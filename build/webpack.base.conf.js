@@ -2,6 +2,7 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
+var webpack = require("webpack")
 const vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve (dir) {
@@ -37,6 +38,10 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass']
+      },
+      {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
@@ -64,8 +69,20 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\\\\\\\\.css$/,
+        loader: "style!css"
+      },
+      {
+        test: /\\\\\\\\.(eot|woff|woff2|ttf)([\\\\\\\\?]?.*)$/,
+        loader: "file"
       }
     ]
+  },
+  externals: {
+    'AMap': 'AMap',
+    'AMapUI': 'AMapUI'
   },
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
@@ -78,5 +95,12 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin('common.js'),
+    new webpack.ProvidePlugin({
+      jQuery: "jquery",
+      $: "jquery"
+    })
+  ]
 }
