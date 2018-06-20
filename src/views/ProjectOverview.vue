@@ -1,76 +1,80 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <el-container style="height: 100%">
-      <el-header height="70px">
+      <el-header height="70px" style="border-bottom: 1px solid rgba(230,234,238,1);">
         <z-header></z-header>
       </el-header>
-      <el-container>
-        <el-aside width="245px">
-          <z-nav></z-nav>
-        </el-aside>
+      <el-container style="height: 100%">
+        <z-nav></z-nav>
         <el-main>
           <div class="breadcrumb-box">
             <div class="b-title">{{ title }}</div>
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item :to="{ path: '/' }">在线一览</el-breadcrumb-item>
-              <el-breadcrumb-item @changeTitle="change" >{{ title }}</el-breadcrumb-item>
-            </el-breadcrumb>
+            <div class="el-breadcrumb">
+              <z-bread></z-bread>
+            </div>
           </div>
-
-          <transition name="move" mode="out-in">
-            <keep-alive>
+          <transition name="fade" mode="out-in">
               <router-view></router-view>
-            </keep-alive>
           </transition>
         </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
-
 <script>
   import zHeader from '@/components/zHeader'
   import zNav from '@/components/zNav'
+  import zBread from '@/components/zBread'
   import Bus from '@/assets/eventBus'
   export default {
     name: "ProjectOverview",
     components:{
       zHeader,
-      zNav
+      zNav,
+      zBread
     },
     data(){
       return{
         title:''
       }
     },
-    created(){
-      this.title=this.$route.meta.title;
-      //console.log(this.title)
-    },
     mounted(){
-      var that=this
-      Bus.$on('changeTitle',function (msg) {
-        that.title=msg
-      })
+      this.title=this.$route.name;
     },
     methods:{
       change(msg){
         console.log(msg)
+      }
+    },
+    watch:{
+      $route(){
+        this.title=this.$route.name;
+        if(this.$route.name==''){
+          this.title='项目总览'
+        }
       }
     }
   }
 </script>
 
 <style scoped lang="scss">
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
   .el-header{
     padding: 15px 40px;
+  }
+  .el-aside{
+    height: 100%;
   }
   .breadcrumb-box{
     width: 100%;
     height: 80px;
     text-align: right;
     .el-breadcrumb{
-      width: 165px;
       float: right;
     }
     .b-title{
@@ -82,6 +86,7 @@
     }
   }
   .el-main{
+    height: 100%;
     background: #f5f5f9;
   }
 </style>

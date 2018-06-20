@@ -2,5 +2,5 @@
 
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '"http://192.168.0.85:9001"'
+  API_ROOT: '"http://test1.iot.v/foreground"'
 }

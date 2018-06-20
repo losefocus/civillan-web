@@ -71,8 +71,13 @@
         </el-col>
       </el-row>
     </div>
-    <!-- 搜索框 -->
+    <!-- Echarts部分 -->
+    <ul class="e-box">
+      <li class="echarts1"><chart :options="polar"></chart></li>
+      <li class="echarts2"><chart :options="test"></chart></li>
+    </ul>
     <!-- 表格部分 -->
+
     <el-table
       :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
       stripe
@@ -195,6 +200,8 @@
       <p><el-checkbox v-model="price" label="运费" ></el-checkbox></p>
       <p><el-checkbox v-model="remark" label="备注" ></el-checkbox></p>
     </el-dialog>
+
+
   </div>
 </template>
 <style>
@@ -206,6 +213,32 @@
   export default {
     data() {
       return {
+        polar: {
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [{
+            data: [120, 200, 150, 80, 70, 110, 130],
+            type: 'bar'
+          }]
+        },
+        test:{
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [{
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: 'line'
+          }]
+        },
         tableData:[],
         currentPage:1,
         pagesize:20,
@@ -278,11 +311,11 @@
   .control-box{
     padding: 10px 20px;
     background: #fff;
-  .title{
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 10px;
-  }
+    .title{
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
   }
   .entrust-table{
   //.pdrl25;
@@ -310,9 +343,29 @@
   .ft{
     background-color: #fff;
     text-align:center;
-  .pag-pad{
-    padding: 16px 5px;
+    .pag-pad{
+      padding: 16px 5px;
+    }
   }
+
+  //echarts
+  .echarts {
+    width: 100%;
+    height: 100%;
+  }
+  .e-box{
+    width: 100%;
+    height: 300px;
+    margin: 30px 0;
+    li{
+      width: 45%;
+      height: 300px;
+      float: left;
+      background: #fff;
+    }
+    .echarts2{
+      margin-left: 94px;
+    }
   }
 </style>
 

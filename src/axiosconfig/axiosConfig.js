@@ -5,8 +5,8 @@ import router from '../router'
 import { Message, Loading } from 'element-ui'
 // 响应时间
 var root = process.env.API_ROOT;
-console.log(process.env.API_ROOT);
-axios.defaults.timeout = 5 * 1000
+//console.log(process.env.API_ROOT);
+axios.defaults.timeout = 5 * 1000;
 // 配置cookie
 // axios.defaults.withCredentials = true
 // 配置请求头
@@ -25,35 +25,37 @@ axios.interceptors.request.use(
       text: '数据加载中，请稍后...',
       spinner: 'el-icon-loading',
       background: 'rgba(0, 0, 0, 0.7)'
-    })
+    });
     if (config.method === 'post') {
       config.data = qs.stringify(config.data)
     }
-    config.headers.token = sessionStorage.getItem("token")
+    console.log(qs.stringify(config.data));
+    //config.headers.token = sessionStorage.getItem("token");
     return config
   },
   err => {
-    loadingInstance.close()
-    Message.error('请求错误')
+    loadingInstance.close();
+    Message.error('请求错误');
     return Promise.reject(err)
   }
 );
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
-    console.log(res)
+    console.log(res);
     if (res.status === 200) {
-      loadingInstance.close()
-      return res
+      loadingInstance.close();
+      return res;
       console.log(res.data)
     } else {
-      loadingInstance.close()
+      loadingInstance.close();
       Message.error(res.data.message)
     }
   },
   err => {
+    console.log(err);
     loadingInstance.close();
-    console.log(err.request.status)
+    console.log(err.request.status);
     /*if(err.request||err.request.status===401){
       router.replace({
         path: 'login',
@@ -65,7 +67,7 @@ axios.interceptors.response.use(
     Message.error('请求失败，请稍后再试');
     return Promise.reject(err)
   }
-)
+);
 // 发送请求
 export function post (url, params) {
   return new Promise((resolve, reject) => {

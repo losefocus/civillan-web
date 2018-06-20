@@ -1,37 +1,16 @@
-//当前文件需要在main.js中引用
-import vue from 'vue'
+import Vue from 'vue'
 import Vuex from 'vuex'
+import login from './modules/login'
+import breadcrumb from './modules/breadcrumb'
 
-vue.use(Vuex);
+Vue.use(Vuex);
 
-var store= new Vuex.Store({
-  state:{
-    isLogin:sessionStorage.getItem('isLogin') || 0,
-    token:sessionStorage.getItem('isLogin') || ''
-  },
-  getters:{
-    getlogined:state => {
-      return state.isLogin
-    },
-  },
-  mutations:{
-    changeLogin(state,num){
-      state.isLogin=num;
-      sessionStorage.setItem('isLogin',num)
-    },
-    changeToken(state,str){
-      state.token=str
-      sessionStorage.setItem('token',str)
-    }
-  },
-  actions:{
-    incrementLogin({ commit },num){
-      commit('changeLogin',num)
-    },
-    incrementToken({ commit },str){
-      commit('changeToken',str)
-    }
-  }
-});
+const debug = process.env.NODE_ENV !== 'production';
 
-export default store
+export default new Vuex.Store({
+  modules: {
+    login,
+    breadcrumb
+  },
+  strict: debug
+})

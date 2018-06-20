@@ -1,5 +1,5 @@
 <template>
-<div style="height:100%">
+<div style="height:100%;">
   <div class="hd-logo hd-left"></div>
   <div class="hd-name hd-left">工程施工实时监控系统</div>
 

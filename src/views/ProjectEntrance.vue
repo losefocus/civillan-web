@@ -27,6 +27,9 @@
 
 <script>
   import zHeader from '@/components/zHeader'
+  import zImg from '@/assets/AMap/info.png'
+  import state from '@/assets/AMap/stateMarker.png'
+  import location from '@/assets/AMap/location.png'
   import toTree from '@/assets/toTree'
   import $ from 'jquery'
   export default {
@@ -184,8 +187,7 @@
     },
     methods: {
       init: function () {
-        var _this=this;
-        console.log(this)
+        let _this=this;
         let map = new AMap.Map('container', {
           center: [116.397428, 39.90923],
           zoom: 6
@@ -203,14 +205,20 @@
           console.log('asd')
         );*/
         //console.log(this.data2);
-        var data=this.data2
+        var data=this.data2;
 
         //console.log(toTree(data));
         var _MList=[];
+
+        var _unSelected={};
+        var _markerShow={};
         var _lists= this.lists
         this.lists.forEach(function (item,i) {
-          AMapUI.loadUI(['misc/MarkerList', 'overlay/SimpleMarker', 'overlay/SimpleInfoWindow'],
-            function(MarkerList, SimpleMarker, SimpleInfoWindow) {
+          AMapUI.define("polyfill/require/require-css/css!plug/ext/font-awesome/css/font-awesome", [], function () {
+            //留空即可
+          });
+          AMapUI.loadUI(['misc/MarkerList', 'overlay/SimpleMarker', 'overlay/SvgMarker'],
+            function(MarkerList, SimpleMarker ,SvgMarker) {
               var markerList = new MarkerList({
                 //关联的map对象
                 map: map,
@@ -238,38 +246,36 @@
                 //返回数据项对应的Marker
                 getMarker: function(dataItem, context, recycledMarker) {
 
-                  var content = '标注: ' + (context.index + 1) + '';
+                  var content = '<div style="width:110px;\n' +
+                    'height:30px;\n' +
+                    'background:rgba(243,26,26,1);\n' +
+                    'border-radius:6px;\n' +
+                    'opacity:0.75;font-size:18px;\n' +
+                    'color:rgba(255,255,255,1);\n' +
+                    'line-height:30px;' +
+                    'text-align: center;'+
+                    '">' +dataItem.desc+
+                    '</div>';
+
+
                   var label = {
-                    offset: new AMap.Pixel(-6, -23), //修改label相对于marker的位置
+                    offset: new AMap.Pixel(-35, -40), //修改label相对于marker的位置
                     content: content
                   };
-
-                  //存在可回收利用的marker
-                  /*if (recycledMarker) {
-                    //直接更新内容返回
-                    recycledMarker.setIconLabel(label);
-                    return recycledMarker;
-                  }*/
-
                   //返回一个新的Marker
                   return new SimpleMarker({
                     //前景文字
-                    iconLabel: 'A',
                     label: label,
-                    //图标主题
-                    iconTheme: 'default',
-
-                    //背景图标样式
-                    iconStyle: 'red',
-                    //...其他Marker选项...，不包括content
+                    iconStyle:{
+                      src:state
+                    },
                     map: map,
-                    position: [116.405285, 39.904989],
-                    id:'123'
+                    id:dataItem.id
                   });
                 },
                 //返回数据项对应的列表节点
                 getListElement: function(dataItem, context, recycledListElement) {
-                  var tpl = '<p style="height: 35px;line-height: 35px"><%- dataItem.id %>：<%- dataItem.desc %>';
+                  var tpl = '<p style="height: 35px;line-height: 35px" class=<%- dataItem.id %>><%- dataItem.id %>：<%- dataItem.desc %>';
 
                   var content = MarkerList.utils.template(tpl, {
                     dataItem: dataItem,
@@ -286,13 +292,22 @@
                   return '<li>' + content + '</li>';
                 },
                 getInfoWindow: function(dataItem, context, recycledInfoWindow) {
+                  let content='<div style="width:330px;\n' +
+                    'height:234px;\n' +
+                    'background:rgba(255,255,255,1);\n' +
+                    'cursor:pointer;\n'+
+                    'box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);">' +
+                    '<div style="width: 330px;height: 158px;background: url(' +zImg+
+                    ')"></div>'+
+                    '<div style="width: 280px;height: 40px;padding: 12px 25px;">' +dataItem.desc+
+                    '</div>'+
+                    '</div>';
 
                   //返回一个新的InfoWindow
-                  return new SimpleInfoWindow({
-                    offset: new AMap.Pixel(0, -57),
-                    infoTitle:dataItem.id,
-                    infoBody: '<p class="my-desc">'+dataItem.desc +'<strong>这里是内容。</strong> <br/> 高德地图 JavaScript API，是由 JavaScript 语言编写的应用程序接口，' +
-                    '它能够帮助您在网站或移动端中构建功能丰富、交互性强的地图应用程序</p>'+'<img src="../assets/info.png">',
+                  return new AMap.InfoWindow({
+                    autoMove: true,
+                    offset: new AMap.Pixel(0, -30),
+                    content: content,
                   });
                 }
               });
@@ -303,38 +318,68 @@
                 function(event, record) {
                   var $ = MarkerList.utils.$,
                     template = MarkerList.utils.template;
-                  /*$('#eventInfo').html(template('<%- record.id%>: <%- record.data.desc %>' +
-                    '<div class="eventType"><%- event.type %></div>', {
-                    event: event,
-                    record: record
-                  }));*/
                 });
 
               //监听选中改变
-              //console.log(markerList);
-              markerList.on('selectedChanged', function(event, record) {
-                //console.log(event,info);
-                //console.log(this._opts)
+              //创建一个SquarePin，显示在选中的Marker位置
+              var svgMarker = new SvgMarker(
+                new SvgMarker.Shape.IconFont({
+                  height: 60,
+                  strokeWidth: 1,
+                  strokeColor: '#ccc',
+                  fillColor: '#ED0000',
+                  offset: [-30, -35],
+                }), {
+                  containerClassNames: 'my-svg-marker',
+                });
+
+
+              markerList.on('selectedChanged', function(event, changedInfo) {
+                var selectedRecord = changedInfo.selected,
+                  marker;
+
+                if(_unSelected.id){
+                  map.remove(_unSelected);
+
+                  marker = selectedRecord.marker;
+                  marker.hide();
+                  _markerShow.show();
+                  svgMarker.setMap(marker.getMap());
+                  svgMarker.setPosition(marker.getPosition());
+                  //svgMarker.setIconLabel(selectedRecord.id);
+                  svgMarker.show();
+
+                  _markerShow=marker;
+                  _unSelected=svgMarker;
+                  _unSelected.id='0'
+                }else{
+                  marker = selectedRecord.marker;
+                  marker.hide();
+                  _markerShow=marker;
+
+                  svgMarker.getOffset([-300,-100]);
+                  svgMarker.setMap(marker.getMap());
+                  svgMarker.setMap(marker.getMap());
+                  svgMarker.setPosition(marker.getPosition());
+                  //svgMarker.setIconLabel(selectedRecord.id);
+                  svgMarker.show();
+
+                  _unSelected=svgMarker;
+                  _unSelected.id='1'
+                }
               });
+
               markerList.on('infoWindowClick',function (event,info) {
-                //console.log(event);
                 _this.$router.push('project')
               });
 
-
-              markerList.on('markerClick',function (event,info) {
-                console.log(event)
-                console.log($('#my-list ul li li').length);
-                var n=0;
-                var arr=[]
-                for (var i=0;i<$('#my-list ul li li').length;i++){
-                  if($('#my-list ul li li').eq(i).hasClass('selected')){
-                    console.log(i);
-                    arr.push(i);
+              markerList.on('markerClick',function (event) {
+                $('#my-list ul li li').removeClass('selected');
+                for (var i=0;i<$('#my-list p').length;i++){
+                  if($('#my-list p').eq(i).hasClass(event.target.opts.id)){
+                    $('#my-list p').eq(i).parent().addClass('selected');
                   }
                 }
-                console.log(arr);
-
                 _lists.forEach(function (i) {
                   if(item.id!==i.id){
                     i.show=false
@@ -353,26 +398,17 @@
         this.lists.forEach(i => {
           if (i.show !== this.lists[index].show) {
             i.show = false;
-          };
+          }
         });
         list.show = !list.show;
-        console.log(list);
         this.isShow=list;
       },
       getDom:function (e) {
-        if(e.target.parentNode.className.indexOf('selected') ==-1){
-          this.$refs.listBody.forEach(item => {
-            //console.log(item)
-            item.childNodes.forEach(i => {
-              function removeClass( elements,cName ) {
-                elements.className = elements.className.replace( new RegExp( "(\\s|^)" + cName + "(\\s|$)" )," " ); // replace方法是替换
-              }
-              removeClass(i,'selected');
-              //console.log(i)
-            })
-          })
-        }else{
-          console.log('okkkk')
+        $('#my-list ul li li').removeClass('selected');
+        for (var i=0;i<$('#my-list p').length;i++){
+          if($('#my-list p').eq(i).hasClass(e.target.className)){
+            $('#my-list p').eq(i).parent().addClass('selected');
+          }
         }
       }
     }
@@ -394,6 +430,7 @@
     position: relative;
   }
   #my-list{
+    cursor: pointer;
     position: absolute;
     z-index: 99999;
     background: #E71919;
@@ -417,7 +454,7 @@
     .list-body{
       width: 220px;
       margin-left: -30px;
-      padding: 5px 50px;
+      padding: 0 50px;
       background:rgba(0,0,0,.1);
     }
     .isBorder{

@@ -12,19 +12,19 @@
           <div class="log-spacing">
             <label for="username">账号</label>
           </div>
-          <input type="text" id="username" placeholder="请输入账号" v-model="userInfo.username" @blur="getUser(userInfo.username)" :class={fail:isFail,success:isSuccess}>
-          <p :class={fail:isFail,success:isSuccess}>{{validateRules}}</p>
+          <input type="text" id="username" placeholder="请输入账号" v-model="userInfo.username" @input="getUser(userInfo.username)" :class={fail:isFail,success:isSuccess}>
+          <p class="initColor" :class={fail:isFail,success:isSuccess}>{{validateRules}}</p>
           <div class="log-spacing">
             <label for="password">密码</label>
           </div>
-          <input type="password" id="password" placeholder="请输入密码" v-model.lazy="userInfo.password" @blur="getPassword(userInfo.password)">
-          <p :class={fail:isFail1,success:isSuccess1}>{{validateRules1}}</p>
+          <input type="password" id="password" placeholder="请输入密码" v-model="userInfo.password" @input="getPassword(userInfo.password)">
+          <p class="initColor" :class={fail:isFail1,success:isSuccess1}>{{validateRules1}}</p>
           <div class="log-spacing">
-            <el-checkbox v-model="userInfo.checked">记住密码</el-checkbox>
+            <el-checkbox v-model="userInfo.checked">自动登录</el-checkbox>
           </div>
           <div class="log-spacing">
             <button type="submit" id="log-submit">登录</button>
-            <span class="log-forget" @click="getCookie()" v-model="checked">忘记密码?</span>
+            <span class="log-forget" @click="getCookie()">忘记密码?</span>
           </div>
         </form>
 
@@ -39,37 +39,36 @@
   export default {
     data() {
       return {
-        userInfo:{},
+        userInfo:{
+          checked:false
+        },
         validateRules:'',
         validateRules1:'',
         isFail:false,
         isSuccess:false,
         isFail1:false,
-        isSuccess1:false,
-        checked:false
+        isSuccess1:false
       };
     },
     mounted() {
-      document.body.onkeydown = this.keyDown
+      document.body.onkeydown = this.keyDown;
     },
     computed: {
-      ...mapState(['isLogin'])
+      ...mapState({isLogin:state=>state.login.isLogin})
     },
     methods: {
-      ...mapActions(['incrementLogin']),
+      ...mapActions('login',['incrementLogin']),
+
       keyDown(e) {
         //console.log(e.code)
         if (e.code == 'Enter') {
           console.log(this);
-          this.getPassword();
-          this.getUser();
-          this.submit()
+          this.submit();
           //this.$options.methods.submitForm('loginForm')
         }
       },
       getUser(u){
         if(/^\s*$/g.test(u)||u==""||u==undefined){
-          console.log(u);
           this.validateRules='用户名不能为空';
           this.isFail=true;
           this.isSuccess=false;
@@ -81,11 +80,12 @@
           this.validateRules='';
           this.isSuccess=true;
           this.isFail=false;
-          console.log('成功')
+          console.log('成功');
         }
       },
       getPassword:function(p){
         let reg = /^\s*$/g;
+        console.log(p);
         if(reg.test(p)||p==""||p==undefined){
           this.validateRules1='用户名不能为空';
           this.isFail1=true;
@@ -101,27 +101,31 @@
         }
       },
       submit:function(){
-        if(this.isSuccess1&&this.isSuccess){
-          console.log(this.userInfo);
+        if(this.isSuccess&&this.isSuccess1){
           var that=this;
+          console.log(this.userInfo);
           this.$api.login.login(this.userInfo).then((res) => {
-            if(this){
-
+            if(that.userInfo.checked){
+              that.$cookie.set('token',res.result.token,{ expires: '1M'})
+              //that.$store.dispatch('incrementLogin',1);
+              //that.$store.dispatch('incrementToken',res.result.token);
+              //that.$router.push('/');
+            }else{
+              that.$cookie.delete('userInfo');
+              //that.$store.dispatch('incrementLogin',1);
+              //that.$store.dispatch('incrementToken',res.result.token);
+              //that.$router.push('/');
             }
-            //that.$store.dispatch('incrementLogin',1);
-            //that.$store.dispatch('incrementToken',res.result.token);
-            //that.$router.push('/');
-            console.log(res);
           },(e)=>{
-            console.log(e)
+            console.log(e);
           });
         }else {
-          console.log('密码账号错误')
+          console.log('密码账号错误');
         }
         //this.$cookie.set('user.info',JSON.stringify(this.userInfo),{ expires: '60s'});
       },
       getCookie:function () {
-        console.log(this.$cookie.get('user.info'));
+        console.log(this.$cookie.get('token'));
       }
     }
   }
@@ -129,17 +133,20 @@
 
 <style scoped lang="scss">
   $percent:100%;
-
+  .initColor{
+    border-top:2px solid rgba(220,224,230,1);
+  }
   .fail{
-    border-top: 1px solid red;
+    border-top: 2px solid #F03E41;
     font-size: 12px;
-    color : red
+    color : #F03E41
   }
   .success{
-    border-top: 1px solid greenyellow;
+    border-top: 2px solid #0FA2FF;
     font-size: 12px;
-    color : red
+    color : #0FA2FF
   }
+
     /*头部*/
   .el-main{
     height: 973px;
