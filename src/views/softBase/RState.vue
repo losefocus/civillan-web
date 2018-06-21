@@ -27,8 +27,28 @@
      </li>
    </ul>
    <ul class="s-box2">
-     <li class="s-info">
-
+     <li class="s-progress">
+       <div class="p-box">
+         <div class="progressContainer">
+           <div class="progress" :style="{height:progress+'%'}">
+             <b>{{progress}}%</b>
+           </div>
+         </div>
+       </div>
+       <div class="p-box">
+         <el-progress type="circle" :percentage="80" color="#8e71c7" width="100"></el-progress>
+       </div>
+       <div class="p-box">
+         <el-progress type="circle" :percentage="100" status="success" width="100"></el-progress>
+       </div>
+       <div class="p-box">
+         <el-progress type="circle" :percentage="50" status="exception" width="100"></el-progress>
+       </div>
+       <!--<div class="progressContainer">
+         <div class="progress" :style="{width:progress+'%'}">
+           <b>{{progress}}%</b>
+         </div>
+       </div>-->
      </li>
      <li class="s-chart">
        <chart :options="AshBreakingAmount"></chart>
@@ -51,6 +71,7 @@ export default {
     let Data1=data1.reverse();
     console.log(Data);
     return {
+      progress:20,
       PulpingQuantity:{
         title: {
           text: 'A-断浆量随桩机里程变化曲线',
@@ -530,6 +551,25 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .progressContainer{
+    height: 80%;
+    width: 20px;
+    background-color: #ddd;
+    margin-left: 2%;
+  }
+  .progress{
+    background-color: #1C8DE0;
+    width:20px;
+    line-height: 20px;
+  }
+  b{
+    color:#fff;
+    font-weight: 100;
+    font-size: 12px;
+    position:absolute;
+    left:40%;
+  }
+
   .echarts {
     width: 100%;
     height: 100%;
@@ -592,6 +632,29 @@ export default {
        line-height: 15px;
        display: flex;
        justify-content:space-between;
+     }
+   }
+
+   .s-progress{
+     width:240px;
+     height:260px;
+     padding: 20px;
+     background:rgba(255,255,255,1);
+     box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+     display: flex;
+     display: -webkit-flex;
+     flex-direction: row;/*决定主轴的方向*/
+     flex-wrap:wrap;
+     .p-box{
+       height: 130px;
+       flex: 0 1 50%;
+       //background-color: lightcoral;
+       color: white;
+       font-size: 20px;
+       text-align: center;
+       line-height: 100px;
+       border: 4px solid white;
+       box-sizing: border-box;
      }
    }
 
