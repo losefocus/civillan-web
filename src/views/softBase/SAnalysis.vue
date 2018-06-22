@@ -1,12 +1,16 @@
 <template>
   <div>
-    统计分析
+    <analysis></analysis>
   </div>
 </template>
 
 <script>
+  import analysis from '@/views/POV/analysis'
 export default {
-  name: "SAnalysis"
+  name: "SAnalysis",
+  components:{
+    analysis
+  }
 }
 </script>
 

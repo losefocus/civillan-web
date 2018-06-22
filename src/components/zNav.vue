@@ -17,7 +17,7 @@
             <router-link :to="list.path">
               <div class="nav-link" :class="{active:index==isActive}" @click="checkedItem(index,list.name)">
                 <div class="nav-icon">
-                  <i :class="list.icon"></i>
+                  <i class="iconfont" :class="list.icon"></i>
                 </div>
                 <div class="link-title" v-if="imgShow">{{ list.name }}</div>
               </div>
@@ -44,7 +44,7 @@ export default {
      lists:[
        {
          name:'项目总览',
-         icon:'el-icon-view',
+         icon:'icon-project',
          path:'/ProjectOverview',
          children:[
            {
@@ -58,31 +58,31 @@ export default {
        },
        {
          name:'统计分析',
-         icon:'el-icon-message',
+         icon:'icon-analysis',
          path:'/analysis'
        },{
          name:'历史数据',
-         icon:'el-icon-service',
+         icon:'icon-history',
          path:'/historical'
        },{
          name:'报警查询',
-         icon:'el-icon-menu',
+         icon:'icon-alarm',
          path:'/alarm'
        },{
          name:'视频监控',
-         icon:'el-icon-upload',
+         icon:'icon-video',
          path:'/video'
        },{
          name:'文档资料',
-         icon:'el-icon-date',
+         icon:'icon-document',
          path:'/document'
        },{
          name:'质量评估',
-         icon:'el-icon-sold-out',
+         icon:'icon-quality',
          path:'/quality'
        },{
          name:'作业成效',
-         icon:'el-icon-star-on',
+         icon:'icon-operational',
          path:'/operational'
        }
      ]
@@ -139,7 +139,7 @@ export default {
     #resize{
       transition: 0.4s all ease;
       position: absolute;
-      top: 800px;
+      top: 600px;
       right: 30px;
       cursor: pointer;
       width: 24px;
@@ -161,10 +161,6 @@ export default {
      opacity: 0;
      height: 0;
   }
-
-
-
-
   .pj-img{
     position: relative;
     width: 100%;
@@ -214,7 +210,7 @@ export default {
         color: #4F5059;
         overflow: hidden;
         .nav-icon{
-          padding-top: 15px;
+          padding-top: 12px;
           text-align: center;
           i{
             font-size: 25px;
@@ -226,7 +222,6 @@ export default {
         }
       }
     };
-
     .liActive{
       width: 50px;
       height: 50px;
@@ -246,5 +241,4 @@ export default {
   .navClose{
     background: url("../assets/Nav/navClose.png");
   }
-
 </style>

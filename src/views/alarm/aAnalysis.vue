@@ -36,9 +36,8 @@
       </el-row>
     </div>
     <div class="e-body">
-      <chart :options="polar"></chart>
+      <chart :options="polar" :auto-resize=true></chart>
     </div>
-
   </div>
 
 </div>
@@ -48,10 +47,7 @@
 export default {
   name: "analysis",
   data(){
-    let colors=['#DBECF8','#76DDFB','#53A8E2','#2C82BE'];
-    let i=0;
     return{
-
       polar:{
         tooltip: {
           trigger: 'item',
@@ -87,9 +83,7 @@ export default {
                 show: false
               }
             },
-            color:function(){
-              return colors[i++];
-            },
+            color:['#DBECF8','#76DDFB','#53A8E2','#2C82BE'],
             data:[
               {value:335, name:'报警机故障'},
               {value:310, name:'邮件营销'},

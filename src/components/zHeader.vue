@@ -5,9 +5,9 @@
 
   <img src="@/assets/header/label_close.png" class="hd-right hd-close">
   <div class="hd-uName hd-right">
-    <el-dropdown>
+    <el-dropdown trigger="click" placement="bottom">
       <span class="el-dropdown-link">
-        我是DJ<i class="el-icon-caret-bottom el-icon--right"></i>
+        <div class="u-name">我是DJ</div><i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item>黄金糕</el-dropdown-item>
@@ -18,7 +18,7 @@
       </el-dropdown-menu>
     </el-dropdown>
   </div>
-  <img src="@/assets/header/b-Girl.jpg" class="hd-right hd-portrait">
+  <img src="@/assets/header/userImg.png" class="hd-right hd-portrait">
 
 </div>
 </template>
@@ -35,6 +35,9 @@
 </script>
 
 <style scoped lang="scss">
+  .el-header{
+    padding-bottom: 0;
+  }
   .hd-left{
     float: left;
   }
@@ -57,9 +60,8 @@
     font-size: 16px;
   }
   .hd-portrait{
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
   }
   .hd-uName{
     margin: 10px 0 0 10px;
@@ -67,5 +69,10 @@
 
   .hd-close{
     margin: 10px 10px 0 40px;
+  }
+  .u-name{
+    height: 32px;
+    display: inline-block;
+    cursor: pointer;
   }
 </style>

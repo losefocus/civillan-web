@@ -1,13 +1,17 @@
 <template>
  <div>
-   历史数据{{data}}
+   <historical></historical>
  </div>
 </template>
 
 <script>
+  import historical from '@/views/POV/historical'
 export default {
   name: "SHistory",
-  props:['data']
+  props:['data'],
+  components:{
+    historical
+  }
 }
 </script>
 

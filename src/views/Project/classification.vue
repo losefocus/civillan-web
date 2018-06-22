@@ -1,16 +1,16 @@
 <template>
   <div>
     <waterfall
-      :line-gap="300"
-      :min-line-gap="290"
-      :max-line-gap="330"
+      :line-gap="350"
+      :min-line-gap="300"
+      :max-line-gap="400"
       :single-max-width="400"
       :watch="items">
       <!-- each component is wrapped by a waterfall slot -->
       <waterfall-slot
         v-for="(item, index) in items"
         :width="240"
-        :height="330"
+        :height="320"
         :order="index"
         :key="item.id"
         move-class="item-move"
@@ -263,8 +263,8 @@
 
 <style scoped lang="scss">
   .item-move {
-    transition: all .5s cubic-bezier(.55,0,.1,1);
-    -webkit-transition: all .5s cubic-bezier(.55,0,.1,1);
+    transition: all .4s cubic-bezier(.55,0,.1,1);
+    -webkit-transition: all .4s cubic-bezier(.55,0,.1,1);
   }
   .item {
     background: #ffffff;
@@ -327,7 +327,7 @@
   }
 
   .el-row {
-    width: 98.2%;
+    width: 98.5%;
     padding: 30px;
     background: #ffffff;
     margin-bottom: 20px;

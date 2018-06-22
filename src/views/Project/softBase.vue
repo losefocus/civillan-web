@@ -1,199 +1,11 @@
 <template>
   <div>
-    <!--<ul class="pj-box">
-      <li class="pj-body">
-        <div class="pj-img">
-          <span>软基处理</span>
-        </div>
-        <div class="pj-data">
-          <ul>
-            <li class="equipment">设备</li>
-            <li class="online">在线</li>
-            <li class="statistics">统计</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-        </div>
-      </li>
-      <li class="pj-body">
-        <div class="pj-img">
-          <span>软基处理</span>
-        </div>
-        <div class="pj-data">
-          <ul>
-            <li class="equipment">设备</li>
-            <li class="online">在线</li>
-            <li class="statistics">统计</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-        </div>
-      </li>
-      <li class="pj-body">
-        <div class="pj-img">
-          <span>软基处理</span>
-        </div>
-        <div class="pj-data">
-          <ul>
-            <li class="equipment">设备</li>
-            <li class="online">在线</li>
-            <li class="statistics">统计</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-        </div>
-      </li>
-      <li class="pj-body">
-        <div class="pj-img">
-          <span>软基处理</span>
-        </div>
-        <div class="pj-data">
-          <ul>
-            <li class="equipment">设备</li>
-            <li class="online">在线</li>
-            <li class="statistics">统计</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-        </div>
-      </li>
-      <li class="pj-body">
-        <div class="pj-img">
-          <span>软基处理</span>
-        </div>
-        <div class="pj-data">
-          <ul>
-            <li class="equipment">设备</li>
-            <li class="online">在线</li>
-            <li class="statistics">统计</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-          <ul>
-            <li class="equipment">双头搅拌桩</li>
-            <li class="online">6</li>
-            <li class="statistics">10</li>
-          </ul>
-        </div>
-      </li>
-    </ul>-->
     <waterfall
       :line-gap="250"
       :min-line-gap="240"
       :max-line-gap="280"
       :single-max-width="350"
       :watch="items">
-      <!-- each component is wrapped by a waterfall slot -->
       <waterfall-slot
         v-for="(item, index) in items"
         :width="210"
@@ -232,12 +44,17 @@
     </waterfall>
     <el-dialog
       :visible.sync="dialogVisible"
-      width="65%"
+      :width="dialogWidth"
+      :fullscreen="dialogFullscreen"
       :show-close='false'>
       <ul class="t-header">
         <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
+        <div class="t-handle">
+          <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-enlarge':changeIcon==true,'icon-narrow':changeIcon==false}"></i></div>
+          <div @click="close()"><i class="iconfont icon-close"></i></div>
+        </div>
       </ul>
-      <r-state :is="currentView" keep-alive  :data="currentView"></r-state>
+      <r-state :is="currentView" keep-alive  :data="currentView" class="t-Body"></r-state>
     </el-dialog>
   </div>
 </template>
@@ -265,6 +82,9 @@
     data () {
       return {
         dialogVisible: false,
+        dialogWidth:'70%',
+        dialogFullscreen:false,
+        changeIcon:true,
         radio:"",
         line: 'v',
         items: [
@@ -291,14 +111,14 @@
           {name:'运行状况'},
           {name:'历史数据'},
           {name:'统计分析'},
-          {name:'通知记录'},
+          //{name:'通知记录'},
           {name:'报警查询'},
         ],
         tBody:[
           'RState',
           'HData',
           'SAnalysis',
-          'NRecord',
+          //'NRecord',
           'AQuery'
         ],
         tIndex:0,
@@ -316,6 +136,17 @@
       changeTab(i){
         this.tIndex=i;
         this.currentView=this.tBody[i]
+      },
+      isFullscreen(){
+        if(this.changeIcon){
+          this.dialogWidth='100%';
+          this.dialogFullscreen=true;
+          this.changeIcon=!this.changeIcon
+        }else{
+          this.dialogWidth='70%';
+          this.dialogFullscreen=false;
+          this.changeIcon=!this.changeIcon
+        }
       }
     }
   }
@@ -428,10 +259,26 @@
       font-size:14px;
       color:rgba(153,153,153,1);
     }
+    .t-handle{
+      float: right;
+      width: 60px;
+      height: 45px;
+      line-height: 45px;
+      margin-right: 20px;
+      display: flex;
+      justify-content: space-around;
+      div{
+        cursor: pointer;
+      }
+    }
     .active {
       background-color: #F85959;
       color: #ffffff;
     }
+  }
+  .t-Body{
+    padding: 20px;
+    background: #f5f5f9;
   }
 
   .wf-transition {
