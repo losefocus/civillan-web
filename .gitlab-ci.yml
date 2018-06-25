@@ -19,6 +19,7 @@ maven-build:
   script:
     - npm install -g cnpm --registry=https://registry.npm.taobao.org
     - cnpm install -g vue-cli
+    - npm install
     - npm run build
     # 启动
     - docker build -t="civillan-front-web" .
