@@ -54,7 +54,7 @@
           <div @click="close()"><i class="iconfont icon-close"></i></div>
         </div>
       </ul>
-      <r-state :is="currentView" keep-alive  :data="currentView" class="t-Body"></r-state>
+      <r-state :is="currentView" keep-alive  :data="currentView" class="t-Body" :height="viewHeight"></r-state>
     </el-dialog>
   </div>
 </template>
@@ -83,6 +83,7 @@
       return {
         dialogVisible: false,
         dialogWidth:'70%',
+        viewHeight:'800px',
         dialogFullscreen:false,
         changeIcon:true,
         radio:"",
@@ -152,11 +153,15 @@
   }
 </script>
 <style>
+  /*重置element*/
   .el-dialog__header{
     padding: 0 !important;
   }
   .el-dialog__body{
     padding: 0 !important;
+  }
+  .is-fullscreen{
+    background: #f5f5f9;
   }
 </style>
 <style scoped lang="scss">
@@ -250,7 +255,9 @@
   }
   .t-header{
     height: 45px;
+    background: #ffffff;
     li{
+      cursor: pointer;
       float: left;
       width:160px;
       height:45px;
@@ -288,5 +295,4 @@
   .wf-enter {
     opacity: 0;
   }
-
 </style>

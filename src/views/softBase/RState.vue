@@ -20,10 +20,10 @@
        </div>
      </li>
      <li class="s-chart">
-       <chart :options="PulpingQuantity"></chart>
+       <chart :options="PulpingQuantity" :auto-resize=true></chart>
      </li>
      <li class="s-chart">
-       <chart :options="ElectricCurrent"></chart>
+       <chart :options="ElectricCurrent" :auto-resize=true></chart>
      </li>
    </ul>
    <ul class="s-box2">
@@ -45,10 +45,10 @@
        </div>
      </li>
      <li class="s-chart">
-       <chart :options="AshBreakingAmount"></chart>
+       <chart :options="AshBreakingAmount" :auto-resize=true></chart>
      </li>
      <li class="s-chart">
-       <chart :options="JettingPressure"></chart>
+       <chart :options="JettingPressure" :auto-resize=true></chart>
      </li>
    </ul>
  </div>
@@ -62,127 +62,235 @@ export default {
     let data = [0,10,20,30,40,50,60,70,80,90];
     let data1 = [120.0, 80.2, 100.3, 60.5, 90.6, 70.3,60.6,90.1,110.9,80.5];
     let Data=data.reverse();
-    let Data1=data1.reverse();
-    console.log(Data);
-    return {
-      progress:60,
-      PulpingQuantity:{
-        title: {
-          text: 'A-断浆量随桩机里程变化曲线',
-          show: true,
-          textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
-            color: '#333'
-          },
-          top:'4%',
-          left: '6%'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            lineStyle: {
-              color: '#333'
-            }
-          }
-        },
-        legend: {
-          icon: 'rect',
-          itemWidth: 14,
-          itemHeight: 5,
-          itemGap: 13,
-          data: ['断浆量'],
-          top:'5%',
-          right: '4%',
-          textStyle: {
-            fontSize: 12,
-            color: '#333'
-          }
-        },
-        grid: {
-          top:'20%',
-          left: '8%',
-          right: '8%',
-          bottom: '8%',
-          containLabel: true
-        },
-        yAxis: [{
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 14,
-              color: '#999'
-            }
-          },
-          data: Data
-        }],
-        xAxis: [{
-          type: 'value',
-          position:'top',
-          name: '',
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#fff'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 14,
-              color: '#999'
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              type: 'solid',
-              color: '#ccc'
-            }
-          }
-        }],
-        series: [{
-          name: '断浆量',
+    let Data1=data1.slice(0, 4).concat(['-', '-', '-', '-', '-', '-']).reverse();
+    let Data2= ['-', '-', '-', '-'].concat(data1.slice(3, 10)).reverse();
+    console.log( Data1);
+
+    var effectDTOList = [{
+      "date": 0,
+      "salesCnt": 22,
+      "status": 0
+    }, {
+      "date": 10,
+      "salesCnt": 27,
+      "status": 0
+    }, {
+      "date": 20,
+      "salesCnt": 44,
+      "status": 0
+    }, {
+      "date": 30,
+      "salesCnt": 64,
+      "status": 1
+    }, {
+      "date": 40,
+      "salesCnt": 77,
+      "status": 1
+    }, {
+      "date": 50,
+      "salesCnt": 99,
+      "status": 1
+    }, {
+      "date": 60,
+      "salesCnt": 102,
+      "status": 2
+    }, {
+      "date": 70,
+      "salesCnt": 116,
+      "status": 2
+    }, {
+      "date": 80,
+      "salesCnt": 99,
+      "status": 2
+    }, {
+      "date": 90,
+      "salesCnt": 77,
+      "status": 3
+    }, {
+      "date": 100,
+      "salesCnt": 64,
+      "status": 3
+    }, {
+      "date": 110,
+      "salesCnt": 70,
+      "status": 3
+    }];
+    var xAxis = [],
+      yAxis = [],
+      dataText = [],
+      series = [],
+      seriesItem;
+    var st = effectDTOList[0].status;
+    console.log(st);
+    console.log(effectDTOList);
+    for (var i = 0; i < effectDTOList.length; i++) {
+      var date=effectDTOList[i].date;
+      xAxis.push(effectDTOList[i].date);
+      yAxis.push(effectDTOList[i].salesCnt);
+      console.log(yAxis);
+      dataText.push([date, effectDTOList[i].salesCnt]);
+      if (st != effectDTOList[i].status || (i == effectDTOList.length - 1)) {
+        var color ='';
+        switch (st)
+        {
+          case 0:
+            color="#FFD400";
+            break;
+          case 1:
+            color="#13E864";
+            break;
+          case 2:
+            color="#22A6FF";
+            break;
+          case 3:
+            color="#6713E8";
+            break;
+        }
+        var name1 = '';
+        switch (st)
+        {
+          case 0:
+            name1="黄色";
+            break;
+          case 1:
+            name1="绿色";
+            break;
+          case 2:
+            name1="蓝色";
+            break;
+          case 3:
+            name1="紫色";
+            break;
+        }
+        seriesItem = {
+          name: name1,
           type: 'line',
           smooth: true,
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 1
-            }
-          },
+          symbolSize: 7,
+          data: dataText,
           areaStyle: {
             normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: 'rgba(113,226,237,1)'
-              }, {
-                offset: 1,
-                color: 'rgba(0, 136, 212, 1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
+              color: color,
+              opacity: 1
+            }
+          },
+          lineStyle: {
+            normal: {
+              color: '#ff8c66'
             }
           },
           itemStyle: {
             normal: {
-              color: 'rgb(113,226,237)',
-              borderColor: 'rgba(0,136,212,0.2)',
-              borderWidth: 12
+              color: color,
+              borderWidth: 2,
+              borderType: 'solid'
+            }
+          }
+        };
+        series.push(seriesItem);
+        console.log(series);
+        data = [
+          [date, effectDTOList[i].salesCnt]
+        ];
+        st = effectDTOList[i].status;
+      }
+    }
+
+    return {
+      progress:60,
+      PulpingQuantity:{
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        title: {
+          text: '销售量曲线图',
+          subtext: '不同时间段面积标记不同颜色'
+        },
+        legend: {
+          right: 50,
+          top: 20,
+          data: [{
+            name: '无促销',
+            icon: 'circle',
+            textStyle: {
+              color: '#333',
+              fontSize: '14'
+            }
+          }, {
+            name: '有促销',
+            icon: 'circle',
+            textStyle: {
+              color: '#333',
+              fontSize: '14'
+            }
+          }
+
+          ]
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        dataZoom: [{
+          type: 'inside',
+          xAxisIndex: [0]
+        }],
+        tooltip: {
+          trigger: 'axis',
+          formatter: function(params) {
+            for (let i = 0; i < params.length; i++) {
+              if (params[i].value) {
+                return params[i].value[1];
+              }
+            }
+            return 'loading';
+          },
+          backgroundColor: '#ff6633',
+          padding: [10],
+          axisPointer: {
+            lineStyle: {
+              color: '#ddd'
+            }
+          }
+
+        },
+        xAxis: {
+          axisTick: {
+            show: true
+          },
+          type: 'category',
+          boundaryGap: false,
+          data: xAxis,
+          axisLine: {
+            lineStyle: {
+              color: '#ddd'
             }
           },
-          data: Data1
-        },]
+          axisLabel: {
+            textStyle: {
+              color: '#333'
+            }
+          }
+        },
+        yAxis: {
+          axisTick: {
+            show: false
+          },
+          type: 'value',
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            lineStyle: {
+              color: '#ddd'
+            }
+          }
+        },
+        series: series
       },
       ElectricCurrent:{
         title: {
@@ -268,7 +376,7 @@ export default {
           }
         }],
         series: [{
-          name: '电量',
+          name: '测试1',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -300,6 +408,39 @@ export default {
             }
           },
           data: Data1
+        },{
+          name: '测试2',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              width: 1
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                offset: 0,
+                color: 'rgba(0,0,0,1)'
+              }, {
+                offset: 1,
+                color: 'rgba(0, 0, 0, 1)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: 'rgb(0,0,0)',
+              borderColor: 'rgba(0,0,0,0.2)',
+              borderWidth: 12
+            }
+          },
+          data: Data2
         },]
       },
       AshBreakingAmount:{
@@ -565,6 +706,7 @@ export default {
     height: 100%;
   }
  .s-box1,.s-box2{
+   height: 50%;
    display: flex;
    background-color: #F5F5F9;
    justify-content:space-between;
