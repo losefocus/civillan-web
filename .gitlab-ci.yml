@@ -20,8 +20,8 @@ maven-build:
     - cnpm run build
     # 启动
     - docker build -t="civillan-front-web" .
-    - ssh test@test1.iot.v -tt docker stop civillan-foreground
-    - ssh test@test1.iot.v -tt docker rm civillan-foreground
+    - ssh test@test1.iot.v -tt docker stop civillan-front-web
+    - ssh test@test1.iot.v -tt docker rm civillan-front-web
     - ssh test@test1.iot.v -tt docker run -p 9990:8080 --name civillan-front-web -d civillan-front-web
 
     #清除临时文件
