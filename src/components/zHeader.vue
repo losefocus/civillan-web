@@ -7,18 +7,20 @@
   <div class="hd-uName hd-right">
     <el-dropdown trigger="click" placement="bottom">
       <span class="el-dropdown-link">
-        <div class="u-name">我是DJ</div><i class="el-icon-caret-bottom el-icon--right"></i>
+        <div class="u-name">用户名</div><i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>黄金糕</el-dropdown-item>
-        <el-dropdown-item>狮子头</el-dropdown-item>
-        <el-dropdown-item>螺蛳粉</el-dropdown-item>
-        <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-        <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+        <el-dropdown-item>个人中心</el-dropdown-item>
+        <el-dropdown-item>个人中心</el-dropdown-item>
+        <el-dropdown-item>个人中心</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
   <img src="@/assets/header/userImg.png" class="hd-right hd-portrait">
+  <router-link to="/" class="p-box hd-right">
+    <i class="iconfont icon-MapView"></i>
+    <span class="p-name">项目总览</span>
+  </router-link>
 
 </div>
 </template>
@@ -60,19 +62,39 @@
     font-size: 16px;
   }
   .hd-portrait{
-    width: 44px;
-    height: 44px;
+    margin-top: 7px;
+    width: 32px;
+    height: 32px;
   }
   .hd-uName{
     margin: 10px 0 0 10px;
   }
-
   .hd-close{
-    margin: 10px 10px 0 40px;
+    margin: 13px 10px 0 40px;
   }
+  .p-box{
+    text-decoration: none;
+    height: 40px;
+    line-height: 44px;
+    margin-right: 50px;
+    .icon-MapView{
+      margin-top: 30px;
+      font-size: 25px;
+      color: #4F5059;
+      vertical-align: middle;
+    }
+    .p-name{
+      font-size:12px;
+      color:rgba(58,59,68,1);
+      vertical-align: middle;
+    }
+  }
+
   .u-name{
-    height: 32px;
+    height: 27px;
+    padding-top: 5px;
     display: inline-block;
     cursor: pointer;
+    font-size: 12px;
   }
 </style>

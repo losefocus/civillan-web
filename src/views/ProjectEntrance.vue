@@ -11,14 +11,6 @@
             <div @click="close(list,index)" class="list-title"  :class="{isBorder:list.show}">{{ list.city }}</div>
             <li :id=list.id   v-show="list.show" class="list-body" ref="listBody" @click="getDom($event)"></li>
           </ul>
-          <!--<li class="list-header" v-for="(list,index) in lists" :key="index" >
-            <div @click="close(list,index)" >{{ list.city }}</div>
-            <ul v-if="list.child" v-show="list.show">
-              <li :class="" v-for="(childLIst,cIndex) in list.child" :key="cIndex" @click="showMap(childLIst,cIndex)">
-                {{ childLIst.desc}}
-              </li>
-            </ul>
-          </li>-->
         </ul>
       </div>
     </el-container>
@@ -192,10 +184,14 @@
           center: [116.397428, 39.90923],
           zoom: 6
         });
-        AMap.plugin(['AMap.ToolBar', 'AMap.Scale'], function () {
+        AMap.plugin(['AMap.ToolBar', 'AMap.Scale','AMap.MapType',], function () {
           map.addControl(new AMap.ToolBar());
-          map.addControl(new AMap.Scale())
+          map.addControl(new AMap.Scale());
+          map.addControl(new AMap.MapType(
+            {defaultType:0,showTraffic:false,position:{top:'100px'}}
+          ))
         });
+
 
         /*this.$api.list.list().then(res=>{
           console.log(res.data.result);
@@ -212,13 +208,20 @@
 
         var _unSelected={};
         var _markerShow={};
-        var _lists= this.lists
-        this.lists.forEach(function (item,i) {
+        var _lists= this.lists;
+        this.lists.forEach(function (item) {
           AMapUI.define("polyfill/require/require-css/css!plug/ext/font-awesome/css/font-awesome", [], function () {
             //留空即可
           });
           AMapUI.loadUI(['misc/MarkerList', 'overlay/SimpleMarker', 'overlay/SvgMarker'],
             function(MarkerList, SimpleMarker ,SvgMarker) {
+
+              if (!SvgMarker.supportSvg) {
+                alert('当前环境不支持SVG');
+              }
+              /*map.addControl(new BasicControl.LayerSwitcher({
+                position: 'rb' //right top，右上角
+              }));*/
               var markerList = new MarkerList({
                 //关联的map对象
                 map: map,
@@ -226,13 +229,13 @@
                 listContainer: item.id,
 
                 //需要监听的列表节点事件
-                listElementEvents: ['click', 'mouseenter', 'mouseleave'],
+                listElementEvents: ['click'],
 
                 //需要监听的marker事件
-                markerEvents: ['click', 'mouseover', 'mouseout'],
+                markerEvents: ['click'],
 
                 //需要监听的infoWindow事件
-                infoWindowEvents: ['click', 'mouseover', 'mouseout'],
+                infoWindowEvents: ['click'],
 
                 //返回数据项的Id
                 getDataId: function(dataItem, index) {
@@ -256,8 +259,6 @@
                     'text-align: center;'+
                     '">' +dataItem.desc+
                     '</div>';
-
-
                   var label = {
                     offset: new AMap.Pixel(-35, -40), //修改label相对于marker的位置
                     content: content
@@ -282,11 +283,11 @@
                     dataIndex: context.index
                   });
 
-                  /*if (recycledListElement) {
+                  if (recycledListElement) {
                     //存在可回收利用的listElement, 直接更新内容返回
                     recycledListElement.innerHTML = content;
                     return recycledListElement;
-                  }*/
+                  }
 
                   //返回一段html，MarkerList将利用此html构建一个新的dom节点
                   return '<li>' + content + '</li>';
@@ -324,14 +325,11 @@
               //创建一个SquarePin，显示在选中的Marker位置
               var svgMarker = new SvgMarker(
                 new SvgMarker.Shape.IconFont({
-                  height: 60,
-                  strokeWidth: 1,
-                  strokeColor: '#ccc',
-                  fillColor: '#ED0000',
-                  offset: [-30, -35],
-                }), {
-                  containerClassNames: 'my-svg-marker',
-                });
+                  symbolJs: '//at.alicdn.com/t/font_716432_vviuodo293a.js',
+                  icon:'icon-map5',
+                  size:65,
+                  offset: [-35, -35],
+                }));
 
 
               markerList.on('selectedChanged', function(event, changedInfo) {
@@ -432,8 +430,9 @@
   #my-list{
     cursor: pointer;
     position: absolute;
-    z-index: 99999;
-    background: #E71919;
+    z-index: 2;
+    background: rgba(231,25,25,0.85);
+    box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(243,26,26,1);
     border-radius: 5px;
     top: 35px;
     right: 40px;

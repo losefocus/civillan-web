@@ -16,7 +16,7 @@
        <div class="i-start">开始时间：<span>2018-01-21 19:00</span></div>
        <div class="i-progress">
          <div>进度：</div>
-         <el-progress :percentage="80" color="#8DE8F0" style="width: 195px"></el-progress>
+         <el-progress :stroke-width="15" :percentage="80" color="#8DE8F0" style="width: 195px"></el-progress>
        </div>
      </li>
      <li class="s-chart">
@@ -29,19 +29,64 @@
    <ul class="s-box2">
      <li class="s-progress">
        <div class="p-box">
-         <div class="progressContainer">
-           <div class="progress" :style="{height:progress+'%'}">
+         <div style="height: 80%">
+           <div class="progressContainer">
+             <div class="progress" :style="{height:progress+'%'}">
+             </div>
            </div>
+         </div>
+
+       </div>
+       <div class="p-box">
+         <div class="p-progress">
+           <radial-progress-bar :diameter="diameter"
+                                :total-steps="totalSteps"
+                                :completed-steps="completedSteps"
+                                :animate-speed="animateSpeed"
+                                :stroke-width="strokeWidth"
+                                :start-color="startColor"
+                                :stop-color="stopColor"
+                                :inner-stroke-color="innerStrokeColor"
+                                :timing-func="timingFunc">
+             <p><span :style="completedStepsStyle">{{ completedSteps }}</span> <span :style="totalStepsStyle">/{{ totalSteps }}</span></p>
+             <p :style="totalStepsStyle">cm/min</p>
+           </radial-progress-bar>
+           <div :style="titleStyle">流量</div>
          </div>
        </div>
        <div class="p-box">
-         <el-progress type="circle" :percentage="80" color="#8e71c7" :width="100"></el-progress>
+         <div class="p-progress">
+           <radial-progress-bar :diameter="diameter"
+                                :total-steps="totalSteps"
+                                :completed-steps="completedSteps"
+                                :animate-speed="animateSpeed"
+                                :stroke-width="strokeWidth"
+                                :start-color="startColor"
+                                :stop-color="stopColor"
+                                :inner-stroke-color="innerStrokeColor"
+                                :timing-func="timingFunc">
+             <p><span :style="completedStepsStyle">{{ completedSteps }}</span> <span :style="totalStepsStyle">/{{ totalSteps }}</span></p>
+             <p :style="totalStepsStyle">L/min</p>
+           </radial-progress-bar>
+           <div :style="titleStyle">下钻速度</div>
+         </div>
        </div>
        <div class="p-box">
-         <el-progress type="circle" :percentage="100" status="success" :width="100"></el-progress>
-       </div>
-       <div class="p-box">
-         <el-progress type="circle" :percentage="50" status="exception" :width="100"></el-progress>
+         <div class="p-progress">
+           <radial-progress-bar :diameter="diameter"
+                                :total-steps="totalSteps"
+                                :completed-steps="completedSteps"
+                                :animate-speed="animateSpeed"
+                                :stroke-width="strokeWidth"
+                                :start-color="startColor"
+                                :stop-color="stopColor"
+                                :inner-stroke-color="innerStrokeColor"
+                                :timing-func="timingFunc">
+             <p><span :style="completedStepsStyle">{{ completedSteps }}</span> <span :style="totalStepsStyle">/{{ totalSteps }}</span></p>
+             <p :style="totalStepsStyle">A</p>
+           </radial-progress-bar>
+           <div :style="titleStyle">外钻杆电流</div>
+         </div>
        </div>
      </li>
      <li class="s-chart">
@@ -56,241 +101,197 @@
 
 <script>
   import echarts from 'echarts'
+  import RadialProgressBar from 'vue-radial-progress'
 export default {
   name: "runningState",
+  components:{
+    RadialProgressBar
+  },
   data(){
     let data = [0,10,20,30,40,50,60,70,80,90];
     let data1 = [120.0, 80.2, 100.3, 60.5, 90.6, 70.3,60.6,90.1,110.9,80.5];
     let Data=data.reverse();
-    let Data1=data1.slice(0, 4).concat(['-', '-', '-', '-', '-', '-']).reverse();
-    let Data2= ['-', '-', '-', '-'].concat(data1.slice(3, 10)).reverse();
+    let Data1=data1.slice(0, 4).concat(['', '', '', '', '', '']).reverse();
+    let Data2= ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'].concat(data1.slice(3, 10)).reverse();
     console.log( Data1);
+    console.log( Data2);
 
-    var effectDTOList = [{
-      "date": 0,
-      "salesCnt": 22,
-      "status": 0
-    }, {
-      "date": 10,
-      "salesCnt": 27,
-      "status": 0
-    }, {
-      "date": 20,
-      "salesCnt": 44,
-      "status": 0
-    }, {
-      "date": 30,
-      "salesCnt": 64,
-      "status": 1
-    }, {
-      "date": 40,
-      "salesCnt": 77,
-      "status": 1
-    }, {
-      "date": 50,
-      "salesCnt": 99,
-      "status": 1
-    }, {
-      "date": 60,
-      "salesCnt": 102,
-      "status": 2
-    }, {
-      "date": 70,
-      "salesCnt": 116,
-      "status": 2
-    }, {
-      "date": 80,
-      "salesCnt": 99,
-      "status": 2
-    }, {
-      "date": 90,
-      "salesCnt": 77,
-      "status": 3
-    }, {
-      "date": 100,
-      "salesCnt": 64,
-      "status": 3
-    }, {
-      "date": 110,
-      "salesCnt": 70,
-      "status": 3
-    }];
-    var xAxis = [],
-      yAxis = [],
-      dataText = [],
-      series = [],
-      seriesItem;
-    var st = effectDTOList[0].status;
-    console.log(st);
-    console.log(effectDTOList);
-    for (var i = 0; i < effectDTOList.length; i++) {
-      var date=effectDTOList[i].date;
-      xAxis.push(effectDTOList[i].date);
-      yAxis.push(effectDTOList[i].salesCnt);
-      console.log(yAxis);
-      dataText.push([date, effectDTOList[i].salesCnt]);
-      if (st != effectDTOList[i].status || (i == effectDTOList.length - 1)) {
-        var color ='';
-        switch (st)
-        {
-          case 0:
-            color="#FFD400";
-            break;
-          case 1:
-            color="#13E864";
-            break;
-          case 2:
-            color="#22A6FF";
-            break;
-          case 3:
-            color="#6713E8";
-            break;
-        }
-        var name1 = '';
-        switch (st)
-        {
-          case 0:
-            name1="黄色";
-            break;
-          case 1:
-            name1="绿色";
-            break;
-          case 2:
-            name1="蓝色";
-            break;
-          case 3:
-            name1="紫色";
-            break;
-        }
-        seriesItem = {
-          name: name1,
-          type: 'line',
-          smooth: true,
-          symbolSize: 7,
-          data: dataText,
-          areaStyle: {
-            normal: {
-              color: color,
-              opacity: 1
-            }
-          },
-          lineStyle: {
-            normal: {
-              color: '#ff8c66'
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: color,
-              borderWidth: 2,
-              borderType: 'solid'
-            }
-          }
-        };
-        series.push(seriesItem);
-        console.log(series);
-        data = [
-          [date, effectDTOList[i].salesCnt]
-        ];
-        st = effectDTOList[i].status;
-      }
-    }
 
     return {
-      progress:60,
-      PulpingQuantity:{
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        title: {
-          text: '销售量曲线图',
-          subtext: '不同时间段面积标记不同颜色'
-        },
-        legend: {
-          right: 50,
-          top: 20,
-          data: [{
-            name: '无促销',
-            icon: 'circle',
-            textStyle: {
-              color: '#333',
-              fontSize: '14'
-            }
-          }, {
-            name: '有促销',
-            icon: 'circle',
-            textStyle: {
-              color: '#333',
-              fontSize: '14'
-            }
-          }
+      completedStepsStyle:{
+        "font-size": "30px",
+        "font-weight": "bold"
+      },
+      totalStepsStyle:{
+        "color":"#979797",
+        "font-size": "12px"
+      },
+      titleStyle:{
+        "color":"#979797",
+        "width":"100%",
+        "text-align":"center",
+        "font-size": "12px"
+      },
+      completedSteps:3,
+      totalSteps: 20,
+      animateSpeed: 500,
+      diameter: 110,
+      strokeWidth: 8,
+      startColor: '#17A8F5',
+      stopColor: '#20CEDE',
+      innerStrokeColor: 'rgba(151,151,151,0.3)',
+      timingFunc: 'linear',
 
-          ]
+      progress:10,
+
+      PulpingQuantity:{
+        title: {
+          text: 'A-电流随桩机里程变化曲线',
+          show: true,
+          textStyle: {
+            fontWeight: 'normal',
+            fontSize: 14,
+            color: '#333'
+          },
+          top:'4%',
+          left: '6%'
         },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        dataZoom: [{
-          type: 'inside',
-          xAxisIndex: [0]
-        }],
         tooltip: {
           trigger: 'axis',
-          formatter: function(params) {
-            for (let i = 0; i < params.length; i++) {
-              if (params[i].value) {
-                return params[i].value[1];
-              }
-            }
-            return 'loading';
-          },
-          backgroundColor: '#ff6633',
-          padding: [10],
           axisPointer: {
             lineStyle: {
-              color: '#ddd'
-            }
-          }
-
-        },
-        xAxis: {
-          axisTick: {
-            show: true
-          },
-          type: 'category',
-          boundaryGap: false,
-          data: xAxis,
-          axisLine: {
-            lineStyle: {
-              color: '#ddd'
-            }
-          },
-          axisLabel: {
-            textStyle: {
               color: '#333'
             }
           }
         },
-        yAxis: {
+        legend: {
+          icon: 'rect',
+          itemWidth: 14,
+          itemHeight: 5,
+          itemGap: 13,
+          data: ['电量'],
+          textStyle: {
+            fontSize: 12,
+            color: '#333'
+          },
+          top:'5%',
+          right:'4%'
+        },
+        grid: {
+          top:'20%',
+          left: '8%',
+          right: '8%',
+          bottom: '8%',
+          containLabel: true
+        },
+        yAxis: [{
+          type: 'category',
+          boundaryGap: false,
+          axisLine: {
+            lineStyle: {
+              color: '#ccc'
+            }
+          },
+          axisLabel: {
+            margin: 10,
+            textStyle: {
+              fontSize: 14,
+              color: '#999'
+            }
+          },
+          data: Data
+        }],
+        xAxis: [{
+          type: 'value',
+          position:'top',
+          name: '',
           axisTick: {
             show: false
           },
-          type: 'value',
           axisLine: {
-            show: false
+            lineStyle: {
+              color: '#fff'
+            }
+          },
+          axisLabel: {
+            margin: 10,
+            textStyle: {
+              fontSize: 14,
+              color: '#999'
+            }
           },
           splitLine: {
             lineStyle: {
-              color: '#ddd'
+              type: 'solid',
+              color: '#ccc'
             }
           }
-        },
-        series: series
+        }],
+        series: [{
+          name: '测试1',
+          type: 'line',
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              width: 1
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                offset: 0,
+                color: 'rgba(113,226,237,1)'
+              }, {
+                offset: 1,
+                color: 'rgba(0, 136, 212, 1)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: 'rgb(113,226,237)',
+              borderColor: 'rgba(0,136,212,0.2)',
+              borderWidth: 12
+            }
+          },
+          data: Data1
+        },{
+          name: '测试2',
+          type: 'line',
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              width: 1
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                offset: 0,
+                color: 'rgba(0,0,0,1)'
+              }, {
+                offset: 1,
+                color: 'rgba(0, 0, 0, 1)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: 'rgb(0,0,0)',
+              borderColor: 'rgba(0,0,0,0.2)',
+              borderWidth: 12
+            }
+          },
+          data: Data2
+        },]
       },
       ElectricCurrent:{
         title: {
@@ -378,7 +379,6 @@ export default {
         series: [{
           name: '测试1',
           type: 'line',
-          smooth: true,
           symbol: 'circle',
           symbolSize: 5,
           showSymbol: false,
@@ -411,7 +411,6 @@ export default {
         },{
           name: '测试2',
           type: 'line',
-          smooth: true,
           symbol: 'circle',
           symbolSize: 5,
           showSymbol: false,
@@ -681,17 +680,80 @@ export default {
       }
     }
   },
-  props:['data']
+  props:['dialogFullscreen'],
+  mounted(){
+    const that = this;
+    window.onresize = function temp() {
+      console.log(document.body.clientWidth);
+      let clientWidth=document.body.clientWidth;
+      if(!that.dialogFullscreen){
+        if(clientWidth>1660){
+          that.diameter=110;
+        }else if(clientWidth<1660&&clientWidth>1500){
+          that.diameter=100;
+        }else if(clientWidth<1500&&clientWidth>1380){
+          that.diameter=90;
+        }else if(clientWidth<1380&&clientWidth>1220){
+          that.diameter=80;
+        }else if(clientWidth<1220&&clientWidth>1020){
+          that.diameter = 50;
+        }
+      }else{
+        console.log('asdasd')
+      }
+    }
+  },
+  methods:{
+    add(){
+      this.progress+=10
+    }
+  },
+  watch:{
+    dialogFullscreen:function (val,oldVal) {
+      if(val){
+        this.diameter=170;
+        this.completedStepsStyle={
+          "font-size": "40px",
+          "font-weight": "bold"
+        };
+        this.totalStepsStyle={
+          "color":"#979797",
+            "font-size": "16px"
+        };
+        this.titleStyle={
+          "color":"#979797",
+          "font-size": "16px",
+          "width":"100%",
+          "text-align":"center",
+        }
+      }else{
+        this.diameter=110;
+        this.completedStepsStyle={
+          "font-size": "30px",
+          "font-weight": "bold"
+        };
+        this.totalStepsStyle={
+          "color":"#979797",
+          "font-size": "12px"
+        };
+        this.titleStyle={
+          "color":"#979797",
+          "font-size": "12px",
+          "width":"100%",
+          "text-align":"center",
+        }
+      }
+    }
+  }
 }
 </script>
 
 <style scoped lang="scss">
   .progressContainer{
     position: relative;
-    height: 80%;
+    height: 100%;
     width: 20px;
     background-color: #ddd;
-    margin-left: 30%;
   }
   .progress{
     background-color: #1C8DE0;
@@ -699,6 +761,7 @@ export default {
     line-height: 15px;
     position: absolute;
     bottom: 0;
+    transition: 0.5s linear;
   }
 
   .echarts {
@@ -706,13 +769,12 @@ export default {
     height: 100%;
   }
  .s-box1,.s-box2{
-   height: 50%;
+   height: 49%;
    display: flex;
    background-color: #F5F5F9;
    justify-content:space-between;
    .s-info{
-     width:20%;
-     height:260px;
+     width:22%;
      padding: 20px;
      background:rgba(255,255,255,1);
      box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
@@ -767,9 +829,8 @@ export default {
    }
 
    .s-progress{
-     width:20%;
-     height:260px;
-     padding: 20px;
+     width:22%;
+     padding: 10px 20px;
      background:rgba(255,255,255,1);
      box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
      display: flex;
@@ -777,21 +838,24 @@ export default {
      flex-direction: row;/*决定主轴的方向*/
      flex-wrap:wrap;
      .p-box{
-       height: 130px;
        flex: 0 1 50%;
-       //background-color: lightcoral;
-       color: white;
-       font-size: 20px;
-       text-align: center;
-       line-height: 100px;
+       display:flex;
+       justify-content:center;
        border: 4px solid white;
        box-sizing: border-box;
+       .p-progress{
+         .p-title{
+           width: 100%;
+           font-size: 12px;
+           color: #999999;
+           text-align: center;
+         }
+       }
      }
    }
 
    .s-chart{
      width:36.5%;
-     height:302px;
      background:rgba(255,255,255,1);
      box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
    }

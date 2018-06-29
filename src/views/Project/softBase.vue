@@ -46,15 +46,16 @@
       :visible.sync="dialogVisible"
       :width="dialogWidth"
       :fullscreen="dialogFullscreen"
-      :show-close='false'>
+      style="min-width: 1024px;"
+      >
       <ul class="t-header">
         <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
         <div class="t-handle">
-          <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-enlarge':changeIcon==true,'icon-narrow':changeIcon==false}"></i></div>
-          <div @click="close()"><i class="iconfont icon-close"></i></div>
+          <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
+          <div @click="close()"></div>
         </div>
       </ul>
-      <r-state :is="currentView" keep-alive  :data="currentView" class="t-Body" :height="viewHeight"></r-state>
+      <r-state :is="currentView" keep-alive  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight"></r-state>
     </el-dialog>
   </div>
 </template>
@@ -83,7 +84,9 @@
       return {
         dialogVisible: false,
         dialogWidth:'70%',
-        viewHeight:'800px',
+        dialogHeight:{
+          height:'580px'
+        },
         dialogFullscreen:false,
         changeIcon:true,
         radio:"",
@@ -141,13 +144,23 @@
       isFullscreen(){
         if(this.changeIcon){
           this.dialogWidth='100%';
+          this.dialogHeight={
+            height:'91%'
+          };
           this.dialogFullscreen=true;
-          this.changeIcon=!this.changeIcon
+          this.changeIcon=!this.changeIcon;
+
         }else{
           this.dialogWidth='70%';
+          this.dialogHeight={
+            height:'580px'
+          };
           this.dialogFullscreen=false;
           this.changeIcon=!this.changeIcon
         }
+      },
+      close(){
+
       }
     }
   }
@@ -157,8 +170,14 @@
   .el-dialog__header{
     padding: 0 !important;
   }
+  .el-dialog__headerbtn{
+    top:11px;
+    font-size: 21px;
+
+  }
   .el-dialog__body{
     padding: 0 !important;
+    height: 100%;
   }
   .is-fullscreen{
     background: #f5f5f9;
@@ -284,6 +303,7 @@
     }
   }
   .t-Body{
+    overflow: auto;
     padding: 20px;
     background: #f5f5f9;
   }
