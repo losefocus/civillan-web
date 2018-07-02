@@ -19,7 +19,7 @@ maven-build:
     - docker build -t="civillan-front-web" .
     - ssh test@test1.iot.v -tt docker stop civillan-front-web
     - ssh test@test1.iot.v -tt docker rm civillan-front-web
-    - ssh test@test1.iot.v -tt docker run -p 8080:8080 --name civillan-front-web -d civillan-front-web
+    - ssh test@test1.iot.v -tt docker run -p 9990:8080 --name civillan-front-web -d civillan-front-web
 
     #清除临时文件
     - ssh test@test1.iot.v -tt docker rm $(docker ps -q -f status=exited -f name=runner)
