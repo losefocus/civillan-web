@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 COPY package.json /usr/src/app/
-# RUN npm install -g cnpm --registry=https://registry.npm.taobao.org && cnpm install && cnpm run build
+RUN npm config set registry https://registry.npm.taobao.org && npm install
 COPY . /usr/src/app
 
 CMD [ "npm", "start" ]
