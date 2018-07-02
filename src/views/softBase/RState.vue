@@ -9,14 +9,24 @@
            <div class="i-company">宏远建设记录仪一号</div>
          </div>
          <div>
-           <div class="i-state">喷浆状态</div>
-           <div class="i-state">记录状态</div>
+           <div class="i-state"><i class="iconfont icon-state"></i><span>喷浆状态</span></div>
+           <div class="i-state"><i class="iconfont icon-state"></i><span>记录状态</span></div>
          </div>
        </div>
        <div class="i-start">开始时间：<span>2018-01-21 19:00</span></div>
        <div class="i-progress">
-         <div>进度：</div>
-         <el-progress :stroke-width="15" :percentage="80" color="#8DE8F0" style="width: 195px"></el-progress>
+         <div style="width: 20%">进度：</div>
+         <el-progress :stroke-width="15" :percentage="80" color="#24BCF7" style="width: 80%"></el-progress>
+       </div>
+       <div class="i-normal" v-if="isWarming">
+         未发现任何问题
+       </div>
+       <div class="i-warning" v-else>
+         <i class="iconfont icon-warming"></i>
+         <div class="w-text">
+           <p>下钻钻速超过50cm/min</p>
+           <p>下钻钻速超过50cm/min</p>
+         </div>
        </div>
      </li>
      <li class="s-chart">
@@ -35,7 +45,6 @@
              </div>
            </div>
          </div>
-
        </div>
        <div class="p-box">
          <div class="p-progress">
@@ -143,6 +152,8 @@ export default {
       timingFunc: 'linear',
 
       progress:10,
+
+      isWarming:true,
 
       PulpingQuantity:{
         title: {
@@ -684,7 +695,7 @@ export default {
   mounted(){
     const that = this;
     window.onresize = function temp() {
-      console.log(document.body.clientWidth);
+      //console.log(document.body.clientWidth);
       let clientWidth=document.body.clientWidth;
       if(!that.dialogFullscreen){
         if(clientWidth>1660){
@@ -693,13 +704,25 @@ export default {
           that.diameter=100;
         }else if(clientWidth<1500&&clientWidth>1380){
           that.diameter=90;
-        }else if(clientWidth<1380&&clientWidth>1220){
-          that.diameter=80;
-        }else if(clientWidth<1220&&clientWidth>1020){
-          that.diameter = 50;
+        }else if(clientWidth<1380){
+          that.$emit('dialogFullscreen','true')
         }
       }else{
-        console.log('asdasd')
+        if(clientWidth>1700){
+          that.diameter=170;
+        }else if(clientWidth<1700&&clientWidth>1600){
+          that.diameter=160;
+        }else if(clientWidth<1600&&clientWidth>1510){
+          that.diameter=150;
+        }else if(clientWidth<1510&&clientWidth>1420){
+          that.diameter=140;
+        }else if(clientWidth<1420&&clientWidth>1300){
+          that.diameter=120;
+        }else if(clientWidth<1300&&clientWidth>1100){
+          that.diameter=100;
+        }else if(clientWidth<1100&&clientWidth>1024){
+          that.diameter=90;
+        }
       }
     }
   },
@@ -708,10 +731,30 @@ export default {
       this.progress+=10
     }
   },
+  created(){
+
+  },
   watch:{
     dialogFullscreen:function (val,oldVal) {
+      let that=this;
+      let clientWidth=document.body.clientWidth;
       if(val){
-        this.diameter=170;
+        if(clientWidth>1700){
+          that.diameter=170;
+        }else if(clientWidth<1700&&clientWidth>1600){
+          that.diameter=160;
+        }else if(clientWidth<1600&&clientWidth>1510){
+          that.diameter=150;
+        }else if(clientWidth<1510&&clientWidth>1420){
+          that.diameter=140;
+        }else if(clientWidth<1420&&clientWidth>1300){
+          that.diameter=120;
+        }else if(clientWidth<1300&&clientWidth>1100){
+          that.diameter=100;
+        }else if(clientWidth<1100&&clientWidth>1024){
+          that.diameter=90;
+        }
+
         this.completedStepsStyle={
           "font-size": "40px",
           "font-weight": "bold"
@@ -727,7 +770,15 @@ export default {
           "text-align":"center",
         }
       }else{
-        this.diameter=110;
+        if(clientWidth>1660){
+          that.diameter=110;
+        }else if(clientWidth<1660&&clientWidth>1500){
+          that.diameter=100;
+        }else if(clientWidth<1500&&clientWidth>1380){
+          that.diameter=90;
+        }else if(clientWidth<1380){
+          that.$emit('dialogFullscreen','true')
+        }
         this.completedStepsStyle={
           "font-size": "30px",
           "font-weight": "bold"
@@ -756,7 +807,7 @@ export default {
     background-color: #ddd;
   }
   .progress{
-    background-color: #1C8DE0;
+    background-color: #24BCF7;
     width:20px;
     line-height: 15px;
     position: absolute;
@@ -773,26 +824,32 @@ export default {
    display: flex;
    background-color: #F5F5F9;
    justify-content:space-between;
+
+
    .s-info{
-     width:22%;
-     padding: 20px;
+     width:23%;
+     height: 100%;
+     padding:0 20px;
      background:rgba(255,255,255,1);
      box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+     display: flex;
+     flex-direction: column;
+     justify-content:space-around;
      .i-id{
        width:110px;
-       height:42px;
        font-size:30px;
        color:rgba(51,51,51,1);
        line-height:42px;
      }
      .i-box{
-       margin-top: 15px;
        display: flex;
        justify-content:space-between;
        .i-body{
-         width: 135px;
-         height: 35px;
-         border-right: 1px solid #979797;
+         width: 60%;
+         height: 45px;
+         line-height: 25px;
+         font-weight: bold;
+         border-right: 1px solid rgba(51,51,51,0.3);
          .i-name{
            font-size:16px;
            color:rgba(51,51,51,1);
@@ -803,15 +860,18 @@ export default {
          }
        }
        .i-state{
-         width:48px;
-         height:17px;
-         line-height: 17px;
+         line-height: 25px;
          font-size:12px;
          color:rgba(153,153,153,1);
        }
+       .icon-state{
+         font-size: 12px;
+         color: #24BCF7;
+         margin-right: 20px;
+       }
      }
+
      .i-start{
-       margin-top: 40px;
        width:100%;
        height:17px;
        font-size:12px;
@@ -819,29 +879,51 @@ export default {
        line-height:17px;
      }
      .i-progress{
-       margin-top: 17px;
        width: 100%;
        height: 15px;
        line-height: 15px;
        display: flex;
        justify-content:space-between;
      }
+     .i-normal{
+       width:100%;
+       line-height: 57px;
+       text-align: center;
+       height:57px;
+       background:rgba(141,232,240,0.06);
+     }
+     .i-warning{
+       width:100%;
+       padding-top: 10px;
+       height:47px;
+       background:rgba(248,89,89,0.06);
+       text-align: center;
+       .icon-warming{
+         vertical-align: top;
+         color: #DF2A2A;
+       }
+       .w-text{
+         margin-left: 10px;
+         vertical-align: top;
+         display: inline-block;
+       }
+     }
    }
-
    .s-progress{
-     width:22%;
-     padding: 10px 20px;
+     width:23%;
+     padding: 15px 20px;
      background:rgba(255,255,255,1);
      box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
      display: flex;
      display: -webkit-flex;
      flex-direction: row;/*决定主轴的方向*/
+     justify-content:space-around;
      flex-wrap:wrap;
      .p-box{
        flex: 0 1 50%;
        display:flex;
        justify-content:center;
-       border: 4px solid white;
+       border: 1px solid white;
        box-sizing: border-box;
        .p-progress{
          .p-title{
@@ -853,7 +935,6 @@ export default {
        }
      }
    }
-
    .s-chart{
      width:36.5%;
      background:rgba(255,255,255,1);

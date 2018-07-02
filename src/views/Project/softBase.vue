@@ -55,7 +55,7 @@
           <div @click="close()"></div>
         </div>
       </ul>
-      <r-state :is="currentView" keep-alive  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight"></r-state>
+      <r-state :is="currentView" keep-alive  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
     </el-dialog>
   </div>
 </template>
@@ -142,6 +142,7 @@
         this.currentView=this.tBody[i]
       },
       isFullscreen(){
+        console.log(this.changeIcon);
         if(this.changeIcon){
           this.dialogWidth='100%';
           this.dialogHeight={
@@ -149,7 +150,6 @@
           };
           this.dialogFullscreen=true;
           this.changeIcon=!this.changeIcon;
-
         }else{
           this.dialogWidth='70%';
           this.dialogHeight={
@@ -158,6 +158,11 @@
           this.dialogFullscreen=false;
           this.changeIcon=!this.changeIcon
         }
+      },
+      changeScreen(data){
+        console.log(data);
+        this.changeIcon=data;
+        this.isFullscreen();
       },
       close(){
 

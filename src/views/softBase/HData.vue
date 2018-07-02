@@ -8,7 +8,6 @@
   import historical from '@/views/POV/historical'
 export default {
   name: "SHistory",
-  props:['data'],
   components:{
     historical
   }
