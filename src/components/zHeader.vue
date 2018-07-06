@@ -14,7 +14,7 @@
         <el-dropdown-item>个人设置</el-dropdown-item>
         <el-dropdown-item>消息通知</el-dropdown-item>
         <el-dropdown-item>帮助中心</el-dropdown-item>
-        <el-dropdown-item>退出登录</el-dropdown-item>
+        <el-dropdown-item divided>退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
