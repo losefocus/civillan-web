@@ -8,7 +8,12 @@
         <ul id="my-list">
           <div class="pj-title">项目列表</div>
           <ul v-for="(list,index) in lists" :key="index">
-            <div @click="close(list,index)" class="list-title"  :class="{isBorder:list.show}">{{ list.city }}</div>
+            <div @click="close(list,index)" class="list-title"  :class="{isBorder:list.show}">
+              <div>{{ list.city }}</div>
+              <div>
+                <i :class="{'el-icon-caret-bottom':!list.show,'el-icon-caret-top':list.show}"></i>
+              </div>
+            </div>
             <li :id=list.id   v-show="list.show" class="list-body" ref="listBody" @click="getDom($event)"></li>
           </ul>
         </ul>
@@ -41,12 +46,16 @@
           child:[
             {
               id: 'A',
-              position: [116.405125, 39.904989],
-              desc: '北京'
+              position: [120.203358,30.258216],
+              desc: '杭州高新战略科技城区'
             },{
               id: 'B',
-              position: [116.789456, 39.904989],
-              desc: '上海'
+              position: [121.472279,31.230749],
+              desc: '上海高新战略科技城区'
+            },{
+              id: 'B1',
+              position: [87.573963,43.776682],
+              desc: '乌鲁木齐高新战略科技城区'
             }
           ]
         }, {
@@ -58,16 +67,16 @@
           child:[
             {
               id: 'C',
-              position: [116.405345, 39.904989],
-              desc: '广州'
+              position: [112.886463,28.332528],
+              desc: '长沙高新战略科技城区'
             },{
               id: 'D',
-              position: [116.784506, 39.904989],
-              desc: '天津'
+              position: [117.1162,39.171895],
+              desc: '天津高新战略科技城区'
             },{
               id: 'E',
-              position: [116.787606, 39.904989],
-              desc: '安徽'
+              position: [116.325184,39.883694],
+              desc: '北京高新战略科技城区'
             }
           ]
         }, {
@@ -79,12 +88,12 @@
           child:[
             {
               id: 'F',
-              position: [116.408985, 39.904989],
-              desc: '合肥'
+              position: [117.160145,31.867391],
+              desc: '安徽高新战略科技城区'
             },{
               id: 'G',
-              position: [116.781206, 39.904989],
-              desc: '深圳'
+              position: [114.072987,22.572528],
+              desc: '深圳高新战略科技城区'
             }
           ]
         }],
@@ -96,7 +105,7 @@
             createdBy: 1,
             endAt: 1,
             id: 1,
-            name: "北京",
+            name: "北京高新战略科技城区",
             parentId: 0,
             position: "120.128857,30.229929",
             status: 1,
@@ -112,7 +121,7 @@
             createdBy: 1,
             endAt: 1,
             id: 2,
-            name: "北京",
+            name: "北京高新战略科技城区",
             parentId: 1,
             position: "120.128857,30.229929",
             status: 1,
@@ -182,7 +191,7 @@
         let _this=this;
         let map = new AMap.Map('container', {
           center: [116.397428, 39.90923],
-          zoom: 6
+          zoom: 10
         });
         AMap.plugin(['AMap.ToolBar', 'AMap.Scale','AMap.MapType',], function () {
           map.addControl(new AMap.ToolBar());
@@ -249,18 +258,17 @@
                 //返回数据项对应的Marker
                 getMarker: function(dataItem, context, recycledMarker) {
 
-                  var content = '<div style="width:110px;\n' +
-                    'height:30px;\n' +
+                  var content = '<div style="width: auto;\n' +
                     'background:rgba(243,26,26,1);\n' +
                     'border-radius:6px;\n' +
-                    'opacity:0.75;font-size:18px;\n' +
+                    'opacity:0.75;font-size:12px;\n' +
                     'color:rgba(255,255,255,1);\n' +
-                    'line-height:30px;' +
                     'text-align: center;'+
+                    'padding: 10px;'+
                     '">' +dataItem.desc+
                     '</div>';
                   var label = {
-                    offset: new AMap.Pixel(-35, -40), //修改label相对于marker的位置
+                    offset: new AMap.Pixel(-40, -40), //修改label相对于marker的位置
                     content: content
                   };
                   //返回一个新的Marker
@@ -276,7 +284,7 @@
                 },
                 //返回数据项对应的列表节点
                 getListElement: function(dataItem, context, recycledListElement) {
-                  var tpl = '<p style="height: 35px;line-height: 35px" class=<%- dataItem.id %>><%- dataItem.id %>：<%- dataItem.desc %>';
+                  var tpl = '<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 30px;vertical-align: middle;"></i>'+'<span style="width: 260px;height: 52px;line-height: 52px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 16px;vertical-align: middle;" class=<%- dataItem.id %>><%- dataItem.desc %>';
 
                   var content = MarkerList.utils.template(tpl, {
                     dataItem: dataItem,
@@ -293,15 +301,64 @@
                   return '<li>' + content + '</li>';
                 },
                 getInfoWindow: function(dataItem, context, recycledInfoWindow) {
-                  let content='<div style="width:330px;\n' +
-                    'height:234px;\n' +
+                  let content='<div style="width:290px;\n' +
+                    'height:195px;\n' +
+
                     'background:rgba(255,255,255,1);\n' +
                     'cursor:pointer;\n'+
                     'box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);">' +
-                    '<div style="width: 330px;height: 158px;background: url(' +zImg+
-                    ')"></div>'+
-                    '<div style="width: 280px;height: 40px;padding: 12px 25px;">' +dataItem.desc+
+                    '<div style=" position: relative; width: 290px;height: 130px;background: url(' +zImg+
+                    ')">' +
+
+                    '<div style="width:120px;\n' +
+                    'height:27px;\n' +
+                    'background:rgba(243,26,26,0.8);\n' +
+                    'border-radius:100px 0px 0px 100px;\n' +
+                    'position:absolute;right: 0;bottom: 10px;color: #ffffff;text-align: center;line-height: 27px;font-size: 12px;">2018-10-21 12:00</div>'+
                     '</div>'+
+                    '<div style="width: 90%;padding-left: 15px">' +
+                    '<div style="width: 230px;height: 36px;font-size:16px;line-height: 36px;font-weight: bold;font-family:PingFangSC-Medium;">' +dataItem.desc+
+                    '</div>'+
+                    '<div style="display: flex;justify-content: space-between;width: 100%;">' +
+                    '<div style="width:46px;\n' +
+                    'height:19px;\n' +
+                    'font-size :12px;\n' +
+                    'text-align :center;\n' +
+                    'line-height :19px;\n' +
+                    'color :#ffffff;\n' +
+                    'background:rgba(233,78,78,1);\n' +
+                    'border-radius:2px;">软基</div>'+'<div style="width:46px;\n' +
+                    'height:19px;\n' +
+                    'font-size :12px;\n' +
+                    'text-align :center;\n' +
+                    'line-height :19px;\n' +
+                    'color :#ffffff;\n' +
+                    'background:rgba(173,173,173,1);\n' +
+                    'border-radius:2px;">路面</div>'+'<div style="width:46px;\n' +
+                    'height:19px;\n' +
+                    'font-size :12px;\n' +
+                    'text-align :center;\n' +
+                    'line-height :19px;\n' +
+                    'color :#ffffff;\n' +
+                    'background:rgba(173,173,173,1);\n' +
+                    'border-radius:2px;">桥梁</div>'+'<div style="width:46px;\n' +
+                    'height:19px;\n' +
+                    'font-size :12px;\n' +
+                    'text-align :center;\n' +
+                    'line-height :19px;\n' +
+                    'color :#ffffff;\n' +
+                    'background:rgba(173,173,173,1);\n' +
+                    'border-radius:2px;">试验室</div>'+'<div style="width:46px;\n' +
+                    'height:19px;\n' +
+                    'font-size :12px;\n' +
+                    'text-align :center;\n' +
+                    'line-height :19px;\n' +
+                    'color :#ffffff;\n' +
+                    'background:rgba(173,173,173,1);\n' +
+                    'border-radius:2px;">拌和站</div>' +
+                    '</div>'
+                    '</div>'
+
                     '</div>';
 
                   //返回一个新的InfoWindow
@@ -325,10 +382,10 @@
               //创建一个SquarePin，显示在选中的Marker位置
               var svgMarker = new SvgMarker(
                 new SvgMarker.Shape.IconFont({
-                  symbolJs: '//at.alicdn.com/t/font_716432_vviuodo293a.js',
-                  icon:'icon-map5',
-                  size:65,
-                  offset: [-35, -35],
+                  symbolJs: '//at.alicdn.com/t/font_716432_na8vly768ks.js',
+                  icon:'icon-track1',
+                  size:50,
+                  offset: [-23, -30],
                 }));
 
 
@@ -442,18 +499,22 @@
     .pj-title{
       width: 100%;
       height: 40px;
+      margin-bottom: 30px;
       font-size: 26px;
       text-align: center;
     }
     .list-title{
-      height: 30px;
+      height: 35px;
       border-bottom: 1px solid rgba(255,255,255,.5);
-      margin-top: 10px;
+      margin-top: 20px;
+      font-size: 18px;
+      display: flex;
+      justify-content: space-between;
     }
     .list-body{
-      width: 220px;
+      width: 260px;
       margin-left: -30px;
-      padding: 0 50px;
+      padding: 0 30px;
       background:rgba(0,0,0,.1);
     }
     .isBorder{

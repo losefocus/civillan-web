@@ -40,6 +40,9 @@
     },
     mounted(){
       this.title=this.$route.name;
+      if(!this.$route.name){
+        this.title='项目总览'
+      }
     },
     methods:{
       change(msg){
@@ -49,7 +52,7 @@
     watch:{
       $route(){
         this.title=this.$route.name;
-        if(this.$route.name==''){
+        if(!this.$route.name){
           this.title='项目总览'
         }
       }
@@ -59,7 +62,7 @@
 
 <style scoped lang="scss">
   .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.2s;
+    transition: opacity 0.3s;
   }
   .fade-enter, .fade-leave-to {
     opacity: 0;
@@ -79,8 +82,10 @@
     }
     .b-title{
       float: left;
-      width: 100px;
+      width: 115px;
       height: 26px;
+      line-height: 28px;
+      font-size: 22px;
       font-weight: bold;
       border-left: 4px solid #F31A1A;
     }

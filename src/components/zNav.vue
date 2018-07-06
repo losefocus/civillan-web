@@ -139,7 +139,7 @@ export default {
     #resize{
       transition: 0.4s all ease;
       position: absolute;
-      top: 600px;
+      top: 700px;
       right: 30px;
       cursor: pointer;
       width: 24px;
@@ -210,7 +210,7 @@ export default {
         color: #4F5059;
         overflow: hidden;
         .nav-icon{
-          padding-top: 12px;
+          padding-top: 15px;
           text-align: center;
           i{
             font-size: 25px;

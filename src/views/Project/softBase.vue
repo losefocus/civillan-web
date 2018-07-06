@@ -9,7 +9,7 @@
       <waterfall-slot
         v-for="(item, index) in items"
         :width="210"
-        :height="190"
+        :height="220"
         :order="index"
         :key="item.id"
         move-class="item-move"
@@ -201,7 +201,7 @@
     top: 0;
     left: 0;
     right: 30px;
-    bottom: 20px;
+    bottom: 30px;
     font-size: 0.9em;
     box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
     cursor: pointer;
@@ -222,8 +222,8 @@
     background: #ffffff;
     padding-left: 25px;
     .r-state{
-      width: 42%;
-      height: 40%;
+      width: 38%;
+      height: 32%;
       float: right;
       text-align: right;
       .r-stateText{
@@ -232,9 +232,9 @@
         margin: 6% 3%;
       }
     }
-    .r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: cover;}
-    .r-state2{background: url(../../assets/device/break.png) no-repeat;background-size: cover;}
-    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: cover;}
+    .r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: 100% 100%;}
+    .r-state2{background: url(../../assets/device/break.png) no-repeat;background-size: 100% 100%;}
+    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: 100% 100%;}
 
     .d-name{
       color: #333333;
@@ -277,6 +277,7 @@
       .d-type3{background: url(../../assets/device/highPressureJet.png)no-repeat center;background-size: cover;}
     }
   }
+
   .t-header{
     height: 45px;
     background: #ffffff;

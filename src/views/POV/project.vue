@@ -11,6 +11,7 @@
     name: "project",
     data () {
       return {
+
       };
     },
     methods: {

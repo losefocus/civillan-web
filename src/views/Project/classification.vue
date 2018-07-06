@@ -1,10 +1,10 @@
 <template>
   <div>
     <waterfall
-      :line-gap="350"
-      :min-line-gap="300"
-      :max-line-gap="400"
-      :single-max-width="400"
+      :line-gap="300"
+      :min-line-gap="250"
+      :max-line-gap="350"
+      :single-max-width="350"
       :watch="items">
       <!-- each component is wrapped by a waterfall slot -->
       <waterfall-slot
@@ -15,9 +15,9 @@
         :key="item.id"
         move-class="item-move"
       >
-        <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.path)">
-          <div class="pj-img">
-            <div class="pj-mask">
+        <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.path,item.title)">
+          <div class="pj-img" :style="{ 'background-image': 'url(' + item.ImgUrl + ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
+            <div class="pj-mask" >
               <span>{{item.title}}</span>
             </div>
           </div>
@@ -37,7 +37,7 @@
       </waterfall-slot>
     </waterfall>
     <el-row>
-      <el-col :span="6">
+      <el-col :span="6"  style="border-right: 1px solid rgba(230,234,238,1);">
         <h1>杭州市余杭区G80标段项目</h1>
         <div class="pj-details">
           <p>
@@ -47,7 +47,6 @@
       </el-col>
       <el-col :span="6">
         <div class="t-limit">
-
           <el-progress type="circle" :percentage="20" color="#F03E41"></el-progress>
           <p class="t-interval">2018-04-08 至 2018-06-06</p>
         </div>
@@ -85,6 +84,12 @@
 <script>
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
+  import Bus from '@/assets/eventBus'
+  import softBase from '@/assets/project/softBase.png'
+  import subgradePavement from '@/assets/project/subgradePavement.png'
+  import bridgeEngineering from '@/assets/project/bridgeEngineering.png'
+  import testRoom from '@/assets/project/testRoom.png'
+  import mixingStation from '@/assets/project/mixingStation.png'
   export default {
     name: "project",
     components: {
@@ -94,15 +99,19 @@
     data () {
       return {
         line: 'v',
+        imgArr:[
+          softBase,
+          subgradePavement,
+          bridgeEngineering,
+          testRoom,
+          mixingStation,
+        ],
         items: [
           { id:1,
             title:'软基处理',
             path:'/project/softBase',
+            ImgUrl:softBase,
             lists:[{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
               a:'双头搅拌桩',
               b:'6',
               c:'10'
@@ -127,11 +136,8 @@
           { id:2,
             title:'路基路面',
             path:'/project/softBase',
+            ImgUrl:subgradePavement,
             lists:[{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
               a:'双头搅拌桩',
               b:'6',
               c:'10'
@@ -156,11 +162,8 @@
           { id:3,
             title:'桥梁工程',
             path:'/project/softBase',
+            ImgUrl:bridgeEngineering,
             lists:[{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
               a:'双头搅拌桩',
               b:'6',
               c:'10'
@@ -184,12 +187,9 @@
           },
           { id:4,
           title:'实验室',
-            path:'/project/softBase',
+          path:'/project/softBase',
+          ImgUrl:testRoom,
           lists:[{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
             a:'双头搅拌桩',
             b:'6',
             c:'10'
@@ -214,11 +214,8 @@
           { id:5,
           title:'拌和站',
           path:'/project/softBase',
+          ImgUrl:mixingStation,
           lists:[{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
             a:'双头搅拌桩',
             b:'6',
             c:'10'
@@ -254,14 +251,21 @@
           zoom: 6
         });
       },
-      jump(path){
-        this.$router.push(path)
+      jump(path,title){
+        this.$router.push(path);
+        Bus.$emit('Title', title);
       }
     }
   }
 </script>
+<style>
+  .el-main{
+    padding:24px 64px 0 60px;
+  }
+</style>
 
 <style scoped lang="scss">
+
   .item-move {
     transition: all .4s cubic-bezier(.55,0,.1,1);
     -webkit-transition: all .4s cubic-bezier(.55,0,.1,1);
@@ -272,7 +276,7 @@
     top: 0;
     left: 0;
     right: 30px;
-    bottom: 20px;
+    bottom: 30px;
     font-size: 0.9em;
     color: #666666;
     box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
@@ -282,8 +286,6 @@
       height: 160px;
       line-height: 160px;
       color: #ffffff;
-      background: url(../../assets/project/softBase.png) no-repeat;
-      background-size: 100% 100%;
       text-align: center;
       font-size: 26px;
       .pj-mask{
