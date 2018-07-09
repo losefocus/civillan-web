@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-left: 3%">
     <waterfall
       :line-gap="300"
       :min-line-gap="250"
@@ -36,48 +36,51 @@
         </div>
       </waterfall-slot>
     </waterfall>
-    <el-row>
-      <el-col :span="6"  style="border-right: 1px solid rgba(230,234,238,1);">
+    <div class="p-box">
+      <div class="p-item" style="width: 300px;margin-bottom: 30px;">
         <h1>杭州市余杭区G80标段项目</h1>
         <div class="pj-details">
           <p>
             杭州高新战略科技城项目是由杭州市政府主导的一个高新战略科技项目，项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情目详情项目详情项目详情项目详情项目详情项目详情
           </p>
         </div>
-      </el-col>
-      <el-col :span="6">
+      </div>
+      <div class="p-item" style="width: 200px;margin-bottom: 30px;">
         <div class="t-limit">
           <el-progress type="circle" :percentage="20" color="#F03E41"></el-progress>
           <p class="t-interval">2018-04-08 至 2018-06-06</p>
         </div>
+      </div>
 
-      </el-col>
-      <el-col :span="3">
-        <div class="c-info c-infoM">
-          <h2>业主单位</h2>
-          <p>浙江科技有限公司</p>
-          <p><span class="l-man">张三</span><span>180420302112</span></p>
+      <div class="i-box p-item" style="margin-bottom: 30px;">
+        <div style="width: 150px">
+          <div class="c-info c-infoM">
+            <h2>业主单位</h2>
+            <p>浙江科技有限公司</p>
+            <p><span class="l-man">张三</span><span>180420302112</span></p>
+          </div>
+          <div class="c-info">
+            <h2>监理单位</h2>
+            <p>杭州市城管局</p>
+            <p><span class="l-man">张三</span><span>180420302112</span></p>
+          </div>
         </div>
-        <div class="c-info">
-          <h2>监理单位</h2>
-          <p>杭州市城管局</p>
-          <p><span class="l-man">张三</span><span>180420302112</span></p>
+        <div style="width:150px">
+          <div class="c-info c-infoM">
+            <h2>建设单位</h2>
+            <p>浙江科技有限公司</p>
+            <p><span class="l-man">张三</span><span>180420302112</span></p>
+          </div>
+          <div class="c-info">
+            <h2>设计单位</h2>
+            <p>杭州市城管局</p>
+            <p><span class="l-man">张三</span><span>180420302112</span></p>
+          </div>
         </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="c-info c-infoM">
-          <h2>建设单位</h2>
-          <p>浙江科技有限公司</p>
-          <p><span class="l-man">张三</span><span>180420302112</span></p>
-        </div>
-        <div class="c-info">
-          <h2>设计单位</h2>
-          <p>杭州市城管局</p>
-          <p><span class="l-man">张三</span><span>180420302112</span></p>
-        </div>
-      </el-col>
-      <el-col :span="6"><div id="AMap"></div></el-col>
-    </el-row>
+      </div>
+
+      <div class="p-item" style="width: 250px;margin-bottom: 30px;"><div id="AMap"></div></div>
+    </div>
   </div>
 </template>
 
@@ -242,7 +245,7 @@
       };
     },
     mounted(){
-      this.init()
+      this.init();
     },
     methods: {
       init:function () {
@@ -258,14 +261,12 @@
     }
   }
 </script>
-<style>
-  .el-main{
-    padding:24px 64px 0 60px;
-  }
-</style>
 
 <style scoped lang="scss">
 
+  .el-mian{
+
+  }
   .item-move {
     transition: all .4s cubic-bezier(.55,0,.1,1);
     -webkit-transition: all .4s cubic-bezier(.55,0,.1,1);
@@ -328,14 +329,15 @@
     opacity: 0;
   }
 
-  .el-row {
-    width: 98.5%;
-    padding: 30px;
+  .p-box {
+    width: 94%;
+    padding: 30px 30px 0  30px;
     background: #ffffff;
     margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
+    display: flex;
+    justify-content: space-between;
+    flex-flow:row  wrap;
+
     .pj-details{
       margin-top: 16px;
       width:285px;
@@ -356,20 +358,26 @@
         color: #666666;
       }
     }
-    .c-info{
-      p{
-        margin-top: 8px;
-        font-size:12px;
-        color:rgba(102,102,102,1);
-        line-height:17px;
+    .i-box{
+      display: flex;
+      justify-content: space-between;
+      .c-info{
+        p{
+          margin-top: 8px;
+          font-size:12px;
+          color:rgba(102,102,102,1);
+          line-height:17px;
+        }
+      }
+      .c-infoM{
+        margin-bottom: 24px;
+      }
+      .l-man{
+        margin-right: 12px;
       }
     }
-    .c-infoM{
-      margin-bottom: 24px;
-    }
-    .l-man{
-      margin-right: 12px;
-    }
+
+
     #AMap{
       width: 100%;
       height: 180px;

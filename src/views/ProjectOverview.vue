@@ -8,8 +8,9 @@
         <z-nav></z-nav>
         <el-main>
           <div class="breadcrumb-box">
-            <div class="b-title">{{ title }}</div>
+            <div :class="{'b-title':isActive}">{{ title }}</div>
             <div class="el-breadcrumb">
+
               <z-bread></z-bread>
             </div>
           </div>
@@ -35,13 +36,17 @@
     },
     data(){
       return{
-        title:''
+        title:'',
+        isActive:true,
       }
     },
     mounted(){
       this.title=this.$route.name;
       if(!this.$route.name){
-        this.title='项目总览'
+        this.title='';
+        this.isActive=false;
+      }else {
+        this.isActive=true;
       }
     },
     methods:{
@@ -53,13 +58,20 @@
       $route(){
         this.title=this.$route.name;
         if(!this.$route.name){
-          this.title='项目总览'
+          this.title='';
+          this.isActive=false;
+        }else {
+          this.isActive=true;
         }
       }
     }
   }
 </script>
-
+<style>
+  .el-aside::-webkit-scrollbar-button {
+    background-color:#FF7677;
+  }
+</style>
 <style scoped lang="scss">
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.3s;
@@ -73,6 +85,11 @@
   .el-aside{
     height: 100%;
   }
+
+
+
+
+
   .breadcrumb-box{
     width: 100%;
     height: 80px;
@@ -89,6 +106,7 @@
       font-weight: bold;
       border-left: 4px solid #F31A1A;
     }
+
   }
   .el-main{
     height: 100%;

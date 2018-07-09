@@ -39,12 +39,16 @@
    <ul class="s-box2">
      <li class="s-progress">
        <div class="p-box">
-         <div style="height: 80%">
-           <div class="progressContainer">
-             <div class="progress" :style="{height:progress+'%'}">
+         <div style="height: 80%;background: #F85959">
+           <div style="height: 80%;">
+             <div class="progressContainer">
+               <div class="progress" :style="{height:(100-progress)+'%'}">
+               </div>
              </div>
            </div>
+
          </div>
+         <div class="p-name" :style="titleStyle">深度</div>
        </div>
        <div class="p-box">
          <div class="p-progress">
@@ -137,9 +141,11 @@ export default {
       },
       titleStyle:{
         "color":"#979797",
-        "width":"100%",
+        "width":"78%",
         "text-align":"center",
-        "font-size": "12px"
+        "font-size": "12px",
+        "position":"absolute",
+        "bottom":"0"
       },
       completedSteps:3,
       totalSteps: 20,
@@ -151,7 +157,7 @@ export default {
       innerStrokeColor: 'rgba(151,151,151,0.3)',
       timingFunc: 'linear',
 
-      progress:10,
+      progress:20,
 
       isWarming:true,
 
@@ -694,9 +700,9 @@ export default {
   props:['dialogFullscreen'],
   mounted(){
     const that = this;
+    let clientWidth=document.body.clientWidth;
     window.onresize = function temp() {
       //console.log(document.body.clientWidth);
-      let clientWidth=document.body.clientWidth;
       if(!that.dialogFullscreen){
         if(clientWidth>1660){
           that.diameter=110;
@@ -766,8 +772,10 @@ export default {
         this.titleStyle={
           "color":"#979797",
           "font-size": "16px",
-          "width":"100%",
+          "width":"78%",
           "text-align":"center",
+          "position":"absolute",
+          "bottom":"0"
         }
       }else{
         if(clientWidth>1660){
@@ -790,8 +798,10 @@ export default {
         this.titleStyle={
           "color":"#979797",
           "font-size": "12px",
-          "width":"100%",
+          "width":"78%",
           "text-align":"center",
+          "position":"absolute",
+          "bottom":"0"
         }
       }
     }
@@ -804,10 +814,10 @@ export default {
     position: relative;
     height: 100%;
     width: 20px;
-    background-color: #ddd;
+    background-color: #24BCF7;
   }
   .progress{
-    background-color: #24BCF7;
+    background-color: #ddd;
     width:20px;
     line-height: 15px;
     position: absolute;
@@ -920,6 +930,7 @@ export default {
      justify-content:space-around;
      flex-wrap:wrap;
      .p-box{
+       position: relative;
        flex: 0 1 50%;
        display:flex;
        justify-content:center;
@@ -931,7 +942,14 @@ export default {
            font-size: 12px;
            color: #999999;
            text-align: center;
+           position: relative;
          }
+       }
+       .p-name{
+         position: absolute;
+         bottom: 0;
+         font-size:16px;
+         color:rgba(151,151,151,1);
        }
      }
    }

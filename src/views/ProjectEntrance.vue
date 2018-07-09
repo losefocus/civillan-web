@@ -275,16 +275,18 @@
                   return new SimpleMarker({
                     //前景文字
                     label: label,
+                    showPositionPoint: true,
                     iconStyle:{
                       src:state
                     },
+                    offset: new AMap.Pixel(-22, -50),
                     map: map,
                     id:dataItem.id
                   });
                 },
                 //返回数据项对应的列表节点
                 getListElement: function(dataItem, context, recycledListElement) {
-                  var tpl = '<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 30px;vertical-align: middle;"></i>'+'<span style="width: 260px;height: 52px;line-height: 52px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 16px;vertical-align: middle;" class=<%- dataItem.id %>><%- dataItem.desc %>';
+                  var tpl ='<p class=<%- dataItem.id %>>'+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'+'<span style="width: 260px;height: 42px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 16px;vertical-align: middle;" class=<%- dataItem.id %>><%- dataItem.desc %>'+'</span>'+'</p>';
 
                   var content = MarkerList.utils.template(tpl, {
                     dataItem: dataItem,
@@ -364,7 +366,7 @@
                   //返回一个新的InfoWindow
                   return new AMap.InfoWindow({
                     autoMove: true,
-                    offset: new AMap.Pixel(0, -30),
+                    offset: new AMap.Pixel(-5, -34),
                     content: content,
                   });
                 }
@@ -380,22 +382,30 @@
 
               //监听选中改变
               //创建一个SquarePin，显示在选中的Marker位置
+              /*var svgMarker = new SvgMarker(
+                new SvgMarker.Shape.IconFont({
+
+                  icon:'icon-track1',
+                  size:50,
+                }));*/
               var svgMarker = new SvgMarker(
                 new SvgMarker.Shape.IconFont({
                   symbolJs: '//at.alicdn.com/t/font_716432_na8vly768ks.js',
                   icon:'icon-track1',
+                  strokeWidth: 1,
                   size:50,
-                  offset: [-23, -30],
-                }));
+                }), {
+                  containerClassNames: 'my-svg-marker',
+                  showPositionPoint: true
+                });
 
 
               markerList.on('selectedChanged', function(event, changedInfo) {
-                var selectedRecord = changedInfo.selected,
-                  marker;
 
+                /*var selectedRecord = changedInfo.selected,
+                  marker;
                 if(_unSelected.id){
                   map.remove(_unSelected);
-
                   marker = selectedRecord.marker;
                   marker.hide();
                   _markerShow.show();
@@ -414,27 +424,26 @@
 
                   svgMarker.getOffset([-300,-100]);
                   svgMarker.setMap(marker.getMap());
-                  svgMarker.setMap(marker.getMap());
                   svgMarker.setPosition(marker.getPosition());
                   //svgMarker.setIconLabel(selectedRecord.id);
                   svgMarker.show();
 
                   _unSelected=svgMarker;
                   _unSelected.id='1'
-                }
+                }*/
               });
 
               markerList.on('infoWindowClick',function (event,info) {
                 _this.$router.push('project')
               });
 
-              markerList.on('markerClick',function (event) {
-                $('#my-list ul li li').removeClass('selected');
+              markerList.on('markerClick',function (event,info) {
+                /*$('#my-list ul li li').removeClass('selected');
                 for (var i=0;i<$('#my-list p').length;i++){
                   if($('#my-list p').eq(i).hasClass(event.target.opts.id)){
                     $('#my-list p').eq(i).parent().addClass('selected');
                   }
-                }
+                }*/
                 _lists.forEach(function (i) {
                   if(item.id!==i.id){
                     i.show=false
@@ -461,7 +470,7 @@
       getDom:function (e) {
         $('#my-list ul li li').removeClass('selected');
         for (var i=0;i<$('#my-list p').length;i++){
-          if($('#my-list p').eq(i).hasClass(e.target.className)){
+            if($('#my-list p').eq(i).hasClass(e.target.className)){
             $('#my-list p').eq(i).parent().addClass('selected');
           }
         }
@@ -482,9 +491,11 @@
     color: black;
   }
   #container{
+    border-top: 1px solid #e0e0e0;
     position: relative;
   }
   #my-list{
+
     cursor: pointer;
     position: absolute;
     z-index: 2;

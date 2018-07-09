@@ -54,9 +54,9 @@ export default {
           formatter: "{a} <br/>{b}: {c} ({d}%)"
         },
         legend: {
-          orient: 'horizontal',
+          orient: 'vertical',
           x: 'left',
-          itemGap: 60,
+          itemGap: 15,
           data:['报警机故障','邮件营销','联盟广告','视频广告']
         },
         series: [

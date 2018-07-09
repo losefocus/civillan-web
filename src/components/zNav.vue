@@ -146,6 +146,26 @@ export default {
       height: 21px;
     }
   }
+  .el-aside::-webkit-scrollbar {/*滚动条整体样式*/
+    width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+    background: #ffffff;
+  }
+  .el-aside::-webkit-scrollbar-button{
+    background: rgba(0,0,0,0.2);
+  }
+  .el-aside::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+  }
+  .el-aside::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+  }
+
+
   .fade-enter-active,.fade-leave-active{
     transition: 0.6s all ease;
   }

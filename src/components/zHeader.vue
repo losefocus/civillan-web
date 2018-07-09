@@ -6,7 +6,7 @@
   <img src="@/assets/header/label_close.png" class="hd-right hd-close">
   <div class="hd-uName hd-right">
     <el-dropdown trigger="click" placement="bottom">
-      <span class="el-dropdown-link">
+      <span class="el-dropdown-link" style="cursor: pointer">
         <div class="u-name">用户名</div><i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
@@ -20,7 +20,7 @@
   </div>
   <img src="@/assets/header/userImg.png" class="hd-right hd-portrait">
   <div class="p-box hd-right" style="font-size: 28px;color: #E6EAEE;margin-right: 35px;vertical-align: middle;">|</div>
-  <div @click="getMessage()" class="p-box hd-right" style="margin-right: 35px">
+  <div @click="getMessage()" class="p-box hd-right" style="margin-right: 35px;cursor: pointer;">
     <el-badge :value=num :max="99" class="item" :hidden='false'>
       <el-tooltip class="item" effect="dark" content="消息通知" placement="bottom">
         <i class="iconfont icon-message"></i>
@@ -165,10 +165,10 @@
     float: right;
   }
   .hd-logo{
-    width: 155px;
-    height: 100%;
+    width: 183px;
+    height: 41px;
     background: url("../../static/img/login/logo.png") no-repeat;
-    background-size: 100% 100%;
+    background-size: cover;
   }
   .hd-name{
     width: 162px;
@@ -189,6 +189,7 @@
   }
   .hd-close{
     margin: 13px 10px 0 30px;
+    cursor: pointer;
   }
   .p-box{
     text-decoration: none;
