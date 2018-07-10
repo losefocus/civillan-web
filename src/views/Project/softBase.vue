@@ -18,12 +18,12 @@
           <div class="r-state" :class="{'r-state1':item.running==0,'r-state2':item.running==1,'r-state3':item.running==2}">
           </div>
           <div class="d-name">
+            <span>{{item.name}}</span>
+          </div>
+          <div class="d-title">
             <span v-if="item.device==0">搅拌桩</span>
             <span v-if="item.device==1">双头搅拌桩</span>
             <span v-if="item.device==2">高压旋桩</span>
-          </div>
-          <div class="d-title">
-            宏远建设记录仪
           </div>
           <ul class="d-info">
             <li class="d-img" :class="{'d-type1':item.device==0,'d-type2':item.device==1,'d-type3':item.device==2}"></li>
@@ -52,7 +52,6 @@
         <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
         <div class="t-handle">
           <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
-          <div @click="close()"></div>
         </div>
       </ul>
       <r-state :is="currentView" keep-alive  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
@@ -92,24 +91,24 @@
         radio:"",
         line: 'v',
         items: [
-          {id:1,running:1,runningText:'断线中',device:1},
-          {id:2,running:0,runningText:'运行中',device:0},
-          {id:3,running:2,runningText:'故障中',device:2},
-          {id:4,running:0,runningText:'运行中',device:1},
-          {id:5,running:1,runningText:'断线中',device:2},
-          {id:7,running:2,runningText:'故障中',device:0},
-          {id:8,running:0,runningText:'运行中',device:1},
-          {id:9,running:2,runningText:'故障中',device:2},
-          {id:10,running:1,runningText:'断线中',device:1},
-          {id:11,running:0,runningText:'运行中',device:1},
-          {id:12,running:1,runningText:'断线中',device:1},
-          {id:13,running:0,runningText:'运行中',device:0},
-          {id:14,running:2,runningText:'故障中',device:2},
-          {id:15,running:0,runningText:'运行中',device:1},
-          {id:16,running:1,runningText:'断线中',device:2},
-          {id:17,running:2,runningText:'故障中',device:0},
-          {id:18,running:0,runningText:'运行中',device:1},
-          {id:19,running:2,runningText:'故障中',device:2}
+          {id:1,running:1,runningText:'断线中',device:1,name:'我是名字'},
+          {id:2,running:0,runningText:'运行中',device:0,name:'我是名字'},
+          {id:3,running:2,runningText:'故障中',device:2,name:'我是名字'},
+          {id:4,running:0,runningText:'运行中',device:1,name:'我是名字'},
+          {id:5,running:1,runningText:'断线中',device:2,name:'我是名字'},
+          {id:7,running:2,runningText:'故障中',device:0,name:'我是名字'},
+          {id:8,running:0,runningText:'运行中',device:1,name:'我是名字'},
+          {id:9,running:2,runningText:'故障中',device:2,name:'我是名字'},
+          {id:10,running:1,runningText:'断线中',device:1,name:'我是名字'},
+          {id:11,running:0,runningText:'运行中',device:1,name:'我是名字'},
+          {id:12,running:1,runningText:'断线中',device:1,name:'我是名字'},
+          {id:13,running:0,runningText:'运行中',device:0,name:'我是名字'},
+          {id:14,running:2,runningText:'故障中',device:2,name:'我是名字'},
+          {id:15,running:0,runningText:'运行中',device:1,name:'我是名字'},
+          {id:16,running:1,runningText:'断线中',device:2,name:'我是名字'},
+          {id:17,running:2,runningText:'故障中',device:0,name:'我是名字'},
+          {id:18,running:0,runningText:'运行中',device:1,name:'我是名字'},
+          {id:19,running:2,runningText:'故障中',device:2,name:'我是名字'}
         ],
         tHeader:[
           {name:'运行状况'},
@@ -296,7 +295,7 @@
       width: 60px;
       height: 45px;
       line-height: 45px;
-      margin-right: 20px;
+      margin-right: 30px;
       display: flex;
       justify-content: space-around;
       div{

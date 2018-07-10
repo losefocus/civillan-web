@@ -279,7 +279,7 @@
                     iconStyle:{
                       src:state
                     },
-                    offset: new AMap.Pixel(-22, -50),
+                    offset: new AMap.Pixel(-19, -50),
                     map: map,
                     id:dataItem.id
                   });

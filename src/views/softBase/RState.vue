@@ -1,114 +1,153 @@
 <template>
  <div>
-   <ul class="s-box1">
-     <li class="s-info">
-       <div class="i-id">NB-001</div>
-       <div class="i-box">
-         <div class="i-body">
-           <div class="i-name">双头搅拌设备</div>
-           <div class="i-company">宏远建设记录仪一号</div>
+   <div class="r-box">
+     <div class="t-box" :class="{'t-box1':classChange==1}">
+       <div class="r-stateTab" :class="{'tabActive':!isTab}" @click="tabChange(0)">运行状况</div>
+       <div class="p-designTab" :class="{'tabActive':isTab}" @click="tabChange(1)">桩设计值</div>
+     </div>
+     <ul class="s-box1">
+       <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
+         <div class="i-id">NB-001</div>
+         <div class="i-box">
+           <div class="i-body">
+             <div class="i-name">双头搅拌设备</div>
+             <div class="i-company">宏远建设记录仪一号</div>
+           </div>
+           <div>
+             <div class="i-state"><i class="iconfont icon-state"></i><span>喷浆状态</span></div>
+             <div class="i-state"><i class="iconfont icon-state"></i><span>记录状态</span></div>
+           </div>
          </div>
-         <div>
-           <div class="i-state"><i class="iconfont icon-state"></i><span>喷浆状态</span></div>
-           <div class="i-state"><i class="iconfont icon-state"></i><span>记录状态</span></div>
+         <div class="i-start">开始时间：<span>2018-01-21 19:00</span></div>
+         <div class="i-progress">
+           <div class="i-progressName" style="width: 20%">进度：</div>
+           <el-progress :stroke-width="15" :percentage="80" color="#24BCF7" style="width: 80%"></el-progress>
          </div>
-       </div>
-       <div class="i-start">开始时间：<span>2018-01-21 19:00</span></div>
-       <div class="i-progress">
-         <div style="width: 20%">进度：</div>
-         <el-progress :stroke-width="15" :percentage="80" color="#24BCF7" style="width: 80%"></el-progress>
-       </div>
-       <div class="i-normal" v-if="isWarming">
-         未发现任何问题
-       </div>
-       <div class="i-warning" v-else>
-         <i class="iconfont icon-warming"></i>
-         <div class="w-text">
-           <p>下钻钻速超过50cm/min</p>
-           <p>下钻钻速超过50cm/min</p>
+         <div class="i-normal" v-if="isWarming">
+           未发现问题
          </div>
-       </div>
-     </li>
-     <li class="s-chart">
-       <chart :options="PulpingQuantity" :auto-resize=true></chart>
-     </li>
-     <li class="s-chart">
-       <chart :options="ElectricCurrent" :auto-resize=true></chart>
-     </li>
-   </ul>
-   <ul class="s-box2">
-     <li class="s-progress">
-       <div class="p-box">
-         <div style="height: 80%;background: #F85959">
-           <div style="height: 80%;">
-             <div class="progressContainer">
-               <div class="progress" :style="{height:(100-progress)+'%'}">
+         <div class="i-warning" v-else>
+           <i class="iconfont icon-warming"></i>
+           <div class="w-text">
+             <p>下钻钻速超过50cm/min</p>
+             <p>下钻钻速超过50cm/min</p>
+           </div>
+         </div>
+       </li>
+       <li class="s-info" :class="{'s-info1':classChange==1}" v-else="!isTab">
+         <div class="d-name">
+           <i class="iconfont icon-pie"></i>
+           <span>桩设计参考值</span>
+         </div>
+         <div class="d-box">
+           <div>
+             <span class="d-key">桩间距：</span>
+             <span class="d-value">30</span>
+           </div>
+           <div>
+             <span class="d-key">设计灰量：</span>
+             <span class="d-value">30</span>
+           </div>
+           <div>
+             <span class="d-key">桩径：</span>
+             <span class="d-value">30</span>
+           </div>
+           <div>
+             <span class="d-key">设计水灰比：</span>
+             <span class="d-value">30</span>
+           </div>
+           <div>
+             <span class="d-key">桩长：</span>
+             <span class="d-value">30</span>
+           </div>
+           <div>
+             <span class="d-key">工艺：</span>
+             <span class="d-value">工艺</span>
+           </div>
+         </div>
+       </li>
+       <li class="s-chart" v-if="isRouterAlive">
+         <chart :options="PulpingQuantity" :auto-resize=true></chart>
+       </li>
+       <li class="s-chart" v-if="isRouterAlive">
+         <chart :options="ElectricCurrent" :auto-resize=true></chart>
+       </li>
+     </ul>
+     <ul class="s-box2">
+       <li class="s-progress" :class="{'s-progress1':classChange==1}">
+         <div class="p-box">
+           <div style="height: 80%;background: #F85959">
+             <div style="height: 80%;">
+               <div class="progressContainer">
+                 <div class="progress" :style="{height:(100-progress)+'%'}">
+                 </div>
                </div>
              </div>
-           </div>
 
+           </div>
+           <div class="p-name">深度</div>
          </div>
-         <div class="p-name" :style="titleStyle">深度</div>
-       </div>
-       <div class="p-box">
-         <div class="p-progress">
-           <radial-progress-bar :diameter="diameter"
-                                :total-steps="totalSteps"
-                                :completed-steps="completedSteps"
-                                :animate-speed="animateSpeed"
-                                :stroke-width="strokeWidth"
-                                :start-color="startColor"
-                                :stop-color="stopColor"
-                                :inner-stroke-color="innerStrokeColor"
-                                :timing-func="timingFunc">
-             <p><span :style="completedStepsStyle">{{ completedSteps }}</span> <span :style="totalStepsStyle">/{{ totalSteps }}</span></p>
-             <p :style="totalStepsStyle">cm/min</p>
-           </radial-progress-bar>
-           <div :style="titleStyle">流量</div>
+         <div class="p-box">
+           <div class="p-progress">
+             <radial-progress-bar :diameter="diameter"
+                                  :total-steps="totalSteps"
+                                  :completed-steps="completedSteps"
+                                  :animate-speed="animateSpeed"
+                                  :stroke-width="strokeWidth"
+                                  :start-color="startColor"
+                                  :stop-color="stopColor"
+                                  :inner-stroke-color="innerStrokeColor"
+                                  :timing-func="timingFunc">
+               <p><span class="p-completedSteps">{{ completedSteps }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
+               <p class="p-unit">cm/min</p>
+             </radial-progress-bar>
+             <div class="p-title">流量</div>
+           </div>
          </div>
-       </div>
-       <div class="p-box">
-         <div class="p-progress">
-           <radial-progress-bar :diameter="diameter"
-                                :total-steps="totalSteps"
-                                :completed-steps="completedSteps"
-                                :animate-speed="animateSpeed"
-                                :stroke-width="strokeWidth"
-                                :start-color="startColor"
-                                :stop-color="stopColor"
-                                :inner-stroke-color="innerStrokeColor"
-                                :timing-func="timingFunc">
-             <p><span :style="completedStepsStyle">{{ completedSteps }}</span> <span :style="totalStepsStyle">/{{ totalSteps }}</span></p>
-             <p :style="totalStepsStyle">L/min</p>
-           </radial-progress-bar>
-           <div :style="titleStyle">下钻速度</div>
+         <div class="p-box">
+           <div class="p-progress">
+             <radial-progress-bar :diameter="diameter"
+                                  :total-steps="totalSteps"
+                                  :completed-steps="completedSteps"
+                                  :animate-speed="animateSpeed"
+                                  :stroke-width="strokeWidth"
+                                  :start-color="startColor"
+                                  :stop-color="stopColor"
+                                  :inner-stroke-color="innerStrokeColor"
+                                  :timing-func="timingFunc">
+               <p><span class="p-completedSteps">{{ completedSteps }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
+               <p class="p-unit">L/min</p>
+             </radial-progress-bar>
+             <div class="p-title">下钻速度</div>
+           </div>
          </div>
-       </div>
-       <div class="p-box">
-         <div class="p-progress">
-           <radial-progress-bar :diameter="diameter"
-                                :total-steps="totalSteps"
-                                :completed-steps="completedSteps"
-                                :animate-speed="animateSpeed"
-                                :stroke-width="strokeWidth"
-                                :start-color="startColor"
-                                :stop-color="stopColor"
-                                :inner-stroke-color="innerStrokeColor"
-                                :timing-func="timingFunc">
-             <p><span :style="completedStepsStyle">{{ completedSteps }}</span> <span :style="totalStepsStyle">/{{ totalSteps }}</span></p>
-             <p :style="totalStepsStyle">A</p>
-           </radial-progress-bar>
-           <div :style="titleStyle">外钻杆电流</div>
+         <div class="p-box">
+           <div class="p-progress">
+             <radial-progress-bar :diameter="diameter"
+                                  :total-steps="totalSteps"
+                                  :completed-steps="completedSteps"
+                                  :animate-speed="animateSpeed"
+                                  :stroke-width="strokeWidth"
+                                  :start-color="startColor"
+                                  :stop-color="stopColor"
+                                  :inner-stroke-color="innerStrokeColor"
+                                  :timing-func="timingFunc">
+               <p><span class="p-completedSteps">{{ completedSteps }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
+               <p  class="p-unit">A</p>
+             </radial-progress-bar>
+             <div class="p-title">外钻杆电流</div>
+           </div>
          </div>
-       </div>
-     </li>
-     <li class="s-chart">
-       <chart :options="AshBreakingAmount" :auto-resize=true></chart>
-     </li>
-     <li class="s-chart">
-       <chart :options="JettingPressure" :auto-resize=true></chart>
-     </li>
-   </ul>
+       </li>
+       <li class="s-chart" v-if="isRouterAlive">
+         <chart :options="AshBreakingAmount" :auto-resize=true></chart>
+       </li>
+       <li class="s-chart" v-if="isRouterAlive">
+         <chart :options="JettingPressure" :auto-resize=true></chart>
+       </li>
+     </ul>
+   </div>
+
  </div>
 </template>
 
@@ -129,24 +168,11 @@ export default {
     console.log( Data1);
     console.log( Data2);
 
-
     return {
-      completedStepsStyle:{
-        "font-size": "30px",
-        "font-weight": "bold"
-      },
-      totalStepsStyle:{
-        "color":"#979797",
-        "font-size": "12px"
-      },
-      titleStyle:{
-        "color":"#979797",
-        "width":"78%",
-        "text-align":"center",
-        "font-size": "12px",
-        "position":"absolute",
-        "bottom":"0"
-      },
+      classChange:1,
+
+      isRouterAlive: true,
+
       completedSteps:3,
       totalSteps: 20,
       animateSpeed: 500,
@@ -161,13 +187,15 @@ export default {
 
       isWarming:true,
 
+      isTab:false,
+
       PulpingQuantity:{
         title: {
           text: 'A-电流随桩机里程变化曲线',
           show: true,
           textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
+            fontWeight: 'bold',
+            fontSize: 16,
             color: '#333'
           },
           top:'4%',
@@ -209,10 +237,11 @@ export default {
               color: '#ccc'
             }
           },
+
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -233,7 +262,7 @@ export default {
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -315,8 +344,8 @@ export default {
           text: 'A-电流随桩机里程变化曲线',
           show: true,
           textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
+            fontWeight: 'bold',
+            fontSize: 16,
             color: '#333'
           },
           top:'4%',
@@ -361,7 +390,7 @@ export default {
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -382,7 +411,7 @@ export default {
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -464,8 +493,8 @@ export default {
           text: 'A-断灰量随桩机里程变化曲线',
           show: true,
           textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
+            fontWeight: 'bold',
+            fontSize: 16,
             color: '#333'
           },
           left: '6%',
@@ -510,7 +539,7 @@ export default {
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -531,7 +560,7 @@ export default {
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -582,8 +611,8 @@ export default {
           text: 'A-喷浆压力随桩机里程变化曲线',
           show: true,
           textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
+            fontWeight: 'bold',
+            fontSize: 16,
             color: '#333'
           },
           left: '6%',
@@ -628,7 +657,7 @@ export default {
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -649,7 +678,7 @@ export default {
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14,
+              fontSize: 12,
               color: '#999'
             }
           },
@@ -699,42 +728,75 @@ export default {
   },
   props:['dialogFullscreen'],
   mounted(){
+
+    this.init();
+    this.reload()
     const that = this;
-    let clientWidth=document.body.clientWidth;
-    window.onresize = function temp() {
-      //console.log(document.body.clientWidth);
-      if(!that.dialogFullscreen){
+    window.onresize = function (){
+      let clientWidth=document.body.clientWidth;
+      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
+    }
+  },
+  methods:{
+
+    init(){
+      let clientWidth=document.body.clientWidth;
+      this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
+    },
+    temp(isDialog,diameter,that,clientWidth) {
+
+      console.log(document.body.clientWidth);
+
+      if(!isDialog){
+        this.classChange=2;
         if(clientWidth>1660){
-          that.diameter=110;
+          diameter=110;
         }else if(clientWidth<1660&&clientWidth>1500){
-          that.diameter=100;
+          diameter=100;
         }else if(clientWidth<1500&&clientWidth>1380){
-          that.diameter=90;
+          diameter=90;
         }else if(clientWidth<1380){
           that.$emit('dialogFullscreen','true')
         }
       }else{
         if(clientWidth>1700){
-          that.diameter=170;
+          this.classChange=1;
+          diameter=170;
         }else if(clientWidth<1700&&clientWidth>1600){
-          that.diameter=160;
+          this.classChange=1;
+          diameter=160;
         }else if(clientWidth<1600&&clientWidth>1510){
-          that.diameter=150;
+          this.classChange=1;
+          diameter=150;
         }else if(clientWidth<1510&&clientWidth>1420){
-          that.diameter=140;
+          this.classChange=2;
+          diameter=140;
         }else if(clientWidth<1420&&clientWidth>1300){
-          that.diameter=120;
+          this.classChange=2;
+          diameter=120;
         }else if(clientWidth<1300&&clientWidth>1100){
-          that.diameter=100;
-        }else if(clientWidth<1100&&clientWidth>1024){
-          that.diameter=90;
+          this.classChange=2;
+          diameter=100;
+        }else if(clientWidth<1100&&clientWidth>1000){
+          this.classChange=2;
+          diameter=90;
         }
       }
-    }
-  },
-  methods:{
+      this.diameter=diameter
+    },
     add(){
       this.progress+=10
+    },
+    tabChange(x){
+      if(x==0){
+        this.isTab=false;
+      }else {
+        this.isTab=true;
+      }
+    },
+    reload () {
+      this.isRouterAlive = false;
+      this.$nextTick(() => (this.isRouterAlive = true))
     }
   },
   created(){
@@ -744,72 +806,14 @@ export default {
     dialogFullscreen:function (val,oldVal) {
       let that=this;
       let clientWidth=document.body.clientWidth;
-      if(val){
-        if(clientWidth>1700){
-          that.diameter=170;
-        }else if(clientWidth<1700&&clientWidth>1600){
-          that.diameter=160;
-        }else if(clientWidth<1600&&clientWidth>1510){
-          that.diameter=150;
-        }else if(clientWidth<1510&&clientWidth>1420){
-          that.diameter=140;
-        }else if(clientWidth<1420&&clientWidth>1300){
-          that.diameter=120;
-        }else if(clientWidth<1300&&clientWidth>1100){
-          that.diameter=100;
-        }else if(clientWidth<1100&&clientWidth>1024){
-          that.diameter=90;
-        }
-
-        this.completedStepsStyle={
-          "font-size": "40px",
-          "font-weight": "bold"
-        };
-        this.totalStepsStyle={
-          "color":"#979797",
-            "font-size": "16px"
-        };
-        this.titleStyle={
-          "color":"#979797",
-          "font-size": "16px",
-          "width":"78%",
-          "text-align":"center",
-          "position":"absolute",
-          "bottom":"0"
-        }
-      }else{
-        if(clientWidth>1660){
-          that.diameter=110;
-        }else if(clientWidth<1660&&clientWidth>1500){
-          that.diameter=100;
-        }else if(clientWidth<1500&&clientWidth>1380){
-          that.diameter=90;
-        }else if(clientWidth<1380){
-          that.$emit('dialogFullscreen','true')
-        }
-        this.completedStepsStyle={
-          "font-size": "30px",
-          "font-weight": "bold"
-        };
-        this.totalStepsStyle={
-          "color":"#979797",
-          "font-size": "12px"
-        };
-        this.titleStyle={
-          "color":"#979797",
-          "font-size": "12px",
-          "width":"78%",
-          "text-align":"center",
-          "position":"absolute",
-          "bottom":"0"
-        }
-      }
+      that.temp(val,that.diameter,that,clientWidth)
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+
   .progressContainer{
     position: relative;
     height: 100%;
@@ -829,137 +833,346 @@ export default {
     width: 100%;
     height: 100%;
   }
- .s-box1,.s-box2{
-   height: 49%;
-   display: flex;
-   background-color: #F5F5F9;
-   justify-content:space-between;
+  .r-box{
+    padding-left: 2%;
+    height: 100%;
+    position: relative;
+    .t-box{
+      cursor: pointer;
+      width: 2%;
+      position: absolute;
+      left:0;
+      .r-stateTab{
+        padding: 25%;
+        height: 50%;
+        text-align: center;
+        font-size: 12px;
+        border-radius:4px 0 0 0;
+        border:1px solid rgba(206,206,206,1);
+      }
+      .p-designTab{
+        padding: 20%;
+        height: 50%;
+        text-align: center;
+        font-size: 12px;
+        border-radius:0 0 0 4px;
+        border:1px solid rgba(206,206,206,1);
+      }
+      .tabActive{
+        background: #828282;
+        color: #fff;
+        border: 1px solid #828282;
+      }
+    }
+    .t-box1{
+      .r-stateTab{
+        font-size: 16px;
+      }
+      .p-designTab{
+        font-size: 16px;
+      }
+    }
 
+    .s-box1,.s-box2{
+      height: 49%;
+      display: flex;
+      background-color: #F5F5F9;
+      justify-content:space-between;
 
-   .s-info{
-     width:23%;
-     height: 100%;
-     padding:0 20px;
-     background:rgba(255,255,255,1);
-     box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-     display: flex;
-     flex-direction: column;
-     justify-content:space-around;
-     .i-id{
-       width:110px;
-       font-size:30px;
-       color:rgba(51,51,51,1);
-       line-height:42px;
-     }
-     .i-box{
-       display: flex;
-       justify-content:space-between;
-       .i-body{
-         width: 60%;
-         height: 45px;
-         line-height: 25px;
-         font-weight: bold;
-         border-right: 1px solid rgba(51,51,51,0.3);
-         .i-name{
-           font-size:16px;
-           color:rgba(51,51,51,1);
-         }
-         .i-company{
-           font-size:10px;
-           color:rgba(153,153,153,1);
-         }
-       }
-       .i-state{
-         line-height: 25px;
-         font-size:12px;
-         color:rgba(153,153,153,1);
-       }
-       .icon-state{
-         font-size: 12px;
-         color: #24BCF7;
-         margin-right: 20px;
-       }
-     }
+      .s-info{
+        width:23%;
+        height: 100%;
+        padding:0 20px;
+        background:rgba(255,255,255,1);
+        box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content:space-around;
+        .i-id{
+          margin-top: 10px;
+          width:100%;
+          font-size:30px;
+          color:rgba(51,51,51,1);
+          line-height:42px;
+        }
+        .i-box{
+          display: flex;
+          justify-content:space-between;
+          height: 30%;
+          .i-body{
+            width: 60%;
+            height: 45px;
+            line-height: 30px;
+            font-weight: bold;
+            .i-name{
+              font-size:16px;
+              color:rgba(51,51,51,1);
+            }
+            .i-company{
+              font-size:10px;
+              color:rgba(153,153,153,1);
+            }
+          }
+          .i-state{
+            line-height: 30px;
+            font-size:12px;
+            color:rgba(153,153,153,1);
+          }
+          .icon-state{
+            font-size: 12px;
+            color: #24BCF7;
+            margin-right: 20px;
+          }
+        }
 
-     .i-start{
-       width:100%;
-       height:17px;
-       font-size:12px;
-       color:rgba(102,102,102,1);
-       line-height:17px;
-     }
-     .i-progress{
-       width: 100%;
-       height: 15px;
-       line-height: 15px;
-       display: flex;
-       justify-content:space-between;
-     }
-     .i-normal{
-       width:100%;
-       line-height: 57px;
-       text-align: center;
-       height:57px;
-       background:rgba(141,232,240,0.06);
-     }
-     .i-warning{
-       width:100%;
-       padding-top: 10px;
-       height:47px;
-       background:rgba(248,89,89,0.06);
-       text-align: center;
-       .icon-warming{
-         vertical-align: top;
-         color: #DF2A2A;
-       }
-       .w-text{
-         margin-left: 10px;
-         vertical-align: top;
-         display: inline-block;
-       }
-     }
-   }
-   .s-progress{
-     width:23%;
-     padding: 15px 20px;
-     background:rgba(255,255,255,1);
-     box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-     display: flex;
-     display: -webkit-flex;
-     flex-direction: row;/*决定主轴的方向*/
-     justify-content:space-around;
-     flex-wrap:wrap;
-     .p-box{
-       position: relative;
-       flex: 0 1 50%;
-       display:flex;
-       justify-content:center;
-       border: 1px solid white;
-       box-sizing: border-box;
-       .p-progress{
-         .p-title{
-           width: 100%;
-           font-size: 12px;
-           color: #999999;
-           text-align: center;
-           position: relative;
-         }
-       }
-       .p-name{
-         position: absolute;
-         bottom: 0;
-         font-size:16px;
-         color:rgba(151,151,151,1);
-       }
-     }
-   }
-   .s-chart{
-     width:36.5%;
-     background:rgba(255,255,255,1);
-     box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-   }
- }
- .s-box1{
-   padding: 0 0 10px 0;
- }
+        .i-start{
+          width:100%;
+          height:17px;
+          font-size:12px;
+          color:rgba(102,102,102,1);
+          line-height:17px;
+        }
+        .i-progress{
+          width: 100%;
+          height: 15px;
+          line-height: 15px;
+          display: flex;
+          justify-content:space-between;
+        }
+        .i-normal{
+          width:100%;
+          line-height: 57px;
+          text-align: center;
+          height:57px;
+          background:rgba(141,232,240,0.06);
+        }
+        .i-warning{
+          width:100%;
+          padding-top: 10px;
+          height:47px;
+          background:rgba(248,89,89,0.06);
+          text-align: center;
+          .icon-warming{
+            vertical-align: top;
+            color: #DF2A2A;
+          }
+          .w-text{
+            margin-left: 10px;
+            vertical-align: top;
+            display: inline-block;
+          }
+        }
+
+        .d-name{
+          span{
+            margin-left: 5%;
+            font-size: 14px;
+            font-weight: bold;
+          }
+        }
+        .d-box{
+          height: 60%;
+          display: flex;
+          flex-direction: row;/*决定主轴的方向*/
+          flex-wrap:wrap;
+          justify-content:space-around;
+          div{
+            width: 50%;
+          }
+          .d-key{
+            margin-right: 5%;
+          }
+          .d-value{
+
+            color: #24BCF7;
+          }
+        }
+      }
+      .s-info1{
+        .i-id{
+          font-size:40px;
+          color:rgba(51,51,51,1);
+          line-height:42px;
+        }
+        .i-box{
+          display: flex;
+          justify-content:space-between;
+          height: 30%;
+          .i-body{
+            width: 60%;
+            height: 45px;
+            line-height: 45px;
+            font-weight: bold;
+            .i-name{
+              font-size:20px;
+              color:rgba(51,51,51,1);
+            }
+            .i-company{
+              font-size:16px;
+              color:rgba(153,153,153,1);
+            }
+          }
+          .i-state{
+            line-height: 45px;
+            font-size:16px;
+            color:rgba(153,153,153,1);
+          }
+          .icon-state{
+            font-size: 16px;
+            color: #24BCF7;
+            margin-right: 20px;
+          }
+        }
+
+        .i-start{
+          width:100%;
+          height:17px;
+          font-size:16px;
+          color:rgba(102,102,102,1);
+          line-height:17px;
+        }
+        .i-progress{
+          width: 100%;
+          height: 15px;
+          line-height: 15px;
+          display: flex;
+          justify-content:space-between;
+          .i-progressName{
+            font-size: 16px;
+          }
+        }
+        .i-normal{
+          width:100%;
+          line-height: 57px;
+          text-align: center;
+          height:57px;
+          background:rgba(141,232,240,0.06);
+        }
+        .i-warning{
+          width:100%;
+          padding-top: 10px;
+          height:47px;
+          background:rgba(248,89,89,0.06);
+          text-align: center;
+          .icon-warming{
+            vertical-align: top;
+            color: #DF2A2A;
+          }
+          .w-text{
+            margin-left: 10px;
+            vertical-align: top;
+            display: inline-block;
+          }
+        }
+
+        .d-name{
+          i{
+            font-size: 20px;
+          }
+          span{
+            margin-left: 5%;
+            font-size: 20px;
+            font-weight: bold;
+          }
+        }
+        .d-box{
+          height: 60%;
+          display: flex;
+          flex-direction: row;/*决定主轴的方向*/
+          flex-wrap:wrap;
+          justify-content:space-around;
+          div{
+            width: 50%;
+          }
+          .d-key{
+            font-size: 16px;
+            margin-right: 5%;
+          }
+          .d-value{
+            font-size: 16px;
+            color: #24BCF7;
+          }
+        }
+      }
+
+      .s-progress{
+        width:23%;
+        padding: 15px 20px;
+        background:rgba(255,255,255,1);
+        box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+        display: flex;
+        display: -webkit-flex;
+        flex-direction: row;/*决定主轴的方向*/
+        justify-content:space-around;
+        flex-wrap:wrap;
+        .p-box{
+          position: relative;
+          flex: 0 1 50%;
+          display:flex;
+          justify-content:center;
+          border: 1px solid white;
+          box-sizing: border-box;
+          .p-progress{
+            .p-title{
+              width: 100%;
+              font-size: 12px;
+              color: #999999;
+              text-align: center;
+              position: relative;
+            }
+          }
+          .p-name{
+            position: absolute;
+            bottom: 2%;
+            font-size:12px;
+            color:rgba(151,151,151,1);
+          }
+          .p-completedSteps{
+            font-size: 30px;
+            font-weight: bold;
+          }
+          .p-totalSteps{
+            font-size: 12px;
+          }
+          .p-unit{
+            font-size: 12px;
+          }
+          .p-title{
+            width: 78%;
+            text-align: center;
+          }
+        }
+      }
+      .s-progress1{
+        .p-box{
+          .p-progress{
+            .p-title{
+              font-size: 18px;
+            }
+          }
+          .p-name{
+            font-size:18px;
+          }
+          .p-completedSteps{
+            font-size: 50px;
+          }
+          .p-totalSteps{
+            font-size: 18px;
+          }
+          .p-unit{
+            font-size: 18px;
+          }
+        }
+      }
+      .s-chart{
+        width:36.5%;
+        background:rgba(255,255,255,1);
+        box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+      }
+    }
+    .s-box1{
+      padding: 0 0 10px 0;
+    }
+  }
+
 </style>
