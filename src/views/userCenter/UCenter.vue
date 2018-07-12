@@ -7,11 +7,11 @@
           <div class="u-info">
             <img src="@/assets/header/b-Girl.jpg" alt="头像">
             <div class="u-name">
-              <p class="n-text">我是DJ</p>
-              <p class="n-num">username</p>
+              <p class="n-text">{{userInfo.name}}</p>
+              <p class="n-num">{{userInfo.username}}</p>
             </div>
             <div class="u-jurisdiction">
-              <p class="j-title">管理员</p>
+              <p class="j-title">{{userInfo.userRole[0].projectRole.role}}</p>
               <p class="j-password">修改密码</p>
             </div>
           </div>
@@ -21,31 +21,35 @@
           <div class="i-box">
             <div class="i-company">
               <i class="iconfont icon-company"></i>
-              <div class="i-context">
+              <div class="i-context" v-if="isCompany1">
                 <p>杭州工程管理有限公司</p>
               </div>
-              <i class="iconfont icon-modify"></i>
+              <input class="i-modify" type="text" v-else="isCompany1" v-focus>
+              <i class="iconfont icon-modify" @click="modify1()"></i>
             </div>
             <div class="i-company">
               <i class="iconfont icon-WeChat"></i>
-              <div class="i-context">
+              <div class="i-context"  v-if="isCompany2">
                 <p>wx199299</p>
               </div>
-              <i class="iconfont icon-modify"></i>
+              <input class="i-modify" type="text" v-else="isCompany2" v-focus>
+              <i class="iconfont icon-modify" @click="modify2()"></i>
             </div>
             <div class="i-company">
               <i class="iconfont icon-phone"></i>
-              <div class="i-context">
+              <div class="i-context"  v-if="isCompany3">
                 <p>18989477589</p>
               </div>
-              <i class="iconfont icon-modify"></i>
+              <input class="i-modify" type="text" v-else="isCompany3" v-focus>
+              <i class="iconfont icon-modify" @click="modify3()"></i>
             </div>
-            <div class="i-company">
+            <div class="i-company" >
               <i class="iconfont icon-mail"></i>
-              <div class="i-context">
+              <div class="i-context"  v-if="isCompany4">
                 <p>18989477589@163.com</p>
               </div>
-              <i class="iconfont icon-modify"></i>
+              <input class="i-modify" type="text" v-else="isCompany4" v-focus>
+              <i class="iconfont icon-modify" @click="modify4()"></i>
             </div>
           </div>
           <div class="u-submit">保存</div>
@@ -57,7 +61,43 @@
 
 <script>
 export default {
-name: "userCenter"
+  data(){
+    return{
+      isCompany1:true,
+      isCompany2:true,
+      isCompany3:true,
+      isCompany4:true,
+    }
+  },
+  props:[
+    'userInfo'
+  ],
+  created(){
+
+  },
+  directives: {
+    focus: {
+      // 当绑定元素插入到 DOM 中。
+      inserted: function (el) {
+        // 聚焦元素
+        el.focus()
+      }
+    }
+  },
+  methods:{
+    modify1(){
+      this.isCompany1=!this.isCompany1
+    },
+    modify2(){
+      this.isCompany2=!this.isCompany2
+    },
+    modify3(){
+      this.isCompany3=!this.isCompany3
+    },
+    modify4(){
+      this.isCompany4=!this.isCompany4
+    }
+  }
 }
 </script>
 
@@ -109,6 +149,7 @@ name: "userCenter"
           .j-password{
             font-size: 12px;
             color: #ffffff;
+            cursor: pointer;
           }
         }
       }
@@ -147,7 +188,14 @@ name: "userCenter"
               color: #666666;
             }
           }
-
+          .i-modify{
+            width: 150px;
+            border: none;
+            outline: medium;
+          }
+          .icon-modify{
+            cursor: pointer;
+          }
         }
       }
       .u-submit{

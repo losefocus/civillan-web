@@ -17,12 +17,12 @@ maven-build:
   script:
     # 启动
     - docker build -t="civillan-front-web" .
-    - ssh test@test1.iot.v -tt docker stop civillan-front-web
-    - ssh test@test1.iot.v -tt docker rm civillan-front-web
-    - ssh test@test1.iot.v -tt docker run -p 9990:8080 --name civillan-front-web -d civillan-front-web
+    - ssh test@192.168.0.232 -tt docker stop civillan-front-web
+    - ssh test@192.168.0.232 -tt docker rm civillan-front-web
+    - ssh test@192.168.0.232 -tt docker run -p 9990:8080 --name civillan-front-web -d civillan-front-web
 
     #清除临时文件
-    - ssh test@test1.iot.v -tt docker rm $(docker ps -q -f status=exited -f name=runner)
-    - ssh test@test1.iot.v -tt docker rmi $(docker images -q -f dangling=true)
+    - ssh test@192.168.0.232 -tt docker rm $(docker ps -q -f status=exited -f name=runner)
+    - ssh test@192.168.0.232 -tt docker rmi $(docker images -q -f dangling=true)
   tags:
       - dockersock

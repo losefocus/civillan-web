@@ -15,10 +15,10 @@
         :key="item.id"
         move-class="item-move"
       >
-        <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.path,item.title)">
+        <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.name)">
           <div class="pj-img" :style="{ 'background-image': 'url(' + item.ImgUrl + ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
             <div class="pj-mask" >
-              <span>{{item.title}}</span>
+              <span>{{item.name}}</span>
             </div>
           </div>
           <div class="pj-data">
@@ -85,6 +85,9 @@
 </template>
 
 <script>
+  import deviceGrouping from '@/api/project/deviceGrouping'
+
+
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   import Bus from '@/assets/eventBus'
@@ -109,7 +112,7 @@
           testRoom,
           mixingStation,
         ],
-        items: [
+        /*items: [
           { id:1,
             title:'软基处理',
             path:'/project/softBase',
@@ -240,12 +243,19 @@
             c:'10'
           }]
         }
-        ],
+        ],*/
+        items:[],
         isBusy: false
       };
     },
     mounted(){
       this.init();
+    },
+    created(){
+      deviceGrouping.list().then(res=>{
+        console.log(res);
+        this.items=res.result.items
+      })
     },
     methods: {
       init:function () {
@@ -254,8 +264,8 @@
           zoom: 6
         });
       },
-      jump(path,title){
-        this.$router.push(path);
+      jump(title){
+        this.$router.push('/project/softBase');
         Bus.$emit('Title', title);
       }
     }

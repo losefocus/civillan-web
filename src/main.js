@@ -16,8 +16,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI);
 
-import VueCookie from 'vue-cookie'
-Vue.use(VueCookie);
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies);
 
 import echarts from 'echarts'
 import ECharts from 'vue-echarts/components/ECharts.vue'

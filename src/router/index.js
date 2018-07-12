@@ -47,19 +47,19 @@ const vRouter = new Router({
           name:'项目名称',
           component: project,
           redirect:"/project/classification",
-          meta: { title: '项目分类'},
+          meta: { requireAuth: true},
           children:[
             {
               path:'/project/classification',
               name:'',
               component:classification,
-              meta: { title: '项目分类'}
+              meta: { requireAuth: true}
             },
             {
               path:'/project/softBase',
               component:softBase,
               name:'设备列表',
-              meta:{title: '设备列表'}
+              meta:{requireAuth: true}
             }
           ]
         },
@@ -67,79 +67,86 @@ const vRouter = new Router({
           path: '/analysis',
           component: analysis,
           name:'统计分析',
-          meta: { title: '统计分析' }
+          meta: { requireAuth: true }
         },
         {
           path: '/historical',
           component: historical,
           name:'历史数据',
-          meta: { title: '历史数据' }
+          meta: { requireAuth: true }
         },{
           path: '/alarm',
           component: alarm,
           name:'报警查询',
           redirect:'/alarm/aAnalysis',
-          meta: { title: '报警查询' },
+          meta: { requireAuth: true },
           children:[
             {
               path:'/alarm/aAnalysis',
               name:'报警分析',
               component:aAnalysis,
-              meta: { title: '报警分析'}
+              meta: {requireAuth: true}
             },
             {
               path:'/alarm/aRealTime',
               component:aRealTime,
               name:'实时报警',
-              meta:{title: '实时报警'}
+              meta:{requireAuth: true}
             },
             {
               path:'/alarm/aHistory',
               component:aHistory,
               name:'历史报警',
-              meta:{title: '历史报警'}
+              meta:{requireAuth: true}
             }
           ]
         },{
           path: '/document',
           component: document,
           name:'文档资料',
-          meta: { title: '文档资料' }
+          meta: { requireAuth: true }
         },{
           path: '/operational',
           component: operational,
           name:'作业成效',
-          meta: { title: '作业成效' }
+          meta: { requireAuth: true }
         },{
           path: '/quality',
           component: quality,
           name:'质量评估',
-          meta: { title: '质量评估' }
+          meta: { requireAuth: true }
         },{
           path: '/video',
           component: video,
           name:'视频监控',
-          meta: { title: '视频监控' }
+          meta: { requireAuth: true }
         }
       ]
     }
   ]
 });
 
-/*vRouter.beforeEach(function (to,from,next) {
+
+vRouter.beforeEach(function (to,from,next) {
+  console.log(store.state.login.token);
   if (to.matched.some(record => record.meta.requireAuth)){ // 判断该路由是否需要登录权限
-    if (store.state.token) {  //token存在 已经登陆
+    if(window.$cookies.get('token')){
+      sessionStorage.setItem('token',window.$cookies.get('token'));
       next();
-    }
-    else {
-      next({
-        path: '/login',
-        query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
-      })
+    }else {
+      if (store.state.login.token) { //token存在 已经登陆
+        next();
+      }
+      else {
+        next({
+          path: '/login',
+          query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        })
+      }
     }
   }
   else {
     next();
   }
-});*/
+});
 export default vRouter

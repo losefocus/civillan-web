@@ -6,9 +6,9 @@ import { Message, Loading } from 'element-ui'
 // 响应时间
 var root = process.env.API_ROOT;
 //console.log(process.env.API_ROOT);
-axios.defaults.timeout = 5 * 1000;
+axios.defaults.timeout = 2 * 1000;
 // 配置cookie
-// axios.defaults.withCredentials = true
+ //axios.defaults.withCredentials = true;
 // 配置请求头
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 // 静态资源
@@ -29,8 +29,9 @@ axios.interceptors.request.use(
     if (config.method === 'post') {
       config.data = qs.stringify(config.data)
     }
-    console.log(qs.stringify(config.data));
-    //config.headers.token = sessionStorage.getItem("token");
+    //console.log(qs.stringify(config.data));
+    console.log(sessionStorage.getItem("token"));
+    config.headers.token = sessionStorage.getItem("token");
     return config
   },
   err => {
@@ -42,20 +43,16 @@ axios.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
-    console.log(res);
     if (res.status === 200) {
       loadingInstance.close();
       return res;
-      console.log(res.data)
     } else {
       loadingInstance.close();
       Message.error(res.data.message)
     }
   },
   err => {
-    console.log(err);
     loadingInstance.close();
-    console.log(err.request.status);
     /*if(err.request||err.request.status===401){
       router.replace({
         path: 'login',

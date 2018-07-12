@@ -36,6 +36,7 @@
 
 <script>
   import { mapActions , mapState} from 'vuex'
+  import login from '@/api/userCenter/login'
   export default {
     data() {
       return {
@@ -57,7 +58,6 @@
       ...mapState({isLogin:state=>state.login.isLogin})
     },
     methods: {
-      ...mapActions('login',['incrementLogin']),
 
       keyDown(e) {
         //console.log(e.code)
@@ -85,7 +85,6 @@
       },
       getPassword:function(p){
         let reg = /^\s*$/g;
-        console.log(p);
         if(reg.test(p)||p==""||p==undefined){
           this.validateRules1='用户名不能为空';
           this.isFail1=true;
@@ -103,21 +102,26 @@
       submit:function(){
         if(this.isSuccess&&this.isSuccess1){
           var that=this;
-          console.log(this.userInfo);
-          this.$api.login.login(this.userInfo).then((res) => {
+          login.login(this.userInfo).then((res) => {
             if(that.userInfo.checked){
-              that.$cookie.set('token',res.result.token,{ expires: '1M'})
-              //that.$store.dispatch('incrementLogin',1);
-              //that.$store.dispatch('incrementToken',res.result.token);
-              //that.$router.push('/');
+
+              sessionStorage.setItem('token',res.result.token);
+              sessionStorage.setItem('wsUrl',res.result.wsUrl.result);
+              that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
+              that.$store.dispatch('incrementToken',res.result.token);
+              that.$router.push('/');
             }else{
-              that.$cookie.delete('userInfo');
-              //that.$store.dispatch('incrementLogin',1);
-              //that.$store.dispatch('incrementToken',res.result.token);
-              //that.$router.push('/');
+              console.log(res.result.wsUrl);
+              let wsUrl=JSON.parse(res.result.wsUrl)
+              console.log(wsUrl);
+              sessionStorage.setItem('token',res.result.token);
+              sessionStorage.setItem('wsUrl',wsUrl.result);
+              that.$cookies.remove('token');
+              that.$store.dispatch('incrementToken',res.result.token);
+              that.$router.push('/');
             }
           },(e)=>{
-            console.log(e);
+            console.log('登录出错');
           });
         }else {
           console.log('密码账号错误');

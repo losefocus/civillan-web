@@ -60,6 +60,7 @@
 </template>
 
 <script>
+  import deviceList from '@/api/project/deviceList'
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
   import AQuery from '@/views/softBase/AQuery'
@@ -128,6 +129,11 @@
         currentView:'RState',
         isBusy: false
       };
+    },
+    created(){
+      deviceList.list().then(res=>{
+        console.log(res)
+      })
     },
     methods: {
       radioEvent(){

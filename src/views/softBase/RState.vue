@@ -730,7 +730,7 @@ export default {
   mounted(){
 
     this.init();
-    this.reload()
+    this.reload();
     const that = this;
     window.onresize = function (){
       let clientWidth=document.body.clientWidth;
@@ -744,8 +744,6 @@ export default {
       this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
     },
     temp(isDialog,diameter,that,clientWidth) {
-
-      console.log(document.body.clientWidth);
 
       if(!isDialog){
         this.classChange=2;

@@ -3,18 +3,18 @@
   <div class="hd-logo hd-left"></div>
   <div class="hd-name hd-left">工程施工实时监控系统</div>
 
-  <img src="@/assets/header/label_close.png" class="hd-right hd-close">
+  <img src="@/assets/header/label_close.png" class="hd-right hd-close" @click="close()">
   <div class="hd-uName hd-right">
-    <el-dropdown trigger="click" placement="bottom">
+    <el-dropdown trigger="click" placement="bottom" @command="handleCommand">
       <span class="el-dropdown-link" style="cursor: pointer">
         <div class="u-name">用户名</div><i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>用户中心</el-dropdown-item>
-        <el-dropdown-item>个人设置</el-dropdown-item>
-        <el-dropdown-item>消息通知</el-dropdown-item>
-        <el-dropdown-item>帮助中心</el-dropdown-item>
-        <el-dropdown-item divided>退出登录</el-dropdown-item>
+        <el-dropdown-item command="0">用户中心</el-dropdown-item>
+        <el-dropdown-item command="1">个人设置</el-dropdown-item>
+        <el-dropdown-item command="2">消息通知</el-dropdown-item>
+        <el-dropdown-item command="3">帮助中心</el-dropdown-item>
+        <!--<el-dropdown-item divided command="close">退出登录</el-dropdown-item>-->
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -43,7 +43,7 @@
       <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
       <div @click="close()"></div>
     </ul>
-    <n-message :is="currentView" keep-alive class="t-Body"></n-message>
+    <n-message :is="currentView" keep-alive class="t-Body" :user-info="uInfo"></n-message>
   </el-dialog>
 
 </div>
@@ -54,6 +54,7 @@
   import NMessage from '@/views/userCenter/NMessage.vue'
   import PSettings from '@/views/userCenter/PSettings.vue'
   import UCenter from '@/views/userCenter/UCenter.vue'
+  import user from '@/api/userCenter/header'
   export default {
     name: "zHeader",
     components:{
@@ -64,6 +65,7 @@
     },
     data(){
        return{
+         uInfo:null,
          dialogWidth:'68%',
          num:10,
          dialogVisible: false,
@@ -84,10 +86,13 @@
        }
     },
     created(){
-      /*let queueReceiveSetting = {//消息队列配置
+      /*console.log(sessionStorage.getItem('wsUrl'));
+      let wsUrl='ws:'+sessionStorage.getItem('wsUrl');
+      console.log(wsUrl);
+      let queueReceiveSetting = {//消息队列配置
         websock: null,
         client: null,
-        wsuri: "ws://192.168.0.33:4050/ws/message/1fjldjfaaotriaohjdaldfjal"
+        wsuri: 'ws://192.168.0.232:10008/ws/message/token=$2a$10$.A8THWdKwsx1cimdoxIuBeZLTH3QtfXnKYSw06yCCThXqAy3hFaHa'
       };
 
       if (queueReceiveSetting.websock) {
@@ -122,12 +127,34 @@
     },
     methods:{
       getMessage(){
-        this.dialogVisible=true
+        this.dialogVisible=true;
+        this.tIndex=2;
+        this.currentView=this.tBody[2]
       },
       changeTab(i){
         this.tIndex=i;
         this.currentView=this.tBody[i]
       },
+      handleCommand(command) {
+        this.dialogVisible=true;
+        this.tIndex=command;
+        this.currentView=this.tBody[command];
+
+        let userId=sessionStorage.getItem('token').substring(0,2);
+        if(command==0){
+          user.userInfo({project_user_id:userId}).then(res=>{
+            console.log(res.result)
+            this.uInfo = res.result;
+          })
+        }
+      },
+      close(){
+        if(window.$cookies.get('token')){
+          window.$cookies.remove('token')
+        }
+        sessionStorage.removeItem('token');
+        this.$router.push('/login')
+      }
     }
   }
 </script>
