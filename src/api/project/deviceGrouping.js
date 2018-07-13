@@ -1,6 +1,6 @@
 import { get } from '../../axiosconfig/axiosConfig'
 export default {
-  list() {
-    return get('/device_group/list')
+  list(params) {
+    return get('/device_group/list',params)
   }
 }

@@ -28,7 +28,7 @@
   import zHeader from '@/components/zHeader'
   import zImg from '@/assets/AMap/info.png'
   import state from '@/assets/AMap/stateMarker.png'
-  import toTree from '@/assets/toTree'
+  import toTree from '@/common/toTree'
   import $ from 'jquery'
   export default {
     name: "ProjectEntrance",
@@ -214,6 +214,8 @@
 
                 markerList.on('infoWindowClick',function (event,info) {
                   console.log(info.data);
+                  _this.$store.dispatch('incrementId',info.id);
+                  _this.$store.dispatch('incrementTenant',info.data.tenant);
                   _this.$router.push('project')
                 });
 

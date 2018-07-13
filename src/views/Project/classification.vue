@@ -38,17 +38,15 @@
     </waterfall>
     <div class="p-box">
       <div class="p-item" style="width: 300px;margin-bottom: 30px;">
-        <h1>杭州市余杭区G80标段项目</h1>
+        <h1>{{ info.name }}</h1>
         <div class="pj-details">
-          <p>
-            杭州高新战略科技城项目是由杭州市政府主导的一个高新战略科技项目，项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情项目详情目详情项目详情项目详情项目详情项目详情项目详情
-          </p>
+          <p>{{ info.comment }}</p>
         </div>
       </div>
       <div class="p-item" style="width: 200px;margin-bottom: 30px;">
         <div class="t-limit">
           <el-progress type="circle" :percentage="20" color="#F03E41"></el-progress>
-          <p class="t-interval">2018-04-08 至 2018-06-06</p>
+          <p class="t-interval">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</p>
         </div>
       </div>
 
@@ -86,6 +84,8 @@
 
 <script>
   import deviceGrouping from '@/api/project/deviceGrouping'
+  import project from '@/api/userCenter/project'
+  import {formatDate} from '@/common/formatDate.js';
 
 
   import Waterfall from 'vue-waterfall/lib/waterfall'
@@ -245,24 +245,50 @@
         }
         ],*/
         items:[],
-        isBusy: false
+        info:{},
+        isBusy: false,
+        map:null
       };
+    },
+    filters: {
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd'); //yyyy-MM-dd hh:mm
+      }
     },
     mounted(){
       this.init();
     },
     created(){
-      deviceGrouping.list().then(res=>{
+      let id=this.$store.state.project.projectId;
+      let tenant=this.$store.state.project.tenant;
+      deviceGrouping.list({'project_id':id,'tenant':tenant}).then(res=>{
         console.log(res);
         this.items=res.result.items
+      });
+
+      console.log(id);
+      console.log(tenant);
+      project.info({'project_id':id,'tenant':tenant}).then(res=>{
+        console.log(res);
+        this.info=res.result;
+        let marker = new AMap.Marker({
+          icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+          position: [116.405467, 39.907761]
+        });
+        marker.setMap(this.map);
       })
     },
     methods: {
       init:function () {
-        let map = new AMap.Map('AMap', {
+
+        // let infoPosition=this.info.position.split(',');
+        // console.log(infoPosition);
+        this.map = new AMap.Map('AMap', {
           center: [116.397428, 39.90923],
-          zoom: 6
+          zoom: 12
         });
+
       },
       jump(title){
         this.$router.push('/project/softBase');

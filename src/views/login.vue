@@ -55,9 +55,10 @@
       document.body.onkeydown = this.keyDown;
     },
     computed: {
-      ...mapState({isLogin:state=>state.login.isLogin})
+      ...mapState({token:state=>state.login.token})
     },
     methods: {
+      ...mapActions('token',['incrementToken']),
 
       keyDown(e) {
         //console.log(e.code)
@@ -111,8 +112,8 @@
               that.$store.dispatch('incrementToken',res.result.token);
               that.$router.push('/');
             }else{
-              console.log(res.result.wsUrl);
-              let wsUrl=JSON.parse(res.result.wsUrl)
+              console.log(that.$store);
+              let wsUrl=JSON.parse(res.result.wsUrl);
               console.log(wsUrl);
               sessionStorage.setItem('token',res.result.token);
               sessionStorage.setItem('wsUrl',wsUrl.result);

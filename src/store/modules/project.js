@@ -1,6 +1,6 @@
 const state = {
-  projectId: 0,
-  tenant:0,
+  projectId: sessionStorage.getItem('projectId') || 0,
+  tenant:sessionStorage.getItem('tenant') || 0,
 };
 
 // getters
@@ -21,10 +21,12 @@ const actions = {
 // mutations
 const mutations = {
   changeId(state,str){
-    state.token=str;
+    state.projectId=str;
+    sessionStorage.setItem('projectId',str)
   },
   changeTenant(state,str){
-    state.token=str;
+    state.tenant=str;
+    sessionStorage.setItem('tenant',str)
   }
 };
 

@@ -43,7 +43,7 @@
       <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
       <div @click="close()"></div>
     </ul>
-    <n-message :is="currentView" keep-alive class="t-Body" :user-info="uInfo"></n-message>
+    <n-message :is="currentView" keep-alive class="t-Body"></n-message>
   </el-dialog>
 
 </div>
@@ -54,7 +54,7 @@
   import NMessage from '@/views/userCenter/NMessage.vue'
   import PSettings from '@/views/userCenter/PSettings.vue'
   import UCenter from '@/views/userCenter/UCenter.vue'
-  import user from '@/api/userCenter/header'
+
   export default {
     name: "zHeader",
     components:{
@@ -65,7 +65,6 @@
     },
     data(){
        return{
-         uInfo:null,
          dialogWidth:'68%',
          num:10,
          dialogVisible: false,
@@ -139,14 +138,6 @@
         this.dialogVisible=true;
         this.tIndex=command;
         this.currentView=this.tBody[command];
-
-        let userId=sessionStorage.getItem('token').substring(0,2);
-        if(command==0){
-          user.userInfo({project_user_id:userId}).then(res=>{
-            console.log(res.result)
-            this.uInfo = res.result;
-          })
-        }
       },
       close(){
         if(window.$cookies.get('token')){

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div style="height: 640px;background-color: #ffffff;
-    overflow: hidden;">
+    <div style="height: 590px;background-color: #ffffff;overflow: hidden;">
       <div class="u-box">
         <div class="u-header">
           <div class="u-info">
@@ -11,22 +10,36 @@
               <p class="n-num">{{userInfo.username}}</p>
             </div>
             <div class="u-jurisdiction">
-              <p class="j-title">{{userInfo.userRole[0].projectRole.role}}</p>
+              <p class="j-title">{{ role }}</p>
               <p class="j-password">修改密码</p>
             </div>
           </div>
         </div>
         <div class="u-body">
           <p class="u-information">联系方式</p>
+
+          <!--机构名称-->
           <div class="i-box">
             <div class="i-company">
               <i class="iconfont icon-company"></i>
               <div class="i-context" v-if="isCompany1">
-                <p>杭州工程管理有限公司</p>
+                <p>{{ projectOrgan }}</p>
               </div>
               <input class="i-modify" type="text" v-else="isCompany1" v-focus>
               <i class="iconfont icon-modify" @click="modify1()"></i>
             </div>
+
+            <!--电话号码-->
+            <div class="i-company">
+              <i class="iconfont icon-phone"></i>
+              <div class="i-context"  v-if="isCompany3">
+                <p>{{ userInfo.phone }}</p>
+              </div>
+              <input class="i-modify" type="text" v-else="isCompany3" v-focus>
+              <i class="iconfont icon-modify" @click="modify3()"></i>
+            </div>
+
+            <!--联系方式-->
             <div class="i-company">
               <i class="iconfont icon-WeChat"></i>
               <div class="i-context"  v-if="isCompany2">
@@ -35,14 +48,7 @@
               <input class="i-modify" type="text" v-else="isCompany2" v-focus>
               <i class="iconfont icon-modify" @click="modify2()"></i>
             </div>
-            <div class="i-company">
-              <i class="iconfont icon-phone"></i>
-              <div class="i-context"  v-if="isCompany3">
-                <p>18989477589</p>
-              </div>
-              <input class="i-modify" type="text" v-else="isCompany3" v-focus>
-              <i class="iconfont icon-modify" @click="modify3()"></i>
-            </div>
+
             <div class="i-company" >
               <i class="iconfont icon-mail"></i>
               <div class="i-context"  v-if="isCompany4">
@@ -51,6 +57,7 @@
               <input class="i-modify" type="text" v-else="isCompany4" v-focus>
               <i class="iconfont icon-modify" @click="modify4()"></i>
             </div>
+
           </div>
           <div class="u-submit">保存</div>
         </div>
@@ -60,6 +67,7 @@
 </template>
 
 <script>
+  import user from '@/api/userCenter/header'
 export default {
   data(){
     return{
@@ -67,13 +75,19 @@ export default {
       isCompany2:true,
       isCompany3:true,
       isCompany4:true,
+      userInfo:{},
+      role:'',
+      projectOrgan:{}
     }
   },
-  props:[
-    'userInfo'
-  ],
   created(){
-
+    let userId=sessionStorage.getItem('token').substring(0,2);
+    user.userInfo({project_user_id:userId}).then(res=>{
+      console.log(res);
+      this.userInfo = res.result;
+      this.role=res.result.userRole[0].projectRole.role;
+      this.projectOrgan=res.result.projectOrgan.name
+    })
   },
   directives: {
     focus: {
@@ -186,6 +200,9 @@ export default {
               text-align: left;
               font-size: 14px;
               color: #666666;
+              overflow: hidden;
+              text-overflow:ellipsis;
+              white-space: nowrap;
             }
           }
           .i-modify{
