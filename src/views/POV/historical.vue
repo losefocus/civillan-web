@@ -251,8 +251,8 @@
       let _this=this
       history.list({"key":"ABCxyz0123456789"}).then(res=>{
         console.log(res);
-        res.result.forEach(function (item,i) {
-          console.log(item._v)
+        res.result.forEach(function (item) {
+          console.log(item._v);
           _this.tableData.push(JSON.parse(item._v));
         });
         this.tableData.push(JSON.parse(res.result[0]._v));
