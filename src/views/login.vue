@@ -219,11 +219,13 @@
       border: none;
       box-shadow: 0 6px 15px rgba(243,26,26,0.4);
       border-radius:6px;
+      cursor: pointer;
     }
     .log-forget{
       margin-left: 60px;
       font-size:14px;
       color:rgba(248,89,89,1);
+      cursor: pointer;
     }
     .cp-code{
       margin-top: 240px;

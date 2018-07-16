@@ -67,6 +67,7 @@
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
 
+  import Bus from '@/common/eventBus'
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   export default {
@@ -92,7 +93,7 @@
         radio:"",
         line: 'v',
         items: [
-          {id:1,running:1,runningText:'断线中',device:1,name:'我是名字'},
+          /*{id:1,running:1,runningText:'断线中',device:1,name:'我是名字'},
           {id:2,running:0,runningText:'运行中',device:0,name:'我是名字'},
           {id:3,running:2,runningText:'故障中',device:2,name:'我是名字'},
           {id:4,running:0,runningText:'运行中',device:1,name:'我是名字'},
@@ -103,14 +104,9 @@
           {id:10,running:1,runningText:'断线中',device:1,name:'我是名字'},
           {id:11,running:0,runningText:'运行中',device:1,name:'我是名字'},
           {id:12,running:1,runningText:'断线中',device:1,name:'我是名字'},
-          {id:13,running:0,runningText:'运行中',device:0,name:'我是名字'},
-          {id:14,running:2,runningText:'故障中',device:2,name:'我是名字'},
-          {id:15,running:0,runningText:'运行中',device:1,name:'我是名字'},
-          {id:16,running:1,runningText:'断线中',device:2,name:'我是名字'},
-          {id:17,running:2,runningText:'故障中',device:0,name:'我是名字'},
-          {id:18,running:0,runningText:'运行中',device:1,name:'我是名字'},
-          {id:19,running:2,runningText:'故障中',device:2,name:'我是名字'}
+          {id:13,running:0,runningText:'运行中',device:0,name:'我是名字'},*/
         ],
+        group_id:0,
         tHeader:[
           {name:'运行状况'},
           {name:'历史数据'},
@@ -131,9 +127,14 @@
       };
     },
     created(){
-      deviceList.list().then(res=>{
-        console.log(res)
-      })
+      Bus.$on('groupId',(e)=>{
+        console.log(e);
+        deviceList.list({'group_id':e}).then(res=>{
+          console.log(res);
+          this.items=res.result.items;
+        })
+      });
+
     },
     methods: {
       radioEvent(){
@@ -175,24 +176,6 @@
     }
   }
 </script>
-<style>
-  /*重置element*/
-  .el-dialog__header{
-    padding: 0 !important;
-  }
-  .el-dialog__headerbtn{
-    top:11px;
-    font-size: 21px;
-
-  }
-  .el-dialog__body{
-    padding: 0 !important;
-    height: 100%;
-  }
-  .is-fullscreen{
-    background: #f5f5f9;
-  }
-</style>
 <style scoped lang="scss">
   .item-move {
     transition: all .5s cubic-bezier(.55,0,.1,1);

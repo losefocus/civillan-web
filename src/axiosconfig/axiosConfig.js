@@ -30,7 +30,6 @@ axios.interceptors.request.use(
       config.data = qs.stringify(config.data)
     }
     //console.log(qs.stringify(config.data));
-    console.log(sessionStorage.getItem("token"));
     config.headers.token = sessionStorage.getItem("token");
     return config
   },

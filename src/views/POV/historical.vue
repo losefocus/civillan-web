@@ -1,99 +1,130 @@
 <template>
   <div>
     <!-- 标题和控制栏 -->
-    <div class="control-box">
-      <el-row>
-        <el-col :span="19">
-          <div class="grid-content bg-purple">
-            <div class="hd">
-              <div class="inline-block">
-                <el-dropdown class="inline-block">
-                  <span class="el-dropdown-link">
-                    全部设备<i class="el-icon-caret-bottom el-icon--right"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>黄金糕</el-dropdown-item>
-                    <el-dropdown-item>狮子头</el-dropdown-item>
-                    <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                    <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                    <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-                <el-dropdown class="inline-block">
-                  <span class="el-dropdown-link">
-                    全部桩<i class="el-icon-caret-bottom el-icon--right"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>黄金糕</el-dropdown-item>
-                    <el-dropdown-item>狮子头</el-dropdown-item>
-                    <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                    <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                    <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-                <el-dropdown class="inline-block">
-                  <span class="el-dropdown-link">
-                    最近一周<i class="el-icon-caret-bottom el-icon--right"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>黄金糕</el-dropdown-item>
-                    <el-dropdown-item>狮子头</el-dropdown-item>
-                    <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                    <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                    <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-                <el-date-picker
-                  class="inline-block"
-                  size="small"
-                  type="daterange"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期">
-                </el-date-picker>
-                <el-button type="primary" size="small">查询</el-button>
-                <el-button type="warning" size="small">重置</el-button>
-                <!--<el-button v-popover:popover>focus 激活</el-button>-->
-                <el-button type="text" @click="dialogVisible = true">编辑</el-button>
-              </div>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="5">
-          <div class="grid-content bg-purple icons">
-            <el-button-group class="right">
-              <el-button icon="el-icon-circle-plus-outline" >添加</el-button>
-              <el-button icon="el-icon-share" >下载Excel文件 </el-button>
-              <el-button icon="el-icon-upload2" @click="downloadFile(excelData)" >导出</el-button>
-              <el-button icon="el-icon-download" @click="uploadFile()" >导入</el-button>
-            </el-button-group>
-          </div>
-        </el-col>
-      </el-row>
+    <div class="c-box">
+      <div class="c-query">
+        <el-dropdown trigger="click" placement="bottom-start">
+          <span class="el-dropdown-link" >
+            <span class="c-title">全部设备</span><i class="el-icon-caret-bottom el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>黄金糕</el-dropdown-item>
+            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item>双皮奶</el-dropdown-item>
+            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-dropdown trigger="click" placement="bottom-start">
+          <span class="el-dropdown-link">
+            <span class="c-title">全部桩</span><i class="el-icon-caret-bottom el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>黄金糕</el-dropdown-item>
+            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item>双皮奶</el-dropdown-item>
+            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-dropdown trigger="click" placement="bottom-start">
+          <span class="el-dropdown-link">
+            <span class="c-title">最近一周</span><i class="el-icon-caret-bottom el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>黄金糕</el-dropdown-item>
+            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item>双皮奶</el-dropdown-item>
+            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-dropdown trigger="click" placement="bottom-start">
+          <span class="el-dropdown-link">
+            <span class="c-title">评分等级</span><i class="el-icon-caret-bottom el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>黄金糕</el-dropdown-item>
+            <el-dropdown-item>狮子头</el-dropdown-item>
+            <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            <el-dropdown-item>双皮奶</el-dropdown-item>
+            <el-dropdown-item>蚵仔煎</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-date-picker
+          size="mini"
+          v-model="value7"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions2">
+        </el-date-picker>
+        <div class="c-button">
+          <el-button type="info" size="mini">查询</el-button>
+        </div>
+      </div>
+      <div class="c-handle">
+        <div>
+          <i class="iconfont icon-refresh"></i><span>刷新</span>
+        </div>
+        <div>
+          <i class="iconfont icon-exportdata"></i><span>导出</span>
+        </div>
+        <div>
+          <i class="iconfont icon-Printing"></i><span>打印</span>
+        </div>
+      </div>
     </div>
     <el-table
-      :data="tableData5"
+      :data="tableData"
       style="width: 100%"
       @selection-change="handleSelectionChange">
-      <el-table-column type="expand" style="background: #4F5059">
+      <el-table-column type="expand" style="background: #4F5059" >
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-table
-              :data="tableData"
+              :data="props.row.data"
               style="width: 100%">
               <el-table-column
-                prop="date"
-                label="日期"
+                prop="part_id"
+                label="深度"
                 width="180">
               </el-table-column>
               <el-table-column
                 prop="name"
-                label="姓名"
+                label="+0.25"
                 width="180">
               </el-table-column>
               <el-table-column
                 prop="address"
-                label="地址">
+                label="+0.50">
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="+0.50">
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="+0.75">
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="+1.00">
+              </el-table-column>
+              <el-table-column
+                prop="pulp"
+                label="段浆量（L/m）">
+              </el-table-column>
+              <el-table-column
+                prop="density"
+                label="密度（g/cm3）">
+              </el-table-column>
+              <el-table-column
+                prop="ash"
+                label="灰量（kg）">
               </el-table-column>
             </el-table>
           </el-form>
@@ -105,7 +136,7 @@
       </el-table-column>
       <el-table-column
         label="桩号"
-        prop="id">
+        prop="pile_id">
       </el-table-column>
       <el-table-column
         width="140"
@@ -123,7 +154,7 @@
       </el-table-column>
       <el-table-column
         label="总桩长"
-        prop="b">
+        prop="depth">
       </el-table-column>
       <el-table-column
         label="扩大桩浆量"
@@ -143,11 +174,11 @@
       </el-table-column>
       <el-table-column
         label="外钻最大电流"
-        prop="g">
+        prop="max_current">
       </el-table-column>
       <el-table-column
         label="最大斜度"
-        prop="h">
+        prop="max_slope">
       </el-table-column>
       <el-table-column
         label="喷浆时间"
@@ -162,49 +193,9 @@
 
 </template>
 
-<style>
-  .control-box{
-    border-bottom: 1px solid rgba(230,234,238,1);
-  }
-  .el-tabs{
-    border-bottom: 1px solid red;
-  }
-  .el-table tr{
-    background-color: #ffffff;
-  }
-  .icons .el-button{
-    font-size:12px;
-    padding: 10px 11px;
-  }
-  .control-box {
-    padding: 10px 20px;
-    background: #fff;
-  }
-  .title{
-    font-size: 24px;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
-  .el-table__expanded-cell{
-  }
-  .has-gutter{
-    background: #ffffff !important;
-  }
-</style>
 
 <script>
+  import history from '@/api/project/history'
   export default {
     data() {
       return {
@@ -224,192 +215,53 @@
         price:false,
         remark:true,
         dialogVisible: false,
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
-        tableData5: [{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        }, {
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        }, {
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        }, {
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        },{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        },{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        },{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        },{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        },{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        },{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        },{
-          id: '12987122',
-          startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
-          a: '6m',
-          b: '20m',
-          c: '20L',
-          d: '20L',
-          e: '20KG',
-          f: '20KG',
-          g: '20A',
-          h: '20deg',
-          i: '20min',
-          j: 'A',
-        }
-        ]
+        pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        value7: '',
+        tableData: [],
+
       }
+    },
+    created(){
+      let _this=this
+      history.list({"key":"ABCxyz0123456789"}).then(res=>{
+        console.log(res);
+        res.result.forEach(function (item,i) {
+          console.log(item._v)
+          _this.tableData.push(JSON.parse(item._v));
+        });
+        this.tableData.push(JSON.parse(res.result[0]._v));
+        console.log(this.tableData)
+      })
     },
     methods: {
       handleSelectionChange(val) {
         this.multipleSelection = val;
-      },
-      renderHeader(h) {
-        return (
-          <div>
-          <span>操作</span>
-          <el-button type="text" class='font-blu' style="padding:0px 15px;font-size:12px;"><span class="el-icon-edit-outline"></span > 编辑</el-button>
-        </div>
-      )
       },
       handleSizeChange: function (size) {
         this.pagesize = size;
@@ -424,3 +276,50 @@
     }
   }
 </script>
+<style lang="scss" scoped>
+  .c-box{
+    padding: 20px 30px;
+    border:1px solid rgba(230,234,238,1);
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    .c-handle{
+      display: flex;
+      justify-content: space-between;
+      div{
+        width: 51px;
+        line-height: 27px;
+        margin-left: 40px;
+        text-align: right;
+        cursor: pointer;
+        span{
+          font-size: 12px;
+          margin-left: 10px;
+        }
+      }
+    }
+    .c-query{
+      width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      .c-button{
+        width: 60px;
+      }
+      .el-dropdown-link{
+        cursor: pointer;
+        width: 140px;
+        height: 20px;
+        .c-title{
+          font-size: 12px;
+          color: #666666;
+        }
+
+        .el-icon--right{
+          margin-left: 10px;
+          font-size: 18px;
+          color: #4F5059;
+        }
+      }
+    }
+  }
+</style>

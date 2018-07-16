@@ -149,28 +149,6 @@
     }
   }
 </script>
-<style>
-  .el-badge__content.is-fixed{
-    top: 7px;
-    right: 14px;
-  }
-  /*重置element*/
-  .el-dialog__header{
-    padding: 0 !important;
-  }
-  .el-dialog__headerbtn{
-    top:11px;
-    font-size: 21px;
-
-  }
-  .el-dialog__body{
-    padding: 0 !important;
-    height: 100%;
-  }
-  .is-fullscreen{
-    background: #f5f5f9;
-  }
-</style>
 
 <style scoped lang="scss">
   .el-header{

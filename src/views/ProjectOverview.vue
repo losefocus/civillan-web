@@ -26,7 +26,6 @@
   import zHeader from '@/components/zHeader'
   import zNav from '@/components/zNav'
   import zBread from '@/components/zBread'
-  import Bus from '@/assets/eventBus'
   export default {
     name: "ProjectOverview",
     components:{
@@ -67,11 +66,6 @@
     }
   }
 </script>
-<style>
-  .el-aside::-webkit-scrollbar-button {
-    background-color:#FF7677;
-  }
-</style>
 <style scoped lang="scss">
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.3s;
@@ -85,9 +79,6 @@
   .el-aside{
     height: 100%;
   }
-
-
-
 
 
   .breadcrumb-box{

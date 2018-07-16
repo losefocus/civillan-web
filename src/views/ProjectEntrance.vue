@@ -274,46 +274,6 @@
     }
   }
 </script>
-<style>
-  .info-type{
-    width:46px;
-    height:19px;
-    font-size :12px;
-    text-align :center;
-    line-height :19px;
-    color :#ffffff;
-    background:rgba(173,173,173,1);
-    border-radius:2px;
-  }
-  .info-box{
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .info-title{
-    width: 230px;
-    height: 36px;
-    font-size:16px;
-    line-height: 36px;
-    font-weight: bold;
-    text-overflow:ellipsis;
-    overflow:hidden;
-    white-space:nowrap;
-  }
-  .info-time{
-    width:120px;
-    height:27px;
-    background:rgba(243,26,26,0.8);
-    border-radius:100px 0 0 100px;
-    position:absolute;
-    right: 0;
-    bottom: 10px;
-    color: #ffffff;
-    text-align: center;
-    line-height: 27px;
-    font-size: 12px;
-  }
-</style>
 
 <style scoped lang="scss">
   .el-header{

@@ -15,7 +15,7 @@
         :key="item.id"
         move-class="item-move"
       >
-        <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.name)">
+        <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.name,item.id)">
           <div class="pj-img" :style="{ 'background-image': 'url(' + item.ImgUrl + ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
             <div class="pj-mask" >
               <span>{{item.name}}</span>
@@ -90,7 +90,7 @@
 
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
-  import Bus from '@/assets/eventBus'
+  import Bus from '@/common/eventBus'
   import softBase from '@/assets/project/softBase.png'
   import subgradePavement from '@/assets/project/subgradePavement.png'
   import bridgeEngineering from '@/assets/project/bridgeEngineering.png'
@@ -264,7 +264,7 @@
       let tenant=this.$store.state.project.tenant;
       deviceGrouping.list({'project_id':id,'tenant':tenant}).then(res=>{
         console.log(res);
-        this.items=res.result.items
+        this.items=res.result.items;
       });
 
       console.log(id);
@@ -290,9 +290,10 @@
         });
 
       },
-      jump(title){
+      jump(title,id){
         this.$router.push('/project/softBase');
-        Bus.$emit('Title', title);
+        Bus.$emit('Title',title);
+        Bus.$emit('groupId',id);
       }
     }
   }

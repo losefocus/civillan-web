@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import Bus from '@/assets/eventBus'
+  import Bus from '@/common/eventBus'
 export default {
   name: "zNav",
   data(){
