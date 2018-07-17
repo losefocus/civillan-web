@@ -2,20 +2,21 @@
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
 
-const path = require('path')
+let baseUrl="http://192.168.0.232/";
+const path = require('path');
 
 module.exports = {
   dev: {
-
     // Paths
+    env:require('./dev.env'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api':{//此处并非一定和url一致。
-        target:'192.168.0.85:9000',
+      '/foreground':{//此处并非一定和url一致。
+        target:baseUrl,
         changeOrigin:true,//允许跨域
         pathRewrite:{
-          '^/api': ''
+          '^/foreground': '/foreground'
         }
       }
     },

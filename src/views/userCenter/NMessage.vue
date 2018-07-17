@@ -107,7 +107,7 @@
         }else{
           console.log('删除失败')
         }
-      })
+      });
     },
     deleteAll(){ //清空
       message.emptyMessage({}).then(res=>{

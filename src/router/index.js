@@ -128,7 +128,6 @@ const vRouter = new Router({
 
 
 vRouter.beforeEach(function (to,from,next) {
-  console.log(store.state.login.token);
   if (to.matched.some(record => record.meta.requireAuth)){ // 判断该路由是否需要登录权限
     if(window.$cookies.get('token')){
       sessionStorage.setItem('token',window.$cookies.get('token'));

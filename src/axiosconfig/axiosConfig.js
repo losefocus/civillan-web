@@ -4,9 +4,9 @@ import qs from 'qs'
 import router from '../router'
 import { Message, Loading } from 'element-ui'
 // 响应时间
-var root = process.env.API_ROOT;
+//var root = process.env.API_ROOT;
 //console.log(process.env.API_ROOT);
-axios.defaults.timeout = 2 * 1000;
+axios.defaults.timeout = 3000;
 // 配置cookie
  //axios.defaults.withCredentials = true;
 // 配置请求头
@@ -15,7 +15,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 Vue.prototype.$static = '';
 
 // 配置接口地址
-axios.defaults.baseURL = root;
+//axios.defaults.baseURL = root;
 var loadingInstance;
 // POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use(
@@ -42,12 +42,10 @@ axios.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
+    console.log(res);
     if (res.status === 200) {
       loadingInstance.close();
       return res;
-    } else {
-      loadingInstance.close();
-      Message.error(res.data.message)
     }
   },
   err => {

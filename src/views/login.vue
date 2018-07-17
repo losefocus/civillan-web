@@ -51,6 +51,8 @@
         isSuccess1:false
       };
     },
+    created(){
+    },
     mounted() {
       document.body.onkeydown = this.keyDown;
     },
@@ -112,17 +114,17 @@
               that.$store.dispatch('incrementToken',res.result.token);
               that.$router.push('/');
             }else{
-              console.log(that.$store);
               let wsUrl=JSON.parse(res.result.wsUrl);
-              console.log(wsUrl);
+              console.log(res.result);
+
               sessionStorage.setItem('token',res.result.token);
               sessionStorage.setItem('wsUrl',wsUrl.result);
               that.$cookies.remove('token');
               that.$store.dispatch('incrementToken',res.result.token);
               that.$router.push('/');
             }
-          },(e)=>{
-            console.log('登录出错');
+          }).catch(err => {
+            console.log(err)
           });
         }else {
           console.log('密码账号错误');

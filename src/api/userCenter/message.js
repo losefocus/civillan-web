@@ -2,15 +2,15 @@ import { post } from '../../axiosconfig/axiosConfig'
 import { get } from '../../axiosconfig/axiosConfig'
 export default {
   emptyMessage(params) {
-    return post('/notification/emptyMessage', params)
+    return post('/foreground/notification/emptyMessage', params)
   },
   list(params) {
-    return get('/notification/list',params)
+    return get('/foreground/notification/list',params)
   },
   signRead(params) {
-    return post('/notification/signRead', params)
+    return post('/foreground/notification/signRead', params)
   },
   delete(params) {
-    return post('/notification/signRead', params)
+    return post('/foreground/notification/delete', params)
   }
 }

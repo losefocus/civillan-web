@@ -3,54 +3,30 @@
     <!-- 标题和控制栏 -->
     <div class="c-box">
       <div class="c-query">
-        <el-dropdown trigger="click" placement="bottom-start">
-          <span class="el-dropdown-link" >
-            <span class="c-title">全部设备</span><i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown trigger="click" placement="bottom-start">
-          <span class="el-dropdown-link">
-            <span class="c-title">全部桩</span><i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown trigger="click" placement="bottom-start">
-          <span class="el-dropdown-link">
-            <span class="c-title">最近一周</span><i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown trigger="click" placement="bottom-start">
-          <span class="el-dropdown-link">
-            <span class="c-title">评分等级</span><i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px" clearable >
+          <el-option
+            v-for="item in deviceSelect"
+            :key="item.key"
+            :label="item.name"
+            :value="item.key">
+          </el-option>
+        </el-select>
+        <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px">
+          <el-option
+            v-for="item in deviceSelect"
+            :key="item.key"
+            :label="item.name"
+            :value="item.key">
+          </el-option>
+        </el-select>
+        <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px">
+          <el-option
+            v-for="item in deviceSelect"
+            :key="item.key"
+            :label="item.name"
+            :value="item.key">
+          </el-option>
+        </el-select>
         <el-date-picker
           size="mini"
           v-model="value7"
@@ -60,10 +36,10 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2">
+          :picker-options="pickerOptions2" style="margin: 0 5px">
         </el-date-picker>
         <div class="c-button">
-          <el-button type="info" size="mini">查询</el-button>
+          <el-button type="info" size="mini" @click="query">查询</el-button>
         </div>
       </div>
       <div class="c-handle">
@@ -82,7 +58,7 @@
       :data="tableData"
       style="width: 100%"
       @selection-change="handleSelectionChange">
-      <el-table-column type="expand" style="background: #4F5059" >
+      <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-table
@@ -189,31 +165,32 @@
         prop="j">
       </el-table-column>
     </el-table>
+
+    <div class="m-pagination">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="post_data.page_index"
+        layout="total, prev, pager, next, jumper"
+        :total='total'>
+      </el-pagination>
+    </div>
   </div>
+
+
 
 </template>
 
 
 <script>
   import history from '@/api/project/history'
+  import deviceList from '@/api/project/deviceList'
   export default {
     data() {
       return {
         multipleSelection: [],
         currentPage:1,
         pagesize:20,
-        state:true,
-        date:true,
-        number:true,
-        ship:true,
-        receive:true,
-        tel:false,
-        type:false,
-        total:false,
-        weight:false,
-        volume:false,
-        price:false,
-        remark:true,
+        total:0,
         dialogVisible: false,
         pickerOptions2: {
           shortcuts: [{
@@ -243,23 +220,32 @@
           }]
         },
         value7: '',
+        device:'',
+        deviceKey:'',
         tableData: [],
-
+        deviceSelect:[],
+        post_data:{
+          key:'',
+          page_index:1,
+          page_size:10,
+        }
       }
     },
     created(){
-      let _this=this
-      history.list({"key":"ABCxyz0123456789"}).then(res=>{
+      deviceList.list().then(res=>{
         console.log(res);
-        res.result.forEach(function (item) {
-          console.log(item._v);
-          _this.tableData.push(JSON.parse(item._v));
-        });
-        this.tableData.push(JSON.parse(res.result[0]._v));
-        console.log(this.tableData)
-      })
+        this.deviceSelect=res.result.items
+      });
+      this.getList(this.post_data)
     },
     methods: {
+      deviceChange(val){
+        console.log(val);
+        this.deviceKey=val;
+      },
+      handleCommand(command) {
+        this.$message(command);
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
@@ -267,18 +253,41 @@
         this.pagesize = size;
       },
       handleCurrentChange: function(currentPage){
-        this.currentPage = currentPage;
-        console.log(this.ajax);
+        console.log(currentPage);
+        this.post_data.page_index = currentPage;
+        this.getList(this.post_data);
+        console.log(this.post_data)
       },
-      handleClose(done) {
-        done();
+      getList:function (post_data) {
+        let _this=this;
+        let tableList=[];
+        history.list(post_data).then(res=>{
+          if(res.result.items){
+            //console.log(res.result);
+            _this.total=res.result.total;
+            res.result.items.forEach(function (item) {
+              tableList.push(item._v);
+            });
+            _this.tableData=tableList;
+            //console.log(_this.tableData)
+          }else {
+            console.log('请求不成功')
+          }
+        }).catch(function (err) {
+          console.info(err)
+        })
+      },
+      query(){
+        this.post_data.key=this.deviceKey;
+        this.post_data.page_index=1;
+        this.getList(this.post_data)
       }
     }
   }
 </script>
 <style lang="scss" scoped>
   .c-box{
-    padding: 20px 30px;
+    padding: 20px 2%;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
     display: flex;
@@ -304,6 +313,7 @@
       justify-content: space-between;
       .c-button{
         width: 60px;
+        margin-left: 5px;
       }
       .el-dropdown-link{
         cursor: pointer;
@@ -321,5 +331,10 @@
         }
       }
     }
+  }
+  .m-pagination{
+    padding: 20px;
+    text-align: center;
+    background: #ffffff;
   }
 </style>

@@ -53,7 +53,7 @@ table { border-collapse:collapse; border-spacing:0; }
   line-height: 27px;
   font-size: 12px;
 }
-/*重置element*/
+/*模态框重置样式*/
 .el-dialog__header{
   padding: 0 !important;
 }
@@ -78,7 +78,7 @@ table { border-collapse:collapse; border-spacing:0; }
   top: 7px;
   right: 14px;
 }
-/*重置element*/
+
 .el-dialog__header{
   padding: 0 !important;
 }
@@ -94,6 +94,13 @@ table { border-collapse:collapse; border-spacing:0; }
 .is-fullscreen{
   background: #f5f5f9;
 }
+
+/*表格重置样式*/
+.el-table{
+  font-size: 12px;
+}
+
+
 
 
 

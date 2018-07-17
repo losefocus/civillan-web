@@ -1,10 +1,10 @@
 <template>
   <div style="padding-left: 3%">
     <waterfall
-      :line-gap="300"
-      :min-line-gap="250"
-      :max-line-gap="350"
-      :single-max-width="350"
+      :line-gap="380"
+      :min-line-gap="300"
+      :max-line-gap="380"
+      :single-max-width="380"
       :watch="items">
       <!-- each component is wrapped by a waterfall slot -->
       <waterfall-slot
@@ -112,138 +112,6 @@
           testRoom,
           mixingStation,
         ],
-        /*items: [
-          { id:1,
-            title:'软基处理',
-            path:'/project/softBase',
-            ImgUrl:softBase,
-            lists:[{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            }]
-          },
-          { id:2,
-            title:'路基路面',
-            path:'/project/softBase',
-            ImgUrl:subgradePavement,
-            lists:[{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            }]
-          },
-          { id:3,
-            title:'桥梁工程',
-            path:'/project/softBase',
-            ImgUrl:bridgeEngineering,
-            lists:[{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            },{
-              a:'双头搅拌桩',
-              b:'6',
-              c:'10'
-            }]
-          },
-          { id:4,
-          title:'实验室',
-          path:'/project/softBase',
-          ImgUrl:testRoom,
-          lists:[{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          }]
-        },
-          { id:5,
-          title:'拌和站',
-          path:'/project/softBase',
-          ImgUrl:mixingStation,
-          lists:[{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          },{
-            a:'双头搅拌桩',
-            b:'6',
-            c:'10'
-          }]
-        }
-        ],*/
         items:[],
         info:{},
         isBusy: false,
@@ -267,10 +135,8 @@
         this.items=res.result.items;
       });
 
-      console.log(id);
-      console.log(tenant);
       project.info({'project_id':id,'tenant':tenant}).then(res=>{
-        console.log(res);
+        //console.log(res);
         this.info=res.result;
         let marker = new AMap.Marker({
           icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",

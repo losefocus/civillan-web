@@ -248,9 +248,6 @@
               });
           })
         }
-        ).catch(err=>{
-            console.log(err)
-          }
         );
       },
       close:function (list,index) {
