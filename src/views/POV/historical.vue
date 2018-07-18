@@ -273,8 +273,6 @@
           }else {
             console.log('请求不成功')
           }
-        }).catch(function (err) {
-          console.info(err)
         })
       },
       query(){

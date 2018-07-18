@@ -18,7 +18,7 @@
              <div class="i-state"><i class="iconfont icon-state"></i><span>记录状态</span></div>
            </div>
          </div>
-         <div class="i-start">开始时间：<span>2018-01-21 19:00</span></div>
+         <div class="i-start">开始时间：<span>2018-12-12</span></div>
          <div class="i-progress">
            <div class="i-progressName" style="width: 20%">进度：</div>
            <el-progress :stroke-width="15" :percentage="80" color="#24BCF7" style="width: 80%"></el-progress>
@@ -154,17 +154,55 @@
 <script>
   import echarts from 'echarts'
   import RadialProgressBar from 'vue-radial-progress'
+  import deviceData from '@/api/device/deviceData'
+  import {formatDate} from '@/common/formatDate.js';
 export default {
   name: "runningState",
   components:{
     RadialProgressBar
   },
   data(){
-    let data = [0,10,20,30,40,50,60,70,80,90];
-    let data1 = [120.0, 80.2, 100.3, 60.5, 90.6, 70.3,60.6,90.1,110.9,80.5];
-    let Data=data.reverse();
+    let data = [0,10,20,30,40,50,60,70,80,90,100];
+    let data1 = [];
+    let data2 = [];
+    let data3 = [];
+    let data4 = [];
+    let Data=data;
     let Data1=data1.slice(0, 4).concat(['', '', '', '', '', '']).reverse();
     let Data2= ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'].concat(data1.slice(3, 10)).reverse();
+
+
+    let arr=[];
+    let num =0;
+    let max=100;
+    let min=1;
+    let timer=setInterval(()=>{
+      num+=5;
+      //data.push(num);
+      if(num>0&&num<=25){
+        data1.push(num);
+        data2.push('');
+        data3.push('');
+        data4.push('');
+      }else if(num>=25&&num<=50){
+        data1.push('');
+
+        data2.push(num);
+        data3.push('');
+        data4.push('');
+      }else if(num>=50&&num<=75){
+        data1.push('');
+        data2.push('');
+        data3.push(num);
+        data4.push('');
+      }else if(num>=75){
+        data1.push('');
+        data2.push('');
+        data3.push('');
+        data4.push(num);
+      }
+
+    },1000);
     console.log( Data1);
     console.log( Data2);
 
@@ -174,7 +212,7 @@ export default {
       isRouterAlive: true,
 
       completedSteps:3,
-      totalSteps: 20,
+      totalSteps: 100,
       animateSpeed: 500,
       diameter: 110,
       strokeWidth: 8,
@@ -182,6 +220,8 @@ export default {
       stopColor: '#20CEDE',
       innerStrokeColor: 'rgba(151,151,151,0.3)',
       timingFunc: 'linear',
+
+      RT_data:null, //实时数据
 
       progress:20,
 
@@ -231,6 +271,7 @@ export default {
         },
         yAxis: [{
           type: 'category',
+          inverse:true,
           boundaryGap: false,
           axisLine: {
             lineStyle: {
@@ -249,6 +290,7 @@ export default {
         }],
         xAxis: [{
           type: 'value',
+          max:120,
           position:'top',
           name: '',
           axisTick: {
@@ -273,8 +315,108 @@ export default {
             }
           }
         }],
-        series: [{
+        series: [
+          {
           name: '测试1',
+          type: 'line',
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              width: 1
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                offset: 0,
+                color: '#17A8F5'
+              }, {
+                offset: 1,
+                color: '#17A8F5'
+              }], false),
+              shadowColor: '#17A8F5',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#17A8F5',
+              borderColor: '#17A8F5',
+              borderWidth: 12
+            }
+          },
+          data: data1
+        },
+          {
+          name: '测试2',
+          type: 'line',
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              width: 1
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                offset: 0,
+                color: '#20CEDE'
+              }, {
+                offset: 1,
+                color: '#20CEDE'
+              }], false),
+              shadowColor: '#20CEDE',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#20CEDE',
+              borderColor: '#20CEDE',
+              borderWidth: 12
+            }
+          },
+          data: data2
+        },
+          {
+          name: '测试3',
+          type: 'line',
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              width: 1
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                offset: 0,
+                color: '#979797'
+              }, {
+                offset: 1,
+                color: '#979797'
+              }], false),
+              shadowColor: '#979797',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#979797',
+              borderColor: '#979797',
+              borderWidth: 12
+            }
+          },
+          data: data3
+        },
+          {
+          name: '测试4',
           type: 'line',
           symbol: 'circle',
           symbolSize: 5,
@@ -299,45 +441,14 @@ export default {
           },
           itemStyle: {
             normal: {
-              color: 'rgb(113,226,237)',
-              borderColor: 'rgba(0,136,212,0.2)',
+              color: 'rgb(100,100,100)',
+              borderColor: 'rgba(100,100,100,0.2)',
               borderWidth: 12
             }
           },
-          data: Data1
-        },{
-          name: '测试2',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 1
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: 'rgba(0,0,0,1)'
-              }, {
-                offset: 1,
-                color: 'rgba(0, 0, 0, 1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgb(0,0,0)',
-              borderColor: 'rgba(0,0,0,0.2)',
-              borderWidth: 12
-            }
-          },
-          data: Data2
-        },]
+          data: data4
+        },
+        ],
       },
       ElectricCurrent:{
         title: {
@@ -726,7 +837,7 @@ export default {
       }
     }
   },
-  props:['dialogFullscreen'],
+  props:['dialogFullscreen','deviceKey'],
   mounted(){
 
     this.init();
@@ -735,6 +846,12 @@ export default {
     window.onresize = function (){
       let clientWidth=document.body.clientWidth;
       that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
+    }
+  },
+  filters: {
+    formatDate(time) {
+      let date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd'); //yyyy-MM-dd hh:mm
     }
   },
   methods:{
@@ -795,10 +912,20 @@ export default {
     reload () {
       this.isRouterAlive = false;
       this.$nextTick(() => (this.isRouterAlive = true))
+    },
+    getData(key){
+      deviceData.list({'key':key}).then(res=>{
+        console.log(res);
+        this.RT_data=res.result;
+      })
     }
   },
   created(){
-
+    console.log(this.deviceKey);
+    this.getData(this.deviceKey);
+    /*let timer=setInterval(()=>{
+      this.getData(this.deviceKey)
+    },2000);*/
   },
   watch:{
     dialogFullscreen:function (val,oldVal) {

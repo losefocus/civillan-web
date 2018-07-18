@@ -14,19 +14,19 @@
         :key="item.id"
         move-class="item-move"
       >
-        <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)">
-          <div class="r-state" :class="{'r-state1':item.running==0,'r-state2':item.running==1,'r-state3':item.running==2}">
+        <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)" >
+          <div class="r-state" :class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}">
           </div>
           <div class="d-name">
             <span>{{item.name}}</span>
           </div>
           <div class="d-title">
-            <span v-if="item.device==0">搅拌桩</span>
-            <span v-if="item.device==1">双头搅拌桩</span>
-            <span v-if="item.device==2">高压旋桩</span>
+            <span>{{item.device_type}}</span>
+            <!--<span v-if="item.device_type=='双头搅拌桩'">双头搅拌桩</span>
+            <span v-if="item.device_type=='高压旋桩'">高压旋桩</span>-->
           </div>
           <ul class="d-info">
-            <li class="d-img" :class="{'d-type1':item.device==0,'d-type2':item.device==1,'d-type3':item.device==2}"></li>
+            <li class="d-img" :class="{'d-type1':item.device==0,'d-type2':item.device==1,'d-type3':item.device_type=='高压旋喷搅拌桩'}"></li>
             <li class="d-statistics">
               <div class="d-date">段浆量：10L</div>
               <div class="d-progress">
@@ -54,13 +54,16 @@
           <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
         </div>
       </ul>
-      <r-state :is="currentView" keep-alive  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
+      <r-state v-if="dialogVisible" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
     </el-dialog>
   </div>
 </template>
 
 <script>
+  import dictionary from '@/api/common/dictionary'
   import deviceList from '@/api/project/deviceList'
+
+
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
   import AQuery from '@/views/softBase/AQuery'
@@ -92,21 +95,9 @@
         changeIcon:true,
         radio:"",
         line: 'v',
-        items: [
-          /*{id:1,running:1,runningText:'断线中',device:1,name:'我是名字'},
-          {id:2,running:0,runningText:'运行中',device:0,name:'我是名字'},
-          {id:3,running:2,runningText:'故障中',device:2,name:'我是名字'},
-          {id:4,running:0,runningText:'运行中',device:1,name:'我是名字'},
-          {id:5,running:1,runningText:'断线中',device:2,name:'我是名字'},
-          {id:7,running:2,runningText:'故障中',device:0,name:'我是名字'},
-          {id:8,running:0,runningText:'运行中',device:1,name:'我是名字'},
-          {id:9,running:2,runningText:'故障中',device:2,name:'我是名字'},
-          {id:10,running:1,runningText:'断线中',device:1,name:'我是名字'},
-          {id:11,running:0,runningText:'运行中',device:1,name:'我是名字'},
-          {id:12,running:1,runningText:'断线中',device:1,name:'我是名字'},
-          {id:13,running:0,runningText:'运行中',device:0,name:'我是名字'},*/
-        ],
+        items: [],
         group_id:0,
+        deviceKey:'',
         tHeader:[
           {name:'运行状况'},
           {name:'历史数据'},
@@ -127,21 +118,23 @@
       };
     },
     created(){
+      /*let _this=this;
       Bus.$on('groupId',(e)=>{
         console.log(e);
-        deviceList.list({'group_id':e}).then(res=>{
-          console.log(res);
-          this.items=res.result.items;
-        })
-      });
-
+        console.log(this);
+        _this.group_id=e;
+      });*/
+      let group_id=sessionStorage.getItem('group_id');
+      this.getList(group_id)
     },
     methods: {
       radioEvent(){
         this.dialogVisible = false;
       },
       getDetails(item,index){
-        this.dialogVisible=true
+        this.dialogVisible=true;
+        this.deviceKey=item.key;
+        console.log(this.deviceKey)
       },
       changeTab(i){
         this.tIndex=i;
@@ -172,6 +165,21 @@
       },
       close(){
 
+      },
+      getList(group_id){
+        deviceList.list({'group_id':group_id}).then(res=>{
+          this.items=res.result.items;
+          this.items.forEach((item,i)=>{
+            console.log(item)
+            dictionary.list({'type':'device_type'}).then(res=>{
+              res.result.forEach((dict,j)=>{
+                if(item.product.alias==dict.label){
+                  item.device_type=dict.label
+                }
+              });
+            })
+          });
+        })
       }
     }
   }

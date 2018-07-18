@@ -159,7 +159,7 @@
       jump(title,id){
         this.$router.push('/project/softBase');
         Bus.$emit('Title',title);
-        Bus.$emit('groupId',id);
+        sessionStorage.setItem('group_id',id)
       }
     }
   }

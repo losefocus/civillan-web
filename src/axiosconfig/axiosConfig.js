@@ -42,7 +42,6 @@ axios.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
-    console.log(res);
     if (res.status === 200) {
       loadingInstance.close();
       return res;
