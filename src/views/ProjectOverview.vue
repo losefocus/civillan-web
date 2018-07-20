@@ -10,7 +10,6 @@
           <div class="breadcrumb-box">
             <div :class="{'b-title':isActive}">{{ title }}</div>
             <div class="el-breadcrumb">
-
               <z-bread></z-bread>
             </div>
           </div>
@@ -87,6 +86,7 @@
     text-align: right;
     .el-breadcrumb{
       float: right;
+      //margin-right: 1%;
     }
     .b-title{
       float: left;

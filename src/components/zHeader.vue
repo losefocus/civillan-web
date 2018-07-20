@@ -94,7 +94,7 @@
       console.log();
       let userId=sessionStorage.getItem('token').substring(0,2);
       userInfo.userInfo({project_user_id:userId}).then(res=>{
-        console.log(res)
+        console.log(res);
         this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath
       });
 

@@ -54,6 +54,10 @@ table { border-collapse:collapse; border-spacing:0; }
   font-size: 12px;
 }
 /*模态框重置样式*/
+.el-header{
+  padding: 15px 20px 15px 40px !important;
+}
+
 .el-dialog__header{
   padding: 0 !important;
 }
@@ -99,7 +103,30 @@ table { border-collapse:collapse; border-spacing:0; }
 .el-table{
   font-size: 12px;
 }
-
+.el-table__expanded-cell{
+  background: rgba(79,80,89,0.6);
+  color:#ffffff;
+}
+.el-table__expanded-cell .el-table--enable-row-hover .el-table__body tr:hover>td{
+  background: rgba(79,80,89,0.8);
+  color:#ffffff;
+}
+.el-table__expanded-cell:hover{
+  background: rgba(79,80,89,0.6) !important;
+}
+.el-table__expanded-cell tr td{
+  background: rgba(79,80,89,0.6);
+  border-bottom: rgba(79,80,89,0.6) !important;
+  color: #ffffff;
+}
+.el-table__expanded-cell .el-table__header-wrapper .has-gutter tr th{
+  background: rgba(79,80,89,0.6) !important;
+  border-bottom: rgba(79,80,89,0.6) !important;
+  color: #ffffff;
+}
+.el-table__expanded-cell[class*=cell]{
+  padding: 20px 50px 20px 100px;
+}
 
 
 

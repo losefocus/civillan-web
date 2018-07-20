@@ -142,11 +142,8 @@
            </div>
          </div>
        </li>
-       <li class="s-chart" v-if="isRouterAlive">
+       <li class="s-chart1" v-if="isRouterAlive">
          <chart :options="AshBreakingAmount" :auto-resize=true></chart>
-       </li>
-       <li class="s-chart" v-if="isRouterAlive">
-         <chart :options="JettingPressure" :auto-resize=true></chart>
        </li>
      </ul>
    </div>
@@ -208,30 +205,64 @@ export default {
     console.log( Data1);
     console.log( Data2);
 
+
+    function randomData() {
+      now = new Date(+now + oneDay);
+      value = value + Math.random() * 21 - 10;
+      return {
+        name: now.toString(),
+        value: [
+          [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+          Math.round(value)
+        ]
+      }
+    }
+
+    let aData = [];
+    let aData1 = [];
+    let aData2 = [];
+    let now = +new Date(1997, 9, 3);
+    let oneDay = 24 * 3600 * 1000;
+    let value = Math.random() * 1000;
+    for (var i = 0; i < 1000; i++) {
+      aData.push(randomData());
+      aData1.push(randomData()-200);
+      aData2.push(randomData()+200);
+    }
+    setInterval(function () {
+      for (var i = 0; i < 5; i++) {
+        aData.shift();
+        aData.push(randomData());
+        aData1.push(randomData()-200);
+        aData2.push(randomData()+200);
+      }
+    }, 1000);
+
+
     return {
-      titleActive:'1',//设备切换
+      titleActive:'1',//设备样式切换
 
       classChange:1,//改变样式
 
       isRouterAlive: true, //ECharts刷新
 
-      completedSteps:3,//
-      totalSteps: 100,//
-      animateSpeed: 500,//
-      diameter: 110,//
-      strokeWidth: 8,//
-      startColor: '#17A8F5',//
-      stopColor: '#20CEDE',//
-      innerStrokeColor: 'rgba(151,151,151,0.3)',//
-      timingFunc: 'linear',//
+      completedSteps:3,//进度条中已完成步骤的数量
+      totalSteps: 100,//完成进度条的步骤总数。
+      animateSpeed: 500,//动画一步的时间量（以毫秒为单位）
+      diameter: 110,//进度条圆的直径，以像素为单位。
+      strokeWidth: 8,//进度条的宽度
+      startColor: '#17A8F5',//进度条渐变的前沿颜色。
+      stopColor: '#20CEDE',//进度条渐变的辅助颜色。
+      innerStrokeColor: 'rgba(151,151,151,0.3)',//进度条的背景颜色。
+      timingFunc: 'linear',//用于CSS转换的转换计时功能
 
       RT_data:null, //实时数据
 
-      progress:20,//
+      progress:20,//深度进度
 
-      isWarming:true,//
+      isWarming:true,//未发现问题显示
 
-      isTab:false,//
+      isTab:false,//设备型号切换
 
       PulpingQuantity:{
         title: {
@@ -605,240 +636,108 @@ export default {
       },
       AshBreakingAmount:{
         title: {
-          text: 'A-断灰量随桩机里程变化曲线',
-          show: true,
-          textStyle: {
-            fontWeight: 'bold',
-            fontSize: 16,
-            color: '#333'
-          },
-          left: '6%',
-          top:'4%'
+          text: '动态数据 + 时间坐标轴'
         },
         tooltip: {
           trigger: 'axis',
+          formatter: function (params) {
+            params = params[0];
+            var date = new Date(params.name);
+            return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+          },
           axisPointer: {
-            lineStyle: {
-              color: '#333'
-            }
+            animation: false
           }
         },
         legend: {
-          icon: 'rect',
-          itemWidth: 14,
-          itemHeight: 5,
-          itemGap: 13,
-          data: ['断灰量'],
-          right: '4%',
-          top:'5%',
-          textStyle: {
-            fontSize: 12,
-            color: '#333'
+          x: 'center',
+          data:['NO1','NO2','NO3'],
+          textStyle:{
+            color:"#000",
+            fontsize:5
           }
         },
-        grid: {
-          left: '8%',
-          right: '8%',
-          bottom: '8%',
-          top: '20%',
-          containLabel: true
+        xAxis: {
+          type: 'time',
+          splitLine: {
+            show: false
+          }
         },
         yAxis: [{
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
-          data: Data
-        }],
-        xAxis: [{
           type: 'value',
-          position:'top',
-          name: '',
-          axisTick: {
-            show: false
-          },
+          boundaryGap: [0, '100%'],
           axisLine: {
             lineStyle: {
-              color: '#fff'
+              color:'#0B438B'
             }
           },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
+          name:'电流 A',
+          position:'left',
+          offset:50,
+          splitNumber:10,
           splitLine: {
-            lineStyle: {
-              type: 'solid',
-              color: '#ccc'
-            }
+            show: false
           }
-        }],
+        },
+          {
+            type: 'value',
+            boundaryGap: [0, '100%'],
+            axisLine: {
+              lineStyle: {
+                color:'#0B438B'
+              }
+            },
+            name:'深度 C',
+            position:'left',
+            offset:100,
+            splitNumber:10,
+            splitLine: {
+              show: false
+            }
+          },
+          {
+            boundaryGap: [0, '50%'],
+            axisLine: {
+              lineStyle: {
+                color:'#0B438B'
+              }
+            },
+            splitLine:{
+              show:false,
+            },
+            type: 'value',
+            name:'转速 C',
+            position:'left',
+//            min:0,
+//            max:100,
+            axisLabel: {
+              formatter: '{value} C'
+            },
+
+          },
+        ],
         series: [{
-          name: '断灰量',
+          name: '模拟数据',
           type: 'line',
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 5,
           showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 1
-            }
+          hoverAnimation: false,
+          data: aData
+        },
+          {
+            name: '模拟数据',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: aData1
           },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: 'rgba(113,226,237,1)'
-              }, {
-                offset: 1,
-                color: 'rgba(0, 136, 212, 1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgb(113,226,237)',
-              borderColor: 'rgba(0,136,212,0.2)',
-              borderWidth: 12
-            }
-          },
-          data: Data1
-        },]
+          {
+            name: '模拟数据',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: aData2
+          }]
       },
-      JettingPressure:{
-        title: {
-          text: 'A-喷浆压力随桩机里程变化曲线',
-          show: true,
-          textStyle: {
-            fontWeight: 'bold',
-            fontSize: 16,
-            color: '#333'
-          },
-          left: '6%',
-          top:'4%'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            lineStyle: {
-              color: '#333'
-            }
-          }
-        },
-        legend: {
-          icon: 'rect',
-          itemWidth: 14,
-          itemHeight: 5,
-          itemGap: 13,
-          data: ['喷浆压力'],
-          right: '4%',
-          top:'5%',
-          textStyle: {
-            fontSize: 12,
-            color: '#333'
-          }
-        },
-        grid: {
-          left: '8%',
-          right: '8%',
-          bottom: '8%',
-          top: '20%',
-          containLabel: true
-        },
-        yAxis: [{
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
-          data: Data
-        }],
-        xAxis: [{
-          type: 'value',
-          position:'top',
-          name: '',
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#fff'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              type: 'solid',
-              color: '#ccc'
-            }
-          }
-        }],
-        series: [{
-          name: '喷浆压力',
-          type: 'line',
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 1
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: 'rgba(113,226,237,1)'
-              }, {
-                offset: 1,
-                color: 'rgba(0, 136, 212, 1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgb(113,226,237)',
-              borderColor: 'rgba(0,136,212,0.2)',
-              borderWidth: 12
-            }
-          },
-          data: Data1
-        },]
-      }
     }
   },
   props:['dialogFullscreen','deviceKey'],
@@ -1314,6 +1213,11 @@ export default {
       }
       .s-chart{
         width:36.5%;
+        background:rgba(255,255,255,1);
+        box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+      }
+      .s-chart1{
+        width:73.3%;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
       }

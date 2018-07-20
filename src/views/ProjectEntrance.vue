@@ -279,7 +279,7 @@
 
 <style scoped lang="scss">
   .el-header{
-    padding: 15px 40px;
+    padding: 15px 20px 15px 40px;
   }
   .el-main{
     padding: 0;
@@ -296,7 +296,7 @@
 
     cursor: pointer;
     position: absolute;
-    z-index: 2;
+    z-index:200;
     background: rgba(231,25,25,0.85);
     box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(243,26,26,1);
     border-radius: 5px;

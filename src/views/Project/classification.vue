@@ -91,11 +91,6 @@
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   import Bus from '@/common/eventBus'
-  import softBase from '@/assets/project/softBase.png'
-  import subgradePavement from '@/assets/project/subgradePavement.png'
-  import bridgeEngineering from '@/assets/project/bridgeEngineering.png'
-  import testRoom from '@/assets/project/testRoom.png'
-  import mixingStation from '@/assets/project/mixingStation.png'
   export default {
     name: "project",
     components: {
@@ -105,13 +100,6 @@
     data () {
       return {
         line: 'v',
-        imgArr:[
-          softBase,
-          subgradePavement,
-          bridgeEngineering,
-          testRoom,
-          mixingStation,
-        ],
         items:[],
         info:{},
         isBusy: false,
@@ -126,6 +114,7 @@
     },
     mounted(){
       this.init();
+
     },
     created(){
       let id=this.$store.state.project.projectId;
@@ -133,6 +122,9 @@
       deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
         console.log(res);
         this.items=res.result.items;
+        /*this.$nextTick(()=>{
+          this.isShow=true
+        })*/
       });
 
       project.info({'project_id':id,'tenant':tenant}).then(res=>{

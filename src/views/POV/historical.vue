@@ -94,15 +94,15 @@
                 label="+1.00">
               </el-table-column>
               <el-table-column
-                prop="pulp"
+                prop="p_pulp"
                 label="段浆量（L/m）">
               </el-table-column>
               <el-table-column
-                prop="density"
+                prop="p_density"
                 label="密度（g/cm3）">
               </el-table-column>
               <el-table-column
-                prop="ash"
+                prop="p_ash"
                 label="灰量（kg）">
               </el-table-column>
             </el-table>
