@@ -50,6 +50,8 @@
     methods: {
       init: function () {
         let _this=this;
+        //console.log(sessionStorage.getItem('isActive'));
+        sessionStorage.setItem('isActive',0);
         let map = new AMap.Map('container', {
           center: [116.397428, 39.90923],
           zoom: 10
@@ -63,7 +65,7 @@
         });
 
         project.list().then(res=>{
-          console.log(toTree(res.result.items));
+          //console.log(toTree(res.result.items));
           let lists=toTree(res.result.items);
           lists.forEach(function (item) {
             item.show=false;
@@ -143,7 +145,7 @@
                   },
                   //返回数据项对应的列表节点
                   getListElement: function(dataItem, context, recycledListElement) {
-                    var tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'+'<span style="width: 260px;height: 42px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 16px;vertical-align: middle;" class=<%- dataItem.listId %>><%- dataItem.name %>'+'</span>'+'</p>';
+                    var tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'+'<span style="width: 260px;height: 42px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 14px;vertical-align: middle;" class=<%- dataItem.listId %>><%- dataItem.name %>'+'</span>'+'</p>';
 
                     var content = MarkerList.utils.template(tpl, {
                       dataItem: dataItem,
@@ -160,13 +162,16 @@
                     return '<li>' + content + '</li>';
                   },
                   getInfoWindow: function(dataItem, context, recycledInfoWindow) {
+                    let projectLogo=dataItem.thumbnailUrl+dataItem.thumbnailPath;
+                    _this.$store.dispatch('incrementLogo',projectLogo);
+                    //console.log(dataItem);
                     let content='<div style="width:290px;\n' +
                       'height:195px;\n' +
                       'background:rgba(255,255,255,1);\n' +
                       'cursor:pointer;\n'+
                       'box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);">' +
-                      '<div style=" position: relative; width: 290px;height: 130px;background: url(' +zImg+
-                      ')">' +
+                      '<div style=" position: relative; width: 290px;height: 130px;background: url(' +dataItem.thumbnailUrl+dataItem.thumbnailPath+
+                      ');background-size:100% 100%">' +
                       '<div class="info-time">2018-10-21 12:00</div>'+
                       '</div>'+
                       '<div style="width: 90%;padding-left: 15px">' +
@@ -304,14 +309,14 @@
       width: 100%;
       height: 40px;
       margin-bottom: 30px;
-      font-size: 26px;
+      font-size: 24px;
       text-align: center;
     }
     .list-title{
       height: 35px;
       border-bottom: 1px solid rgba(255,255,255,.5);
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 16px;
       display: flex;
       justify-content: space-between;
     }

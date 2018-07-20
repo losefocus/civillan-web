@@ -4,7 +4,7 @@
       <el-aside :width='isCollapse'>
         <transition name="fade">
           <div class="pj-img" v-if="imgShow">
-            <div class="pj-title">
+            <div class="pj-title" :style="{'background-image': 'url(' + projectLogo+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
               <p>
                 杭州高新战略科技城区项目
               </p>
@@ -36,6 +36,7 @@ export default {
   name: "zNav",
   data(){
    return{
+     projectLogo:'',
      isActive:-1,
      imgShow:true,
      isCollapse:'245px',
@@ -90,9 +91,11 @@ export default {
   },
   created(){
     this.isActive=0;
+    this.projectLogo=sessionStorage.getItem('projectLogo')
   },
   mounted(){
-    this.isActive=sessionStorage.getItem('isActive') || 0
+    this.isActive=sessionStorage.getItem('isActive') || 0;
+    console.log(this.isActive)
   },
   methods:{
     checkedItem(index,title){
@@ -118,6 +121,7 @@ export default {
       this.lists.forEach((item,i)=>{
         if(item.path==this.$route.path){
           this.isActive=i;
+          console.log(this.isActive)
         }
         this.lists[0].children.forEach((child,c)=>{
           if(child.path==this.$route.path){
@@ -184,7 +188,7 @@ export default {
   .pj-img{
     position: relative;
     width: 100%;
-    background: url(../assets/Nav/projectLogo.png);
+    //background: url(../assets/Nav/projectLogo.png);
     background-size: cover;
     text-align: center;
     color: #ffffff;

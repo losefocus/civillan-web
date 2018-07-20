@@ -131,6 +131,7 @@ vRouter.beforeEach(function (to,from,next) {
   if (to.matched.some(record => record.meta.requireAuth)){ // 判断该路由是否需要登录权限
     if(window.$cookies.get('token')){
       sessionStorage.setItem('token',window.$cookies.get('token'));
+      sessionStorage.setItem('wsUrl',window.$cookies.get('wsUrl'));
       next();
     }else {
       if (store.state.login.token) { //token存在 已经登陆

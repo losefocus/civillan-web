@@ -80,6 +80,9 @@
       },
       handleDelete(index, row) {
         console.log(index, row);
+      },
+      getList(){
+
       }
     }
   }

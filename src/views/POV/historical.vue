@@ -3,7 +3,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box">
       <div class="c-query">
-        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px" clearable >
+        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px" clearable>
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -40,6 +40,9 @@
         </el-date-picker>
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">查询</el-button>
+        </div>
+        <div class="c-button">
+          <el-button type="info" size="mini" @click="query">重置</el-button>
         </div>
       </div>
       <div class="c-handle">
@@ -115,18 +118,19 @@
         prop="pile_id">
       </el-table-column>
       <el-table-column
-        width="140"
-        label="开始时间"
-        prop="startTime">
-      </el-table-column>
-      <el-table-column
-        width="140"
-        label="结束时间"
-        prop="endTime">
+        width="300"
+        label="作业周期"
+        align="center"
+        >
+        <template slot-scope="props">
+          {{ props.row.begin_time | formatDate }}
+          <span style="margin: 0 8px">-</span>
+          {{ props.row.end_time | formatDate }}
+        </template>
       </el-table-column>
       <el-table-column
         label="扩大头桩长"
-        prop="a">
+        prop="t_type_length">
       </el-table-column>
       <el-table-column
         label="总桩长"
@@ -134,19 +138,19 @@
       </el-table-column>
       <el-table-column
         label="扩大桩浆量"
-        prop="c">
+        prop="t_type_slurry">
       </el-table-column>
       <el-table-column
         label="下部桩浆量"
-        prop="d">
+        prop="bottom_part_slurry">
       </el-table-column>
       <el-table-column
         label="扩大桩灰量"
-        prop="e">
+        prop="t_type_ash">
       </el-table-column>
       <el-table-column
         label="下部桩灰量"
-        prop="f">
+        prop="bottom_part_ash">
       </el-table-column>
       <el-table-column
         label="外钻最大电流"
@@ -158,11 +162,11 @@
       </el-table-column>
       <el-table-column
         label="喷浆时间"
-        prop="i">
+        prop="sprayed_time">
       </el-table-column>
       <el-table-column
         label="评分值"
-        prop="j">
+        prop="rate">
       </el-table-column>
     </el-table>
 
@@ -184,6 +188,7 @@
 <script>
   import history from '@/api/project/history'
   import deviceList from '@/api/project/deviceList'
+  import {formatDate} from '@/common/formatDate.js';
   export default {
     data() {
       return {
@@ -229,6 +234,12 @@
           page_index:1,
           page_size:10,
         }
+      }
+    },
+    filters: {
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss'); //yyyy-MM-dd hh:mm
       }
     },
     created(){
@@ -290,6 +301,7 @@
     background: #fff;
     display: flex;
     justify-content: space-between;
+    flex-wrap:wrap;
     .c-handle{
       display: flex;
       justify-content: space-between;

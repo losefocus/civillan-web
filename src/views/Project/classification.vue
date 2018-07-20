@@ -16,7 +16,7 @@
         move-class="item-move"
       >
         <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.name,item.id)">
-          <div class="pj-img" :style="{ 'background-image': 'url(' + item.ImgUrl + ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
+          <div class="pj-img" :style="{ 'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
             <div class="pj-mask" >
               <span>{{item.name}}</span>
             </div>
@@ -130,7 +130,7 @@
     created(){
       let id=this.$store.state.project.projectId;
       let tenant=this.$store.state.project.tenant;
-      deviceGrouping.list({'project_id':id,'tenant':tenant}).then(res=>{
+      deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
         console.log(res);
         this.items=res.result.items;
       });

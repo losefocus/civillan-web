@@ -7,21 +7,24 @@
      </div>
      <ul class="s-box1">
        <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
-         <div class="i-id">NB-001</div>
+         <div class="i-id">
+           <span :class="{'titleActive':titleActive==1}" @click="titleChange1(1)">NB-001</span>
+           <span style="margin-left: 20px" :class="{'titleActive':titleActive==2}" @click="titleChange2(2)">AJ-002</span>
+         </div>
          <div class="i-box">
            <div class="i-body">
              <div class="i-name">双头搅拌设备</div>
              <div class="i-company">宏远建设记录仪一号</div>
            </div>
            <div>
-             <div class="i-state"><i class="iconfont icon-state"></i><span>喷浆状态</span></div>
-             <div class="i-state"><i class="iconfont icon-state"></i><span>记录状态</span></div>
+             <div class="i-state"><span>喷浆状态</span><i class="iconfont icon-state"></i></div>
+             <div class="i-state"><span>记录状态</span><i class="iconfont icon-state"></i></div>
            </div>
          </div>
          <div class="i-start">开始时间：<span>2018-12-12</span></div>
          <div class="i-progress">
            <div class="i-progressName" style="width: 20%">进度：</div>
-           <el-progress :stroke-width="15" :percentage="80" color="#24BCF7" style="width: 80%"></el-progress>
+           <el-progress :stroke-width="15" :percentage="progress" color="#24BCF7" style="width: 80%"></el-progress>
          </div>
          <div class="i-normal" v-if="isWarming">
            未发现问题
@@ -118,7 +121,7 @@
                <p><span class="p-completedSteps">{{ completedSteps }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
                <p class="p-unit">L/min</p>
              </radial-progress-bar>
-             <div class="p-title">下钻速度</div>
+             <div class="p-title">钻速</div>
            </div>
          </div>
          <div class="p-box">
@@ -135,7 +138,7 @@
                <p><span class="p-completedSteps">{{ completedSteps }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
                <p  class="p-unit">A</p>
              </radial-progress-bar>
-             <div class="p-title">外钻杆电流</div>
+             <div class="p-title">电流</div>
            </div>
          </div>
        </li>
@@ -186,7 +189,6 @@ export default {
         data4.push('');
       }else if(num>=25&&num<=50){
         data1.push('');
-
         data2.push(num);
         data3.push('');
         data4.push('');
@@ -207,27 +209,29 @@ export default {
     console.log( Data2);
 
     return {
-      classChange:1,
+      titleActive:'1',//设备切换
 
-      isRouterAlive: true,
+      classChange:1,//改变样式
 
-      completedSteps:3,
-      totalSteps: 100,
-      animateSpeed: 500,
-      diameter: 110,
-      strokeWidth: 8,
-      startColor: '#17A8F5',
-      stopColor: '#20CEDE',
-      innerStrokeColor: 'rgba(151,151,151,0.3)',
-      timingFunc: 'linear',
+      isRouterAlive: true, //ECharts刷新
+
+      completedSteps:3,//
+      totalSteps: 100,//
+      animateSpeed: 500,//
+      diameter: 110,//
+      strokeWidth: 8,//
+      startColor: '#17A8F5',//
+      stopColor: '#20CEDE',//
+      innerStrokeColor: 'rgba(151,151,151,0.3)',//
+      timingFunc: 'linear',//
 
       RT_data:null, //实时数据
 
-      progress:20,
+      progress:20,//
 
-      isWarming:true,
+      isWarming:true,//
 
-      isTab:false,
+      isTab:false,//
 
       PulpingQuantity:{
         title: {
@@ -839,7 +843,6 @@ export default {
   },
   props:['dialogFullscreen','deviceKey'],
   mounted(){
-
     this.init();
     this.reload();
     const that = this;
@@ -860,6 +863,13 @@ export default {
       let clientWidth=document.body.clientWidth;
       this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
     },
+    titleChange1(x){
+      this.titleActive=x;
+    },
+    titleChange2(x){
+      this.titleActive=x;
+    },
+
     temp(isDialog,diameter,that,clientWidth) {
 
       if(!isDialog){
@@ -1014,11 +1024,18 @@ export default {
         flex-direction: column;
         justify-content:space-around;
         .i-id{
+          font-size: 20px;
+          color: rgba(218,218,218,1);
           margin-top: 10px;
           width:100%;
+          line-height:42px;
+          span{
+            cursor: pointer;
+          }
+        }
+        .titleActive{
           font-size:30px;
           color:rgba(51,51,51,1);
-          line-height:42px;
         }
         .i-box{
           display: flex;
@@ -1042,11 +1059,13 @@ export default {
             line-height: 30px;
             font-size:12px;
             color:rgba(153,153,153,1);
+            span{
+              margin-right: 20px;
+            }
           }
           .icon-state{
             font-size: 12px;
             color: #24BCF7;
-            margin-right: 20px;
           }
         }
 
@@ -1115,9 +1134,13 @@ export default {
       }
       .s-info1{
         .i-id{
+          font-size:30px;
+          color:#DADADA;
+          line-height:42px;
+        }
+        .titleActive{
           font-size:40px;
           color:rgba(51,51,51,1);
-          line-height:42px;
         }
         .i-box{
           display: flex;

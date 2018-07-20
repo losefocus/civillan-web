@@ -106,16 +106,18 @@
         if(this.isSuccess&&this.isSuccess1){
           var that=this;
           login.login(this.userInfo).then((res) => {
+            let wsUrl=JSON.parse(res.result.wsUrl);
+            console.log(res.result);
             if(that.userInfo.checked){
 
               sessionStorage.setItem('token',res.result.token);
-              sessionStorage.setItem('wsUrl',res.result.wsUrl.result);
+              sessionStorage.setItem('wsUrl',wsUrl.result);
               that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
+              that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
               that.$store.dispatch('incrementToken',res.result.token);
               that.$router.push('/');
             }else{
-              let wsUrl=JSON.parse(res.result.wsUrl);
-              console.log(res.result);
+
 
               sessionStorage.setItem('token',res.result.token);
               sessionStorage.setItem('wsUrl',wsUrl.result);

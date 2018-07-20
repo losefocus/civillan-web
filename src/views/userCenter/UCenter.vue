@@ -4,7 +4,7 @@
       <div class="u-box">
         <div class="u-header">
           <div class="u-info">
-            <img src="@/assets/header/b-Girl.jpg" alt="头像">
+            <img :src="avatarUrl" alt="头像">
             <div class="u-name">
               <p class="n-text">{{userInfo.name}}</p>
               <p class="n-num">{{userInfo.username}}</p>
@@ -77,16 +77,18 @@ export default {
       isCompany4:true,
       userInfo:{},
       role:'',
-      projectOrgan:{}
+      projectOrgan:{},
+      avatarUrl:'', //头像路径
     }
   },
   created(){
     let userId=sessionStorage.getItem('token').substring(0,2);
     user.userInfo({project_user_id:userId}).then(res=>{
-      console.log(res);
+      //console.log(res);
       this.userInfo = res.result;
       this.role=res.result.userRole[0].projectRole.role;
-      this.projectOrgan=res.result.projectOrgan.name
+      this.projectOrgan=res.result.projectOrgan.name;
+      this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
     })
   },
   directives: {

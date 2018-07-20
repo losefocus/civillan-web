@@ -18,16 +18,16 @@
       </el-dropdown-menu>
     </el-dropdown>
   </div>
-  <img src="@/assets/header/userImg.png" class="hd-right hd-portrait">
+  <img :src="avatarUrl" class="hd-right hd-portrait" >
   <div class="p-box hd-right" style="font-size: 28px;color: #E6EAEE;margin-right: 35px;vertical-align: middle;">|</div>
   <div @click="getMessage()" class="p-box hd-right" style="margin-right: 35px;cursor: pointer;">
-    <el-badge :value=num :max="99" class="item" :hidden='false'>
+    <el-badge :value=unReadCount :max="99" class="item" :hidden='isHidden'>
       <el-tooltip class="item" effect="dark" content="消息通知" placement="bottom">
         <i class="iconfont icon-message"></i>
       </el-tooltip>
     </el-badge>
   </div>
-  <router-link to="/" class="p-box hd-right" style="margin-right: 40px">
+  <router-link to="/" class="p-box hd-right" style="margin-right: 40px" v-if="isMap">
     <el-tooltip class="item" effect="dark" content="项目地图" placement="bottom">
       <i class="iconfont icon-Rectanglex"></i>
     </el-tooltip>
@@ -55,6 +55,9 @@
   import PSettings from '@/views/userCenter/PSettings.vue'
   import UCenter from '@/views/userCenter/UCenter.vue'
 
+  import message from '@/api/userCenter/message'
+  import userInfo from '@/api/userCenter/header'
+
   export default {
     name: "zHeader",
     components:{
@@ -65,9 +68,12 @@
     },
     data(){
        return{
-         dialogWidth:'68%',
-         num:10,
-         dialogVisible: false,
+         dialogWidth:'68%',//模态框宽度
+         avatarUrl:'', //头像路径
+         unReadCount:0, //未读信息数量
+         isHidden:true, //未读信息数量是否显示
+         dialogVisible: false, //模态框是否显示
+         isMap:true, //地图入口是否显示
          tHeader:[
            {name:'用户中心'},
            {name:'个人设置'},
@@ -85,46 +91,53 @@
        }
     },
     created(){
-      /*console.log(sessionStorage.getItem('wsUrl'));
-      let wsUrl='ws:'+sessionStorage.getItem('wsUrl');
-      console.log(wsUrl);
-      let queueReceiveSetting = {//消息队列配置
-        websock: null,
-        client: null,
-        wsuri: 'ws://192.168.0.232:10008/ws/message/token=$2a$10$.A8THWdKwsx1cimdoxIuBeZLTH3QtfXnKYSw06yCCThXqAy3hFaHa'
-      };
+      console.log();
+      let userId=sessionStorage.getItem('token').substring(0,2);
+      userInfo.userInfo({project_user_id:userId}).then(res=>{
+        console.log(res)
+        this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath
+      });
 
-      if (queueReceiveSetting.websock) {
-        queueReceiveSetting.websock.close();
-      }
-      queueReceiveSetting.websock = new WebSocket(queueReceiveSetting.wsuri);
-      queueReceiveSetting.websock.onopen = function (res) {
-        console.log("开启连接")
-      };
-      queueReceiveSetting.websock.onmessage = function (res) {
-        console.log(res);
-        let data = JSON.parse(res.data);
-        console.log("收到数据：" + data.message);
-        Message({
-          message: data.message,
-          type: 'info',
-          showClose: true,
-          duration: 3 * 1000
-        })
-      };
-      queueReceiveSetting.websock.onclose = function (res) {
-        console.log("连接关闭")
-      };
-      queueReceiveSetting.websock.onerror = function (res) {
-        console.log("连接出错")
-        // this.initWebSocket();
-      };
+      this.$route.path=='/'?this.isMap=false:this.isMap=true;
+      message.unReadCount().then(res=>{
+        //console.log(res.result);
+        this.unReadCount=res.result;
+        console.log(res.result);
+        this.unReadCount==0? this.isHidden=true : this.isHidden=false;
+      });
 
-      function Message(content) {
-        console.log(content.message)
-      }*/
+
+      this.initWebSocket();
+
+    },
+    destroyed() {
+      //页面销毁时关闭长连接
+      this.websocketclose();
     },
     methods:{
+      initWebSocket(){ //初始化webSocket
+
+        let wsUrl='ws:'+sessionStorage.getItem('wsUrl');//ws地址
+        this.webSocket = new WebSocket(wsUrl);
+        this.webSocket.onopen = this.websocketonopen;
+        this.webSocket.onerror = this.websocketonerror;
+        this.webSocket.onmessage = this.websocketonmessage;
+        this.webSocket.onclose = this.websocketclose;
+      },
+
+      websocketonopen() {
+        console.log("WebSocket连接成功");
+      },
+      websocketonerror() { //错误
+        console.log("WebSocket连接发生错误");
+      },
+      websocketonmessage(){ //数据接收
+        this.unReadCount+=1;
+      },
+      websocketclose(){ //关闭
+        console.log("关闭");
+      },
+
       getMessage(){
         this.dialogVisible=true;
         this.tIndex=2;
@@ -179,6 +192,7 @@
     margin-top: 7px;
     width: 32px;
     height: 32px;
+    border-radius: 50%;
   }
   .hd-uName{
     margin: 10px 0 0 10px;
