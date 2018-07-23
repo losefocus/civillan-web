@@ -145,7 +145,7 @@
         if(this.changeIcon){
           this.dialogWidth='100%';
           this.dialogHeight={
-            height:'91%'
+            height:'87%'
           };
           this.dialogFullscreen=true;
           this.changeIcon=!this.changeIcon;
@@ -195,8 +195,8 @@
   .item {
     position: absolute;
     top: 0;
-    left: 0;
-    right: 30px;
+    left: 5px;
+    right: 5px;
     bottom: 30px;
     font-size: 0.9em;
     box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
@@ -306,7 +306,7 @@
   }
   .t-Body{
     overflow: auto;
-    padding: 20px;
+    padding: 1%;
     background: #f5f5f9;
   }
 

@@ -79,7 +79,7 @@
      <ul class="s-box2">
        <li class="s-progress" :class="{'s-progress1':classChange==1}">
          <div class="p-box">
-           <div style="height: 80%;background: #F85959">
+           <div class="p-progress" style="height: 80%;background: #F85959">
              <div style="height: 80%;">
                <div class="progressContainer">
                  <div class="progress" :style="{height:(100-progress)+'%'}">
@@ -240,12 +240,10 @@ export default {
 
 
     return {
+      isShow:true,
       titleActive:'1',//设备样式切换
-
       classChange:1,//改变样式
-
       isRouterAlive: true, //ECharts刷新
-
       completedSteps:3,//进度条中已完成步骤的数量
       totalSteps: 100,//完成进度条的步骤总数。
       animateSpeed: 500,//动画一步的时间量（以毫秒为单位）
@@ -778,6 +776,8 @@ export default {
         }else if(clientWidth<1660&&clientWidth>1500){
           diameter=100;
         }else if(clientWidth<1500&&clientWidth>1380){
+          that.$emit('dialogFullscreen','true');
+          that.isShow=false;
           diameter=90;
         }else if(clientWidth<1380){
           that.$emit('dialogFullscreen','true')
@@ -785,19 +785,19 @@ export default {
       }else{
         if(clientWidth>1700){
           this.classChange=1;
-          diameter=170;
+          diameter=140;
         }else if(clientWidth<1700&&clientWidth>1600){
           this.classChange=1;
-          diameter=160;
+          diameter=130;
         }else if(clientWidth<1600&&clientWidth>1510){
           this.classChange=1;
-          diameter=150;
+          diameter=120;
         }else if(clientWidth<1510&&clientWidth>1420){
           this.classChange=2;
-          diameter=140;
+          diameter=110;
         }else if(clientWidth<1420&&clientWidth>1300){
           this.classChange=2;
-          diameter=120;
+          diameter=110;
         }else if(clientWidth<1300&&clientWidth>1100){
           this.classChange=2;
           diameter=100;

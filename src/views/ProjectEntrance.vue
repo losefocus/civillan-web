@@ -164,7 +164,9 @@
                   getInfoWindow: function(dataItem, context, recycledInfoWindow) {
                     let projectLogo=dataItem.thumbnailUrl+dataItem.thumbnailPath;
                     _this.$store.dispatch('incrementLogo',projectLogo);
-                    //console.log(dataItem);
+                    console.log(dataItem);
+
+
                     let content='<div style="width:290px;\n' +
                       'height:195px;\n' +
                       'background:rgba(255,255,255,1);\n' +
@@ -178,8 +180,8 @@
                       '<div class="info-title">' +dataItem.name+
                       '</div>'+
                       '<div class="info-box">' +
-                      '<div class="info-type">软基</div>'+'<div class="info-type">路面</div>'+'<div class="info-type">桥梁</div>'+'<div class="info-type">试验室</div>'+'<div class="info-type">拌和站</div>' +
-                      '</div>'
+                      '<div class="info-type" style="background: rgba(243,26,26,1)">软基</div>'+'<div class="info-type">路面</div>'+'<div class="info-type">桥梁</div>'+'<div class="info-type">试验室</div>'+'<div class="info-type">拌和站</div>' +
+                      '</div>';
                     '</div>'
 
                     '</div>';
@@ -293,7 +295,6 @@
     position: relative;
   }
   #my-list{
-
     cursor: pointer;
     position: absolute;
     z-index:200;
@@ -334,6 +335,37 @@
     }
     .isBorder{
       border: none;
+    }
+  }
+  @media screen and (max-width: 1366px){
+    #my-list{
+      padding: 30px;
+      .pj-title{
+        font-size: 22px;
+      }
+      .list-title{
+        height: 35px;
+        border-bottom: 1px solid rgba(255,255,255,.5);
+        margin-top: 15px;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .list-body{
+        width: 260px;
+        margin-left: -30px;
+        padding: 0 30px;
+        background:rgba(0,0,0,.1);
+      }
+      .l-name{
+        width: 200px;
+        text-overflow:ellipsis;
+        overflow:hidden;
+        white-space:nowrap;
+      }
+      .isBorder{
+        border: none;
+      }
     }
   }
 </style>

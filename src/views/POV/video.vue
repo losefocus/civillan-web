@@ -26,7 +26,6 @@
       </li>
       <div class="c-both"></div>
     </ul>
-
   </div>
 </template>
 
@@ -210,11 +209,13 @@ export default {
   .v-box{
     background: #ffffff;
     height: auto;
-    padding: 40px 0 40px 40px;
+    padding: 40px 0 0 0;
+    display: flex;
+    //justify-content:space-between;
+    flex-flow:row wrap;
     li{
-      float: left;
-      width: 344px;
-      margin:20px 50px 0 0  ;
+      width: 317px;
+      margin:20px 10px 0 0 ;
     }
     .v-name{
       width: 100%;

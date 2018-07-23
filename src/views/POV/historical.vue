@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- 标题和控制栏 -->
-    <div class="c-box">
+    <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px" clearable>
+        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;" clearable >
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -11,7 +11,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px">
+        <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -19,7 +19,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px">
+        <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -31,12 +31,12 @@
           size="mini"
           v-model="value7"
           type="daterange"
-          align="right"
+          align="center"
           unlink-panels
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2" style="margin: 0 5px">
+          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%">
         </el-date-picker>
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">查询</el-button>
@@ -46,15 +46,9 @@
         </div>
       </div>
       <div class="c-handle">
-        <div>
-          <i class="iconfont icon-refresh"></i><span>刷新</span>
-        </div>
-        <div>
-          <i class="iconfont icon-exportdata"></i><span>导出</span>
-        </div>
-        <div>
-          <i class="iconfont icon-Printing"></i><span>打印</span>
-        </div>
+        <el-button type="primary" icon="el-icon-refresh" size="mini">刷新</el-button>
+        <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
+        <el-button type="primary" icon="el-icon-printer" size="mini">打印</el-button>
       </div>
     </div>
     <el-table
@@ -169,7 +163,6 @@
         prop="rate">
       </el-table-column>
     </el-table>
-
     <div class="m-pagination">
       <el-pagination
         @current-change="handleCurrentChange"
@@ -189,9 +182,11 @@
   import history from '@/api/project/history'
   import deviceList from '@/api/project/deviceList'
   import {formatDate} from '@/common/formatDate.js';
+  import Bus from '@/common/eventBus'
   export default {
     data() {
       return {
+        isCollapse:true,
         multipleSelection: [],
         currentPage:1,
         pagesize:20,
@@ -247,7 +242,11 @@
         console.log(res);
         this.deviceSelect=res.result.items
       });
-      this.getList(this.post_data)
+      this.getList(this.post_data);
+      Bus.$on('isCollapse',res=>{
+        console.log(res)
+        this.isCollapse=res
+      })
     },
     methods: {
       deviceChange(val){
@@ -296,19 +295,19 @@
 </script>
 <style lang="scss" scoped>
   .c-box{
-    padding: 20px 2%;
+    padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
     display: flex;
     justify-content: space-between;
-    flex-wrap:wrap;
     .c-handle{
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
       div{
         width: 51px;
         line-height: 27px;
-        margin-left: 40px;
+        margin-left: 10px;
         text-align: right;
         cursor: pointer;
         span{
@@ -318,12 +317,13 @@
       }
     }
     .c-query{
-      width: 1000px;
+      width: 675px;
+      margin-top: 20px;
+      margin-right: 30px;
       display: flex;
       justify-content: space-between;
       .c-button{
-        width: 60px;
-        margin-left: 5px;
+        margin:0 3px;
       }
       .el-dropdown-link{
         cursor: pointer;
@@ -341,6 +341,9 @@
         }
       }
     }
+  };
+  .c-box1{
+    flex-wrap:wrap;
   }
   .m-pagination{
     padding: 20px;

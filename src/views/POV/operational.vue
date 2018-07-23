@@ -1,75 +1,55 @@
 <template>
 <div>
   <!-- 标题和控制栏 -->
-  <div class="control-box">
-    <el-row>
-      <el-col :span="17">
-        <div class="grid-content bg-purple">
-          <div class="hd">
-            <div class="inline-block">
-              <el-dropdown class="inline-block">
-                  <span class="el-dropdown-link">
-                    全部设备<i class="el-icon-caret-bottom el-icon--right"></i>
-                  </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>黄金糕</el-dropdown-item>
-                  <el-dropdown-item>狮子头</el-dropdown-item>
-                  <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                  <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                  <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-              <el-dropdown class="inline-block">
-                  <span class="el-dropdown-link">
-                    全部桩<i class="el-icon-caret-bottom el-icon--right"></i>
-                  </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>黄金糕</el-dropdown-item>
-                  <el-dropdown-item>狮子头</el-dropdown-item>
-                  <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                  <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                  <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-              <el-dropdown class="inline-block">
-                  <span class="el-dropdown-link">
-                    最近一周<i class="el-icon-caret-bottom el-icon--right"></i>
-                  </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>黄金糕</el-dropdown-item>
-                  <el-dropdown-item>狮子头</el-dropdown-item>
-                  <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                  <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                  <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-              <el-date-picker
-                class="inline-block"
-                size="small"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-              </el-date-picker>
-              <el-button type="primary" size="small">查询</el-button>
-              <el-button type="warning" size="small">重置</el-button>
-              <!--<el-button v-popover:popover>focus 激活</el-button>-->
-              <el-button type="text" @click="dialogVisible = true">编辑</el-button>
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="7">
-        <div class="grid-content bg-purple icons">
-          <el-button-group class="right">
-            <el-button icon="el-icon-circle-plus-outline" >添加</el-button>
-            <el-button icon="el-icon-share" >下载Excel文件 </el-button>
-            <el-button icon="el-icon-upload2" @click="downloadFile(excelData)" >导出</el-button>
-            <el-button icon="el-icon-download" @click="uploadFile()" >导入</el-button>
-          </el-button-group>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="c-box" :class="{'c-box1':isCollapse}">
+    <div class="c-query">
+      <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;" clearable >
+        <el-option
+          v-for="item in deviceSelect"
+          :key="item.key"
+          :label="item.name"
+          :value="item.key">
+        </el-option>
+      </el-select>
+      <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-option
+          v-for="item in deviceSelect"
+          :key="item.key"
+          :label="item.name"
+          :value="item.key">
+        </el-option>
+      </el-select>
+      <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-option
+          v-for="item in deviceSelect"
+          :key="item.key"
+          :label="item.name"
+          :value="item.key">
+        </el-option>
+      </el-select>
+      <el-date-picker
+        size="mini"
+        v-model="value7"
+        type="daterange"
+        align="center"
+        unlink-panels
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%">
+      </el-date-picker>
+      <div class="c-button">
+        <el-button type="info" size="mini" @click="query">查询</el-button>
+      </div>
+      <div class="c-button">
+        <el-button type="info" size="mini" @click="query">重置</el-button>
+      </div>
+    </div>
+    <div class="c-handle">
+      <el-button type="primary" icon="el-icon-refresh" size="mini">刷新</el-button>
+      <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
+      <el-button type="primary" icon="el-icon-printer" size="mini">打印</el-button>
+    </div>
   </div>
   <el-table
     :data="tableData5"
@@ -129,11 +109,13 @@
 </template>
 
 <script>
+  import Bus from '@/common/eventBus'
 export default {
 name: "OperationalEffectiveness",
   data(){
     return{
-      tableData5: [{
+      tableData5: [
+        {
         id: '12987122',
         startTime:'2018-02-22 19:00',
         endTime:'2018-02-22 19:00',
@@ -288,22 +270,74 @@ name: "OperationalEffectiveness",
         i: '20min',
         j: 'A',
       }
-      ]
+      ],
+      isCollapse:true,
     }
+  },
+  created(){
+    Bus.$on('isCollapse',res=>{
+      console.log(res)
+      this.isCollapse=res
+    })
   }
 }
 </script>
 
 <style scoped lang="scss">
-  .control-box{
-    padding: 20px 30px;
+  .c-box{
+    padding: 0 2% 20px;
+    border:1px solid rgba(230,234,238,1);
     background: #fff;
-    border-bottom:1px solid rgba(235,237,248,1);
-    margin-bottom: 30px;
-    .title{
-      font-size: 24px;
-      font-weight: bold;
-      margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    .c-handle{
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      div{
+        width: 51px;
+        line-height: 27px;
+        margin-left: 10px;
+        text-align: right;
+        cursor: pointer;
+        span{
+          font-size: 12px;
+          margin-left: 10px;
+        }
+      }
     }
+    .c-query{
+      width: 675px;
+      margin-top: 20px;
+      margin-right: 30px;
+      display: flex;
+      justify-content: space-between;
+      .c-button{
+        margin:0 3px;
+      }
+      .el-dropdown-link{
+        cursor: pointer;
+        width: 140px;
+        height: 20px;
+        .c-title{
+          font-size: 12px;
+          color: #666666;
+        }
+
+        .el-icon--right{
+          margin-left: 10px;
+          font-size: 18px;
+          color: #4F5059;
+        }
+      }
+    }
+  };
+  .c-box1{
+    flex-wrap:wrap;
+  }
+  .m-pagination{
+    padding: 20px;
+    text-align: center;
+    background: #ffffff;
   }
 </style>

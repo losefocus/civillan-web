@@ -1,44 +1,32 @@
 <template>
   <div>
     <!-- 标题和控制栏 -->
-    <div class="c-box">
-      <div>
-        <el-dropdown trigger="click" placement="bottom-start">
-          <span class="el-dropdown-link" >
-            <span class="c-title">全部设备</span><i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown trigger="click" placement="bottom-start">
-          <span class="el-dropdown-link">
-            <span class="c-title">全部桩</span><i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown trigger="click" placement="bottom-start">
-          <span class="el-dropdown-link">
-            <span class="c-title">最近一周</span><i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+    <div class="c-box" :class="{'c-box1':isCollapse}">
+      <div class="c-query">
+        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;" clearable >
+          <el-option
+            v-for="item in deviceSelect"
+            :key="item.key"
+            :label="item.name"
+            :value="item.key">
+          </el-option>
+        </el-select>
+        <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+          <el-option
+            v-for="item in deviceSelect"
+            :key="item.key"
+            :label="item.name"
+            :value="item.key">
+          </el-option>
+        </el-select>
+        <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+          <el-option
+            v-for="item in deviceSelect"
+            :key="item.key"
+            :label="item.name"
+            :value="item.key">
+          </el-option>
+        </el-select>
         <el-date-picker
           size="mini"
           v-model="value7"
@@ -48,22 +36,19 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2">
+          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%">
         </el-date-picker>
         <div class="c-button">
-          <el-button type="info" size="mini">查询</el-button>
+          <el-button type="info" size="mini" @click="query">查询</el-button>
+        </div>
+        <div class="c-button">
+          <el-button type="info" size="mini" @click="query">重置</el-button>
         </div>
       </div>
       <div class="c-handle">
-        <div>
-          <i class="iconfont icon-refresh"></i><span>刷新</span>
-        </div>
-        <div>
-          <i class="iconfont icon-exportdata"></i><span>导出</span>
-        </div>
-        <div>
-          <i class="iconfont icon-Printing"></i><span>打印</span>
-        </div>
+        <el-button type="primary" icon="el-icon-refresh" size="mini">刷新</el-button>
+        <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
+        <el-button type="primary" icon="el-icon-printer" size="mini">打印</el-button>
       </div>
     </div>
     <!-- Echarts部分 -->
@@ -162,33 +147,17 @@
         :total="tableData.length">
       </el-pagination>
     </el-footer>
-    <!--  弹窗  -->
-    <el-dialog
-      title="列表管理"
-      :visible.sync="dialogVisible"
-      width="20%"
-      :before-close="handleClose">
-      <p><el-checkbox v-model="state" label="状态" ></el-checkbox></p>
-      <p><el-checkbox v-model="date" label="订单日期" ></el-checkbox></p>
-      <p><el-checkbox v-model="number" label="订单编号" ></el-checkbox></p>
-      <p><el-checkbox v-model="ship" label="发货单位" ></el-checkbox></p>
-      <p><el-checkbox v-model="receive" label="收货单位" ></el-checkbox></p>
-      <p><el-checkbox v-model="tel" label="收货电话" ></el-checkbox></p>
-      <p><el-checkbox v-model="type" label="货物类型" ></el-checkbox></p>
-      <p><el-checkbox v-model="total" label="总件数" ></el-checkbox></p>
-      <p><el-checkbox v-model="weight" label="总重量" ></el-checkbox></p>
-      <p><el-checkbox v-model="volume" label="总体积" ></el-checkbox></p>
-      <p><el-checkbox v-model="price" label="运费" ></el-checkbox></p>
-      <p><el-checkbox v-model="remark" label="备注" ></el-checkbox></p>
-    </el-dialog>
+
 
 
   </div>
 </template>
 <script>
+  import Bus from '@/common/eventBus'
   export default {
     data() {
       return {
+        isCollapse:true,
         polar: {
           xAxis: {
             type: 'category',
@@ -246,19 +215,6 @@
         tableData:[],
         currentPage:1,
         pagesize:20,
-        state:true,
-        date:true,
-        number:true,
-        ship:true,
-        receive:true,
-        tel:false,
-        type:false,
-        total:false,
-        weight:false,
-        volume:false,
-        price:false,
-        remark:true,
-        dialogVisible: false
       }
     },
     created:function(){
@@ -269,6 +225,10 @@
         })
         .catch(function(err){
         })*/
+      Bus.$on('isCollapse',res=>{
+        console.log(res);
+        this.isCollapse=res
+      })
     },
     methods: {
       handleSizeChange: function (size) {
@@ -298,18 +258,19 @@
     padding: 10px 11px;
   }
   .c-box{
-    padding: 20px 30px;
+    padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
     display: flex;
     justify-content: space-between;
     .c-handle{
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
       div{
         width: 51px;
         line-height: 27px;
-        margin-left: 40px;
+        margin-left: 10px;
         text-align: right;
         cursor: pointer;
         span{
@@ -318,15 +279,17 @@
         }
       }
     }
-    div{
+    .c-query{
+      width: 675px;
+      margin-top: 20px;
+      margin-right: 30px;
+      display: flex;
+      justify-content: space-between;
       .c-button{
-        width: 60px;
-        display: inline-block;
-        margin-left: 20px;
+        margin:0 3px;
       }
       .el-dropdown-link{
         cursor: pointer;
-        display: inline-block;
         width: 140px;
         height: 20px;
         .c-title{
@@ -341,6 +304,14 @@
         }
       }
     }
+  };
+  .c-box1{
+    flex-wrap:wrap;
+  }
+  .m-pagination{
+    padding: 20px;
+    text-align: center;
+    background: #ffffff;
   }
   .ft{
     background-color: #fff;

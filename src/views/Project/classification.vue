@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-left: 3%">
+  <div>
     <waterfall
       :line-gap="380"
       :min-line-gap="300"
@@ -37,47 +37,48 @@
       </waterfall-slot>
     </waterfall>
     <div class="p-box">
-      <div class="p-item" style="width: 300px;margin-bottom: 30px;">
+      <div class="p-item" >
         <h1>{{ info.name }}</h1>
         <div class="pj-details">
           <p>{{ info.comment }}</p>
         </div>
       </div>
-      <div class="p-item" style="width: 200px;margin-bottom: 30px;">
+      <div class="p-item">
         <div class="t-limit">
+          <p class="t-title">工期</p>
           <el-progress type="circle" :percentage="20" color="#F03E41"></el-progress>
           <p class="t-interval">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</p>
         </div>
       </div>
 
-      <div class="i-box p-item" style="margin-bottom: 30px;">
+      <div class="i-box p-item" >
         <div style="width: 150px">
           <div class="c-info c-infoM">
             <h2>业主单位</h2>
             <p>浙江科技有限公司</p>
-            <p><span class="l-man">张三</span><span>180420302112</span></p>
+            <p><span class="l-man">张三</span></p>
           </div>
           <div class="c-info">
             <h2>监理单位</h2>
             <p>杭州市城管局</p>
-            <p><span class="l-man">张三</span><span>180420302112</span></p>
+            <p><span class="l-man">张三</span></p>
           </div>
         </div>
         <div style="width:150px">
           <div class="c-info c-infoM">
             <h2>建设单位</h2>
             <p>浙江科技有限公司</p>
-            <p><span class="l-man">张三</span><span>180420302112</span></p>
+            <p><span class="l-man">张三</span></p>
           </div>
           <div class="c-info">
             <h2>设计单位</h2>
             <p>杭州市城管局</p>
-            <p><span class="l-man">张三</span><span>180420302112</span></p>
+            <p><span class="l-man">张三</span></p>
           </div>
         </div>
       </div>
 
-      <div class="p-item" style="width: 250px;margin-bottom: 30px;"><div id="AMap"></div></div>
+      <div class="p-item"><div id="AMap"></div></div>
     </div>
   </div>
 </template>
@@ -158,9 +159,8 @@
 </script>
 
 <style scoped lang="scss">
-
-  .el-mian{
-
+  .el-main{
+    padding: 30px 0 0 30px;
   }
   .item-move {
     transition: all .4s cubic-bezier(.55,0,.1,1);
@@ -169,9 +169,9 @@
   .item {
     background: #ffffff;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 30px;
+    top: 20px;
+    left: 10px;
+    right: 10px;
     bottom: 30px;
     font-size: 0.9em;
     color: #666666;
@@ -225,14 +225,19 @@
   }
 
   .p-box {
-    width: 94%;
-    padding: 30px 30px 0  30px;
+    margin: 10px;
+    padding: 20px;
     background: #ffffff;
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
-    flex-flow:row  wrap;
+    flex-flow: wrap;
 
+    .p-item{
+      margin-bottom: 30px;
+      width: 21%;
+      padding: 0 1%;
+    }
     .pj-details{
       margin-top: 16px;
       width:285px;
@@ -244,9 +249,7 @@
     .t-limit{
       text-align: center;
       .t-title{
-        position: absolute;
-        left:10px;
-        top:10px;
+        margin-bottom: 5px;
       }
       .t-interval{
         font-size: 14px;

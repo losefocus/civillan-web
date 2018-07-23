@@ -7,7 +7,7 @@
       <el-container style="height: 100%">
         <z-nav></z-nav>
         <el-main>
-          <div class="breadcrumb-box">
+          <div class="breadcrumb-box" v-if="isActive">
             <div :class="{'b-title':isActive}">{{ title }}</div>
             <div class="el-breadcrumb">
               <z-bread></z-bread>

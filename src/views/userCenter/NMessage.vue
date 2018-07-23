@@ -74,7 +74,7 @@
   data(){
     return {
       currentPage:1,
-      pageSize:10,
+      pageSize:6,
       tableData: [],
       total:0,
     }
@@ -113,7 +113,7 @@
       message.emptyMessage({}).then(res=>{
         console.log(res);
         if(res.success){
-          this.getList(1,10)
+          this.getList(1,7)
         }else{
           console.log('清空失败')
         }
@@ -135,7 +135,7 @@
 </script>
 <style scoped lang="scss">
   .m-box{
-    height: 590px;
+    height: 415px;
     background-color: #ffffff;
     overflow:auto;
     position: relative;
@@ -149,7 +149,7 @@
   }
   .m-handle{
     border-bottom: 1px solid rgba(151,151,151,0.4);
-    padding: 10px 0 10px 20px;
+    padding: 20px 0 20px 20px;
     .a-read{
       display: inline-block;
       vertical-align: middle;
@@ -177,7 +177,7 @@
     }
   }
   .m-pagination{
-    margin: 20px 0 20px 0;
+    margin: 20px 0 10px 0;
     text-align: center;
   }
 </style>

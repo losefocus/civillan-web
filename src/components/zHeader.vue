@@ -70,6 +70,7 @@
        return{
          dialogWidth:'68%',//模态框宽度
          avatarUrl:'', //头像路径
+         username:'',//用户名
          unReadCount:0, //未读信息数量
          isHidden:true, //未读信息数量是否显示
          dialogVisible: false, //模态框是否显示

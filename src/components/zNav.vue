@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="fade" mode="out-in">
-      <el-aside :width='isCollapse'>
+      <el-aside :width='navWidth'>
         <transition name="fade">
           <div class="pj-img" v-if="imgShow">
             <div class="pj-title" :style="{'background-image': 'url(' + projectLogo+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
@@ -13,18 +13,21 @@
         </transition>
 
         <ul class="nav-box">
-          <li v-for="(list,index) in lists" class="nav-list" :class="{liActive:imgShow==false}">
+
+          <li v-for="(list,index) in lists" class="nav-list" :class="{'liActive':!isCollapse}">
             <router-link :to="list.path">
-              <div class="nav-link" :class="{active:index==isActive}" @click="checkedItem(index,list.name)">
-                <div class="nav-icon">
-                  <i class="iconfont" :class="list.icon"></i>
+              <el-tooltip class="item" effect="dark" :content="list.name" placement="right" :disabled="isCollapse">
+                <div class="nav-link" :class="{active:index==isActive}" @click="checkedItem(index,list.name)">
+                  <div class="nav-icon">
+                    <i class="iconfont" :class="list.icon"></i>
+                  </div>
+                  <div class="link-title" v-if="isCollapse">{{ list.name }}</div>
                 </div>
-                <div class="link-title" v-if="imgShow">{{ list.name }}</div>
-              </div>
+              </el-tooltip>
             </router-link>
           </li>
         </ul>
-        <div id="resize" @click="collapse()" :class="isCollapseIcom"></div>
+        <div id="resize" @click="collapse()" :class="{'navOpen':!isCollapse,'navClose':isCollapse}" v-if="isShow"></div>
       </el-aside>
     </transition>
   </div>
@@ -36,10 +39,12 @@ export default {
   name: "zNav",
   data(){
    return{
+     isShow:'true',
      projectLogo:'',
      isActive:-1,
      imgShow:true,
-     isCollapse:'245px',
+     isCollapse:true,
+     navWidth:"",
      isCollapseIcom:'navClose',
      navIndex:'',
      lists:[
@@ -91,29 +96,61 @@ export default {
   },
   created(){
     this.isActive=0;
-    this.projectLogo=sessionStorage.getItem('projectLogo')
+    this.projectLogo=sessionStorage.getItem('projectLogo');
+    let _this=this;
+    let cWidth=document.body.clientWidth;
+    if(cWidth<1410){
+      console.log(cWidth);
+      _this.isCollapse=false;
+      _this.changeWidth();
+      _this.isShow=false;
+    }else{
+      _this.isCollapse=true;
+      _this.changeWidth();
+      _this.isShow=true;
+    }
+    window.onresize = function (){
+      let clientWidth=document.body.clientWidth;
+      if(clientWidth<=1410){
+        console.log(clientWidth);
+        _this.isCollapse=false;
+        _this.changeWidth();
+        _this.isShow=false;
+      }else{
+        _this.isCollapse=true;
+        _this.changeWidth();
+        _this.isShow=true;
+      }
+    };
+
   },
   mounted(){
     this.isActive=sessionStorage.getItem('isActive') || 0;
-    console.log(this.isActive)
+    console.log(this.isCollapse);
+    this.changeWidth()
+    //console.log(this.isActive)
   },
   methods:{
+    changeWidth(){
+      if(this.isCollapse==true){
+        this.navWidth='245px';
+        this.imgShow=true;
+      }else{
+        this.navWidth='90px';
+        this.imgShow=false
+      }
+    },
     checkedItem(index,title){
       this.isActive=index;
       Bus.$emit('changeTitle',title);
       sessionStorage.setItem('isActive',this.isActive);
-
     },
     collapse:function () {
       this.imgShow=!this.imgShow;
-      if(this.isCollapse=='245px'){
-        this.isCollapse='90px';
-        this.isCollapseIcom='navOpen'
-      }else{
-        this.isCollapse='245px';
-        this.isCollapseIcom='navClose'
-      }
-      Bus.$emit('changeWidth');
+      this.isCollapse=!this.isCollapse;
+      Bus.$emit('isCollapse',this.isCollapse);
+      sessionStorage.setItem('isCollapse',this.isCollapse);
+      this.changeWidth()
     }
   },
   watch: {
@@ -143,7 +180,7 @@ export default {
     #resize{
       transition: 0.4s all ease;
       position: absolute;
-      top: 700px;
+      top: 630px;
       right: 30px;
       cursor: pointer;
       width: 24px;

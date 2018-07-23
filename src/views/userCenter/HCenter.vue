@@ -1,8 +1,7 @@
 <template>
 <div>
-  <div style="height: 590px;background-color: #ffffff;
+  <div style="height: 480px;background-color: #ffffff;
     overflow: hidden;">
-
   </div>
 </div>
 </template>

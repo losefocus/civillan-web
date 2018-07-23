@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <el-container>
-      <el-main>
+  <div style="height: 100%">
+    <el-container style="height: 100%">
+      <el-main style="height: 100%">
         <div class="cp-logo"></div>
       </el-main>
       <el-aside width="32%">
@@ -158,9 +158,9 @@
 
     /*头部*/
   .el-main{
-    height: 973px;
     padding: 50px 70px;
     background: url("../../static/img/login/group.png") no-repeat;
+    background-size: cover;
     .cp-logo{
       width: 200px;
       height: 45px;
@@ -170,16 +170,16 @@
     }
   }
   .el-aside{
-    padding: 120px 80px 0;
+    padding: 7% 4% 0;
     .user-title{
       font-size: 32px;
       font-weight: bold;
     }
     .cp-system{
       font-size: 20px;
-      margin-top: 20px;
+      margin-top: 5%;
       color: #535353;
-      margin-bottom: 120px;
+      margin-bottom: 30%;
     }
     .log-spacing{
       margin-top: 20px;
@@ -232,9 +232,77 @@
       cursor: pointer;
     }
     .cp-code{
-      margin-top: 240px;
+      margin-top: 40%;
       font-size: 12px;
       color: #8A96A0;
+    }
+  }
+  @media screen and (max-width: 1600px) {
+    .el-aside{
+      padding: 3% 4% 0;
+      .user-title{
+        font-size: 28px;
+      }
+      .cp-system{
+        font-size: 18px;
+        margin-bottom: 30%;
+      }
+      .log-spacing{
+        margin-top: 20px;
+      }
+      label{
+        font-weight: bold;
+        height:24px;
+        font-size:20px;
+        color: #333333;
+        line-height:23px;
+      }
+      .stateLine{
+        width: 280px;
+        border-bottom: 1px solid #DCE0E6;
+      }
+      input{
+        margin-top: 10px;
+        outline: medium;
+        border: none;
+        height: 30px;
+        line-height: 30px;
+        font-size: 17px;
+        width: 280px;
+        color: #666666;
+        background-image: none;
+      }
+      form p{
+        width: 280px;
+        height: 20px;
+        line-height: 20px;
+      }
+      input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px white inset;
+      }
+      #log-submit{
+        width: 140px;
+        height: 40px;
+        background: #F31A1A;
+        color: #ffffff;
+        outline: medium;
+        border: none;
+        box-shadow: 0 6px 15px rgba(243,26,26,0.4);
+        border-radius:6px;
+        cursor: pointer;
+      }
+      .log-forget{
+        margin-left: 60px;
+        font-size:14px;
+        color:rgba(248,89,89,1);
+        cursor: pointer;
+      }
+      .cp-code{
+        margin-top: 28%;
+        font-size: 12px;
+        color: #8A96A0;
+        text-align: center;
+      }
     }
   }
 </style>
