@@ -27,8 +27,9 @@
   import project from '@/api/userCenter/project'
   import zHeader from '@/components/zHeader'
   import zImg from '@/assets/AMap/info.png'
-  import state from '@/assets/AMap/stateMarker.png'
+  import state from '@/assets/AMap/marker.png'
   import toTree from '@/common/toTree'
+  import timeStamp from '@/common/timeStamp'
   import $ from 'jquery'
   export default {
     name: "ProjectEntrance",
@@ -127,18 +128,17 @@
                       '">' +dataItem.name+
                       '</div>';
                     var label = {
-                      offset: new AMap.Pixel(-65, -40), //修改label相对于marker的位置
+                      offset: new AMap.Pixel(-69, -46), //修改label相对于marker的位置
                       content: content
                     };
                     //返回一个新的Marker
                     return new SimpleMarker({
                       //前景文字
                       label: label,
-                      showPositionPoint: true,
                       iconStyle:{
                         src:state
                       },
-                      offset: new AMap.Pixel(-19, -50),
+                      offset: new AMap.Pixel(-16, -38),
                       map: map,
                       id:dataItem.id
                     });
@@ -164,9 +164,9 @@
                   getInfoWindow: function(dataItem, context, recycledInfoWindow) {
                     let projectLogo=dataItem.thumbnailUrl+dataItem.thumbnailPath;
                     _this.$store.dispatch('incrementLogo',projectLogo);
-                    console.log(dataItem);
-
-
+                    //console.log(dataItem.beginAt);
+                    let beginTime=timeStamp(dataItem.beginAt);
+                    let endTime=timeStamp(dataItem.endAt);
                     let content='<div style="width:290px;\n' +
                       'height:195px;\n' +
                       'background:rgba(255,255,255,1);\n' +
@@ -174,7 +174,7 @@
                       'box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);">' +
                       '<div style=" position: relative; width: 290px;height: 130px;background: url(' +dataItem.thumbnailUrl+dataItem.thumbnailPath+
                       ');background-size:100% 100%">' +
-                      '<div class="info-time">2018-10-21 12:00</div>'+
+                      '<div class="info-time">'+beginTime+'<span class="info-Interval">至</span>'+endTime+'</div>'+
                       '</div>'+
                       '<div style="width: 90%;padding-left: 15px">' +
                       '<div class="info-title">' +dataItem.name+
@@ -189,7 +189,7 @@
                     //返回一个新的InfoWindow
                     return new AMap.InfoWindow({
                       autoMove: true,
-                      offset: new AMap.Pixel(-5, -34),
+                      offset: new AMap.Pixel(-5, -28),
                       content: content,
                     });
                   }
@@ -205,8 +205,8 @@
 
                 var svgMarker = new SvgMarker(
                   new SvgMarker.Shape.IconFont({
-                    symbolJs: '//at.alicdn.com/t/font_716432_na8vly768ks.js',
-                    icon:'icon-track1',
+                    symbolJs: '//at.alicdn.com/t/font_716432_uetxjod26k.js',
+                    icon:'icon-marker',
                     strokeWidth: 1,
                     size:50,
                   }), {

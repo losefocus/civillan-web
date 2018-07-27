@@ -18,23 +18,27 @@
     },
     mounted(){
       Bus.$on('Title', content => {
+        //console.log(content);
         this.changeName = content;
+        //sessionStorage.setItem('pGrouping',content)
       });
     },
     created() {
-      this.getBreadcrumb();
-      /*if(!this.changeName){
+      //this.getBreadcrumb();
+      //let pGrouping=sessionStorage.getItem('pGrouping');
+      if(!this.changeName){
         this.name='';
         this.getBreadcrumb()
       }else {
         this.name=this.changeName;
         this.getBreadcrumb();
         this.changeName=""
-      } *///刷新的参数为true
+      } //刷新的参数为true
     },
     methods: {
       getBreadcrumb () {
         if(!this.name){
+          console.log('0000000000');
           this.breadList = [].concat(this.$route.matched);
           this.$route.matched.forEach((item) => {
             if(item.name==''){
@@ -45,9 +49,11 @@
             item.name === '在线一览' ? item.path = '/' : this.$route.path === item.path ? this.title = item.name : '';
           })
         }else {
+          console.log('11111111111');
           this.breadList = [].concat(this.$route.matched);
           this.$route.matched.forEach((item, index) => {
             if(index==1){
+              console.log('asdasd'+item.name);
               item.name=this.name
             }
             if(item.name==''){
@@ -63,10 +69,13 @@
     },
     watch: {
       $route () {
+        console.log(this.changeName);
         if(!this.changeName){
+          console.log('444444');
           this.name='';
           this.getBreadcrumb()
         }else {
+          console.log('333333');
           this.name=this.changeName;
           this.getBreadcrumb();
           this.changeName=""

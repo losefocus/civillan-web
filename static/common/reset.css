@@ -20,6 +20,12 @@ table { border-collapse:collapse; border-spacing:0; }
   width: 290px;
   margin-left: -30px;
   padding-left: 30px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow: hidden;
+}
+#my-list .selected p{
+  width: 260px;
 }
 .amap-info-content{
   background: none;
@@ -48,7 +54,7 @@ table { border-collapse:collapse; border-spacing:0; }
   height:19px;
   font-size :12px;
   text-align :center;
-  line-height :19px;
+  line-height :20px;
   color :#ffffff;
   background:rgba(173,173,173,1);
   border-radius:2px;
@@ -69,8 +75,8 @@ table { border-collapse:collapse; border-spacing:0; }
   white-space:nowrap;
 }
 .info-time{
-  width:120px;
-  height:27px;
+  width:165px;
+  height:25px;
   background:rgba(243,26,26,0.8);
   border-radius:100px 0 0 100px;
   position:absolute;
@@ -78,12 +84,15 @@ table { border-collapse:collapse; border-spacing:0; }
   bottom: 10px;
   color: #ffffff;
   text-align: center;
-  line-height: 27px;
+  line-height: 25px;
   font-size: 12px;
+}
+.info-Interval{
+  margin: 0 5px 0 0;
 }
 /*模态框重置样式*/
 .el-header{
-  padding: 15px 20px 15px 40px !important;
+  padding: 15px 20px 15px 25px !important;
 }
 
 .el-dialog__header{
@@ -130,36 +139,59 @@ table { border-collapse:collapse; border-spacing:0; }
 /*表格重置样式*/
 .el-table{
   font-size: 12px;
+  /*background-color: rgba(79,80,89,0.2);*/
 }
 .el-table__expanded-cell{
-  background: rgba(79,80,89,0.6);
-  color:#ffffff;
+  background: rgba(105,106,114,0.7);
+  color:#666666;
 }
-.el-table__expanded-cell .el-table--enable-row-hover .el-table__body tr:hover>td{
-  background: rgba(79,80,89,0.8);
-  color:#ffffff;
-}
+/*.el-table__expanded-cell .el-table--enable-row-hover .el-table__body tr:hover>td{
+  background: rgba(79,80,89,0.2);
+  color:#666666;
+}*/
 .el-table__expanded-cell:hover{
-  background: rgba(79,80,89,0.6) !important;
+  background: rgba(105,106,114,0.7) !important;
 }
-.el-table__expanded-cell tr td{
-  background: rgba(79,80,89,0.6);
-  border-bottom: rgba(79,80,89,0.6) !important;
-  color: #ffffff;
-}
-.el-table__expanded-cell .el-table__header-wrapper .has-gutter tr th{
-  background: rgba(79,80,89,0.6) !important;
-  border-bottom: rgba(79,80,89,0.6) !important;
-  color: #ffffff;
-}
+/*.el-table__expanded-cell tr td{
+  background: rgba(79,80,89,0.2);
+  border-bottom: rgba(79,80,89,0.2) !important;
+  color: #666666;
+}*/
+/*.el-table__expanded-cell .el-table__header-wrapper .has-gutter tr th{
+  background: rgba(79,80,89,0.2) !important;
+  border-bottom: rgba(79,80,89,0.2) !important;
+  color: #666666;
+}*/
 .el-table__expanded-cell[class*=cell]{
-  padding: 20px 50px 20px 100px;
+  padding: 20px 50px 20px 50px;
 }
 .el-button--mini{
   padding: 7px 7px;
 }
+/*.el-table::before{
+  background-color: rgba(79,80,89,0.2);
+}*/
+.el-table__expanded-cell .el-table__header-wrapper .has-gutter{
+  background-color: rgba(79,80,89,0.2);
+}
+/*.el-table__body tr.current-row>td{
+  background-color: rgba(79,80,89,0.8);
+  color: #ffffff;
+}*/
 
 
+.config-table{
+  padding: 4px 0 !important;
+}
 
+.history-header{
+  background-color: #E1E1E3 !important;
+}
+.h-header{
+  background-color: #E1E1E3 !important;
+}
+/*.el-table__header-wrapper{
+  background-color: #E1E1E3 !important;
+}*/
 
 

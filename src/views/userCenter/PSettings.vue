@@ -1,8 +1,6 @@
 <template>
 <div>
-  <div style="height: 480px;background-color: #ffffff;
-    overflow: hidden;">
-
+  <div class="p-box">
   </div>
 </div>
 </template>
@@ -13,6 +11,10 @@ name: "personalSettings"
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .p-box{
+    height: 100%;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
 </style>

@@ -36,7 +36,7 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%">
+          :picker-options="pickerOptions2" style="margin: 0 5px;width: 35%">
         </el-date-picker>
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">查询</el-button>
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="c-handle">
-        <el-button type="primary" icon="el-icon-refresh" size="mini">刷新</el-button>
+        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="Refresh">刷新</el-button>
         <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
         <el-button type="primary" icon="el-icon-printer" size="mini">打印</el-button>
       </div>
@@ -54,17 +54,25 @@
     <el-table
       :data="tableData"
       style="width: 100%"
-      @selection-change="handleSelectionChange">
+      :highlight-current-row=true
+      @selection-change="handleSelectionChange"
+      @expand-change="handleExpandChange"
+
+    >
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-table
+              header-cell-class-name="history-header"
+              header-row-class-name="h-header"
+              header-align="center"
               :data="props.row.data"
               style="width: 100%">
               <el-table-column
+                align="center"
                 prop="part_id"
                 label="深度"
-                width="180">
+                width="120">
               </el-table-column>
               <el-table-column
                 prop="name"
@@ -123,42 +131,56 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="扩大头桩长"
-        prop="t_type_length">
+        :show-overflow-tooltip=true
+        label="扩大头桩长">
+        <template slot-scope="props">
+          {{ props.row.t_type_length | keepTwo}}
+        </template>
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="总桩长"
         prop="depth">
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="扩大桩浆量"
         prop="t_type_slurry">
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="下部桩浆量"
         prop="bottom_part_slurry">
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="扩大桩灰量"
         prop="t_type_ash">
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="下部桩灰量"
         prop="bottom_part_ash">
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="外钻最大电流"
         prop="max_current">
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="最大斜度"
         prop="max_slope">
       </el-table-column>
       <el-table-column
-        label="喷浆时间"
-        prop="sprayed_time">
+        :show-overflow-tooltip=true
+        label="喷浆时间">
+        <template slot-scope="props">
+          {{ props.row.sprayed_time | keepTwo}}
+        </template>
       </el-table-column>
       <el-table-column
+        :show-overflow-tooltip=true
         label="评分值"
         prop="rate">
       </el-table-column>
@@ -235,6 +257,10 @@
       formatDate(time) {
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd hh:mm:ss'); //yyyy-MM-dd hh:mm
+      },
+      keepTwo(value){
+        value=Number(value)
+        return value.toFixed(2)
       }
     },
     created(){
@@ -249,6 +275,9 @@
       })
     },
     methods: {
+      handleExpandChange(row,expandedRows){
+        console.log(expandedRows)
+      },
       deviceChange(val){
         console.log(val);
         this.deviceKey=val;
@@ -288,6 +317,9 @@
       query(){
         this.post_data.key=this.deviceKey;
         this.post_data.page_index=1;
+        this.getList(this.post_data)
+      },
+      Refresh(){
         this.getList(this.post_data)
       }
     }

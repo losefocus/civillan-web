@@ -12,12 +12,12 @@
           <div class="log-spacing">
             <label for="username">账号</label>
           </div>
-          <input type="text" id="username" placeholder="请输入账号" v-model="userInfo.username" @input="getUser(userInfo.username)" :class={fail:isFail,success:isSuccess}>
+          <input type="text" id="username" autocomplete placeholder="请输入账号" v-model="userInfo.username" @input="getUser(userInfo.username)" :class={fail:isFail,success:isSuccess}>
           <p class="initColor" :class={fail:isFail,success:isSuccess}>{{validateRules}}</p>
           <div class="log-spacing">
             <label for="password">密码</label>
           </div>
-          <input type="password" id="password" placeholder="请输入密码" v-model="userInfo.password" @input="getPassword(userInfo.password)">
+          <input type="password" id="password" autocomplete placeholder="请输入密码" v-model="userInfo.password" @input="getPassword(userInfo.password)">
           <p class="initColor" :class={fail:isFail1,success:isSuccess1}>{{validateRules1}}</p>
           <div class="log-spacing">
             <el-checkbox v-model="userInfo.checked">自动登录</el-checkbox>
@@ -83,7 +83,6 @@
           this.validateRules='';
           this.isSuccess=true;
           this.isFail=false;
-          console.log('成功');
         }
       },
       getPassword:function(p){
@@ -105,11 +104,12 @@
       submit:function(){
         if(this.isSuccess&&this.isSuccess1){
           var that=this;
+          console.log(this.userInfo);
           login.login(this.userInfo).then((res) => {
+            console.log(res);
             let wsUrl=JSON.parse(res.result.wsUrl);
             console.log(res.result);
             if(that.userInfo.checked){
-
               sessionStorage.setItem('token',res.result.token);
               sessionStorage.setItem('wsUrl',wsUrl.result);
               that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
@@ -117,8 +117,6 @@
               that.$store.dispatch('incrementToken',res.result.token);
               that.$router.push('/');
             }else{
-
-
               sessionStorage.setItem('token',res.result.token);
               sessionStorage.setItem('wsUrl',wsUrl.result);
               that.$cookies.remove('token');

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div >
+    <div style="height: 100%">
       <div class="u-box">
         <div class="u-header">
           <div class="u-info">
@@ -119,19 +119,22 @@ export default {
 
 <style scoped lang="scss">
   .u-box{
-    height: 415px;
+    width: 100%;
+    height: 100%;
     background-color: #ffffff;
     overflow: hidden;
     .u-header{
       width:100%;
-      height:180px;
+      height:40%;
       background: url("../../assets/userinfo/userInfo.png") no-repeat;
       background-size: cover;
       overflow: hidden;
       border-radius:3px 3px 0 0;
+      display: flex;
+      justify-content:center;
+      align-items:Center;
       .u-info{
-        margin: 80px auto;
-        height: 100px;
+        height: 20%;
         width: 300px;
         display: flex;
         justify-content: space-around;
@@ -174,13 +177,14 @@ export default {
     }
     .u-body{
       width: 450px;
-      margin: 30px auto;
+      margin: 0 auto;
       .u-information{
+        margin-top: 10%;
         font-size:14px;
         color:rgba(102,102,102,1);
       }
       .i-box{
-        margin-top: 25px;
+        margin-top: 5%;
         height: 100px;
         display: flex;
         justify-content: space-between;
@@ -228,7 +232,7 @@ export default {
         text-align: center;
         background:rgba(102,102,102,1);
         border-radius:6px;
-        margin: 20px auto;
+        margin: 6% auto;
         cursor: pointer;
       }
     }

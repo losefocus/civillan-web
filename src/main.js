@@ -9,8 +9,9 @@ Vue.config.productionTip = false;
 
 import api from './api/'
 Vue.prototype.$api = api;
-/*import axios from 'axios'
-Vue.prototype.$http= axios*/
+
+import axios from 'axios'
+Vue.prototype.$http= axios;
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -20,6 +21,8 @@ import VueCookies from 'vue-cookies'
 Vue.use(VueCookies);
 
 import echarts from 'echarts'
+Vue.prototype.$echarts = echarts;
+
 import ECharts from 'vue-echarts/components/ECharts.vue'
 
 // 手动引入 ECharts 各模块来减小打包体积

@@ -20,12 +20,23 @@ var loadingInstance;
 // POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use(
   config => {
-    loadingInstance = Loading.service({
-      lock: true,
-      text: '数据加载中，请稍后...',
-      spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
-    });
+    if(config.url=='/foreground/realtime/data'){
+      loadingInstance=Loading.service({
+        lock: false,
+        fullscreen:false,
+        //text: '数据加载中，请稍后...',
+        //spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.2)'
+      })
+    }else {
+      loadingInstance = Loading.service({
+        lock: true,
+        //text: '数据加载中，请稍后...',
+        //spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.2)'
+      });
+    }
+
     if (config.method === 'post') {
       config.data = qs.stringify(config.data)
     }

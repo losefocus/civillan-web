@@ -3,7 +3,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;" clearable >
+        <el-select v-model="device" placeholder="全部设备" size="mini" style="margin: 0 5px 0 0;width: 16%;" clearable >
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -11,7 +11,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-select placeholder="全部桩" size="mini" style="margin: 0 5px;width: 16%;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -19,7 +19,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-select  placeholder="评分等级" size="mini" style="margin: 0 5px;width: 16%;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -58,80 +58,52 @@
     </ul>
     <!-- 表格部分 -->
     <el-table
-      :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+      :data="tableData"
       stripe
       size="small"
       style="">
       <el-table-column
-        prop="state"
-        v-if="state"
-        label="状态">
+        type="selection">
       </el-table-column>
       <el-table-column
-        prop="date"
-        v-if="date"
-        label="订单日期"
-        >
+        label="桩号"
+        prop="pile_id">
       </el-table-column>
       <el-table-column
-        prop="number"
-        v-if="number"
-        label="订单编号"
-        >
+        label="作业周期"
+        align="center"
+      >
       </el-table-column>
       <el-table-column
-        prop="ship"
-        v-if="ship"
-        label="发货单位"
-        >
+        label="扩大头桩长">
       </el-table-column>
       <el-table-column
-        prop="receive"
-        v-if="receive"
-        label="收货单位"
-        >
+        label="总桩长">
       </el-table-column>
       <el-table-column
-        prop="tel"
-        v-if="tel"
-        label="收货电话"
-        >
+        label="扩大桩浆量">
       </el-table-column>
       <el-table-column
-        prop="type"
-        v-if="type"
-        label="货物类型"
-        >
+        label="下部桩浆量">
       </el-table-column>
       <el-table-column
-        prop="total"
-        v-if="total"
-        label="总件数"
-        >
+        label="扩大桩灰量">
       </el-table-column>
       <el-table-column
-        prop="weight"
-        v-if="weight"
-        label="总重量"
-        >
+        label="下部桩灰量">
       </el-table-column>
       <el-table-column
-        prop="volume"
-        v-if="volume"
-        label="总体积"
-        >
+        width="100"
+        label="外钻最大电流">
       </el-table-column>
       <el-table-column
-        prop="price"
-        v-if="price"
-        label="运费"
-        >
+        label="最大斜度">
       </el-table-column>
       <el-table-column
-        prop="remark"
-        v-if="remark"
-        label="备注"
-        >
+        label="喷浆时间">
+      </el-table-column>
+      <el-table-column
+        label="评分值">
       </el-table-column>
     </el-table>
     <!--  分页部分   -->
@@ -153,6 +125,7 @@
   </div>
 </template>
 <script>
+  import deviceList from '@/api/project/deviceList'
   import Bus from '@/common/eventBus'
   export default {
     data() {
@@ -198,6 +171,7 @@
             }
           }]
         },
+        value: '',
         value7: '',
         test:{
           xAxis: {
@@ -215,6 +189,17 @@
         tableData:[],
         currentPage:1,
         pagesize:20,
+        multipleSelection: [],
+        total:0,
+        dialogVisible: false,
+        device:'',
+        deviceKey:'',
+        deviceSelect:[],
+        post_data:{
+          key:'',
+          page_index:1,
+          page_size:10,
+        }
       }
     },
     created:function(){
@@ -225,6 +210,10 @@
         })
         .catch(function(err){
         })*/
+      deviceList.list().then(res=>{
+        console.log(res);
+        this.deviceSelect=res.result.items
+      });
       Bus.$on('isCollapse',res=>{
         console.log(res);
         this.isCollapse=res
@@ -240,6 +229,11 @@
       },
       handleClose(done) {
         done();
+      },
+      query(){
+        this.post_data.key=this.deviceKey;
+        this.post_data.page_index=1;
+        this.getList(this.post_data)
       }
     }
   }

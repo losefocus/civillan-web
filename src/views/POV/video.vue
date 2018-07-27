@@ -53,7 +53,7 @@ export default {
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
-          poster: "https://surmon-china.github.io/vue-quill-editor/static/images/surmon-1.jpg",
+          poster: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532527182365&di=89f58c2ad2b5028f3c2a3ae74918245e&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fphotoblog%2F1510%2F19%2Fc10%2F14147580_14147580_1445234591563.jpg",
         },
         {
           height: '220',
@@ -68,7 +68,7 @@ export default {
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
-          poster: "https://surmon-china.github.io/vue-quill-editor/static/images/surmon-1.jpg",
+          poster: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532527182365&di=89f58c2ad2b5028f3c2a3ae74918245e&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fphotoblog%2F1510%2F19%2Fc10%2F14147580_14147580_1445234591563.jpg",
         },
         {
           height: '220',
@@ -83,7 +83,7 @@ export default {
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
-          poster: "https://surmon-china.github.io/vue-quill-editor/static/images/surmon-1.jpg",
+          poster: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532527182365&di=89f58c2ad2b5028f3c2a3ae74918245e&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fphotoblog%2F1510%2F19%2Fc10%2F14147580_14147580_1445234591563.jpg",
         },
         {
           height: '220',
@@ -98,7 +98,7 @@ export default {
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
-          poster: "https://surmon-china.github.io/vue-quill-editor/static/images/surmon-1.jpg",
+          poster: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532527182365&di=89f58c2ad2b5028f3c2a3ae74918245e&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fphotoblog%2F1510%2F19%2Fc10%2F14147580_14147580_1445234591563.jpg",
         },
         {
           height: '220',
@@ -113,7 +113,7 @@ export default {
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
-          poster: "https://surmon-china.github.io/vue-quill-editor/static/images/surmon-1.jpg",
+          poster: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532527182365&di=89f58c2ad2b5028f3c2a3ae74918245e&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fphotoblog%2F1510%2F19%2Fc10%2F14147580_14147580_1445234591563.jpg",
         },
         {
           height: '220',
@@ -128,7 +128,7 @@ export default {
             // webm
             // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
           }],
-          poster: "https://surmon-china.github.io/vue-quill-editor/static/images/surmon-1.jpg",
+          poster: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532527182365&di=89f58c2ad2b5028f3c2a3ae74918245e&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fphotoblog%2F1510%2F19%2Fc10%2F14147580_14147580_1445234591563.jpg",
         }
       ],
       playerOptions: {
@@ -144,7 +144,7 @@ export default {
           // webm
           // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
         }],
-        poster: "https://surmon-china.github.io/vue-quill-editor/static/images/surmon-1.jpg",
+        poster: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532527182365&di=89f58c2ad2b5028f3c2a3ae74918245e&imgtype=0&src=http%3A%2F%2Fimg.pconline.com.cn%2Fimages%2Fupload%2Fupc%2Ftx%2Fphotoblog%2F1510%2F19%2Fc10%2F14147580_14147580_1445234591563.jpg",
       }
     }
   },
@@ -207,17 +207,18 @@ export default {
 
 <style scoped lang="scss">
   .v-box{
-    background: #ffffff;
+    //background: #ffffff;
     height: auto;
-    padding: 40px 0 0 0;
     display: flex;
     //justify-content:space-between;
     flex-flow:row wrap;
     li{
-      width: 317px;
-      margin:20px 10px 0 0 ;
+      width: 325px;
+      border: 20px solid #ffffff;
+      margin: 0 20px 20px 0;
     }
     .v-name{
+      background: #ffffff;
       width: 100%;
       height: 50px;
       text-align: center;

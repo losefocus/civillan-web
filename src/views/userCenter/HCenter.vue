@@ -1,7 +1,6 @@
 <template>
 <div>
-  <div style="height: 480px;background-color: #ffffff;
-    overflow: hidden;">
+  <div class="h-box">
   </div>
 </div>
 </template>
@@ -12,6 +11,10 @@ name: "HCenter"
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .h-box{
+    height: 100%;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
 </style>

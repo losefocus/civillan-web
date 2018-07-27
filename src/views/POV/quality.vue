@@ -77,14 +77,6 @@
         prop="endTime">
       </el-table-column>
       <el-table-column
-        label="日积分"
-        prop="a">
-      </el-table-column>
-      <el-table-column
-        label="根均得分"
-        prop="b">
-      </el-table-column>
-      <el-table-column
         label="日桩长（m)"
         prop="c">
       </el-table-column>
@@ -101,7 +93,7 @@
         prop="f">
       </el-table-column>
       <el-table-column
-        label="工作小计（kg)"
+        label="日成效"
         prop="g">
       </el-table-column>
     </el-table>

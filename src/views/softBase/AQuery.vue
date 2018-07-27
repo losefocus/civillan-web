@@ -49,6 +49,7 @@ export default {
     width: 100%;
     height: 60px;
     li{
+      cursor: pointer;
       float: left;
       width: 120px;
       height: 40px;

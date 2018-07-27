@@ -21,12 +21,12 @@
             <span>{{item.name}}</span>
           </div>
           <div class="d-title">
-            <span>{{item.device_type}}</span>
+            <span>{{item.product.alias}}</span>
             <!--<span v-if="item.device_type=='双头搅拌桩'">双头搅拌桩</span>
             <span v-if="item.device_type=='高压旋桩'">高压旋桩</span>-->
           </div>
           <ul class="d-info">
-            <li class="d-img" :class="{'d-type1':item.device==0,'d-type2':item.device==1,'d-type3':item.device_type=='高压旋喷搅拌桩'}"></li>
+            <li class="d-img" :class="{'d-type1':item.product.alias=='搅拌桩','d-type2':item.product.alias=='双头搅拌桩','d-type3':item.product.alias=='高压旋喷搅拌桩'}"></li>
             <li class="d-statistics">
               <div class="d-date">段浆量：10L</div>
               <div class="d-progress">
@@ -46,11 +46,12 @@
       :visible.sync="dialogVisible"
       :width="dialogWidth"
       :fullscreen="dialogFullscreen"
+      top="12vh"
       style="min-width: 1024px;"
       >
       <ul class="t-header">
         <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
-        <div class="t-handle">
+        <div class="t-handle" v-show="isShow">
           <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
         </div>
       </ul>
@@ -69,6 +70,7 @@
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
+  import JConfig from '@/views/softBase/JConfig'
 
   import Bus from '@/common/eventBus'
   import Waterfall from 'vue-waterfall/lib/waterfall'
@@ -82,14 +84,16 @@
       RState,
       AQuery,
       HData,
-      NRecord
+      NRecord,
+      JConfig
     },
     data () {
       return {
+        isShow:true,
         dialogVisible: false,
         dialogWidth:'70%',
         dialogHeight:{
-          height:'580px'
+          height:'700px'
         },
         dialogFullscreen:false,
         changeIcon:true,
@@ -104,13 +108,15 @@
           {name:'统计分析'},
           //{name:'通知记录'},
           {name:'报警查询'},
+          {name:'作业配置'},
         ],
         tBody:[
           'RState',
           'HData',
           'SAnalysis',
           //'NRecord',
-          'AQuery'
+          'AQuery',
+          'JConfig'
         ],
         tIndex:0,
         currentView:'RState',
@@ -124,6 +130,21 @@
         console.log(this);
         _this.group_id=e;
       });*/
+      /*let clientWidth=document.body.clientWidth;
+      if(clientWidth<1500||this.dialogFullscreen){
+        this.isShow=false
+      }else {
+        this.isShow=true
+      }
+      window.onresize=function () {
+        let clientWidth=document.body.clientWidth;
+        if(clientWidth<1500||this.dialogFullscreen){
+          this.isShow=false
+        }else {
+          this.isShow=true
+        }
+      };*/
+
       let group_id=sessionStorage.getItem('group_id');
       this.getList(group_id)
     },
@@ -170,14 +191,14 @@
         deviceList.list({'group_id':group_id}).then(res=>{
           this.items=res.result.items;
           this.items.forEach((item,i)=>{
-            console.log(item)
-            dictionary.list({'type':'device_type'}).then(res=>{
+            console.log(item);
+            /*dictionary.list({'type':'device_type'}).then(res=>{
               res.result.forEach((dict,j)=>{
                 if(item.product.alias==dict.label){
                   item.device_type=dict.label
                 }
               });
-            })
+            })*/
           });
         })
       }
@@ -203,6 +224,7 @@
     cursor: pointer;
     .equipment{
       width: 50%;
+
       float: left;
     }
     .online{
@@ -235,7 +257,7 @@
     .d-name{
       color: #333333;
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 15px;
       font-weight: bold;
     }
     .d-title{

@@ -74,7 +74,7 @@
   data(){
     return {
       currentPage:1,
-      pageSize:6,
+      pageSize:7,
       tableData: [],
       total:0,
     }
@@ -128,14 +128,21 @@
       })
     }
   },
+  props: ['dialogTop'],
   created(){
+    console.log(this.dialogTop);
+    if(this.dialogTop){
+      this.pageSize=10
+    }else{
+      this.pageSize=7
+    }
     this.getList(this.currentPage,this.pageSize)
   }
 }
 </script>
 <style scoped lang="scss">
   .m-box{
-    height: 415px;
+    height: 100%;
     background-color: #ffffff;
     overflow:auto;
     position: relative;

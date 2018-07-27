@@ -6,7 +6,7 @@
           <div class="pj-img" v-if="imgShow">
             <div class="pj-title" :style="{'background-image': 'url(' + projectLogo+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
               <p>
-                杭州高新战略科技城区项目
+                {{projectName}}
               </p>
             </div>
           </div>
@@ -27,7 +27,7 @@
             </router-link>
           </li>
         </ul>
-        <div id="resize" @click="collapse()" :class="{'navOpen':!isCollapse,'navClose':isCollapse}" v-if="isShow"></div>
+        <div id="resize" @click="collapse()" :class="{'navOpen':!isCollapse,'navClose':isCollapse}" v-show="isShow"></div>
       </el-aside>
     </transition>
   </div>
@@ -35,6 +35,7 @@
 
 <script>
   import Bus from '@/common/eventBus'
+  import project from '@/api/userCenter/project'
 export default {
   name: "zNav",
   data(){
@@ -47,6 +48,7 @@ export default {
      navWidth:"",
      isCollapseIcom:'navClose',
      navIndex:'',
+     projectName:'',
      lists:[
        {
          name:'项目总览',
@@ -84,7 +86,7 @@ export default {
          path:'/document'
        },{
          name:'质量评估',
-         icon:'icon-quality',
+         icon:'icon-quality1',
          path:'/quality'
        },{
          name:'作业成效',
@@ -95,12 +97,18 @@ export default {
    }
   },
   created(){
+    let id=this.$store.state.project.projectId;
+    let tenant=this.$store.state.project.tenant;
+    project.info({'project_id':id,'tenant':tenant}).then(res=>{
+      console.log(res);
+      this.projectName=res.result.name;
+    });
     this.isActive=0;
     this.projectLogo=sessionStorage.getItem('projectLogo');
     let _this=this;
     let cWidth=document.body.clientWidth;
-    if(cWidth<1410){
-      console.log(cWidth);
+    if(cWidth<1450){
+      //console.log(cWidth);
       _this.isCollapse=false;
       _this.changeWidth();
       _this.isShow=false;
@@ -111,8 +119,8 @@ export default {
     }
     window.onresize = function (){
       let clientWidth=document.body.clientWidth;
-      if(clientWidth<=1410){
-        console.log(clientWidth);
+      if(clientWidth<=1450){
+        //console.log(clientWidth);
         _this.isCollapse=false;
         _this.changeWidth();
         _this.isShow=false;
@@ -122,11 +130,10 @@ export default {
         _this.isShow=true;
       }
     };
-
   },
   mounted(){
     this.isActive=sessionStorage.getItem('isActive') || 0;
-    console.log(this.isCollapse);
+    //console.log(this.isCollapse);
     this.changeWidth()
     //console.log(this.isActive)
   },
@@ -271,7 +278,7 @@ export default {
         color: #4F5059;
         overflow: hidden;
         .nav-icon{
-          padding-top: 15px;
+          padding-top: 12px;
           text-align: center;
           i{
             font-size: 25px;

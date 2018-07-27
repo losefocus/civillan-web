@@ -44,7 +44,7 @@ const vRouter = new Router({
       children:[
         {
           path: '/project',
-          name:'项目名称',
+          name:'项目分组',
           component: project,
           redirect:"/project/classification",
           meta: { requireAuth: true},

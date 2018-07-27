@@ -1,6 +1,7 @@
 <template>
 <div style="height:100%;">
   <div class="hd-logo hd-left"></div>
+  <!--<span class="iconfont icon-collapse"></span>-->
   <div class="hd-name hd-left">工程施工实时监控系统</div>
 
   <img src="@/assets/header/label_close.png" class="hd-right hd-close" @click="close()">
@@ -38,12 +39,14 @@
     :visible.sync="dialogVisible"
     :width="dialogWidth"
     style="min-width: 1024px"
+    :top="dialogTop"
+
   >
     <ul class="t-header">
       <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
       <div @click="close()"></div>
     </ul>
-    <n-message :is="currentView" keep-alive class="t-Body"></n-message>
+    <n-message :dialogTop="topChange" :is="currentView" keep-alive class="t-Body" :class="{'t-BodyHeight1':!topChange,'t-BodyHeight2':topChange}"></n-message>
   </el-dialog>
 
 </div>
@@ -68,6 +71,8 @@
     },
     data(){
        return{
+         topChange:true,
+         dialogTop:'15vh',//top值
          dialogWidth:'68%',//模态框宽度
          avatarUrl:'', //头像路径
          username:'',//用户名
@@ -92,10 +97,29 @@
        }
     },
     created(){
-      console.log();
+      let _this=this;
+      let clientHeight=document.body.clientHeight;
+      if(clientHeight<800){
+        _this.dialogTop='6vh';
+        _this.topChange=false;
+      }else {
+        _this.dialogTop='15vh';
+        _this.topChange=true
+      }
+      window.onresize=function () {
+        let cHeight=document.body.clientHeight;
+        if(cHeight<800){
+          _this.dialogTop='6vh';
+          _this.topChange=false;
+          console.log('123')
+        }else {
+          _this.dialogTop='15vh';
+          _this.topChange=true
+        }
+      };
       let userId=sessionStorage.getItem('token').substring(0,2);
       userInfo.userInfo({project_user_id:userId}).then(res=>{
-        console.log(res);
+        //console.log(res);
         this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath
       });
 
@@ -103,7 +127,7 @@
       message.unReadCount().then(res=>{
         //console.log(res.result);
         this.unReadCount=res.result;
-        console.log(res.result);
+        //console.log(res.result);
         this.unReadCount==0? this.isHidden=true : this.isHidden=false;
       });
 
@@ -127,16 +151,16 @@
       },
 
       websocketonopen() {
-        console.log("WebSocket连接成功");
+        //console.log("WebSocket连接成功");
       },
       websocketonerror() { //错误
-        console.log("WebSocket连接发生错误");
+        //console.log("WebSocket连接发生错误");
       },
       websocketonmessage(){ //数据接收
         this.unReadCount+=1;
       },
       websocketclose(){ //关闭
-        console.log("关闭");
+        //console.log("关闭");
       },
 
       getMessage(){
@@ -176,7 +200,7 @@
   }
   .hd-logo{
     width: 183px;
-    height: 41px;
+    height: 42px;
     background: url("../../static/img/login/logo.png") no-repeat;
     background-size: cover;
   }
@@ -184,7 +208,7 @@
     width: 162px;
     height: 22px;
     padding-left: 20px;
-    margin: 10px 0 0 20px;
+    margin: 10px 0 0 35px;
     border-left: 2px solid #E6EAEE;
     color: #333333;
     font-size: 16px;
@@ -267,5 +291,11 @@
     overflow: auto;
     padding: 20px;
     background: #f5f5f9;
+  }
+  .t-BodyHeight1{
+    height: 460px;
+  }
+  .t-BodyHeight2{
+    height: 600px;
   }
 </style>
