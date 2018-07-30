@@ -37,7 +37,7 @@
           style="margin: 0 5px;width: 26%">
         </el-date-picker>
         <div class="c-button">
-          <el-button type="info" size="mini" @click="query">查询</el-button>
+          <el-button  type="info" size="mini" @click="query">查询</el-button>
         </div>
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">重置</el-button>
@@ -63,7 +63,8 @@
       </el-table-column>
       <el-table-column
         prop="a"
-        label="报警内容">
+        label="报警内容"
+        min-width="400">
       </el-table-column>
       <el-table-column
         prop="b"

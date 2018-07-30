@@ -78,7 +78,7 @@ export default {
          path:'/alarm'
        },{
          name:'视频监控',
-         icon:'icon-video',
+         icon:'icon-video1',
          path:'/video'
        },{
          name:'文档资料',

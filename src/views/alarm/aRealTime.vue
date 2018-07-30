@@ -9,6 +9,7 @@
     </el-table-column>
     <el-table-column
       prop="a"
+      min-width="400"
       label="报警内容">
     </el-table-column>
     <el-table-column

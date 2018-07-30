@@ -1,15 +1,15 @@
 <template>
   <div>
     <waterfall
-      :line-gap="250"
-      :min-line-gap="240"
-      :max-line-gap="280"
+      :line-gap="320"
+      :min-line-gap="280"
+      :max-line-gap="320"
       :single-max-width="350"
       :watch="items">
       <waterfall-slot
         v-for="(item, index) in items"
         :width="210"
-        :height="220"
+        :height="210"
         :order="index"
         :key="item.id"
         move-class="item-move"
@@ -257,7 +257,7 @@
     .d-name{
       color: #333333;
       margin-top: 20px;
-      font-size: 15px;
+      font-size: 18px;
       font-weight: bold;
     }
     .d-title{
@@ -328,7 +328,7 @@
   }
   .t-Body{
     overflow: auto;
-    padding: 1%;
+    padding: 1.5% 1%;
     background: #f5f5f9;
   }
 

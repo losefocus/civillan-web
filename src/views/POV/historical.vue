@@ -66,6 +66,7 @@
               header-cell-class-name="history-header"
               header-row-class-name="h-header"
               header-align="center"
+              border
               :data="props.row.data"
               style="width: 100%">
               <el-table-column

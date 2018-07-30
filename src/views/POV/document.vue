@@ -42,7 +42,7 @@
       @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
-        width="100">
+        width="50">
       </el-table-column>
       <el-table-column
         prop="name"
@@ -65,7 +65,6 @@
             @click="handleEdit(scope.$index, scope.row)">上传</el-button>
           <el-button
             size="mini"
-            type="danger"
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>

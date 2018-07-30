@@ -57,10 +57,10 @@ export default {
     li{
       cursor: pointer;
       float: left;
-      width: 120px;
-      height: 40px;
+      width: 100px;
+      height: 30px;
       text-align: center;
-      line-height: 40px;
+      line-height: 30px;
       background: #FFFFFF;
       color: #CCCFD4;
       border:1px solid rgba(204,207,212,1);
@@ -72,9 +72,9 @@ export default {
       border-radius: 0 5px 5px 0;
     }
     .active{
-      background: #6FDDE8;
+      background: #F76A6A;
       color: #ffffff;
-      border:1px solid #6FDDE8;
+      border:1px solid #F76A6A;
     }
   }
 

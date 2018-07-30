@@ -16,7 +16,7 @@
                   start-placeholder="开始日期"
                   end-placeholder="结束日期">
                 </el-date-picker>
-                <el-button type="primary" size="small">查询</el-button>
+                <el-button type="info" size="small">查询</el-button>
               </div>
             </div>
           </div>
@@ -45,6 +45,7 @@ export default {
           formatter: "{a} <br/>{b}: {c} ({d}%)"
         },
         legend: {
+          type: 'scroll',
           orient: 'vertical',
           x: 'left',
           itemGap: 15,
@@ -54,7 +55,7 @@ export default {
           {
             name:'报警来源',
             type:'pie',
-            radius: ['50%', '80%'],
+            //radius: ['50%', '80%'],
             avoidLabelOverlap: true,
             labelLine: {
               normal: {

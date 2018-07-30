@@ -134,8 +134,8 @@ export default {
       justify-content:center;
       align-items:Center;
       .u-info{
-        height: 20%;
-        width: 300px;
+        height: 35%;
+        width: 280px;
         display: flex;
         justify-content: space-around;
         img{
@@ -157,7 +157,7 @@ export default {
         .u-jurisdiction{
           line-height: 67px;
           .j-title{
-            width:46px;
+            width:48px;
             height:18px;
             background:rgba(111,221,232,1);
             border-radius:4px;

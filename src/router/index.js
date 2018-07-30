@@ -20,6 +20,10 @@ import aAnalysis from '@/views/alarm/aAnalysis'
 import aHistory from '@/views/alarm/aHistory'
 import aRealTime from '@/views/alarm/aRealTime'
 
+import vData from '@/views/video/vData'
+import vSurveillance from '@/views/video/vSurveillance'
+import zPanorama from '@/views/video/zPanorama'
+
 Vue.use(Router)
 
 const vRouter = new Router({
@@ -119,7 +123,28 @@ const vRouter = new Router({
           path: '/video',
           component: video,
           name:'视频监控',
-          meta: { requireAuth: true }
+          meta: { requireAuth: true },
+          redirect:'/video/vData',
+          children:[
+            {
+              path:'/video/vData',
+              name:'影像资料',
+              component:vData,
+              meta: {requireAuth: true}
+            },
+            {
+              path:'/video/zPanorama',
+              component:zPanorama,
+              name:'全景图片',
+              meta:{requireAuth: true}
+            },
+            {
+              path:'/video/vSurveillance',
+              component:vSurveillance,
+              name:'视频监控',
+              meta:{requireAuth: true}
+            }
+          ]
         }
       ]
     }

@@ -8,7 +8,7 @@
         <ul id="my-list">
           <div class="pj-title">项目列表</div>
           <ul v-for="(list,index) in lists" :key="index">
-            <div @click="close(list,index)" class="list-title"  :class="{isBorder:list.show}">
+            <div @click="close(list,index)" class="list-title"  :class="{isBorder:list.show}" >
               <div class="l-name">{{ list.name }}</div>
               <div>
                 <i :class="{'el-icon-caret-bottom':!list.show,'el-icon-caret-top':list.show}"></i>
@@ -78,8 +78,11 @@
             }
           });
           this.lists=lists;
-          this.lists.forEach(function (item) {
-
+          this.lists.forEach(function (item,index) {
+            if(index==0){
+              item.show=true
+            }
+            console.log(item);
             AMapUI.define("polyfill/require/require-css/css!plug/ext/font-awesome/css/font-awesome", [], function () {
               //留空即可
             });

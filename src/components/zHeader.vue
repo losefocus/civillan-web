@@ -15,7 +15,7 @@
         <el-dropdown-item command="1">个人设置</el-dropdown-item>
         <el-dropdown-item command="2">消息通知</el-dropdown-item>
         <el-dropdown-item command="3">帮助中心</el-dropdown-item>
-        <!--<el-dropdown-item divided command="close">退出登录</el-dropdown-item>-->
+        <el-dropdown-item divided command="close">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -199,7 +199,7 @@
     float: right;
   }
   .hd-logo{
-    width: 183px;
+    width: 188px;
     height: 42px;
     background: url("../../static/img/login/logo.png") no-repeat;
     background-size: cover;

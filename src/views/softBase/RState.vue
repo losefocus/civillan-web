@@ -8,7 +8,7 @@
      <ul class="s-box1">
        <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
          <div class="i-id">
-           <div class="d-model">NB-001</div>
+           <div class="d-model">{{deviceName[deviceIndex-1].name}}</div>
            <div class="d-kind">
              <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
            </div>
@@ -185,6 +185,9 @@ export default {
       timer1:null,//定时器1
       deviceType:['1','2','3'],
       deviceIndex:1,
+      deviceName:[
+        {name:'NB-001'},{name:'NB-002'},{name:'NB-003'}
+      ],
       isShow:true,
       titleActive:'1',//设备样式切换
       classChange:1,//改变样式
@@ -195,7 +198,7 @@ export default {
       rspeed:3,//速度实时数据
       rcurrent:3,//电流实时数据
 
-      totalSteps: 100,//完成进度条的步骤总数。
+      totalSteps: 200,//完成进度条的步骤总数。
       animateSpeed: 500,//动画一步的时间量（以毫秒为单位）
       diameter: 110,//进度条圆的直径，以像素为单位。
       strokeWidth: 8,//进度条的宽度
@@ -228,7 +231,7 @@ export default {
 
       PulpingQuantity:{
         title: {
-          text: 'A-段浆量+段灰量随桩机里程变化曲线',
+          text: '段浆量、段灰量随桩机里程变化曲线',
           show: true,
           textStyle: {
             fontWeight: 'bold',
@@ -479,7 +482,7 @@ export default {
       },
       ElectricCurrent:{
         title: {
-          text: 'A-喷浆压力随桩机里程变化曲线',
+          text: '喷浆压力随桩机里程变化曲线',
           show: true,
           textStyle: {
             fontWeight: 'bold',
@@ -719,7 +722,7 @@ export default {
       this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
     },
     deviceChange(index){
-      this.deviceIndex=index
+      this.deviceIndex=index;
     },
     temp(isDialog,diameter,that,clientWidth) {
 
@@ -789,7 +792,7 @@ export default {
         this.RT_data=res.result;
 
         this.rflow=parseInt(res.result.rflow);
-        this.rspeed=parseInt(res.result.rspeed);
+        this.rspeed=(parseInt(res.result.rspeed)+5)*20;
         this.rcurrent=parseInt(res.result.rcurrent);
         this.progress=Math.abs(res.result.rdeep)*2;
         if(this.rflow>=this.totalSteps){
@@ -868,7 +871,7 @@ export default {
       }
     }
     let data = [];
-    let now = +new Date(1997, 9, 3);
+    let now = +new Date(2018, 7, 1);
     let oneDay = 24 * 3600 * 1000;
     let value = Math.random() * 1000;
     for (var i = 0; i < 1000; i++) {
@@ -877,7 +880,7 @@ export default {
 
     myChart.setOption({
       title: {
-        text: 'A-电流随桩机里程变化曲线',
+        text: '电流随桩机里程变化曲线',
         show: true,
         textStyle: {
           fontWeight: 'bold',
@@ -926,7 +929,7 @@ export default {
           margin: 10,
           textStyle: {
             fontSize: 12,
-            color: '#999'
+            color: '#666666'
           }
         }
       },
@@ -936,7 +939,7 @@ export default {
           boundaryGap: [0, '10%'],
           axisLine: {
             lineStyle: {
-              color:'#ccc'
+              color:'#999'
             }
           },
           name:'电流A',
@@ -952,7 +955,7 @@ export default {
           boundaryGap: [0, '100%'],
           axisLine: {
             lineStyle: {
-              color:'#ccc'
+              color:'#999'
             }
           },
           name:'深度 C',
@@ -967,7 +970,7 @@ export default {
           boundaryGap: [0, '50%'],
           axisLine: {
             lineStyle: {
-              color:'#ccc'
+              color:'#999'
             }
           },
           splitLine:{
@@ -1156,6 +1159,7 @@ export default {
           .d-model{
             width: 150px;
             font-size: 30px;
+            font-weight: bold;
             color: #333333;
           }
           .d-kind{
@@ -1314,6 +1318,7 @@ export default {
           color:#DADADA;
           line-height:42px;
           .d-model{
+            font-weight: bold;
             width: 250px;
             font-size: 42px;
             color: #333333;

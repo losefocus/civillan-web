@@ -13,7 +13,7 @@
             </el-table-column>
             <el-table-column
               prop="b"
-              label="标示">
+              label="标识">
             </el-table-column>
             <el-table-column
               prop="c"
@@ -38,14 +38,14 @@
         </template>
       </div>
       <div class="j-add">
-        <div class="a-title">添加配置</div>
+        <div class="a-title">添加作业</div>
         <div class="a-body">
           <div class="a-info">
             <el-input placeholder="名称" size="mini" style="margin: 0 5px 0 0"></el-input>
-            <el-input placeholder="标示" size="mini" style="margin: 0 5px"></el-input>
+            <el-input placeholder="标识" size="mini" style="margin: 0 5px"></el-input>
             <el-input placeholder="排序" size="mini" style="margin: 0 0 0 5px"></el-input>
           </div>
-          <div class="c-content">配置内容</div>
+          <div class="c-content">作业内容</div>
           <div class="c-body">
             <div class="c-add">
               <el-select v-model="value" size="mini" placeholder="项目" style="margin: 0 5px 0 5px">
@@ -101,35 +101,41 @@
         },
         options: [{
           value: '1',
-          label: '流量'
+          label: '设计桩长'
         }, {
           value: '2',
-          label: '压力'
+          label: '设计灰量'
         }, {
           value: '3',
-          label: '电流'
+          label: '设计最大提速'
         }, {
           value: '4',
-          label: '深度'
+          label: '设计最小提速'
+        }, {
+          value: '4',
+          label: '设计最大钻速'
+        }, {
+          value: '4',
+          label: '设计最小钻速'
         }],
         value: '',
         tableData: [
           {
-          a: 'nb-12321',
-          b: 'nb-12321',
-          c: '22'
+          a: '一号桩',
+          b: '1-01',
+          c: '1'
         }, {
-          a: 'nb-12321',
-          b: 'nb-12321',
-          c: '22'
+          a: '二号桩',
+          b: '2-02',
+          c: '2'
         }, {
-          a: 'nb-12321',
-          b: 'nb-12321',
-          c: '22'
+          a: '三号桩',
+          b: '3-03',
+          c: '3'
         }, {
-          a: 'nb-12321',
-          b: 'nb-12321',
-          c: '22'
+          a: '四号桩',
+          b: '4-04',
+          c: '4'
         }],
         tableData1:[
           {
