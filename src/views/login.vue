@@ -28,7 +28,7 @@
           </div>
         </form>
 
-        <p class="cp-code">浙ICP备1500号 Copyright © 2018浙江智握领程科技股份有限公司 版权所有V1.01.</p>
+        <p class="cp-code">Copyright 2018 智握领程 版权所有.</p>
       </el-aside>
     </el-container>
   </div>
@@ -107,21 +107,24 @@
           console.log(this.userInfo);
           login.login(this.userInfo).then((res) => {
             console.log(res);
-            let wsUrl=JSON.parse(res.result.wsUrl);
-            console.log(res.result);
-            if(that.userInfo.checked){
-              sessionStorage.setItem('token',res.result.token);
-              sessionStorage.setItem('wsUrl',wsUrl.result);
-              that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
-              that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
-              that.$store.dispatch('incrementToken',res.result.token);
-              that.$router.push('/');
+            if(res.success==false){
+              that.$message.error(res.message)
             }else{
-              sessionStorage.setItem('token',res.result.token);
-              sessionStorage.setItem('wsUrl',wsUrl.result);
-              that.$cookies.remove('token');
-              that.$store.dispatch('incrementToken',res.result.token);
-              that.$router.push('/');
+              let wsUrl=JSON.parse(res.result.wsUrl);
+              if(that.userInfo.checked){
+                sessionStorage.setItem('token',res.result.token);
+                sessionStorage.setItem('wsUrl',wsUrl.result);
+                that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
+                that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
+                that.$store.dispatch('incrementToken',res.result.token);
+                that.$router.push('/');
+              }else{
+                sessionStorage.setItem('token',res.result.token);
+                sessionStorage.setItem('wsUrl',wsUrl.result);
+                that.$cookies.remove('token');
+                that.$store.dispatch('incrementToken',res.result.token);
+                that.$router.push('/');
+              }
             }
           }).catch(err => {
             console.log(err)

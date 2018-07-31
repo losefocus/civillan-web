@@ -20,7 +20,7 @@
              <div class="i-company">宏远建设记录仪一号</div>
            </div>
            <div>
-             <div class="i-state"><span>喷浆状态</span><div :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
+             <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
              <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==0}"></div></div>
            </div>
          </div>
@@ -50,28 +50,28 @@
          </div>
          <div class="d-box">
            <div>
-             <p class="d-value">30</p>
              <p class="d-key">桩间距</p>
+             <p class="d-value">30</p>
            </div>
            <div>
-             <p class="d-value">30</p>
              <p class="d-key">桩长</p>
+             <p class="d-value">30</p>
            </div>
            <div>
-             <p class="d-value">30</p>
              <p class="d-key">桩径</p>
+             <p class="d-value">30</p>
            </div>
            <div>
-             <p class="d-value">30</p>
              <p class="d-key">水灰比</p>
-           </div>
-           <div>
              <p class="d-value">30</p>
-             <p class="d-key">灰量</p>
            </div>
            <div>
-             <p class="d-value1">{{RT_data.process_type}}</p>
+             <p class="d-key">灰量</p>
+             <p class="d-value">30</p>
+           </div>
+           <div>
              <p class="d-key">工艺</p>
+             <p class="d-value1">{{RT_data.process_type}}</p>
            </div>
          </div>
        </li>
@@ -1171,7 +1171,7 @@ export default {
               cursor: pointer;
               width: 24px;
               height: 24px;
-              line-height: 28px;
+              line-height: 26px;
               border-radius: 50%;
               border: 1px solid rgba(218,218,218,1);
               text-align: center;
@@ -1207,6 +1207,7 @@ export default {
             font-size:12px;
             color:rgba(153,153,153,1);
             .led-green{
+              vertical-align: center;
               display: inline-block;
               background-color: #00ff00;
               width: 6px;
@@ -1295,16 +1296,17 @@ export default {
           .d-key{
             font-size: 12px;
 
-            margin-top: 10px;
             color: #666666;
           }
           .d-value{
+            margin-top: 10px;
             font-weight: bold;
             height: 30px;
             font-size: 20px;
             color: #333333;
           }
           .d-value1{
+            margin-top: 10px;
             font-weight: bold;
             height: 30px;
             font-size: 17px;

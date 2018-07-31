@@ -77,7 +77,7 @@ export default {
          icon:'icon-alarm',
          path:'/alarm'
        },{
-         name:'视频监控',
+         name:'现场影像',
          icon:'icon-video1',
          path:'/video'
        },{
@@ -100,7 +100,7 @@ export default {
     let id=this.$store.state.project.projectId;
     let tenant=this.$store.state.project.tenant;
     project.info({'project_id':id,'tenant':tenant}).then(res=>{
-      console.log(res);
+      //console.log(res);
       this.projectName=res.result.name;
     });
     this.isActive=0;

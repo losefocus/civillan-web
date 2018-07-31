@@ -21,6 +21,7 @@ import aHistory from '@/views/alarm/aHistory'
 import aRealTime from '@/views/alarm/aRealTime'
 
 import vData from '@/views/video/vData'
+import pData from '@/views/video/pData'
 import vSurveillance from '@/views/video/vSurveillance'
 import zPanorama from '@/views/video/zPanorama'
 
@@ -124,9 +125,14 @@ const vRouter = new Router({
           component: video,
           name:'视频监控',
           meta: { requireAuth: true },
-          redirect:'/video/vData',
+          redirect:'/video/pData',
           children:[
             {
+              path:'/video/pData',
+              name:'图片资料',
+              component:pData,
+              meta: {requireAuth: true}
+            },{
               path:'/video/vData',
               name:'影像资料',
               component:vData,

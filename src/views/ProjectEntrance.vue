@@ -66,8 +66,8 @@
         });
 
         project.list().then(res=>{
-          //console.log(toTree(res.result.items));
-          let lists=toTree(res.result.items);
+          console.log(res.result);
+          let lists=toTree(res.result);
           lists.forEach(function (item) {
             item.show=false;
             item.listId='id'+item.id;

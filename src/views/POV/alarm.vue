@@ -41,7 +41,7 @@ export default {
     $route(){
       this.navList.forEach((item,i)=>{
         if(item.path==this.$route.path){
-          //sessionStorage.setItem('aActive',i);
+          sessionStorage.setItem('aActive',i);
           this.isActive=i;
         }
       })
@@ -55,12 +55,13 @@ export default {
     width: 100%;
     height: 60px;
     li{
+      font-size: 14px;
       cursor: pointer;
       float: left;
       width: 100px;
       height: 30px;
       text-align: center;
-      line-height: 30px;
+      line-height: 32px;
       background: #FFFFFF;
       color: #CCCFD4;
       border:1px solid rgba(204,207,212,1);

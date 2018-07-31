@@ -8,14 +8,14 @@
       :watch="items">
       <!-- each component is wrapped by a waterfall slot -->
       <waterfall-slot
-        v-for="(item, index) in items"
+        v-for="(item, j) in items"
         :width="240"
         :height="320"
-        :order="index"
+        :order="j"
         :key="item.id"
         move-class="item-move"
       >
-        <div class="item pj-box" :style="item.style" :index="item.id" @click="jump(item.name,item.id)">
+        <div class="item pj-box" :style="item.style" @click="jump(item.name,item.id)">
           <div class="pj-img" :style="{ 'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
             <div class="pj-mask" >
               <span>{{item.name}}</span>
@@ -24,13 +24,11 @@
           <div class="pj-data">
             <ul>
               <li class="equipment">设备</li>
-              <li class="online">在线</li>
-              <li class="statistics">统计</li>
+              <li class="statistics">状态</li>
             </ul>
             <ul v-for="(list,index) in item.projectDevices" :key="index">
-              <li class="equipment">{{list.name}}</li>
-              <li class="online1">{{list.b}}</li>
-              <li class="statistics">{{list.c}}</li>
+              <li class="equipment1">{{list.name}}</li>
+              <li class="statistics1"><span class="iconfont icon-state"></span></li>
             </ul>
           </div>
         </div>
@@ -197,7 +195,6 @@
     }
     .pj-data {
       ul{
-        font-weight: bold;
         font-size: 14px;
         padding-left: 25px;
         height: 15px;
@@ -206,7 +203,8 @@
       }
     }
     .equipment{
-      width: 48%;
+      font-weight: bold;
+      width: 70%;
       padding-right: 2%;
       float: left;
       color: #666666;
@@ -214,17 +212,28 @@
       overflow:hidden;
       white-space:nowrap;
     }
-    .online{
+    .equipment1{
+      width: 70%;
+      padding-right: 2%;
+      float: left;
+      color: #666666;
+      text-overflow:ellipsis;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+    .iconfont{
+      font-size: 12px;
+      color: #6CD74D;
+    }
+    .statistics1{
+      text-align: center;
       width: 25%;
       float: left;
       color: #666666;
     }
-    .online1{
-      width: 25%;
-      float: left;
-      color: #333333;
-    }
     .statistics{
+      font-weight: bold;
+      text-align: center;
       width: 25%;
       float: left;
       color: #666666;
@@ -282,7 +291,7 @@
       //justify-content: space-between;
       flex-wrap:wrap;
       .c-info{
-        width: 175px;
+        width: 160px;
         margin: 0 5px 0 5px;
         cursor: pointer;
         p{

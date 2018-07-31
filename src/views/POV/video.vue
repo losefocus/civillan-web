@@ -5,7 +5,10 @@
         {{list.name}}
       </li>
     </ul>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+
   </div>
 </template>
 
@@ -13,9 +16,12 @@
   export default {
     data(){
       return{
-        isActive:sessionStorage.getItem('aActive') || 0,
+        isActive:sessionStorage.getItem('bActive') || 0,
         navList:[
           {
+            path:'/video/pData',
+            name:'图片资料'
+          },{
             path:'/video/vData',
             name:'影像资料'
           },
@@ -30,6 +36,9 @@
         ]
       }
     },
+    created(){
+
+    },
     methods:{
       changeTab(list,index){
         this.$router.push(list.path);
@@ -39,8 +48,9 @@
     watch:{
       $route(){
         this.navList.forEach((item,i)=>{
+          console.log(item.path);
           if(item.path==this.$route.path){
-            //sessionStorage.setItem('aActive',i);
+            sessionStorage.setItem('bActive',i);
             this.isActive=i;
           }
         })
@@ -54,12 +64,13 @@
     width: 100%;
     height: 60px;
     li{
+      font-size: 14px;
       cursor: pointer;
       float: left;
       width: 100px;
       height: 30px;
       text-align: center;
-      line-height: 30px;
+      line-height: 32px;
       background: #FFFFFF;
       color: #CCCFD4;
       border:1px solid rgba(204,207,212,1);

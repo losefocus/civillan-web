@@ -223,12 +223,18 @@
     .v-name{
       background: #ffffff;
       width: 100%;
-      height: 50px;
+      height: 25px;
       text-align: center;
-      line-height: 50px;
+      line-height: 45px;
       display: flex;
       justify-content: space-between;
-
+      .v-title{
+        color:rgba(51,51,51,1);
+        font-size: 12px;
+      }
+      .v-time{
+        font-size: 12px;
+      }
     }
     .c-both{
       clear: both;

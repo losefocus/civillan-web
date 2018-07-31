@@ -1,8 +1,7 @@
 <template>
   <div>
     <ul class="p-box">
-      <li @click="photoViewer" v-for="(list,index) in lists">
-        <div class="viewer"></div>
+      <li v-for="(list,index) in lists">
         <div class="b-box"></div>
         <div class="v-name">
           <div class="v-title">高新科技园区建筑建设标段</div>
@@ -11,67 +10,34 @@
       </li>
 
     </ul>
-
-    <el-dialog
-      :visible.sync="dialogVisible"
-      width="70%"
-      style="height: 700px"
-    >
-      <p-viewer></p-viewer>
-    </el-dialog>
   </div>
-
 </template>
 
-
 <script>
-
-
-  import pViewer from '@/views/video/photoViewer'
-  export default {
-    components:{
-      pViewer
-    },
-    data(){
-      return{
-        lists:[
-          {'name':'1'},
-          {'name':'2'},
-          {'name':'3'},
-          {'name':'4'},
-          {'name':'5'},
-          {'name':'6'},
-        ],
-        dialogVisible:false
-      }
-    },
-
-    methods: {
-      photoViewer(){
-        this.dialogVisible=true
-      }
+export default {
+  name: "pData",
+  data(){
+    return{
+      lists:[
+        {'name':'qwe'},
+        {'name':'qwe'},
+        {'name':'qwe'},
+        {'name':'qwe'},
+        {'name':'qwe'},
+        {'name':'qwe'},
+      ]
     }
   }
+}
 </script>
 
 <style scoped lang="scss">
-
   .p-box{
     display: flex;
     flex-flow:row wrap;
     li{
-      position: relative;
-
       border: 20px solid #ffffff;
       margin: 0 20px 20px 0;
-      .viewer{
-        top:0;
-        right: -10px;
-        width: 120px;
-        height: 120px;
-        background: url("viewer.png") no-repeat;
-        position: absolute;
-      }
       .b-box{
         width: 350px;
         height: 210px;
@@ -100,5 +66,4 @@
       }
     }
   }
-
 </style>

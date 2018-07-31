@@ -45,7 +45,7 @@
             <el-input placeholder="标识" size="mini" style="margin: 0 5px"></el-input>
             <el-input placeholder="排序" size="mini" style="margin: 0 0 0 5px"></el-input>
           </div>
-          <div class="c-content">作业内容</div>
+          <div class="c-content">设计参数</div>
           <div class="c-body">
             <div class="c-add">
               <el-select v-model="value" size="mini" placeholder="项目" style="margin: 0 5px 0 5px">

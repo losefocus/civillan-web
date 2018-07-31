@@ -225,9 +225,9 @@
     .v-name{
       background: #ffffff;
       width: 100%;
-      height: 50px;
+      height: 25px;
       text-align: center;
-      line-height: 50px;
+      line-height: 45px;
       display: flex;
       justify-content: space-between;
       .v-title{

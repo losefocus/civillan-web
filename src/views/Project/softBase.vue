@@ -1,5 +1,10 @@
 <template>
   <div>
+    <ul class="a-box">
+      <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
+        {{list.name}}
+      </li>
+    </ul>
     <waterfall
       :line-gap="320"
       :min-line-gap="280"
@@ -89,6 +94,29 @@
     },
     data () {
       return {
+        isActive:sessionStorage.getItem('aActive') || 0,
+        navList:[
+          {
+            path:'/alarm/aAnalysis',
+            name:'软基处理'
+          },
+          {
+            path:'/alarm/aRealTime',
+            name:'路基路面',
+          },
+          {
+            path:'/alarm/aHistory',
+            name:'桥梁工程',
+          },
+          {
+            path:'/alarm/aHistory',
+            name:'试验室',
+          },
+          {
+            path:'/alarm/aHistory',
+            name:'拌合站',
+          }
+        ],
         isShow:true,
         dialogVisible: false,
         dialogWidth:'70%',
@@ -149,6 +177,9 @@
       this.getList(group_id)
     },
     methods: {
+      changeTab1(list,index){
+        this.isActive=index;
+      },
       radioEvent(){
         this.dialogVisible = false;
       },
@@ -206,6 +237,33 @@
   }
 </script>
 <style scoped lang="scss">
+  .a-box{
+    width: 100%;
+    height: 60px;
+    li{
+      font-size: 14px;
+      cursor: pointer;
+      float: left;
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      line-height: 32px;
+      background: #FFFFFF;
+      color: #CCCFD4;
+      border:1px solid rgba(204,207,212,1);
+    }
+    li:first-child{
+      border-radius: 5px 0 0 5px;
+    }
+    li:last-child{
+      border-radius: 0 5px 5px 0;
+    }
+    .active{
+      background: #F76A6A;
+      color: #ffffff;
+      border:1px solid #F76A6A;
+    }
+  }
   .item-move {
     transition: all .5s cubic-bezier(.55,0,.1,1);
     -webkit-transition: all .5s cubic-bezier(.55,0,.1,1);
@@ -257,7 +315,7 @@
     .d-name{
       color: #333333;
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
     }
     .d-title{

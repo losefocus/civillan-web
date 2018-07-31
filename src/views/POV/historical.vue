@@ -11,20 +11,20 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-select v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
           <el-option
-            v-for="item in deviceSelect"
-            :key="item.key"
+            v-for="item in deviceSelect1"
+            :key="item.value1"
             :label="item.name"
-            :value="item.key">
+            :value="item.value1">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
           <el-option
-            v-for="item in deviceSelect"
-            :key="item.key"
+            v-for="item in deviceSelect2"
+            :key="item.value2"
             :label="item.name"
-            :value="item.key">
+            :value="item.value2">
           </el-option>
         </el-select>
         <el-date-picker
@@ -242,6 +242,22 @@
             }
           }]
         },
+        deviceSelect1:[
+          {value1:1,name:'一号桩'},
+          {value1:2,name:'二号桩'},
+          {value1:3,name:'三号桩'},
+          {value1:4,name:'四号桩'},
+          {value1:5,name:'五号桩'},
+        ],
+        value1:'',
+        value2:'',
+        deviceSelect2:[
+          {value2:1,name:'A (80-100)'},
+          {value2:2,name:'B (70-80)'},
+          {value2:3,name:'C (60-70)'},
+          {value2:4,name:'D (50-60)'},
+          {value2:5,name:'E (40-50)'},
+        ],
         value7: '',
         device:'',
         deviceKey:'',
