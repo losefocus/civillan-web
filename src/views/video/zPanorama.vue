@@ -19,7 +19,7 @@
 
 
 <script>
-  import THREE from '@/common/three.min.js'
+  //import THREE from '@/common/three.min.js'
   import PhotoSphereViewer from '@/common/photo-sphere-viewer.min.js'
   export default {
     data(){
