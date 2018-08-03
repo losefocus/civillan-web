@@ -1,7 +1,7 @@
 <template>
   <div class="m-artHeader">
     <el-breadcrumb class="linkWay">
-      <el-breadcrumb-item v-for="(item,index) in breadList" :key="index"  separator="/" :to="{ path: item.path }">{{item.name}}</el-breadcrumb-item>
+      <el-breadcrumb-item  v-for="(item,index) in breadList" :key="index"  separator="/" :to="{ path: item.path }">{{item.name}}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
@@ -10,6 +10,7 @@
   export default{
     data() {
       return {
+        isShow:true,
         title:'',
         name:'',
         changeName:"",
@@ -24,16 +25,19 @@
       });
     },
     created() {
+      console.log(this.$route.path.split('/')[1]);
+
+
       //this.getBreadcrumb();
       //let pGrouping=sessionStorage.getItem('pGrouping');
-      if(!this.changeName){
+      /*if(!this.changeName){
         this.name='';
         this.getBreadcrumb()
       }else {
         this.name=this.changeName;
         this.getBreadcrumb();
         this.changeName=""
-      } //刷新的参数为true
+      } //刷新的参数为true*/
     },
     methods: {
       getBreadcrumb () {

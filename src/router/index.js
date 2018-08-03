@@ -13,8 +13,11 @@ import operational from '@/views/POV/operational'
 import quality from '@/views/POV/quality'
 import video from '@/views/POV/video'
 import project from '@/views/POV/project'
+
 import softBase from '@/views/Project/softBase'
 import classification from '@/views/Project/classification'
+import deviceList from '@/views/Project/deviceList'
+import deviceMap from '@/views/Project/deviceMap'
 
 import aAnalysis from '@/views/alarm/aAnalysis'
 import aHistory from '@/views/alarm/aHistory'
@@ -51,7 +54,7 @@ const vRouter = new Router({
           path: '/project',
           name:'项目分组',
           component: project,
-          redirect:"/project/classification",
+          redirect:"/project/deviceMap",
           meta: { requireAuth: true},
           children:[
             {
@@ -65,6 +68,18 @@ const vRouter = new Router({
               component:softBase,
               name:'设备列表',
               meta:{requireAuth: true}
+            },
+            {
+              path:'/project/deviceList',
+              component:deviceList,
+              name:'设备列表',
+              meta:{requireAuth: true}
+            },
+            {
+              path:'/project/deviceMap',
+              component:deviceMap,
+              name:'设备地图',
+              meta:{requireAuth: true}
             }
           ]
         },
@@ -77,7 +92,7 @@ const vRouter = new Router({
         {
           path: '/historical',
           component: historical,
-          name:'历史数据',
+          name:'数据报表',
           meta: { requireAuth: true }
         },{
           path: '/alarm',

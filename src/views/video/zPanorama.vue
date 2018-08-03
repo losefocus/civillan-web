@@ -25,8 +25,6 @@
 
 
 <script>
-
-
   import pViewer from '@/views/video/photoViewer'
   export default {
     components:{
@@ -61,7 +59,7 @@
     flex-flow:row wrap;
     li{
       position: relative;
-
+      cursor: pointer;
       border: 20px solid #ffffff;
       margin: 0 20px 20px 0;
       .viewer{
@@ -73,11 +71,9 @@
         position: absolute;
       }
       .b-box{
-        width: 350px;
-        height: 210px;
+        height: 180px;
         background: url("../../assets/project/pData.png") no-repeat;
         background-size: cover;
-
 
         min-width:300px;
         max-width:400px;

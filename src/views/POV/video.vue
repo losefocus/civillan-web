@@ -46,11 +46,13 @@
       }
     },
     watch:{
-      $route(){
+      $route(to,from){
+        console.log(to.fullPath);
+        console.log(from.fullPath);
         this.navList.forEach((item,i)=>{
-          console.log(item.path);
+          //console.log(item.path);
           if(item.path==this.$route.path){
-            sessionStorage.setItem('bActive',i);
+            //sessionStorage.setItem('bActive',i);
             this.isActive=i;
           }
         })

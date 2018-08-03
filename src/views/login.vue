@@ -4,17 +4,17 @@
       <el-main style="height: 100%">
         <div class="cp-logo"></div>
       </el-main>
-      <el-aside width="32%">
+      <el-aside>
         <p class="user-title">用户登录</p>
         <p class="cp-system">工程施工实时监控系统</p>
 
         <form action="" @submit.prevent="submit">
-          <div class="log-spacing">
+          <div class="log-spacing l-label">
             <label for="username">账号</label>
           </div>
           <input type="text" id="username" autocomplete placeholder="请输入账号" v-model="userInfo.username" @input="getUser(userInfo.username)" :class={fail:isFail,success:isSuccess}>
           <p class="initColor" :class={fail:isFail,success:isSuccess}>{{validateRules}}</p>
-          <div class="log-spacing">
+          <div class="log-spacing l-label">
             <label for="password">密码</label>
           </div>
           <input type="password" id="password" autocomplete placeholder="请输入密码" v-model="userInfo.password" @input="getPassword(userInfo.password)">
@@ -22,7 +22,7 @@
           <div class="log-spacing">
             <el-checkbox v-model="userInfo.checked">自动登录</el-checkbox>
           </div>
-          <div class="log-spacing">
+          <div class="log-spacing l-submit">
             <button type="submit" id="log-submit">登录</button>
             <span class="log-forget" @click="getCookie()">忘记密码?</span>
           </div>
@@ -106,7 +106,7 @@
           var that=this;
           console.log(this.userInfo);
           login.login(this.userInfo).then((res) => {
-            console.log(res);
+            //console.log(res);
             if(res.success==false){
               that.$message.error(res.message)
             }else{
@@ -118,12 +118,14 @@
                 that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
                 that.$store.dispatch('incrementToken',res.result.token);
                 that.$router.push('/');
+                that.$message.success('登陆成功')
               }else{
                 sessionStorage.setItem('token',res.result.token);
                 sessionStorage.setItem('wsUrl',wsUrl.result);
                 that.$cookies.remove('token');
                 that.$store.dispatch('incrementToken',res.result.token);
                 that.$router.push('/');
+                that.$message.success('登陆成功')
               }
             }
           }).catch(err => {
@@ -157,7 +159,7 @@
     color : #0FA2FF
   }
 
-    /*头部*/
+  /*头部*/
   .el-main{
     padding: 50px 70px;
     background: url("../../static/img/login/group.png") no-repeat;
@@ -171,6 +173,7 @@
     }
   }
   .el-aside{
+    width: 32% !important;
     padding: 7% 4% 0;
     .user-title{
       font-size: 32px;
@@ -238,9 +241,10 @@
       color: #8A96A0;
     }
   }
-  @media screen and (max-width: 1600px) {
+
+  @media screen and (min-width: 1200px) and (max-width: 1600px)  {
     .el-aside{
-      padding: 3% 4% 0;
+      padding: 5% 4% 0;
       .user-title{
         font-size: 28px;
       }
@@ -250,13 +254,6 @@
       }
       .log-spacing{
         margin-top: 20px;
-      }
-      label{
-        font-weight: bold;
-        height:24px;
-        font-size:20px;
-        color: #333333;
-        line-height:23px;
       }
       .stateLine{
         width: 280px;
@@ -306,4 +303,101 @@
       }
     }
   }
+  @media screen and (max-width: 1199px){
+    .el-container{
+      position: relative;
+    }
+    .el-aside{
+      padding: 20px 5% 0;
+      height: 350px;
+      width: 450px !important;
+      position: absolute;
+      left:0;
+      top: 100px;
+      bottom: 0;
+      right: 0;
+      margin: auto;
+      background: #ffffff;
+      opacity: .8;
+      .user-title{
+        width: 100%;
+        text-align: center;
+        font-size: 26px;
+      }
+      .cp-system{
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        margin-top: 3%;
+        margin-bottom: 2%;
+      }
+      .log-spacing{
+        margin-top: 10px;
+      }
+      label{
+        font-weight: bold;
+        height:24px;
+        font-size:14px;
+        color: #333333;
+        line-height:23px;
+      }
+      .l-label{
+        width: 20%;
+        font-size: 12px;
+        display: inline-block;
+      }
+      .stateLine{
+        width: 100%;
+        border-bottom: 1px solid #DCE0E6;
+      }
+      input{
+        margin-top: 10px;
+        outline: medium;
+        border: none;
+        height: 30px;
+        line-height: 30px;
+        font-size: 17px;
+        width: 78%;
+        color: #666666;
+        background-image: none;
+      }
+      form p{
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+      }
+      input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px white inset;
+      }
+      .l-submit{
+        width: 100%;
+        text-align: center;
+      }
+      #log-submit{
+        width: 100%;
+        height: 35px;
+        background: #F31A1A;
+        color: #ffffff;
+        outline: medium;
+        border: none;
+        box-shadow: 0 6px 15px rgba(243,26,26,0.4);
+        border-radius:6px;
+        cursor: pointer;
+      }
+      .log-forget{
+        display: block;
+        margin: 15px 0 0 0 ;
+        text-align: center;
+        font-size:12px;
+        color:rgba(248,89,89,1);
+        cursor: pointer;
+      }
+      .cp-code{
+        display: none;
+      }
+    }
+  }
+
+
+
 </style>

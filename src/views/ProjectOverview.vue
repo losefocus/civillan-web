@@ -7,7 +7,7 @@
       <el-container style="height: 100%">
         <z-nav></z-nav>
         <el-main>
-          <div class="breadcrumb-box" v-show="isActive">
+          <div class="breadcrumb-box" v-show="isShow">
             <div :class="{'b-title':isActive}">{{ title }}</div>
             <div class="el-breadcrumb">
               <z-bread></z-bread>
@@ -36,16 +36,24 @@
       return{
         title:'',
         isActive:true,
+        isShow:true
+      }
+    },
+    created(){
+      if(this.$route.path.split('/')[1]=='project'){
+        this.isShow=false;
+      }else{
+        this.isShow=true
       }
     },
     mounted(){
-      this.title=this.$route.name;
+      /*this.title=this.$route.name;
       if(!this.$route.name){
         this.title='';
         this.isActive=false;
       }else {
         this.isActive=true;
-      }
+      }*/
     },
     methods:{
       change(msg){

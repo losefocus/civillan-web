@@ -1,6 +1,6 @@
 <template>
   <div>
-    <analysis></analysis>
+    <analysis :isShow="isShow"></analysis>
   </div>
 </template>
 
@@ -10,6 +10,11 @@ export default {
   name: "SAnalysis",
   components:{
     analysis
+  },
+  data(){
+    return{
+      isShow:false
+    }
   }
 }
 </script>

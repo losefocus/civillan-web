@@ -54,7 +54,7 @@
       :fullscreen="dialogFullscreen"
       top="12vh"
       style="min-width: 1024px;"
-      >
+    >
       <ul class="t-header">
         <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
         <div class="t-handle" v-show="isShow">
@@ -232,7 +232,8 @@
 <style scoped lang="scss">
   .a-box{
     width: 100%;
-    height: 60px;
+    padding-top: 30px;
+    height: 80px;
     li{
       font-size: 14px;
       cursor: pointer;
@@ -394,3 +395,4 @@
     opacity: 0;
   }
 </style>
+

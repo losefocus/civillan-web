@@ -63,23 +63,23 @@ export default {
              name:'软基处理'
            }
          ]
+       }, {
+         name:'现场影像',
+         icon:'icon-video1',
+         path:'/video'
        },
        {
          name:'统计分析',
          icon:'icon-analysis',
          path:'/analysis'
        },{
-         name:'历史数据',
+         name:'数据报表',
          icon:'icon-history',
          path:'/historical'
        },{
          name:'报警查询',
          icon:'icon-alarm',
          path:'/alarm'
-       },{
-         name:'现场影像',
-         icon:'icon-video1',
-         path:'/video'
        },{
          name:'文档资料',
          icon:'icon-document',
@@ -247,7 +247,7 @@ export default {
         height: 35px;
         line-height: 35px;
         font-size: 14px;
-        background:rgba(0,0,0,0.8);
+        background:rgba(0,0,0,0.36);
         position: absolute;
         bottom: 0;
       }

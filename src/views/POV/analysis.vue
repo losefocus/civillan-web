@@ -3,7 +3,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" placeholder="全部设备" size="mini" style="margin: 0 5px 0 0;width: 16%;" clearable >
+        <el-select v-if="isShow" v-model="device" placeholder="全部设备" size="mini" style="margin: 0 5px 0 0;" clearable >
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -11,7 +11,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select placeholder="全部桩" v-model="value1" size="mini" style="margin: 0 5px;width: 16%;">
+        <el-select placeholder="全部桩" v-model="value1" size="mini" style="margin: 0 5px;">
           <el-option
             v-for="item in deviceSelect1"
             :key="item.value1"
@@ -19,7 +19,7 @@
             :value="item.value1">
           </el-option>
         </el-select>
-        <el-select  placeholder="评分等级" v-model="value2" size="mini" style="margin: 0 5px;width: 16%;">
+        <el-select  placeholder="评分等级" v-model="value2" size="mini" style="margin: 0 5px;">
           <el-option
             v-for="item in deviceSelect2"
             :key="item.value2"
@@ -36,7 +36,7 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%">
+          :picker-options="pickerOptions2" style="margin: 0 5px;">
         </el-date-picker>
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">查询</el-button>
@@ -219,7 +219,11 @@
         }
       }
     },
+    props:['isShow'],
     created:function(){
+      if(this.isShow==undefined){
+        this.isShow=true
+      }
       /*var _this=this;
       this.$http.get("http://localhost:8080/static/data/table.json",{})
         .then(function(res){

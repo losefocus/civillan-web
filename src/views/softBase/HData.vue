@@ -1,6 +1,6 @@
 <template>
  <div>
-   <historical></historical>
+   <historical :isShow="isShow"></historical>
  </div>
 </template>
 
@@ -10,6 +10,11 @@ export default {
   name: "SHistory",
   components:{
     historical
+  },
+  data(){
+    return{
+      isShow:false
+    }
   }
 }
 </script>

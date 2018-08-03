@@ -187,4 +187,7 @@
     margin: 20px 0 10px 0;
     text-align: center;
   }
+  .icon-delete{
+    cursor: pointer;
+  }
 </style>

@@ -15,7 +15,7 @@
         :key="item.id"
         move-class="item-move"
       >
-        <div class="item pj-box" :style="item.style" @click="jump(item.name,item.id)">
+        <div class="item pj-box" :style="item.style" @click="jump(item.name,item.id,j)">
           <div class="pj-img" :style="{ 'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
             <div class="pj-mask" >
               <span>{{item.name}}</span>
@@ -23,12 +23,12 @@
           </div>
           <div class="pj-data">
             <ul>
-              <li class="equipment">设备</li>
+              <li class="equipment">设备名称</li>
               <li class="statistics">状态</li>
             </ul>
             <ul v-for="(list,index) in item.projectDevices" :key="index">
               <li class="equipment1">{{list.name}}</li>
-              <li class="statistics1"><span class="iconfont icon-state"></span></li>
+              <li class="statistics1">运行中</li>
             </ul>
           </div>
         </div>
@@ -40,9 +40,8 @@
         <div class="pj-details">
           <el-popover
             placement="right-start"
-            trigger="hover"
             width="400"
-            :key="index"
+            trigger="click"
           >
             <p>{{ info.comment }}</p>
             <p class="d-content" slot="reference">{{ info.comment }}</p>
@@ -52,7 +51,7 @@
       <div class="p-item">
         <div class="t-limit">
           <h1 class="t-title">项目工期</h1>
-          <el-progress type="circle" :percentage="20" width="120" color="#F03E41"></el-progress>
+          <el-progress type="circle" :percentage="20" :width="120" color="#F03E41"></el-progress>
           <p class="t-interval">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</p>
         </div>
       </div>
@@ -152,10 +151,11 @@
         });
 
       },
-      jump(title,id){
+      jump(title,id,index){
         this.$router.push('/project/softBase');
         Bus.$emit('Title',title);
-        sessionStorage.setItem('group_id',id)
+        sessionStorage.setItem('group_id',id);
+        sessionStorage.setItem('deviceIndex',index);
       }
     }
   }
@@ -229,7 +229,7 @@
       text-align: center;
       width: 25%;
       float: left;
-      color: #666666;
+      color: #6CD74D;
     }
     .statistics{
       font-weight: bold;

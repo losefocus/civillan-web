@@ -60,11 +60,14 @@ axios.interceptors.response.use(
   },
   err => {
     loadingInstance.close();
-   /* if(err.request||err.request.status===401){
-      router.replace({
+    /*if(err.request||err.request.status===401){
+      console.log(router.currentRoute.fullPath);
+
+      router.push({ path: 'login' })
+      /!*router.replace({
         path: 'login',
         query: {redirect: router.currentRoute.fullPath}
-      })
+      })*!/
     }else {
       console.log('身份验证失败')
     }*/

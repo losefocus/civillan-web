@@ -66,7 +66,7 @@
         });
 
         project.list().then(res=>{
-          console.log(res.result);
+          //console.log(res.result);
           let lists=toTree(res.result);
           lists.forEach(function (item) {
             item.show=false;
@@ -82,7 +82,7 @@
             if(index==0){
               item.show=true
             }
-            console.log(item);
+            //console.log(item);
             AMapUI.define("polyfill/require/require-css/css!plug/ext/font-awesome/css/font-awesome", [], function () {
               //留空即可
             });
@@ -148,7 +148,7 @@
                   },
                   //返回数据项对应的列表节点
                   getListElement: function(dataItem, context, recycledListElement) {
-                    var tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'+'<span style="width: 260px;height: 42px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 14px;vertical-align: middle;" class=<%- dataItem.listId %>><%- dataItem.name %>'+'</span>'+'</p>';
+                    var tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'/*+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'*/+'<span style="width: 220px;height: 42px;margin-left:20px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 14px;vertical-align: middle;" class=<%- dataItem.listId %>><%- dataItem.name %>'+'</span>'+'</p>';
 
                     var content = MarkerList.utils.template(tpl, {
                       dataItem: dataItem,
@@ -306,7 +306,7 @@
     border-radius: 5px;
     top: 35px;
     right: 40px;
-    width: 260px;
+    width: 220px;
     color: #ffffff;
     padding: 30px;
     .pj-title{
@@ -325,7 +325,7 @@
       justify-content: space-between;
     }
     .list-body{
-      width: 260px;
+      width: 220px;
       margin-left: -30px;
       padding: 0 30px;
       background:rgba(0,0,0,.1);
@@ -355,7 +355,7 @@
         justify-content: space-between;
       }
       .list-body{
-        width: 260px;
+        width: 220px;
         margin-left: -30px;
         padding: 0 30px;
         background:rgba(0,0,0,.1);

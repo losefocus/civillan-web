@@ -68,6 +68,7 @@
 
 <script>
   import user from '@/api/userCenter/header'
+  import no_photo from '@/assets/header/no_photo.png'
 export default {
   data(){
     return{
@@ -88,7 +89,12 @@ export default {
       this.userInfo = res.result;
       this.role=res.result.userRole[0].projectRole.role;
       this.projectOrgan=res.result.projectOrgan.name;
-      this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
+      if(res.result.avatarBaseUr&&res.result.avatarPath){
+        this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
+      }else{
+        this.avatarUrl=no_photo
+      }
+
     })
   },
   directives: {
@@ -157,7 +163,7 @@ export default {
         .u-jurisdiction{
           line-height: 67px;
           .j-title{
-            width:48px;
+            padding:0 5px;
             height:18px;
             background:rgba(111,221,232,1);
             border-radius:4px;

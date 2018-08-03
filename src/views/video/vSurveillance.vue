@@ -216,7 +216,8 @@
     //justify-content:space-between;
     flex-flow:row wrap;
     li{
-      width: 325px;
+      min-width:300px;
+      max-width:400px;
       border: 20px solid #ffffff;
       margin: 0 20px 20px 0;
     }

@@ -8,7 +8,7 @@
   <div class="hd-uName hd-right">
     <el-dropdown trigger="click" placement="bottom" @command="handleCommand">
       <span class="el-dropdown-link" style="cursor: pointer">
-        <div class="u-name">用户名</div><i class="el-icon-caret-bottom el-icon--right"></i>
+        <div class="u-name">{{username}}</div><i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="0">用户中心</el-dropdown-item>
@@ -19,7 +19,7 @@
       </el-dropdown-menu>
     </el-dropdown>
   </div>
-  <img :src="avatarUrl" class="hd-right hd-portrait" >
+  <img v-if="avatarUrl" :src="avatarUrl" class="hd-right hd-portrait" >
   <div class="p-box hd-right" style="font-size: 28px;color: #E6EAEE;margin-right: 35px;vertical-align: middle;">|</div>
   <div @click="getMessage()" class="p-box hd-right" style="margin-right: 35px;cursor: pointer;">
     <el-badge :value=unReadCount :max="99" class="item" :hidden='isHidden'>
@@ -60,6 +60,8 @@
 
   import message from '@/api/userCenter/message'
   import userInfo from '@/api/userCenter/header'
+
+  import no_photo from '@/assets/header/no_photo.png'
 
   export default {
     name: "zHeader",
@@ -120,7 +122,13 @@
       let userId=sessionStorage.getItem('token').substring(0,2);
       userInfo.userInfo({project_user_id:userId}).then(res=>{
         //console.log(res);
-        this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath
+        if(res.result.avatarBaseUrl&&res.result.avatarPath){
+          this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
+        }else {
+          this.avatarUrl=no_photo;
+        }
+
+        this.username=res.result.name
       });
 
       this.$route.path=='/'?this.isMap=false:this.isMap=true;
@@ -173,9 +181,15 @@
         this.currentView=this.tBody[i]
       },
       handleCommand(command) {
-        this.dialogVisible=true;
-        this.tIndex=command;
-        this.currentView=this.tBody[command];
+        if(command=='close'){
+          this.close()
+        }else {
+          this.dialogVisible=true;
+          this.tIndex=command;
+          this.currentView=this.tBody[command];
+        }
+
+
       },
       close(){
         if(window.$cookies.get('token')){

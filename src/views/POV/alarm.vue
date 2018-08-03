@@ -41,7 +41,7 @@ export default {
     $route(){
       this.navList.forEach((item,i)=>{
         if(item.path==this.$route.path){
-          sessionStorage.setItem('aActive',i);
+          //sessionStorage.setItem('aActive',i);
           this.isActive=i;
         }
       })
