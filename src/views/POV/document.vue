@@ -62,7 +62,7 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">上传</el-button>
+            @click="handleEdit(scope.$index, scope.row)">下载</el-button>
           <el-button
             size="mini"
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>

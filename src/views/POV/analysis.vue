@@ -3,13 +3,33 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-if="isShow" v-model="device" placeholder="全部设备" size="mini" style="margin: 0 5px 0 0;" clearable >
+        <el-select v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
+        <el-select v-if="!isShow" v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
+          <!--<div style="width: 90%">
+            <el-input
+              style="width: 96%;margin:0 0 2% 2%"
+              size="mini"
+              placeholder="请输入内容"
+              suffix-icon="el-icon-search"
+              v-model="input9">
+            </el-input>
+          </div>-->
+          <!--<el-input suffix-icon="el-icon-search" @input="deviceSearch()" v-model="deviceName" size="mini" style="width: 92%;margin:0 0 2% 4%" placeholder="请输入内容"></el-input>-->
           <el-option
-            v-for="item in deviceSelect"
-            :key="item.key"
+            v-for="(item,index) in deviceSelect"
+            :key="index"
             :label="item.name"
-            :value="item.key">
+            :value="index">
           </el-option>
+          <el-pagination
+            @current-change="deviceCurrentChange"
+            small
+            :pager-count="5"
+            :current-page="device_data.page_index"
+            :page-size="device_data.page_size"
+            layout="prev, pager, next"
+            :total="deviceTotal">
+          </el-pagination>
         </el-select>
         <el-select placeholder="全部桩" v-model="value1" size="mini" style="margin: 0 5px;">
           <el-option
@@ -143,7 +163,7 @@
             data: [120, 200, 150, 80, 70, 110, 130],
             type: 'bar'
           }]
-        },
+        }, //echarts1
         pickerOptions2: {
           shortcuts: [{
             text: '最近一周',
@@ -170,7 +190,7 @@
               picker.$emit('pick', [start, end]);
             }
           }]
-        },
+        }, //echarts2
         value: '',
         value7: '',
         test:{
@@ -192,9 +212,7 @@
         multipleSelection: [],
         total:0,
         dialogVisible: false,
-        device:'',
         deviceKey:'',
-        deviceSelect:[],
         key:'',
         deviceSelect1:[
           {value1:1,name:'一号桩'},
@@ -216,25 +234,22 @@
           key:'',
           page_index:1,
           page_size:10,
-        }
+        },
+        device: '', //设备选定值
+        deviceSelect: [], //设备select列表
+        device_data: {//全部设备select列表
+          page_index: 1,
+          page_size: 5,
+          name: ''
+        },
+        deviceTotal: 0,
+        deviceName: ''
       }
     },
     props:['isShow'],
     created:function(){
-      if(this.isShow==undefined){
-        this.isShow=true
-      }
-      /*var _this=this;
-      this.$http.get("http://localhost:8080/static/data/table.json",{})
-        .then(function(res){
-          _this.tableData=res.data.list;
-        })
-        .catch(function(err){
-        })*/
-      deviceList.list().then(res=>{
-        console.log(res);
-        this.deviceSelect=res.result.items
-      });
+      this.deviceName=sessionStorage.getItem('deviceName');
+      this.getDeviceList(this.device_data);
       Bus.$on('isCollapse',res=>{
         console.log(res);
         this.isCollapse=res
@@ -255,7 +270,30 @@
         this.post_data.key=this.deviceKey;
         this.post_data.page_index=1;
         this.getList(this.post_data)
-      }
+      },
+      deviceCurrentChange:function(currentPage){ //全部设备select当前页
+        this.device_data.page_index=currentPage;
+        this.getDeviceList(this.device_data);
+      },
+      deviceChange(val){ //类型改变
+        console.log(val);
+        this.deviceKey=val;
+      },
+      deviceSearch(query){ //select搜索框
+        this.device_data.page_index=1;
+        this.device_data.page_size=5;
+        this.device_data.name=query;
+        this.getDeviceList(this.device_data);
+      },
+      getDeviceList(post_data){
+        let _this=this;
+        deviceList.list(post_data).then(res=>{
+          /*console.log(res);*/
+          _this.deviceSelect=res.result.items;
+          _this.deviceTotal=res.result.total;
+          /*console.log(_this.deviceTotal)*/
+        });
+      },
     }
   }
 </script>

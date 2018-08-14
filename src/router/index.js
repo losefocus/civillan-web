@@ -7,6 +7,8 @@ import login from '@/views/login'
 import ProjectOverview from '@/views/ProjectOverview'
 import alarm from '@/views/POV/alarm'
 import analysis from '@/views/POV/analysis'
+import device from '@/views/POV/device'
+import configure from '@/views/POV/configure'
 import document from '@/views/POV/document'
 import historical from '@/views/POV/historical'
 import operational from '@/views/POV/operational'
@@ -22,6 +24,10 @@ import deviceMap from '@/views/Project/deviceMap'
 import aAnalysis from '@/views/alarm/aAnalysis'
 import aHistory from '@/views/alarm/aHistory'
 import aRealTime from '@/views/alarm/aRealTime'
+
+
+import oOperational from '@/views/operational/oOperational'
+import oAccumulative from '@/views/operational/oAccumulative'
 
 import vData from '@/views/video/vData'
 import pData from '@/views/video/pData'
@@ -54,7 +60,7 @@ const vRouter = new Router({
           path: '/project',
           name:'项目分组',
           component: project,
-          redirect:"/project/deviceMap",
+          //redirect:"/project/deviceMap",
           meta: { requireAuth: true},
           children:[
             {
@@ -66,13 +72,13 @@ const vRouter = new Router({
             {
               path:'/project/softBase',
               component:softBase,
-              name:'设备列表',
+              name:'设备',
               meta:{requireAuth: true}
             },
             {
               path:'/project/deviceList',
               component:deviceList,
-              name:'设备列表',
+              name:'设备',
               meta:{requireAuth: true}
             },
             {
@@ -84,6 +90,16 @@ const vRouter = new Router({
           ]
         },
         {
+          path: '/device',
+          component: device,
+          name:'设备列表',
+          meta: { requireAuth: true }
+        },{
+          path: '/configure',
+          component: configure,
+          name:'作业配置',
+          meta: { requireAuth: true }
+        },{
           path: '/analysis',
           component: analysis,
           name:'统计分析',
@@ -97,7 +113,7 @@ const vRouter = new Router({
         },{
           path: '/alarm',
           component: alarm,
-          name:'报警查询',
+          name:'故障报警',
           redirect:'/alarm/aAnalysis',
           meta: { requireAuth: true },
           children:[
@@ -129,7 +145,22 @@ const vRouter = new Router({
           path: '/operational',
           component: operational,
           name:'作业成效',
-          meta: { requireAuth: true }
+          redirect:'/operational/oOperational',
+          meta: { requireAuth: true },
+          children:[
+            {
+              path:'/operational/oOperational',
+              name:'单日成效',
+              component:oOperational,
+              meta: {requireAuth: true}
+            },
+            {
+              path:'/operational/oAccumulative',
+              component:oAccumulative,
+              name:'累计成效',
+              meta:{requireAuth: true}
+            }
+          ]
         },{
           path: '/quality',
           component: quality,
@@ -138,7 +169,7 @@ const vRouter = new Router({
         },{
           path: '/video',
           component: video,
-          name:'视频监控',
+          name:'现场影像',
           meta: { requireAuth: true },
           redirect:'/video/pData',
           children:[

@@ -112,7 +112,6 @@
     },
     mounted(){
       this.init();
-
     },
     created(){
       let id=this.$store.state.project.projectId;

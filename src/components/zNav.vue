@@ -40,7 +40,7 @@ export default {
   name: "zNav",
   data(){
    return{
-     isShow:'true',
+     isShow:false,
      projectLogo:'',
      isActive:-1,
      imgShow:true,
@@ -53,7 +53,7 @@ export default {
        {
          name:'项目总览',
          icon:'icon-project',
-         path:'/ProjectOverview',
+         path:'/project',
          children:[
            {
              name:'设备监控',
@@ -63,36 +63,43 @@ export default {
              name:'软基处理'
            }
          ]
-       }, {
-         name:'现场影像',
-         icon:'icon-video1',
-         path:'/video'
-       },
-       {
-         name:'统计分析',
-         icon:'icon-analysis',
-         path:'/analysis'
+       },{
+         name:'设备列表',
+         icon:'icon-device',
+         path:'/device'
        },{
          name:'数据报表',
          icon:'icon-history',
          path:'/historical'
        },{
-         name:'报警查询',
+         name:'统计分析',
+         icon:'icon-analysis',
+         path:'/analysis'
+       },{
+         name:'作业成效',
+         icon:'icon-operational',
+         path:'/operational'
+       },{
+         name:'作业配置',
+         icon:'icon-config',
+         path:'/configure'
+       },{
+         name:'故障报警',
          icon:'icon-alarm',
          path:'/alarm'
-       },{
-         name:'文档资料',
-         icon:'icon-document',
-         path:'/document'
        },{
          name:'质量评估',
          icon:'icon-quality1',
          path:'/quality'
        },{
-         name:'作业成效',
-         icon:'icon-operational',
-         path:'/operational'
-       }
+         name:'现场影像',
+         icon:'icon-video1',
+         path:'/video'
+       },{
+         name:'文档资料',
+         icon:'icon-document',
+         path:'/document'
+       },
      ]
    }
   },
@@ -115,7 +122,7 @@ export default {
     }else{
       _this.isCollapse=true;
       _this.changeWidth();
-      _this.isShow=true;
+      _this.isShow=false;
     }
     window.onresize = function (){
       let clientWidth=document.body.clientWidth;
@@ -127,7 +134,7 @@ export default {
       }else{
         _this.isCollapse=true;
         _this.changeWidth();
-        _this.isShow=true;
+        _this.isShow=false;
       }
     };
   },
@@ -161,10 +168,19 @@ export default {
     }
   },
   watch: {
-    $route(){
+    $route(to,from){
+      console.log(to.path)
       this.lists.forEach((item,i)=>{
+        if(item.path==to.path){
+          this.isActive=i;
+          sessionStorage.setItem('isActive',this.isActive);
+          console.log(this.isActive)
+        }
+      })
+      /*this.lists.forEach((item,i)=>{
         if(item.path==this.$route.path){
           this.isActive=i;
+          sessionStorage.setItem('isActive',this.isActive);
           console.log(this.isActive)
         }
         this.lists[0].children.forEach((child,c)=>{
@@ -172,7 +188,7 @@ export default {
             this.isActive=0
           }
         })
-      })
+      })*/
     }
   },
 }

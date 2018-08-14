@@ -40,13 +40,12 @@
     :width="dialogWidth"
     style="min-width: 1024px"
     :top="dialogTop"
-
   >
     <ul class="t-header">
       <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
       <div @click="close()"></div>
     </ul>
-    <n-message :dialogTop="topChange" :is="currentView" keep-alive class="t-Body" :class="{'t-BodyHeight1':!topChange,'t-BodyHeight2':topChange}"></n-message>
+    <n-message ref="child" :dialogTop="topChange" :is="currentView" keep-alive class="t-Body" :class="{'t-BodyHeight1':!topChange,'t-BodyHeight2':topChange}"></n-message>
   </el-dialog>
 
 </div>
@@ -166,6 +165,11 @@
       },
       websocketonmessage(){ //数据接收
         this.unReadCount+=1;
+        if(this.$refs.child){
+          this.$refs.child.getList()
+        }else {
+          //console.log('没有子组件')
+        }
       },
       websocketclose(){ //关闭
         //console.log("关闭");

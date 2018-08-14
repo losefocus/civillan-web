@@ -1,5 +1,9 @@
+
 <template>
-  <div>
+  <div style="position: relative;height: 100%;" >
+    <!--<transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>-->
     <ul class="a-box">
       <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
         {{list.name}}
@@ -10,57 +14,52 @@
 </template>
 
 <script>
+  import deviceList from '@/views/Project/deviceList'
+  import deviceMap from '@/views/Project/deviceMap'
+
   export default {
-    data(){
-      return{
-        isActive:sessionStorage.getItem('bActive') || 0,
+    name: "project_old",
+    components: {
+      deviceList,
+      deviceMap
+    },
+    data () {
+      return {
         navList:[
           {
-            path:'/video/pData',
-            name:'图片资料'
-          },{
-            path:'/video/vData',
-            name:'影像资料'
+            path:'/project/deviceMap',
+            name:'设备地图'
           },
           {
-            path:'/video/zPanorama',
-            name:'全景图片',
-          },
-          {
-            path:'/video/vSurveillance',
-            name:'视频监控',
+            path:'/project/deviceList',
+            name:'设备列表',
           }
-        ]
-      }
+        ],
+        isActive:'',
+      };
     },
-    created(){
-
-    },
-    methods:{
+    methods: {
       changeTab(list,index){
         this.$router.push(list.path);
         this.isActive=index;
-      }
-    },
-    watch:{
-      $route(to,from){
-        console.log(to.fullPath);
-        console.log(from.fullPath);
-        this.navList.forEach((item,i)=>{
-          //console.log(item.path);
-          if(item.path==this.$route.path){
-            //sessionStorage.setItem('bActive',i);
-            this.isActive=i;
-          }
-        })
       }
     }
   }
 </script>
 
 <style scoped lang="scss">
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
   .a-box{
-    width: 100%;
+    position: absolute;
+    z-index: 99;
+    top: 30px;
+    right: 0;
+    width: 214px;
     height: 60px;
     li{
       font-size: 14px;
@@ -86,5 +85,4 @@
       border:1px solid #F76A6A;
     }
   }
-
 </style>

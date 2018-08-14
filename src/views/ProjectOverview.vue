@@ -6,8 +6,8 @@
       </el-header>
       <el-container style="height: 100%">
         <z-nav></z-nav>
-        <el-main>
-          <div class="breadcrumb-box" v-show="isShow">
+        <el-main style="height: 100%;">
+          <div v-show="isActive" class="breadcrumb-box">
             <div :class="{'b-title':isActive}">{{ title }}</div>
             <div class="el-breadcrumb">
               <z-bread></z-bread>
@@ -36,24 +36,18 @@
       return{
         title:'',
         isActive:true,
-        isShow:true
       }
     },
     created(){
-      if(this.$route.path.split('/')[1]=='project'){
-        this.isShow=false;
-      }else{
-        this.isShow=true
-      }
+
     },
     mounted(){
-      /*this.title=this.$route.name;
-      if(!this.$route.name){
-        this.title='';
+      this.title=this.$route.name;
+      if(this.$route.path=='/project'){
         this.isActive=false;
       }else {
         this.isActive=true;
-      }*/
+      }
     },
     methods:{
       change(msg){
@@ -61,14 +55,20 @@
       }
     },
     watch:{
-      $route(){
+      $route(to,from){
+        if(to.path=='/project'){
+          this.isActive=false;
+          console.log(this.isActive);
+        }else {
+          this.isActive=true;
+        }
         this.title=this.$route.name;
-        if(!this.$route.name){
+        /*if(!this.$route.name){
           this.title='';
           this.isActive=false;
         }else {
           this.isActive=true;
-        }
+        }*/
       }
     }
   }
@@ -89,7 +89,7 @@
 
 
   .breadcrumb-box{
-    width: 100%;
+    width: calc(100% - 20px);
     height: 45px;
     text-align: right;
     .el-breadcrumb{

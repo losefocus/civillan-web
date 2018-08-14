@@ -25,6 +25,13 @@ Vue.prototype.$echarts = echarts;
 
 import ECharts from 'vue-echarts/components/ECharts.vue'
 
+import * as filters from './filters' // 全局filter
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+});
+
+
 // 手动引入 ECharts 各模块来减小打包体积
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
