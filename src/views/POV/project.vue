@@ -16,36 +16,35 @@
         <div class="i-time">
           <span class="t-title">项目工期：</span>
           <span class="">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</span>
-          <el-progress style="width: 80%;margin-top: 10px" :percentage="70" color="#24BCF7"></el-progress>
+          <el-progress style="width: 100%;margin-top: 10px" :percentage="70" color="#24BCF7"></el-progress>
         </div>
         <ul class="i-statistics">
           <li class="s-data">
-            <router-link to="device" >
+            <router-link to="device">
               <p class="d-num">{{ deviceTotal }}</p>
               <p class="d-name">设备</p>
             </router-link>
           </li>
           <li class="s-data">
-            <router-link to="project">
+            <router-link to="#">
               <p class="d-num">30</p>
               <p class="d-name">人员</p>
             </router-link>
           </li>
           <li class="s-data">
             <router-link to="video">
-              <p class="d-num">30</p>
+              <p class="d-num">{{ videoTotal }}</p>
               <p class="d-name">影像</p>
             </router-link>
           </li>
           <li class="s-data">
             <router-link to="document">
-              <p class="d-num">30</p>
+              <p class="d-num">{{ documentTotal }}</p>
               <p class="d-name">文档</p>
             </router-link>
           </li>
         </ul>
         <div class="i-box p-item" style="width: 100%;">
-
           <el-popover
             placement="left"
             trigger="click"
@@ -87,13 +86,17 @@
 
 <script>
   import deviceList from '@/api/project/deviceList'
+  import document from '@/api/project/document'
+  import media from '@/api/video/media'
   import marker from '@/assets/AMap/marker.png'
   import stateMarker from '@/assets/AMap/marker.png'
+
 
   import deviceGrouping from '@/api/project/deviceGrouping'
   import project from '@/api/userCenter/project'
   import {formatDate} from '@/common/formatDate.js';
   export default {
+
     name: "project",
     data(){
       return{
@@ -109,20 +112,20 @@
             trigger: 'item',
             formatter: "{a} <br/>{b}: {c} ({d}%)"
           },
-          legend: {
+          /*legend: {
             type: 'scroll',
-            orient: 'vertical',
-            top:30,
+            orient: 'horizontal',
+            top:50,
             x: 'left',
             itemGap: 10,
             data:['设备故障','下钻速度异常','电流异常','掺量异常','电压异常','流量异常']
-          },
+          },*/
           series: [
             {
               name:'报警来源',
               type:'pie',
-              radius : '50%',
-              center: ['55%', '60%'],
+              radius : '65%',
+              center: ['50%', '55%'],
               avoidLabelOverlap: true,
               labelLine: {
                 normal: {
@@ -140,52 +143,86 @@
               ]
             }
           ]
-        },
+        }, //统计分析图表
         polar2:{
+          color: ['#3398DB'],
           title: {
-            text: '项目进度',
+            text: '施工进度',
+            //textStyle: {
+            //    color: '#fff'
+            //}
           },
           tooltip: {
             trigger: 'axis',
             axisPointer: {
               type: 'shadow'
-            }
+            },
+            formatter: "{b} <br> 进度: {c}%"
           },
-          legend: {
-            data: ['实际进度', '预计完成进度'],
-            x:'right',
-          },
+          /*legend: {
+              data: [date]
+          },*/
           grid: {
-            left: '0',
-            right: '0',
-            bottom: '0',
+            left: '4%',
+            right: '4%',
+            bottom: '2%',
             containLabel: true
           },
           xAxis: {
             type: 'value',
-            boundaryGap: [0, 0.01]
+            boundaryGap: [0, 0.01],
+            min: 0,
+            max: 100,
+            interval: 20,
+            axisLabel: {
+              formatter: '{value}%',
+              textStyle: {
+                //color: '#fff',
+                fontWeight: '80'
+              }
+            }
           },
           yAxis: {
             type: 'category',
-            data: ['软基处理','桥梁工程','路基路面','拌和站']
-          },
-          series: [
-            {
-              name: '实际进度',
-              type: 'bar',
-              data: [18203, 23489, 29034, 104970]
-            },
-            {
-              name: '预计完成进度',
-              type: 'bar',
-              data: [19325, 23438, 31000, 121594]
+            data: ['拌和站', '路基路面', '桥梁工程', '软基处理'],
+            axisLabel: {
+              show: true,
+              interval: 0,
+              rotate: 0,
+              margin: 10,
+              inside: false,
+              textStyle: {
+                //color: '#fff',
+                fontWeight: '50'
+              }
             }
-          ]
-        },
-        info:{},
-        organTypeList:{},
+          },
+          series: [{
+            type: 'bar',
+            barWidth:'50%',
+            label: {
+              normal: {
+                show: true,
+                 formatter: '{c}%',
+                /*formatter: function(v) {
+                  var val = v.data;
+                  if (val == 0) {
+                    return '';
+                  }
+                  return val;
+                },*/
+                color: '#fff'
+              }
+            },
+            data: [66, 33, 44, 55]
+          }]
+        }, //施工进度图表
+        info:{}, //项目信息
+        organTypeList:{}, //单位信息
         lists:{},
-        deviceTotal:""
+        deviceTotal:"", //设备总数，
+        videoTotal:'', //影像总数，
+        documentTotal:'', // 文档总数
       }
     },
     filters: {
@@ -199,12 +236,23 @@
       let project_id=sessionStorage.getItem('projectId');
       let tenant=this.$store.state.project.tenant;
 
+      //设备总数获取
       deviceList.list({'project_id':project_id}).then(res=>{
+        console.log(res);
         if(res.success){
           this.deviceTotal=res.result.total;
         }else{
-          console.log("设备列表获取失败")
+          //console.log("设备列表获取失败")
         }
+      });
+      //影像总数
+      media.list().then(res=>{
+        this.videoTotal=res.result.total
+      });
+      //文档总数
+      document.list({ project_id:sessionStorage.getItem('projectId')}).then(res=>{
+        console.log(res.result.total);
+        this.documentTotal=res.result.total
       });
 
       project.info({'project_id':id,'tenant':tenant}).then(res=>{
@@ -312,10 +360,10 @@
     display: flex;
     .p-info{
       padding: 20px;
-      width: 450px;
+      width: 410px;
       height:400px;
       background: #ffffff;
-      margin-right: 10px;
+      margin-right: 20px;
       .i-name{
         font-size:18px;
         color:rgba(51,51,51,1);
@@ -333,10 +381,11 @@
       }
       .i-statistics{
 
-        width: 75%;
+        width: 100%;
+        padding: 0 5% 0 0;
         margin-top: 50px;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         .s-data{
           cursor: pointer;
           .d-num{
@@ -359,7 +408,7 @@
         flex-flow: wrap;
         .c-info{
           width: 195px;
-          margin: 20px 0 0 5px;
+          margin: 20px 5px 0 0;
           cursor: pointer;
           display: flex;
 
@@ -385,25 +434,25 @@
       }
     }
     .d-map{
-      width: calc( 100% - 410px ) ;
+      width: calc( 100% - 470px ) ;
       height:440px;
       background: #ffffff;
     }
   }
   .a-box{
     display: flex;
-    margin-top: 10px;
+    margin-top: 20px;
     .p-info{
       padding: 20px;
-      width: 450px;
+      width: 410px;
       height:400px;
       background: #ffffff;
-      margin-right: 10px;
+      margin-right: 20px;
 
     }
     .d-map{
       padding: 20px;
-      width: calc( 100% - 450px ) ;
+      width: calc( 100% - 510px ) ;
       height:400px;
       background: #ffffff;
     }

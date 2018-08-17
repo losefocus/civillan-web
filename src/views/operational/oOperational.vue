@@ -44,10 +44,6 @@
       :data="tableData5"
       style="width: 100%">
       <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
         type="index"
         width="50">
       </el-table-column>
@@ -57,41 +53,33 @@
       </el-table-column>
       <el-table-column
         width="140"
-        label="施工日期"
+        label="桩机号（设备）"
         prop="startTime">
       </el-table-column>
       <el-table-column
         width="140"
-        label="桩机数量"
+        label="型号"
         prop="endTime">
       </el-table-column>
       <el-table-column
-        label="完成根数"
+        label="桩基数量"
         prop="a">
       </el-table-column>
       <el-table-column
-        label="根均得分"
+        label="施工总长（m)"
         prop="b">
       </el-table-column>
       <el-table-column
-        label="日桩长（m)"
+        label="总灰量（kg)"
         prop="c">
       </el-table-column>
       <el-table-column
-        label="日注浆量（L）"
+        label="总浆量（L）"
         prop="d">
       </el-table-column>
       <el-table-column
-        label="日注灰量（kg)"
+        label="评级"
         prop="e">
-      </el-table-column>
-      <el-table-column
-        label="成桩时间（min）"
-        prop="f">
-      </el-table-column>
-      <el-table-column
-        label="工作小计（kg)"
-        prop="g">
       </el-table-column>
     </el-table>
   </div>
@@ -101,165 +89,175 @@
   import deviceList from '@/api/project/deviceList'
   import Bus from '@/common/eventBus'
   export default {
-    name: "oOperational",
+    name: "oAccumulative",
     data(){
       return{
         tableData5: [
           {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          }, {
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          }, {
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          }, {
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          },{
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          },{
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          },{
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          },{
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          },{
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          },{
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          },{
+          },
+          {
             id: '12987122',
-            startTime:'2018-02-22 19:00',
+            startTime:'nb-21搅拌桩',
             endTime:'2018-02-22 19:00',
-            a: '6m',
-            b: '20m',
-            c: '20L',
-            d: '20L',
-            e: '20KG',
-            f: '20KG',
-            g: '20A',
-            h: '20deg',
-            i: '20min',
+            a: '6',
+            b: '20',
+            c: '20',
+            d: '20',
+            e: '20',
+            f: '20',
+            g: '20',
+            h: '20',
+            i: '20',
             j: 'A',
-          }
+          },
         ],
         value1: '',
         isCollapse:true,

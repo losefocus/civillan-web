@@ -12,7 +12,7 @@ sub{ vertical-align:text-bottom; }
 legend { color:#000; }
 fieldset, img { border:0; }
 button, input, select, textarea { font-size:100%; }
-table { border-collapse:collapse; border-spacing:0; }
+/*table { border-collapse:collapse; border-spacing:0; }*/
 
 /*地图windowInfo*/
 #my-list .selected{
@@ -137,6 +137,11 @@ table { border-collapse:collapse; border-spacing:0; }
 }
 
 /*表格重置样式*/
+
+body .el-table th.gutter {
+  display: table-cell !important;
+}
+
 .el-table{
   font-size: 12px;
   /*background-color: rgba(79,80,89,0.2);*/

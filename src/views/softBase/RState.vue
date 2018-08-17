@@ -14,6 +14,13 @@
            </div>
 
          </div>
+         <div class="">
+           <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
+           <div class="i-progress">
+             <div class="i-progressName" style="width: 18%">成桩进度：</div>
+             <el-progress :stroke-width="15" :text-inside="true" :percentage="progress" color="#24BCF7" style="width: 82%"></el-progress>
+           </div>
+         </div>
          <div class="i-box">
            <div class="i-body">
              <div class="i-name">双头搅拌设备</div>
@@ -24,13 +31,7 @@
              <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==0}"></div></div>
            </div>
          </div>
-         <div class="">
-           <div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>
-           <div class="i-progress">
-             <div class="i-progressName" style="width: 18%">进度：</div>
-             <el-progress :stroke-width="15" :text-inside="true" :percentage="progress" color="#24BCF7" style="width: 82%"></el-progress>
-           </div>
-         </div>
+
 
          <div class="i-normal" v-if="isWarming">
            未发现问题
@@ -120,40 +121,11 @@
 
          </div>
          <div class="p-box">
-           <div class="p-progress">
-             <radial-progress-bar :diameter="diameter"
-                                  :total-steps="totalSteps"
-                                  :completed-steps="rspeed"
-                                  :animate-speed="animateSpeed"
-                                  :stroke-width="strokeWidth"
-                                  :start-color="startColor2"
-                                  :stop-color="stopColor2"
-                                  :inner-stroke-color="innerStrokeColor2"
-                                  :timing-func="timingFunc">
-               <p><span class="p-completedSteps">{{ rspeed }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
-               <p class="p-unit">L/min</p>
-               <div class="p-title">钻速</div>
-             </radial-progress-bar>
-           </div>
-
+           <s-flow ref="sFlow"></s-flow>
          </div>
          <div class="p-box">
-           <div class="p-progress">
-             <radial-progress-bar :diameter="diameter"
-                                  :total-steps="totalSteps"
-                                  :completed-steps="rcurrent"
-                                  :animate-speed="animateSpeed"
-                                  :stroke-width="strokeWidth"
-                                  :start-color="startColor3"
-                                  :stop-color="stopColor3"
-                                  :inner-stroke-color="innerStrokeColor3"
-                                  :timing-func="timingFunc">
-               <p><span class="p-completedSteps">{{ rcurrent }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
-               <p  class="p-unit">A</p>
-               <div class="p-title">电流</div>
-             </radial-progress-bar>
-           </div>
-
+           <!--<div id="myChart2" style="width: 100%;height: 100%"></div>-->
+           <s-current ref="sCurrent"></s-current>
          </div>
        </li>
        <li style="width: 0.4%"></li>
@@ -169,19 +141,25 @@
 <script>
   import echarts from 'echarts'
   import RadialProgressBar from 'vue-radial-progress'
+  import sCurrent from '@/views/RState/sCurrent'
+  import sSpeed from '@/views/RState/sSpeed'
+  import sFlow from '@/views/RState/sFlow'
   import deviceData from '@/api/device/deviceData'
   import {formatDate} from '@/common/formatDate.js';
 export default {
   name: "runningState",
   components:{
-    RadialProgressBar
+    RadialProgressBar,
+    sCurrent,
+    sSpeed,
+    sFlow
   },
   data(){
     let data = [0,10,20,30,40,50,60,70,80,90,100];
     let Data=data;
 
     return {
-      timer:null,//定时器
+      //timer:null,//定时器
       timer1:null,//定时器1
       deviceType:['1','2','3'],
       deviceIndex:1,
@@ -728,6 +706,9 @@ export default {
 
       if(!isDialog){
         this.classChange=2;
+        this.$refs.sCurrent.resize();
+        //this.$refs.sSpeed.resize();
+        this.$refs.sFlow.resize();
         if(clientWidth>1660){
           diameter=110;
         }else if(clientWidth<1660&&clientWidth>1500){
@@ -740,6 +721,9 @@ export default {
           that.$emit('dialogFullscreen','true')
         }
       }else{
+        this.$refs.sCurrent.resize();
+        //this.$refs.sSpeed.resize();
+        this.$refs.sFlow.resize();
         if(clientWidth>1800){
           this.classChange=1;
           diameter=170;
@@ -857,8 +841,24 @@ export default {
     this.reload();
     const that = this;
 
+    setTimeout(()=>{
+      this.$refs.sCurrent.resize();
+      //this.$refs.sSpeed.resize();
+      this.$refs.sFlow.resize();
+    },100);
 
-    let myChart = this.$echarts.init(document.getElementById('myChart1'));
+
+    window.onresize = function(){
+      that.$refs.sCurrent.resize();
+      //that.$refs.sSpeed.resize();
+      that.$refs.sFlow.resize();
+      let clientWidth=document.body.clientWidth;
+      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
+    }
+
+
+
+    /*let myChart = this.$echarts.init(document.getElementById('myChart1'));
     function randomData() {
       now = new Date(+now + oneDay);
       value = value + Math.random() * 21 - 10;
@@ -1057,7 +1057,89 @@ export default {
       myChart.resize();
       let clientWidth=document.body.clientWidth;
       that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
+    }*/
+
+    /*let myChart2 = this.$echarts.init(document.getElementById('myChart2'));
+    let tips = 0;
+    function loading() {
+      return [{
+        value: tips,
+        itemStyle: {
+          normal: {
+            color: '#fb358a',
+            shadowBlur: 10,
+            shadowColor: '#fb358a'
+          }
+        }
+      }, {
+        value: 200 - tips,
+      }];
     }
+
+    myChart2.setOption({
+      title: [{
+        text: tips +' '+'/'+' ' + 200,
+        left: 'center',
+        top: '30%',
+        textStyle: {
+          color: '#fb358a',
+          fontSize:20
+        }
+      }, {
+        text: 'cm/L',
+        left: '50%',
+        top: '45%',
+        textAlign: 'center',
+        textStyle: {
+          color: '#000'
+        }
+      },{
+        text: '深度',
+        left: '50%',
+        top: '60%',
+        textAlign: 'center',
+        textStyle: {
+          color: '#000',
+          fontSize:20
+        }
+      }],
+      series: [{
+        name: 'loading',
+        type: 'pie',
+        radius: ['80%', '83%'],
+        hoverAnimation: false,
+        label: {
+          normal: {
+            show: false,
+          }
+        },
+        data: loading(),
+      }]
+    });
+
+    this.timer1=setInterval(function() {
+
+      if (tips == 200) {
+        tips = 0;
+      } else {
+        ++tips;
+      }
+      myChart2.setOption({
+        title: {
+          text: tips +' '+'/'+' ' + 200
+        },
+        series: [{
+          name: 'loading',
+          data: loading()
+        }]
+      })
+    }, 100);
+    this.$nextTick(() => (myChart2.resize()));
+    window.onresize = function(){
+      myChart2.resize();
+      let clientWidth=document.body.clientWidth;
+      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
+    }*/
   },
   watch:{
     dialogFullscreen:function (val,oldVal) {
@@ -1468,10 +1550,11 @@ export default {
           position: relative;
           flex: 0 1 50%;
           display:flex;
+          width: 50%;
+          height: 50%;
           justify-content:center;
           border: 1px solid white;
           box-sizing: border-box;
-          margin-bottom: 2%;
           .p-progress{
             .p-title{
               width: 50%;
@@ -1512,7 +1595,7 @@ export default {
       }
       .s-progress1{
         .p-box{
-          margin-bottom: 6%;
+          /*margin-bottom: 6%;
           .p-progress{
             .p-title{
               font-size: 18px;
@@ -1533,7 +1616,7 @@ export default {
           .p-title{
             font-size:18px;
           }
-        }
+        }*/}
       }
       .s-chart{
         width:36.5%;

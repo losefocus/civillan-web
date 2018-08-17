@@ -96,58 +96,77 @@
       @selection-change="handleSelectionChange"
       @expand-change="handleExpandChange"
     >
-
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-table
-              header-cell-class-name="history-header"
-              header-row-class-name="h-header"
-              header-align="center"
-              border
-              :data="props.row.data"
-              style="width: 100%">
-              <el-table-column
-                align="center"
-                prop="part_id"
-                label="深度"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="+0.25"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="+0.50">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="+0.50">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="+0.75">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="+1.00">
-              </el-table-column>
-              <el-table-column
-                prop="p_pulp"
-                label="段浆量（L/m）">
-              </el-table-column>
-              <el-table-column
-                prop="p_density"
-                label="密度（g/cm3）">
-              </el-table-column>
-              <el-table-column
-                prop="p_ash"
-                label="灰量（kg）">
-              </el-table-column>
-            </el-table>
-          </el-form>
+          <el-table
+            header-cell-class-name="history-header"
+            header-row-class-name="h-header"
+            header-align="center"
+            border
+            :data="props.row.data"
+            style="width: 100%">
+            <el-table-column
+              align="center"
+              prop="part_id"
+              label="序号"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="+0.25"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="address"
+              label="+0.50">
+            </el-table-column>
+            <el-table-column
+              prop="address"
+              label="+0.50">
+            </el-table-column>
+            <el-table-column
+              prop="address"
+              label="+0.75">
+            </el-table-column>
+            <el-table-column
+              prop="address"
+              label="+1.00">
+            </el-table-column>
+            <el-table-column
+              label="段浆量（L/m）">
+              <template slot-scope="props">
+                {{ props.row.p_pulp | formatP}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="p_deep"
+              label="段深度（cm）">
+            </el-table-column>
+            <el-table-column
+              label="段电流（A）">
+              <template slot-scope="props">
+                {{ props.row.p_current | formatP}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="段喷压（pa）">
+              <template slot-scope="props">
+                {{ props.row.p_pressure | formatP}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="段钻速（pa）">
+              <template slot-scope="props">
+                {{ props.row.p_down_speed | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="密度（g/cm3）">
+              <template slot-scope="props">
+                {{ props.row.p_density | formatZ}}
+              </template>
+            </el-table-column>
+          </el-table>
         </template>
       </el-table-column>
       <el-table-column
@@ -184,7 +203,7 @@
         :show-overflow-tooltip=true
         label="总桩长">
         <template slot-scope="props">
-          {{ props.row.depth | keepTwo}}
+          {{ props.row.depth | formatP}}
         </template>
       </el-table-column>
       <el-table-column
@@ -345,6 +364,15 @@
     </el-table>
     <div class="s-box">
       <div class="s-body">
+        <span class="s-total">总桩数</span>
+        <span class="s-num">{{recordSum.total_pile_num}}</span>
+      </div>
+      <div class="s-body">
+        <span class="s-total">总桩长</span>
+        <span class="s-num">{{recordSum.total_depth | formatZ}}</span>
+        <span class="s-total">m</span>
+      </div>
+      <div class="s-body">
         <span class="s-total">总浆量</span>
         <span class="s-num">{{recordSum.total_cumulative_pulp | formatZ}}</span>
         <span class="s-total">L</span>
@@ -354,16 +382,8 @@
         <span class="s-num">{{recordSum.total_cumulative_ash | formatZ}}</span>
         <span class="s-total">KG</span>
       </div>
-      <div class="s-body">
-        <span class="s-total">总桩长</span>
-        <span class="s-num">{{recordSum.total_depth | formatZ}}</span>
-        <span class="s-total">米</span>
-      </div>
-      <div class="s-body">
-        <span class="s-total">总桩数</span>
-        <span class="s-num">{{recordSum.total_pile_num}}</span>
-        <span class="s-total">根</span>
-      </div>
+
+
     </div>
     <div class="m-pagination">
       <el-pagination

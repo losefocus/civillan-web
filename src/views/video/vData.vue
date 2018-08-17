@@ -35,8 +35,8 @@
           </div>
 
           <div class="v-name">
-            <div class="v-title">高新科技园区建筑建设标段</div>
-            <div class="v-time">2018-5-21</div>
+            <div class="v-title">{{item.name}}</div>
+            <div class="v-time">{{ item.createdAt*1000 |  formatDate}}</div>
           </div>
         </div>
       </waterfall-slot>
@@ -59,106 +59,6 @@
     },
     data(){
       return{
-        lists:[
-          {
-            autoplay: false,
-            muted: true,
-            language: 'zh-CN',
-            playbackRates: [0.7, 1.0, 1.5, 2.0],
-            fluid: true,
-            notSupportedMessage: '此视频暂无法播放，请稍后再试',
-            aspectRatio: '16:9',
-            controlBar: {
-              timeDivider: true,
-              durationDisplay: true,
-              remainingTimeDisplay: false,
-              fullscreenToggle: true  //全屏按钮
-            },
-            sources: [{
-              type: "video/mp4",
-              // mp4
-              src: "http://vjs.zencdn.net/v/oceans.mp4",
-              // webm
-              // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
-            }],
-            poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
-          },
-          {
-            height: '220',
-            autoplay: false,
-            muted: true,
-            language: 'en',
-            playbackRates: [0.7, 1.0, 1.5, 2.0],
-            sources: [{
-              type: "video/mp4",
-              // mp4
-              src: "http://vjs.zencdn.net/v/oceans.mp4",
-              // webm
-              // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
-            }],
-            poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
-          },
-          {
-            height: '220',
-            autoplay: false,
-            muted: true,
-            language: 'en',
-            playbackRates: [0.7, 1.0, 1.5, 2.0],
-            sources: [{
-              type: "video/mp4",
-              // mp4
-              src: "http://vjs.zencdn.net/v/oceans.mp4",
-              // webm
-              // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
-            }],
-            poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
-          },
-          {
-            height: '220',
-            autoplay: false,
-            muted: true,
-            language: 'en',
-            playbackRates: [0.7, 1.0, 1.5, 2.0],
-            sources: [{
-              type: "video/mp4",
-              // mp4
-              src: "http://vjs.zencdn.net/v/oceans.mp4",
-              // webm
-              // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
-            }],
-            poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
-          },
-          {
-            height: '220',
-            autoplay: false,
-            muted: true,
-            language: 'en',
-            playbackRates: [0.7, 1.0, 1.5, 2.0],
-            sources: [{
-              type: "video/mp4",
-              // mp4
-              src: "http://vjs.zencdn.net/v/oceans.mp4",
-              // webm
-              // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
-            }],
-            poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
-          },
-          {
-            height: '220',
-            autoplay: false,
-            muted: true,
-            language: 'en',
-            playbackRates: [0.7, 1.0, 1.5, 2.0],
-            sources: [{
-              type: "video/mp4",
-              // mp4
-              src: "http://vjs.zencdn.net/v/oceans.mp4",
-              // webm
-              // src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
-            }],
-            poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
-          }
-        ],
         playerList:[],
         post_data:{
           page_index:1,
@@ -220,6 +120,8 @@
             console.log(item);
             this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
             this.playerOptions.sources[0].src=item.url;
+            this.playerOptions.createdAt=item.createdAt;
+            this.playerOptions.name=item.name;
             console.log(this.playerOptions.sources[0].src);
             this.playerList.push(this.playerOptions);
           })

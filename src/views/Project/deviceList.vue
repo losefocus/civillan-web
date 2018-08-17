@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 20px">
+  <div>
     <ul class="a-box">
       <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
         {{list.name}}
@@ -78,13 +78,12 @@
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
-  import JConfig from '@/views/softBase/JConfig'
 
   import Bus from '@/common/eventBus'
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   export default {
-    name: "deviceList",
+    name: "device",
     components: {
       Waterfall,
       WaterfallSlot,
@@ -93,7 +92,6 @@
       AQuery,
       HData,
       NRecord,
-      JConfig
     },
     data () {
       return {
@@ -119,7 +117,6 @@
           {name:'统计分析'},
           //{name:'通知记录'},
           {name:'报警查询'},
-          {name:'作业配置'},
         ],
         tBody:[
           'RState',
@@ -127,7 +124,6 @@
           'SAnalysis',
           //'NRecord',
           'AQuery',
-          'JConfig'
         ],
         tIndex:0,
         currentView:'RState',
@@ -160,34 +156,38 @@
       deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
         console.log(res);
         this.navList=res.result.items;
+        this.getList(this.navList[0].id);
         this.$nextTick(()=>{
           this.isShow=true
         })
       });
 
-      let group_id=sessionStorage.getItem('group_id');
+      /*let group_id=sessionStorage.getItem('group_id');
       let deviceIndex=sessionStorage.getItem('deviceIndex');
-      this.getList(group_id)
+      this.getList(group_id);*/
+
     },
     methods: {
-      changeTab1(list,index){
+      changeTab1(list,index){ //切换tab
         this.isActive=index;
+        console.log(list.id);
+        this.getList(list.id)
       },
       radioEvent(){
         this.dialogVisible = false;
       },
-      getDetails(item,index){
+      getDetails(item,index){ //获取详情
         this.dialogVisible=true;
         this.deviceName=item.name;
         sessionStorage.setItem('deviceName',item.name);
         this.deviceKey=item.key;
         console.log(item.name)
       },
-      changeTab(i){
+      changeTab(i){ //模态框tab
         this.tIndex=i;
         this.currentView=this.tBody[i]
       },
-      isFullscreen(){
+      isFullscreen(){ //是否打开模态框
         console.log(this.changeIcon);
         if(this.changeIcon){
           this.dialogWidth='100%';
@@ -216,8 +216,9 @@
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
           this.items=res.result.items;
+          console.log(this.items);
           this.items.forEach((item,i)=>{
-            console.log(item);
+            //console.log(item);
             /*dictionary.list({'type':'device_type'}).then(res=>{
               res.result.forEach((dict,j)=>{
                 if(item.product.alias==dict.label){
@@ -234,7 +235,7 @@
 <style scoped lang="scss">
   .a-box{
     width: 100%;
-    padding-top: 10px;
+    padding-top: 30px;
     height: 80px;
     li{
       font-size: 14px;

@@ -2,14 +2,14 @@
 <div>
   <div class="e-box">
     <!-- 标题和控制栏 -->
-    <div class="control-box">
+    <!--<div class="control-box">
       <el-row>
         <el-col :span="19">
           <div class="grid-content bg-purple">
             <div class="hd">
               <div class="inline-block">
                 <el-select v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
-                  <!--<div style="width: 90%">
+                  &lt;!&ndash;<div style="width: 90%">
                     <el-input
                       style="width: 96%;margin:0 0 2% 2%"
                       size="mini"
@@ -17,8 +17,8 @@
                       suffix-icon="el-icon-search"
                       v-model="input9">
                     </el-input>
-                  </div>-->
-                  <!--<el-input suffix-icon="el-icon-search" @input="deviceSearch()" v-model="deviceName" size="mini" style="width: 92%;margin:0 0 2% 4%" placeholder="请输入内容"></el-input>-->
+                  </div>&ndash;&gt;
+                  &lt;!&ndash;<el-input suffix-icon="el-icon-search" @input="deviceSearch()" v-model="deviceName" size="mini" style="width: 92%;margin:0 0 2% 4%" placeholder="请输入内容"></el-input>&ndash;&gt;
                   <el-option
                     v-for="(item,index) in deviceSelect"
                     :key="index"
@@ -49,12 +49,60 @@
           </div>
         </el-col>
       </el-row>
+    </div>-->
+    <div class="t-analysis">
+      <chart :options="analysisPolar" :auto-resize=true></chart>
     </div>
-    <div class="e-body">
-      <chart :options="polar" :auto-resize=true></chart>
+    <div class="a-screen">
+      <div class="c-box">
+        <div class="c-query">
+          <el-select v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
+            <el-option
+              v-for="(item,index) in deviceSelect"
+              :key="index"
+              :label="item.name"
+              :value="index">
+            </el-option>
+            <el-pagination
+              @current-change="deviceCurrentChange"
+              small
+              :pager-count="5"
+              :current-page="device_data.page_index"
+              :page-size="device_data.page_size"
+              layout="prev, pager, next"
+              :total="deviceTotal">
+            </el-pagination>
+          </el-select>
+
+          <el-date-picker
+            size="mini"
+            v-model="value7"
+            type="daterange"
+            align="center"
+            unlink-panels
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions2" style="margin: 0 5px;">
+          </el-date-picker>
+          <div class="c-button">
+            <el-button type="info" size="mini" @click="query">查询</el-button>
+          </div>
+          <div class="c-button">
+            <el-button type="info" size="mini" @click="query">重置</el-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="a-chart">
+      <div class="e-body">
+        <chart :options="devicePolar" :auto-resize=true></chart>
+      </div>
+      <div class="e-body">
+        <chart :options="alarmPolar" :auto-resize=true></chart>
+      </div>
     </div>
   </div>
-
 </div>
 </template>
 
@@ -64,7 +112,7 @@ export default {
   name: "analysis",
   data(){
     return{
-      polar:{
+      devicePolar:{
         aria: {
           show: true
         },
@@ -76,6 +124,7 @@ export default {
           type: 'scroll',
           orient: 'vertical',
           x: 'left',
+          top:'30',
           itemGap: 15,
           data:['设备故障','下钻速度异常','电流异常','掺量异常','电压异常','流量异常','压力异常','喷浆异常','测量异常']
         },
@@ -83,7 +132,8 @@ export default {
           {
             name:'报警来源',
             type:'pie',
-            //radius: ['50%', '80%'],
+            radius: '60%',
+            center: ['55%', '50%'],
             avoidLabelOverlap: true,
             labelLine: {
               normal: {
@@ -104,6 +154,151 @@ export default {
             ]
           }
         ]
+      },
+      analysisPolar:{
+        title : {
+          text: '总量分析',
+          x:'left',
+        },
+        color: ['#3398DB'],
+        tooltip : {
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis : [
+          {
+            type : 'category',
+            data : ['设备1', '设备2', '设备3', '设备4', '设备5', '设备6', '设备7','设备8','设备9','设备10','设备11','设备12',],
+            axisTick: {
+              alignWithLabel: true
+            }
+          }
+        ],
+        yAxis : [
+          {
+            type : 'value'
+          }
+        ],
+        series : [
+          {
+            name:'直接访问',
+            type:'bar',
+            barWidth: '60%',
+            data:[10, 52, 200, 334, 390, 330, 220,310,230,280,180,80]
+          }
+        ]
+      },
+      alarmPolar:{
+        backgroundColor: '#ffffff',
+        name: 'a',
+        tooltip: {
+          trigger: 'axis', //按x轴显示
+          show: true,
+          axisPointer: {
+            lineStyle: {
+              color: 'none', //不显示线条
+            },
+          },
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          textStyle: {
+            align: 'left',
+            fontSize: 12,
+            color: '#333333',
+          },
+          extraCssText: 'box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2)' //添加阴影
+        },
+        color: ['#0580f2', '#faa732', '#e1575d'],
+        grid: {
+          left: '5%',
+          right: '6%',
+          top: '25%',
+          bottom: '3%',
+          containLabel: true
+        },
+        legend: {
+          show: true,
+          icon: 'circle',
+          top:20,
+          textStyle: {
+            fontSize: 12,
+            color: '#333333'
+          },
+          data: ['Legend 1', 'Legend 2', 'Legend 3']
+        },
+        xAxis: {
+          show: true,
+          type: 'category',
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false,
+            lineStyle: {
+              color: '#eeeeee',
+            }
+          },
+          axisLabel: {
+            textStyle: {
+              fontSize: 14,
+              color: '#999999'
+            }
+          },
+          data: ['2010', '2011', '2012', '2015', '2016', '2017']
+        },
+        yAxis: {
+          show: true,
+          type: 'value',
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false,
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#f2f3f7'
+            }
+          },
+          axisLabel: {
+            textStyle: {
+              fontSize: 12,
+              color: '#999999'
+            }
+          }
+        },
+        series: [{
+          name: 'Legend 1',
+          type: 'line',
+          symbol: 'circle',
+          itemStyle: {
+            emphasis: {
+              symbol: 'circle',
+            }
+          },
+          symbolSize: [8, 8],
+          data: [1, 0, 1, 4, 10, 8]
+        }, {
+          name: 'Legend 2',
+          type: 'line',
+          symbol: 'circle',
+          symbolSize: [8, 8],
+          data: [2, 1, 3, 3, 5, 6]
+        }, {
+          name: 'Legend 3',
+          type: 'line',
+          symbol: 'circle',
+          symbolSize: [8, 8],
+          data: [4, 4, 4, 10, 15, 3]
+        }]
       },
       device:'', //设备选定值
       deviceSelect:[], //设备select列表
@@ -150,17 +345,62 @@ export default {
 <style scoped lang="scss">
   .echarts {
     width: 100%;
-    height: 400px;
+    height: 100%;
   }
-  .e-box{
-    background: #ffffff !important;
+  .a-chart{
+    display: flex;
+    width: 100%;
+    height: 350px;
+    justify-content: space-between;
+    margin: 20px 0 20px;
+    .e-body{
+      background: #ffffff;
+      width: calc(50% - 50px);
+      padding: 20px;
+    }
   }
-  .e-body{
-    padding:0 30px 0px;
+  .c-box{
+    margin-top: 20px;
+    padding: 0 2% 20px;
+    border:1px solid rgba(230,234,238,1);
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    .c-query{
+      width: 600px;
+      margin-top: 20px;
+      margin-right: 30px;
+      display: flex;
+      justify-content: space-between;
+      .c-button{
+        margin:0 3px;
+      }
+      .el-dropdown-link{
+        cursor: pointer;
+        width: 140px;
+        height: 20px;
+        .c-title{
+          font-size: 12px;
+          color: #666666;
+        }
+
+        .el-icon--right{
+          margin-left: 10px;
+          font-size: 18px;
+          color: #4F5059;
+        }
+      }
+    }
+  };
+  .t-analysis{
+    width: calc(100% - 40px);
+    height: 300px;
+    background: #ffffff;
+    padding: 20px;
   }
   .control-box{
     padding: 20px 30px;
-    background: #fff;
+    //background: #fff;
     border-bottom:1px solid rgba(235,237,248,1);
     margin-bottom: 30px;
     .title{

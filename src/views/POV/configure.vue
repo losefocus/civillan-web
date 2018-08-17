@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 600px">
+  <div style="height: 94%">
     <div class="j-box">
       <div class="j-table">
         <div class="i-box">
@@ -49,7 +49,7 @@
         <div class="a-title">添加作业</div>
         <div class="a-body">
           <div class="a-info">
-            <el-input placeholder="名称" size="mini" style="margin: 0 5px 0 0"></el-input>
+            <el-input placeholder="名称" size="mini" style="margin: 0 5px 0 0" ></el-input>
             <el-input placeholder="标识" size="mini" style="margin: 0 5px"></el-input>
             <el-input placeholder="排序" size="mini" style="margin: 0 5px"></el-input>
             <el-input placeholder="类型" size="mini" style="margin: 0 0 0 5px"></el-input>
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="a-preservation">
-          <el-button type="info" size="medium" style="width: 30%">保存</el-button>
+          <el-button type="info" size="medium" style="width: 30%" >保存</el-button>
         </div>
       </div>
     </div>
@@ -100,6 +100,7 @@
 </template>
 
 <script>
+  import config from '@/api/configure/config'
   export default {
     name: "configure",
     data(){
@@ -108,7 +109,8 @@
           user: '',
           region: ''
         },
-        options: [{
+        options: [
+          {
           value: '1',
           label: '设计桩长'
         }, {
@@ -169,10 +171,23 @@
           }, {
             a: '设计最小钻速',
             b: '120'
-          }]
+          }],
+        post_data:{
+          page_index:1,
+          page_size:10
+        }
       }
     },
+    created(){
+      this.getList(this.post_data)
+    },
     methods:{
+      //作业配置列表
+      getList(post_data){
+        config.list(post_data).then(res=>{
+          console.log(res)
+        })
+      },
       handleEdit(index, row) {
         console.log(index, row);
       },
@@ -207,7 +222,6 @@
           cursor: pointer;
         }
       }
-
     }
     .j-add{
       height: 90%;
@@ -235,7 +249,6 @@
           margin-top: 5%;
           font-size:16px;
           font-weight: bold;
-          font-family:PingFangSC-Medium;
           color:rgba(51,51,51,1);
         }
         .c-body{
@@ -252,8 +265,7 @@
       .a-preservation{
         width:95%;
         text-align: center;
-        position: absolute;
-        bottom: 5%
+        margin-top: 30px;
       }
     }
   }

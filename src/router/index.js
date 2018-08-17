@@ -74,11 +74,20 @@ const vRouter = new Router({
               component:softBase,
               name:'设备',
               meta:{requireAuth: true}
-            },
+            }
+          ]
+        },
+        {
+          path: '/device',
+          component: device,
+          name:'设备信息',
+          redirect:"/project/deviceMap",
+          meta: { requireAuth: true },
+          children:[
             {
               path:'/project/deviceList',
               component:deviceList,
-              name:'设备',
+              name:'设备列表',
               meta:{requireAuth: true}
             },
             {
@@ -88,12 +97,6 @@ const vRouter = new Router({
               meta:{requireAuth: true}
             }
           ]
-        },
-        {
-          path: '/device',
-          component: device,
-          name:'设备列表',
-          meta: { requireAuth: true }
         },{
           path: '/configure',
           component: configure,

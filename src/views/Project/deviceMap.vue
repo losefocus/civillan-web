@@ -1,6 +1,6 @@
 <template>
-<div style="width: 100%;height: 100%;">
-  <div id="container" style="width: 100%;height: calc(100% - 20px)"  >
+<div style="width: 100%;height:100%;">
+  <div id="container" style="width: 100%;height: 100%"  >
 
   </div>
 </div>
@@ -55,7 +55,7 @@ export default {
           var lists=res.result.items;
           JSON.stringify();
           for(var i=0;i<lists.length;i++){
-            console.log(lists[i]);
+            //console.log(lists[i]);
 
             if(lists[i].position){
               var marker=new AMap.Marker({
@@ -73,15 +73,15 @@ export default {
               });
               markers.push(marker)
             }else{
-              console.log('没有经纬度')
+              //console.log('没有经纬度')
             }
           }
         }
-        console.log(markers);
+        //console.log(markers);
         AMap.plugin(["AMap.MarkerClusterer"],function() {
           var cluster = new AMap.MarkerClusterer(map,markers,{styles:sts});
           var a=function(e){
-            console.log('好的')
+            //console.log('好的')
           };
           cluster.on('click',a)
         });
@@ -96,7 +96,7 @@ export default {
           }))
         });*/
       });
-      console.log(markers);
+      //console.log(markers);
 
     },
   }

@@ -169,12 +169,12 @@ export default {
   },
   watch: {
     $route(to,from){
-      console.log(to.path)
+      //console.log(to.path)
       this.lists.forEach((item,i)=>{
         if(item.path==to.path){
           this.isActive=i;
           sessionStorage.setItem('isActive',this.isActive);
-          console.log(this.isActive)
+          //console.log(this.isActive)
         }
       })
       /*this.lists.forEach((item,i)=>{
