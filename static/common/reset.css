@@ -90,23 +90,87 @@ button, input, select, textarea { font-size:100%; }
 .info-Interval{
   margin: 0 5px 0 0;
 }
+.projectLabelBox{
+  width: 400px;
+  text-align: center;
+}
+.projectLabel{
+  padding: 5px 10px;
+  border-radius:6px;
+  opacity:0.75;
+  font-size:12px;
+  color:rgba(255,255,255,1);
+  background:rgba(243,26,26,1)
+}
+/*设备地图infoWindow*/
+.deviceLabelBox{
+  width: 300px;
+  text-align: center;
+}
+.deviceLabel{
+  background: rgba(102,208,110,1);
+  padding:2px 10px;
+  height: 20px;
+  line-height: 20px;
+  color:#ffffff;
+}
+
+.device_content{
+  width: 300px;
+  height: 100px;
+  padding-bottom: 5px;
+  display: flex;
+  justify-content: space-around;
+  background: #ffffff;
+}
+.device_img{
+  width: 100px;
+  height: 100px;
+
+}
+.device_info{
+  width: calc(100% - 120px);
+  height: 100px;
+}
+.device_name{
+  font-size: 16px;
+  font-weight: bold;
+  font-family:PingFangSC-Medium;
+  color: #333333;
+}
+.device_company{
+  height: 12px;
+  font-size: 12px;
+  color: #999999;
+  margin: 10px 0 30px 0;
+}
+.device_stateContent{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.device_state{
+  color: #666666;
+  font-size: 12px;
+}
+.device_details{
+  color: #666666;
+  cursor: pointer;
+  font-size: 12px;
+}
+.device_details:hover{
+  color: #2678FF !important;
+}
+.amap-ui-smp-ifwn-info-title{
+  padding: 0 !important;
+  border: none !important;
+}
+
 /*模态框重置样式*/
 .el-header{
   padding: 15px 20px 15px 25px !important;
 }
 
-.el-dialog__header{
-  padding: 0 !important;
-}
-.el-dialog__headerbtn{
-  top:11px;
-  font-size: 21px;
-
-}
-.el-dialog__body{
-  padding: 0 !important;
-  height: 100%;
-}
 .is-fullscreen{
   background: #f5f5f9;
 }
@@ -123,18 +187,17 @@ button, input, select, textarea { font-size:100%; }
 .el-dialog__header{
   padding: 0 !important;
 }
+
 .el-dialog__headerbtn{
   top:11px;
   font-size: 21px;
-
+  z-index: 9999;
 }
 .el-dialog__body{
   padding: 0 !important;
   height: 100%;
 }
-.is-fullscreen{
-  background: #f5f5f9;
-}
+
 
 /*表格重置样式*/
 

@@ -5,8 +5,10 @@
       <router-view></router-view>
     </transition>-->
     <ul class="a-box">
-      <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
-        {{list.name}}
+      <li v-for="(list,index) in navList" :key="index" :class="{active:index==isActive}">
+        <router-link :to="{path:list.path}" tag="li">
+          {{list.name}}
+        </router-link>
       </li>
     </ul>
     <router-view></router-view>
@@ -16,7 +18,7 @@
 <script>
   import deviceList from '@/views/Project/deviceList'
   import deviceMap from '@/views/Project/deviceMap'
-
+  import Bus from '@/common/eventBus'
   export default {
     name: "project_old",
     components: {
@@ -27,22 +29,27 @@
       return {
         navList:[
           {
-            path:'/project/deviceMap',
-            name:'设备地图'
-          },
-          {
             path:'/project/deviceList',
             name:'设备列表',
+          },
+          {
+            path:'/project/deviceMap',
+            name:'设备地图'
           }
         ],
-        isActive:'',
+        isActive:0,
       };
     },
     methods: {
       changeTab(list,index){
         this.$router.push(list.path);
+        console.log(index);
         this.isActive=index;
       }
+    },
+    created(){
+    },
+    mounted(){
     }
   }
 </script>
@@ -73,13 +80,18 @@
       color: #CCCFD4;
       border:1px solid rgba(204,207,212,1);
     }
-    li:first-child{
+    /*li:first-child{
       border-radius: 5px 0 0 5px;
     }
     li:last-child{
       border-radius: 0 5px 5px 0;
-    }
-    .active{
+    }*/
+   /* .active{
+      background: #F76A6A;
+      color: #ffffff;
+      border:1px solid #F76A6A;
+    }*/
+    .router-link-active{
       background: #F76A6A;
       color: #ffffff;
       border:1px solid #F76A6A;

@@ -119,19 +119,10 @@
                   //返回数据项对应的Marker
                   getMarker: function(dataItem, context, recycledMarker) {
 
-                    var content = '<div style="width: 150px;\n' +'text-overflow:ellipsis;'
-                    +'overflow:hidden;'
-                    +'white-space:nowrap;'+
-                      'background:rgba(243,26,26,1);\n' +
-                      'border-radius:6px;\n' +
-                      'opacity:0.75;font-size:12px;\n' +
-                      'color:rgba(255,255,255,1);\n' +
-                      'text-align: center;'+
-                      'padding: 10px;'+
-                      '">' +dataItem.name+
-                      '</div>';
+                    var content ='<div class="projectLabelBox">'+'<span class="projectLabel">' +dataItem.name+
+                      '</span>'+'</div>';
                     var label = {
-                      offset: new AMap.Pixel(-69, -46), //修改label相对于marker的位置
+                      offset: new AMap.Pixel(-185, -25), //修改label相对于marker的位置
                       content: content
                     };
                     //返回一个新的Marker
@@ -192,7 +183,7 @@
                     //返回一个新的InfoWindow
                     return new AMap.InfoWindow({
                       autoMove: true,
-                      offset: new AMap.Pixel(-5, -28),
+                      offset: new AMap.Pixel(-5, -18),
                       content: content,
                     });
                   }

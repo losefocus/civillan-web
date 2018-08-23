@@ -81,7 +81,7 @@ const vRouter = new Router({
           path: '/device',
           component: device,
           name:'设备信息',
-          redirect:"/project/deviceMap",
+          redirect:"/project/deviceList",
           meta: { requireAuth: true },
           children:[
             {

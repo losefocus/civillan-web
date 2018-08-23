@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 820px">
+  <div style="height: 100%;min-height: 756px">
     <ul class="p-box">
       <li class="p-info">
         <div class="i-name">
@@ -15,7 +15,7 @@
         </div>
         <div class="i-time">
           <span class="t-title">项目工期：</span>
-          <span class="">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</span>
+          <span class="t-date">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</span>
           <el-progress style="width: 100%;margin-top: 10px" :percentage="70" color="#24BCF7"></el-progress>
         </div>
         <ul class="i-statistics">
@@ -69,7 +69,9 @@
         </div>
       </li>
       <li class="d-map">
-        <div id="container" style="width: 100%;height: 100%">
+        <d-map></d-map>
+        <div class="m-searchBox">
+          <span class="iconfont icon-dEnlarge" @click="enlarge()"></span>
         </div>
       </li>
     </ul>
@@ -91,19 +93,34 @@
   import marker from '@/assets/AMap/marker.png'
   import stateMarker from '@/assets/AMap/marker.png'
 
+  import dMap from '@/views/Project/deviceMap.vue'
 
   import deviceGrouping from '@/api/project/deviceGrouping'
   import project from '@/api/userCenter/project'
   import {formatDate} from '@/common/formatDate.js';
-  export default {
 
+  import Bus from '@/common/eventBus'
+  export default {
     name: "project",
+    components:{
+      dMap
+    },
     data(){
       return{
         polar1:{
           title : {
             text: '统计分析',
             x:'left'
+          },
+          toolbox: {
+            feature: {
+              restore: {
+                title:'刷新'
+              },
+              saveAsImage: {
+                title:'下载'
+              }
+            },
           },
           aria: {
             show: true
@@ -132,7 +149,6 @@
                   show: true
                 }
               },
-
               data:[
                 {value:1563, name:'设备故障'},
                 {value:310, name:'下钻速度异常'},
@@ -158,6 +174,16 @@
               type: 'shadow'
             },
             formatter: "{b} <br> 进度: {c}%"
+          },
+          toolbox: {
+            feature: {
+              restore: {
+                title:'刷新'
+              },
+              saveAsImage: {
+                title:'下载'
+              }
+            },
           },
           /*legend: {
               data: [date]
@@ -261,91 +287,15 @@
         this.organTypeList=res.result.organTypeList;
       })
     },
-    mounted: function () {
-      this.init()
+    mounted(){
+
     },
     methods:{
-      init(){
-        let project_id=sessionStorage.getItem('projectId')
-        let map = new AMap.Map('container', {
-          center: [116.397428, 39.90923],
-          zoom: 5
-        });
-        /*AMap.plugin(['AMap.ToolBar', 'AMap.Scale','AMap.MapType'], function () {
-          map.addControl(new AMap.ToolBar());
-          map.addControl(new AMap.Scale());
-          map.addControl(new AMap.MapType(
-            {defaultType:0,showTraffic:false,position:{top:'100px'}}
-          ))
-        });*/
-        //获取设备列表
-        let cluster, markers = [];
-        let sts=[
-          {
-            url:marker,
-            size:new AMap.Size(32,32),
-            offset:new AMap.Pixel(-16,-30)
-          },
-          {
-            url:stateMarker,
-            size:new AMap.Size(32,32),
-            offset:new AMap.Pixel(-16,-30)
-          },
-          {
-            url:marker,
-            size:new AMap.Size(48,48),
-            offset:new AMap.Pixel(-24,-45),
-            textColor:'#CC0066'
-          }
-        ];
-
-        deviceList.list({'project_id':project_id}).then(res=>{
-          if(res.success){
-            var lists=res.result.items;
-            JSON.stringify();
-            for(var i=0;i<lists.length;i++){
-              //console.log(lists[i]);
-              if(lists[i].position){
-                var marker=new AMap.Marker({
-                  position:lists[i].position.split(','),
-                  content: '<div style="background:url('+stateMarker+') no-repeat; height: 40px; width: 30px; border-radius: 12px; "></div>',
-                  offset: new AMap.Pixel(-15,-15)
-                });
-                marker.on('click',function (e) {
-
-                });
-                // 设置label标签
-                marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-                  offset: new AMap.Pixel(-35, -25),//修改label相对于maker的位置
-                  content: "<div style='background: rgba(102,208,110,1);width: 100px;height: 20px;line-height: 20px;text-align: center;color:#ffffff;'>"+lists[i].product.productCategory.name+"</div>"
-                });
-                markers.push(marker)
-              }else{
-                //console.log('没有经纬度')
-              }
-            }
-          }
-          //console.log(markers);
-          AMap.plugin(["AMap.MarkerClusterer"],function() {
-            var cluster = new AMap.MarkerClusterer(map,markers,{styles:sts});
-            var a=function(e){
-              //console.log('好的')
-            };
-            //cluster.on('click',a)
-          });
-          //this.items=res.result.items;
-
-          /*this.items.forEach((item,i)=>{
-            console.log(item.position.split(','));
-            markers.push(new AMap.Marker({
-              position:item.position,
-              content: '<div style="background-color: hsla(180, 100%, 50%, 0.7); height: 24px; width: 24px; border: 1px solid hsl(180, 100%, 40%); border-radius: 12px; box-shadow: hsl(180, 100%, 50%) 0px 0px 1px;"></div>',
-              offset: new AMap.Pixel(-15,-15)
-            }))
-          });*/
-        });
-        //console.log(markers);
-      },
+      enlarge(){
+        Bus.$emit('isActive','1');
+        sessionStorage.setItem('isActive',1);
+        this.$router.push('/project/deviceMap');
+      }
     }
   }
 </script>
@@ -354,14 +304,18 @@
 
   .echarts {
     width: 100%;
-    height: 400px;
+    height: 100%;
   }
   .p-box{
+    height: 50%;
     display: flex;
     .p-info{
+      display: flex;
+      flex-flow: wrap;
       padding: 20px;
       width: 410px;
-      height:400px;
+      height:calc(100% - 40px);
+      min-height: 335px;
       background: #ffffff;
       margin-right: 20px;
       .i-name{
@@ -373,25 +327,30 @@
         }
       }
       .i-time{
-        margin-top: 40px;
+        margin-top: 6%;
         color: #666666;
+        width: 100%;
         .t-title{
           font-weight: bold;
         }
+        .t-date{
+          font-family:"微软雅黑";
+          font-size: 14px;
+        }
       }
       .i-statistics{
-
         width: 100%;
         padding: 0 5% 0 0;
-        margin-top: 50px;
+        margin-top: 5%;
         display: flex;
         justify-content: space-around;
         .s-data{
           cursor: pointer;
           .d-num{
             text-align: center;
-            font-size: 22px;
+            font-size: 32px;
             color: #24BCF7;
+            font-weight: bold;
           }
           .d-name{
             margin-top: 10px;
@@ -401,14 +360,14 @@
         }
       }
       .i-box {
-        margin-top: 30px;
+        margin-top: 8%;
         background: #ffffff;
         display: flex;
         //justify-content: space-between;
         flex-flow: wrap;
         .c-info{
           width: 195px;
-          margin: 20px 5px 0 0;
+          margin: 3% 5px 0 0;
           cursor: pointer;
           display: flex;
 
@@ -434,18 +393,33 @@
       }
     }
     .d-map{
-      width: calc( 100% - 470px ) ;
-      height:440px;
+      width: calc( 100% - 470px );
+      height:100%;
+      min-height: 375px;
       background: #ffffff;
+      position: relative;
+      .m-searchBox{
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        text-align: center;
+        background: #ffffff;
+        box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);
+        position: absolute;
+        top:30px;
+        right: 10px;
+      }
     }
   }
   .a-box{
+    height: calc(50% - 20px);
     display: flex;
     margin-top: 20px;
     .p-info{
       padding: 20px;
       width: 410px;
-      height:400px;
+      height:calc(100% - 40px);
       background: #ffffff;
       margin-right: 20px;
 
@@ -453,7 +427,7 @@
     .d-map{
       padding: 20px;
       width: calc( 100% - 510px ) ;
-      height:400px;
+      height:calc(100% - 40px);
       background: #ffffff;
     }
   }

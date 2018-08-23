@@ -143,6 +143,10 @@ export default {
     //console.log(this.isCollapse);
     this.changeWidth()
     //console.log(this.isActive)
+    let _this=this;
+    Bus.$on('isActive',function (res) {
+      _this.isActive=res;
+    })
   },
   methods:{
     changeWidth(){
@@ -177,19 +181,7 @@ export default {
           //console.log(this.isActive)
         }
       })
-      /*this.lists.forEach((item,i)=>{
-        if(item.path==this.$route.path){
-          this.isActive=i;
-          sessionStorage.setItem('isActive',this.isActive);
-          console.log(this.isActive)
-        }
-        this.lists[0].children.forEach((child,c)=>{
-          if(child.path==this.$route.path){
-            this.isActive=0
-          }
-        })
-      })*/
-    }
+    },
   },
 }
 </script>

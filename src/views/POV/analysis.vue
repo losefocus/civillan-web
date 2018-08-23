@@ -4,7 +4,7 @@
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
         <el-select v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-        <el-select v-if="!isShow" v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
+        <el-select v-if="!isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
           <!--<div style="width: 90%">
             <el-input
               style="width: 96%;margin:0 0 2% 2%"

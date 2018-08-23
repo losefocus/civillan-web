@@ -4,17 +4,7 @@
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
         <el-select v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-        <el-select v-else="!isShow" v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
-          <!--<div style="width: 90%">
-            <el-input
-              style="width: 96%;margin:0 0 2% 2%"
-              size="mini"
-              placeholder="请输入内容"
-              suffix-icon="el-icon-search"
-              v-model="input9">
-            </el-input>
-          </div>-->
-          <!--<el-input suffix-icon="el-icon-search" @input="deviceSearch()" v-model="deviceName" size="mini" style="width: 92%;margin:0 0 2% 4%" placeholder="请输入内容"></el-input>-->
+        <el-select v-else="!isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
@@ -382,8 +372,6 @@
         <span class="s-num">{{recordSum.total_cumulative_ash | formatZ}}</span>
         <span class="s-total">KG</span>
       </div>
-
-
     </div>
     <div class="m-pagination">
       <el-pagination

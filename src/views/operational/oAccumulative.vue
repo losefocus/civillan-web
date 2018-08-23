@@ -4,7 +4,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
+        <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
@@ -95,6 +95,17 @@
         prop="h">
       </el-table-column>
     </el-table>
+    <div class="s-box">
+      <div class="s-body">
+        <span class="s-total">桩机总数</span>
+        <span class="s-num">30</span>
+      </div>
+      <div class="s-body">
+        <span class="s-total">施工总长</span>
+        <span class="s-num">30</span>
+        <span class="s-total">m</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -422,6 +433,27 @@
   };
   .c-box1{
     flex-wrap:wrap;
+  }
+  .s-box{
+    display: flex;
+    justify-content: flex-end;
+    height: 60px;
+    line-height: 60px;
+    background: #ffffff;
+    border-bottom: 2px solid #ebeef5;
+    .s-body{
+      margin-right: 60px;
+      .s-total{
+        font-size: 12px;
+        color:rgba(102,102,102,1);
+      }
+      .s-num{
+        margin: 0 5px;
+        font-size:18px;
+        font-weight: bold;
+        color:rgba(51,51,51,1);
+      }
+    }
   }
   .m-pagination{
     padding: 20px;

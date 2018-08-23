@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <div id="a"></div>
+  <div style="width: 100%;">
+    <div id="photoViewer">
+
+    </div>
   </div>
 </template>
 
@@ -11,7 +13,7 @@
   export default {
     name: "photoViewer",
     mounted() {
-      this.loadPredefinedPanorama()
+      this.loadPredefinedPanorama();
     },
     created(){
       window.THREE=THREE;
@@ -19,12 +21,12 @@
     methods:{
       loadPredefinedPanorama() {
         // Loader
-        var loader = document.createElement('div');
+        let loader = document.createElement('div');
         loader.className = 'loader';
 
         // Panorama display
-        var div = document.getElementById('a');
-        div.style.height = '30px';
+        let div = document.getElementById('photoViewer');
+        div.style.height = '500px';
 
         var PSV = new PhotoSphereViewer({
           // Path to the panorama
@@ -46,11 +48,11 @@
           },
 
           // HTML loader
-          loading_html: loader,
+          loading_html: '<div class="el-icon-loading" style="font-size: 50px;">',
 
           // Overlay
-          overlay: {
-            image: 'overlay.png',
+          /*overlay: {
+            image: overlay,
             size: {
               width: '42px'
             },
@@ -58,8 +60,10 @@
               x: 'right',
               y: 'top'
             }
-          }
+          }*/
         });
+
+        console.log(this.$parent.$parent)
       }
     }
   }
@@ -90,8 +94,15 @@
     color: #3D3D3D;
   }
 
+  #photoViewer{
+    height: 500px;
+    line-height: 500px;
+    width: 100%;
+    text-align: center;
+  }
   #content {
-    width: 70%;
+    width: 100%;
+    text-align: center;
     max-width: 1000px;
     margin: 0 auto;
     line-height: 1.5em;

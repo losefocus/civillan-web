@@ -30,7 +30,6 @@
     <el-dialog
       :visible.sync="dialogVisible"
       width="70%"
-      style="height: 700px"
     >
       <p-viewer></p-viewer>
     </el-dialog>
@@ -60,6 +59,7 @@
     },
     data(){
       return{
+        loading:true,
         lists:[],
         dialogVisible:false,
         post_data:{

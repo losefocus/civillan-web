@@ -116,7 +116,7 @@
           {name:'历史数据'},
           {name:'统计分析'},
           //{name:'通知记录'},
-          {name:'报警查询'},
+          {name:'故障报警'},
         ],
         tBody:[
           'RState',
@@ -161,11 +161,9 @@
           this.isShow=true
         })
       });
-
       /*let group_id=sessionStorage.getItem('group_id');
       let deviceIndex=sessionStorage.getItem('deviceIndex');
       this.getList(group_id);*/
-
     },
     methods: {
       changeTab1(list,index){ //切换tab

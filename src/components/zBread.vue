@@ -40,7 +40,7 @@
     methods: {
       getBreadcrumb () {
         this.breadList = [].concat(this.$route.matched);
-        console.log(this.breadList);
+        //console.log(this.breadList);
         this.$route.matched.forEach((item, index) => {
           /*if(index==1){
             console.log('asdasd'+item.name);

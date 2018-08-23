@@ -36,6 +36,7 @@
     created(){
 
     },
+
     methods:{
       changeTab(list,index){
         this.$router.push(list.path);

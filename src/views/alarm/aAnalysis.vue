@@ -50,13 +50,13 @@
         </el-col>
       </el-row>
     </div>-->
-    <div class="t-analysis">
+    <div class="t-analysis" v-if="!isShow">
       <chart :options="analysisPolar" :auto-resize=true></chart>
     </div>
     <div class="a-screen">
       <div class="c-box">
         <div class="c-query">
-          <el-select v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
+          <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
             <el-option
               v-for="(item,index) in deviceSelect"
               :key="index"
@@ -86,10 +86,10 @@
             :picker-options="pickerOptions2" style="margin: 0 5px;">
           </el-date-picker>
           <div class="c-button">
-            <el-button type="info" size="mini" @click="query">查询</el-button>
+            <el-button type="info" size="mini">查询</el-button>
           </div>
           <div class="c-button">
-            <el-button type="info" size="mini" @click="query">重置</el-button>
+            <el-button type="info" size="mini">重置</el-button>
           </div>
         </div>
       </div>
@@ -300,6 +300,35 @@ export default {
           data: [4, 4, 4, 10, 15, 3]
         }]
       },
+      pickerOptions2: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+      value6: '',
+      value7: '',
       device:'', //设备选定值
       deviceSelect:[], //设备select列表
       device_data:{//全部设备select列表
@@ -311,8 +340,10 @@ export default {
       deviceName:''
     }
   },
+  props:['isShow'],
   created(){
     this.getDeviceList(this.device_data);
+    console.log(this.isShow)
   },
   methods:{
     deviceCurrentChange:function(currentPage){ //全部设备select当前页
@@ -358,9 +389,10 @@ export default {
       width: calc(50% - 50px);
       padding: 20px;
     }
+
   }
   .c-box{
-    margin-top: 20px;
+
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
@@ -397,6 +429,7 @@ export default {
     height: 300px;
     background: #ffffff;
     padding: 20px;
+    margin-bottom: 20px;
   }
   .control-box{
     padding: 20px 30px;
