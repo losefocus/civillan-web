@@ -1,9 +1,9 @@
 <template>
 <div>
   <ul class="a-box">
-    <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
+    <router-link v-for="(list,index) in navList" :to="{path:list.path}" tag="li"  :key="index">
       {{list.name}}
-    </li>
+    </router-link>
   </ul>
   <router-view></router-view>
 </div>
@@ -14,7 +14,6 @@ export default {
   name: "AlarmQuery",
   data(){
     return{
-      isActive:sessionStorage.getItem('aActive') || 0,
       navList:[
         {
           path:'/alarm/aAnalysis',
@@ -31,22 +30,6 @@ export default {
       ]
     }
   },
-  methods:{
-    changeTab(list,index){
-      this.$router.push(list.path);
-      this.isActive=index;
-    }
-  },
-  watch:{
-    $route(){
-      this.navList.forEach((item,i)=>{
-        if(item.path==this.$route.path){
-          //sessionStorage.setItem('aActive',i);
-          this.isActive=i;
-        }
-      })
-    }
-  }
 }
 </script>
 
@@ -72,7 +55,7 @@ export default {
     li:last-child{
       border-radius: 0 5px 5px 0;
     }
-    .active{
+    .router-link-active{
       background: #F76A6A;
       color: #ffffff;
       border:1px solid #F76A6A;

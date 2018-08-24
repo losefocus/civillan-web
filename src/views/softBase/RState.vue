@@ -1,5 +1,8 @@
 <template>
- <div>
+ <div style="position: relative;height: 100%">
+   <transition name="fade">
+     <div class="b-device" v-if="noDevice"><div class="t-device">设备不存在！</div></div>
+   </transition>
    <div class="r-box">
      <div class="t-box" :class="{'t-box1':classChange==1}">
        <div class="r-stateTab" :class="{'tabActive':!isTab}" @click="tabChange(0)">运行状况</div>
@@ -17,8 +20,8 @@
          <div class="">
            <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
            <div class="i-progress">
-             <div class="i-progressName" style="width: 18%">成桩进度：</div>
-             <el-progress :stroke-width="15" :text-inside="true" :percentage="progress" color="#24BCF7" style="width: 82%"></el-progress>
+             <div class="i-progressName" style="width: 80px">成桩进度：</div>
+             <el-progress :stroke-width="15" :text-inside="true" :percentage="progress" color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
            </div>
          </div>
          <div class="i-box">
@@ -31,7 +34,15 @@
              <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==0}"></div></div>
            </div>
          </div>
-
+         <div class="h-box">
+           <div class="i-body">
+             <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
+             <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
+           </div>
+           <div class="b-angle">
+             <div class="b-angle"></div>
+           </div>
+         </div>
 
          <div class="i-normal" v-if="isWarming">
            未发现问题
@@ -77,7 +88,7 @@
          </div>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
-         <chart :options="PulpingQuantity" :auto-resize=true></chart>
+         <a-sp></a-sp>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
          <chart :options="ElectricCurrent" :auto-resize=true></chart>
@@ -144,15 +155,18 @@
   import sCurrent from '@/views/RState/sCurrent'
   import sSpeed from '@/views/RState/sSpeed'
   import sFlow from '@/views/RState/sFlow'
-  import deviceData from '@/api/device/deviceData'
   import {formatDate} from '@/common/formatDate.js';
+  import deviceData from '@/api/device/deviceData'
+
+  import aSp from '@/views/RState/AshPressureCurrent.vue'
 export default {
   name: "runningState",
   components:{
     RadialProgressBar,
     sCurrent,
     sSpeed,
-    sFlow
+    sFlow,
+    aSp,
   },
   data(){
     let data = [0,10,20,30,40,50,60,70,80,90,100];
@@ -160,6 +174,7 @@ export default {
 
     return {
       //timer:null,//定时器
+      noDevice:false,
       timer1:null,//定时器1
       deviceType:['1','2','3'],
       deviceIndex:1,
@@ -206,7 +221,6 @@ export default {
       isWarming:true,//未发现问题显示
 
       isTab:false,//设备型号切换
-
       PulpingQuantity:{
         title: {
           text: '段浆量、段灰量随桩机里程变化曲线',
@@ -293,38 +307,25 @@ export default {
         }],
         series: [
           {
-          name: '段浆量',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 3
-            }
-          },
-         /* areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: '#17A8F5'
-              }, {
-                offset: 1,
-                color: '#17A8F5'
-              }], false),
-              shadowColor: '#17A8F5',
-              shadowBlur: 10
-            }
-          },*/
-          itemStyle: {
-            normal: {
-              color: '#F86969',
-              borderColor: '#F86969',
-              borderWidth: 8
-            }
-          },
-          data: []
-        },{
+            name: '段浆量',
+            type: 'line',
+            symbol: 'circle',
+            symbolSize: 5,
+            showSymbol: false,
+            lineStyle: {
+              normal: {
+                width: 3
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: '#F86969',
+                borderColor: '#F86969',
+                borderWidth: 8
+              }
+            },
+            data: []
+          },{
             name: '段灰量',
             type: 'line',
             symbol: 'circle',
@@ -355,107 +356,8 @@ export default {
                 borderWidth: 8
               }
             },
-            data: []
-          }/*
-          {
-          name: '测试2',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 1
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: '#20CEDE'
-              }, {
-                offset: 1,
-                color: '#20CEDE'
-              }], false),
-              shadowColor: '#20CEDE',
-              shadowBlur: 10
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: '#20CEDE',
-              borderColor: '#20CEDE',
-              borderWidth: 12
-            }
-          },
-          data: data2
-        },
-          {
-          name: '测试3',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 1
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: '#979797'
-              }, {
-                offset: 1,
-                color: '#979797'
-              }], false),
-              shadowColor: '#979797',
-              shadowBlur: 10
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: '#979797',
-              borderColor: '#979797',
-              borderWidth: 12
-            }
-          },
-          data: data3
-        },
-          {
-          name: '测试4',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 1
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: 'rgba(113,226,237,1)'
-              }, {
-                offset: 1,
-                color: 'rgba(0, 136, 212, 1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgb(100,100,100)',
-              borderColor: 'rgba(100,100,100,0.2)',
-              borderWidth: 12
-            }
-          },
-          data: data4
-        },*/
+            data: data
+          }
         ],
       },
       ElectricCurrent:{
@@ -703,7 +605,6 @@ export default {
       this.deviceIndex=index;
     },
     temp(isDialog,diameter,that,clientWidth) {
-
       if(!isDialog){
         this.classChange=2;
         this.$refs.sCurrent.resize();
@@ -715,9 +616,11 @@ export default {
           diameter=100;
         }else if(clientWidth<1500&&clientWidth>1380){
           that.$emit('dialogFullscreen','true');
+          that.$emit('zoomShow','false');
           that.isShow=false;
           diameter=90;
         }else if(clientWidth<1380){
+          that.$emit('zoomShow','false');
           that.$emit('dialogFullscreen','true')
         }
       }else{
@@ -772,54 +675,60 @@ export default {
 
     getData(key){
       deviceData.list({'key':key}).then(res=>{
-        console.log(res);
-        this.RT_data=res.result;
+        if(res.success){
+          console.log(res);
+          this.RT_data=res.result;
 
-        this.rflow=parseInt(res.result.rflow);
-        this.rspeed=(parseInt(res.result.rspeed)+5)*20;
-        this.rcurrent=parseInt(res.result.rcurrent);
-        this.progress=Math.abs(res.result.rdeep)*2;
-        if(this.rflow>=this.totalSteps){
-          this.startColor1='#F85959';
-          this.stopColor1='#F85959';
-          this.innerStrokeColor1='#F85959 '
-        }else{
-          this.startColor1='#17A8F5';
-          this.stopColor1='#20CEDE';
-          this.innerStrokeColor1='rgba(151,151,151,0.3)'
+          this.rflow=parseInt(res.result.rflow);
+          this.rspeed=(parseInt(res.result.rspeed)+5)*20;
+          this.rcurrent=parseInt(res.result.rcurrent);
+          this.progress=Math.abs(res.result.rdeep)*2;
+          if(this.rflow>=this.totalSteps){
+            this.startColor1='#F85959';
+            this.stopColor1='#F85959';
+            this.innerStrokeColor1='#F85959 '
+          }else{
+            this.startColor1='#17A8F5';
+            this.stopColor1='#20CEDE';
+            this.innerStrokeColor1='rgba(151,151,151,0.3)'
+          }
+
+          if(this.rspeed>=this.totalSteps){
+            this.startColor2='#F85959';
+            this.stopColor2='#F85959';
+            this.innerStrokeColor2='#F85959'
+          }else{
+            this.startColor2='#17A8F5';
+            this.stopColor2='#20CEDE';
+            this.innerStrokeColor2='rgba(151,151,151,0.3)'
+          }
+
+          if(this.rcurrent>=this.totalSteps){
+            this.startColor3='#F85959';
+            this.stopColor3='#F85959';
+            this.innerStrokeColor3='#F85959'
+          }else{
+            this.startColor3='#17A8F5';
+            this.stopColor3='#20CEDE';
+            this.innerStrokeColor3='rgba(151,151,151,0.3)'
+          }
+
+          console.log('#F85959');
+
+          let num1=Math.floor(Math.random()*10);
+          let num2=Math.floor(Math.random()*10);
+          let par_slurry=parseInt(res.result.par_slurry/1000000)*num1*10;
+          let par_ash=parseInt(res.result.par_ash/1000000)*num2*10;
+          let rpressure=parseInt(res.result.rpressure/1000000)*num1*10;
+
+          this.slurryData.push(par_slurry);
+          this.ashData.push(par_ash);
+          this.rpressureData.push(rpressure);
+        }else {
+          console.log('adasd')
+          this.noDevice=true
         }
 
-        if(this.rspeed>=this.totalSteps){
-          this.startColor2='#F85959';
-          this.stopColor2='#F85959';
-          this.innerStrokeColor2='#F85959'
-        }else{
-          this.startColor2='#17A8F5';
-          this.stopColor2='#20CEDE';
-          this.innerStrokeColor2='rgba(151,151,151,0.3)'
-        }
-
-        if(this.rcurrent>=this.totalSteps){
-          this.startColor3='#F85959';
-          this.stopColor3='#F85959';
-          this.innerStrokeColor3='#F85959'
-        }else{
-          this.startColor3='#17A8F5';
-          this.stopColor3='#20CEDE';
-          this.innerStrokeColor3='rgba(151,151,151,0.3)'
-        }
-
-        console.log('#F85959');
-
-        let num1=Math.floor(Math.random()*10);
-        let num2=Math.floor(Math.random()*10);
-        let par_slurry=parseInt(res.result.par_slurry/1000000)*num1*10;
-        let par_ash=parseInt(res.result.par_ash/1000000)*num2*10;
-        let rpressure=parseInt(res.result.rpressure/1000000)*num1*10;
-
-        this.slurryData.push(par_slurry);
-        this.ashData.push(par_ash);
-        this.rpressureData.push(rpressure);
       }).catch(err=>{
         console.log(err)
       });
@@ -832,9 +741,9 @@ export default {
     this.PulpingQuantity.series[1].data=this.ashData;
     this.ElectricCurrent.series[0].data=this.ashData;
 
-    this.timer=setInterval(()=>{
+    /*this.timer=setInterval(()=>{
       this.getData(this.deviceKey)
-    },3000);
+    },3000);*/
   },
   mounted(){
     this.init();
@@ -1153,6 +1062,12 @@ export default {
 
 <style scoped lang="scss">
 
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to  {
+    opacity: 0;
+  }
   .progressContainer{
     position: relative;
     height: 100%;
@@ -1174,6 +1089,22 @@ export default {
   .echarts {
     width: 100%;
     height: 100%;
+  }
+  .b-device{
+    position: absolute;
+    top:0;
+    left:-10px;
+    width: calc(100% + 10px);
+    height: 100%;
+    background: rgba(255,255,255,0.7);
+    z-index: 10;
+    text-align: center;
+    overflow: hidden;
+    .t-device{
+      color: #666666;
+      font-size: 30px;
+      padding-top: 25%;
+    }
   }
   .r-box{
     padding-left: 2%;
@@ -1269,7 +1200,7 @@ export default {
         .i-box{
           display: flex;
           justify-content:space-between;
-          height: 27%;
+            height: 15%;
           .i-body{
             width: 60%;
             height: 45px;
@@ -1282,6 +1213,12 @@ export default {
             .i-company{
               font-size:10px;
               color:rgba(153,153,153,1);
+            }
+            .icon-portrait{
+              color: #787F87;
+            }
+            .icon-phonenew{
+              color: #787F87;
             }
           }
           .i-state{
@@ -1316,6 +1253,32 @@ export default {
           .icon-state{
             font-size: 12px;
             color: #24BCF7;
+          }
+        }
+        .h-box{
+          display: flex;
+          justify-content:space-between;
+          height: 15%;
+          .i-body{
+            width: 60%;
+            height: 45px;
+            line-height: 30px;
+            font-weight: bold;
+            .i-info{
+              margin-left: 10px;
+            }
+            .icon-portrait{
+              color: #787F87;
+            }
+            .icon-phonenew{
+              color: #787F87;
+            }
+
+          }
+          .b-angle{
+            width: 100px;
+            height: 100px;
+            background: #1c8de0;
           }
         }
 
@@ -1404,7 +1367,7 @@ export default {
           .d-model{
             font-weight: bold;
             width: 250px;
-            font-size: 42px;
+            font-size: 35px;
             color: #333333;
           }
           .d-kind{
@@ -1438,6 +1401,15 @@ export default {
               font-size:20px;
               color:rgba(51,51,51,1);
             }
+            .b-info{
+              .i-info{
+                display: inline-block;
+                margin-left: 10px;
+                color: #999999;
+                font-size: 12px;
+              }
+            }
+
             .i-company{
               font-size:16px;
               color:rgba(153,153,153,1);
@@ -1619,12 +1591,13 @@ export default {
         }*/}
       }
       .s-chart{
-        width:36.5%;
+        margin-left: 10px;
+        width:calc( 38.5% - 30px );
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
       }
       .s-chart1{
-        width:73.8%;
+        width:calc(77% - 50px);
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
       }

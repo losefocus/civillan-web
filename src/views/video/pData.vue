@@ -15,7 +15,7 @@
         move-class="item-move"
       >
         <div class="item p-box" :style="item.style" :index="item.id">
-          <div class="p-body">
+          <div class="p-body" @click="getBig(item)">
             <div class="b-box" :style="{'background':'url('+ item.thumbnailFileBaseUrl+item.thumbnailFilePath+')'}"></div>
             <div class="v-name">
               <div class="v-title">{{ item.name }}</div>
@@ -25,6 +25,13 @@
         </div>
       </waterfall-slot>
     </waterfall>
+
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="70%"
+    >
+      <div class="b-picture" :style="{'background':'url('+ bigPictureUrl+')'}"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -53,16 +60,35 @@ export default {
         page_index:1,
         page_size:10,
         type:1
-      }
+      },
+      dialogVisible:false,
+      loading:null,
+      bigPictureUrl:null,
     }
   },
   created(){
     this.getList(this.post_data)
   },
   methods:{
+    //展开模态框
+    getBig(item){
+      this.dialogVisible=true;
+      this.bigPictureUrl=item.thumbnailFileBaseUrl+item.thumbnailFilePath
+    },
+    //获取数据列表
     getList(post_data){
+      this.loading=this.$loading({
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.2)'
+      });
       media.list(post_data).then(res=>{
-        this.lists=res.result.items
+        if(res.success){
+          this.lists=res.result.items;
+          this.loading.close()
+        }else{
+          this.$message.error(res.message);
+          this.loading.close()
+        }
       })
     }
   }
@@ -124,5 +150,9 @@ export default {
         }
       }
     }
+  }
+  .b-picture{
+    width: 100%;
+    height: 600px;
   }
 </style>

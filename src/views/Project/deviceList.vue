@@ -95,11 +95,12 @@
     },
     data () {
       return {
-        isActive:sessionStorage.getItem('aActive') || 0,
+        isActive:'',
         navList:[],
+        loading:null,
         isShow:true,
         dialogVisible: false,
-        dialogWidth:'70%',
+        dialogWidth:'80%',
         dialogHeight:{
           height:'700px'
         },
@@ -151,15 +152,26 @@
           this.isShow=true
         }
       };*/
+      this.loading=this.$loading({
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.2)'
+      });
       let id=this.$store.state.project.projectId;
       let tenant=this.$store.state.project.tenant;
       deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
         console.log(res);
-        this.navList=res.result.items;
-        this.getList(this.navList[0].id);
-        this.$nextTick(()=>{
-          this.isShow=true
-        })
+        if(res.success){
+          this.navList=res.result.items;
+          this.getList(this.navList[0].id);
+          this.$nextTick(()=>{
+            this.isShow=true
+          })
+          this.loading.close();
+        }else{
+          this.$message.error(res.message);
+          this.loading.close();
+        }
+
       });
       /*let group_id=sessionStorage.getItem('group_id');
       let deviceIndex=sessionStorage.getItem('deviceIndex');
@@ -188,9 +200,10 @@
       isFullscreen(){ //是否打开模态框
         console.log(this.changeIcon);
         if(this.changeIcon){
+
           this.dialogWidth='100%';
           this.dialogHeight={
-            height:'87%'
+            height:'calc(100% - 65px)'
           };
           this.dialogFullscreen=true;
           this.changeIcon=!this.changeIcon;
@@ -213,18 +226,13 @@
       },
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
-          this.items=res.result.items;
-          console.log(this.items);
-          this.items.forEach((item,i)=>{
-            //console.log(item);
-            /*dictionary.list({'type':'device_type'}).then(res=>{
-              res.result.forEach((dict,j)=>{
-                if(item.product.alias==dict.label){
-                  item.device_type=dict.label
-                }
-              });
-            })*/
-          });
+          if(res.success){
+            this.items=res.result.items;
+            this.loading.close();
+          }else{
+            this.$message.error(res.message);
+            this.loading.close();
+          }
         })
       }
     }
@@ -233,7 +241,7 @@
 <style scoped lang="scss">
   .a-box{
     width: 100%;
-    padding-top: 30px;
+    padding-top: 15px;
     height: 80px;
     li{
       font-size: 14px;
@@ -384,7 +392,7 @@
   }
   .t-Body{
     overflow: auto;
-    padding: 1.5% 1%;
+    padding: 10px;
     background: #f5f5f9;
   }
 

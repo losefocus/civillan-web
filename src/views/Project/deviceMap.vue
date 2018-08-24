@@ -45,6 +45,7 @@
   import deviceList from '@/api/project/deviceList'
   import marker from '@/assets/AMap/marker.png'
   import deviceMarker from '@/assets/device/deviceMarker.png'
+  import runningMarker from '@/assets/device/runningMarker.png'
   import devicePolymerization from '@/assets/device/devicePolymerization.png'
   import stateMarker from '@/assets/AMap/marker.png'
 
@@ -54,6 +55,8 @@
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
+
+  import deviceData from '@/api/device/deviceData'
 export default {
   name: "deviceMap",
   components:{
@@ -65,7 +68,7 @@ export default {
   },
   data(){
     return{
-      isActive:sessionStorage.getItem('aActive') || 0,
+      loading:null,
       navList:[],
       productLists:[],
       productType:'',
@@ -105,15 +108,18 @@ export default {
     }
   },
   mounted: function () {
+
     let project_id=sessionStorage.getItem('projectId');
     this.post_data.project_id=project_id;
     this.init(this.post_data)
-
   },
   methods:{
     init(post_data){
       let _this=this;
-
+      this.loading=this.$loading({
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.2)'
+      });
       let map = new AMap.Map('container', {
         center: [116.397428, 39.90923],
         zoom: 5
@@ -147,93 +153,110 @@ export default {
           textColor:'#CC0066'
         }
       ];
-
+      let marker;
       deviceList.list(post_data).then(res=>{
+        //接口成功
         if(res.success){
           let lists=res.result.items;
           let infoWindow= new AMap.InfoWindow({offset: new AMap.Pixel(0, 5)});
-          JSON.stringify();
           for(let i=0;i<lists.length;i++){
             //console.log(lists[i]);
+            //判断设备是否有经纬度
             if(lists[i].position){
-              let marker=new AMap.Marker({
-                position:lists[i].position.split(','),
-                content: '<div style="background:url('+deviceMarker+') no-repeat; height: 40px; width: 32px; border-radius: 12px; "></div>',
-                offset: new AMap.Pixel(-15,-15),
-                lists:lists[i]
+              //设备的运行状态
+              deviceData.list({key:lists[i].key}).then(res =>{
+               if(res.success){
+                 let changeMarker = null;
+                 let changeBackground= null;
+                 let changeColor=null;
+                 if(res.success){
+                   changeMarker = runningMarker;
+                   changeBackground = 'runningBackground';
+                   changeColor = 'runningColor'
+                 }else{
+                   changeMarker = deviceMarker;
+                   changeBackground = 'noBackground';
+                   changeColor = 'noColor'
+                 }
+                 marker=new AMap.Marker({
+                   position:lists[i].position.split(','),
+                   content: '<div style="background:url('+changeMarker+') no-repeat; height: 40px; width: 32px; border-radius: 12px; "></div>',
+                   offset: new AMap.Pixel(-15,-15),
+                   lists:lists[i]
+                 });
+                 marker.on('click',function (e) {
+                   console.log(e.target);
+                   let items=e.target.G.lists;
+                   /*let content='<div class="device_content">' +
+                     '<div class="device_img" style="background: url('+items.thumbnailBaseUrl+items.thumbnailPath+') no-repeat;background-size: 100% 100%;"></div>'+
+                     '<div class="device_info">' +
+                     '<div class="device_name">'+items.name+'</div>'+
+                     '<div class="device_company">'+items.comment+'</div>'+
+                     '<div class="device_stateContent">'+
+                     '<div class="device_state">下钻中</div>'+
+                     '<a class="device_details">详情 ></a>'+
+                     '</div>'+
+                     '</div>'+
+                     '</div>';*/
+
+                   let content='<div class="info-container device_details">' +
+                     '<div style=" position: relative; width: 290px;height: 130px;background: url(' +items.thumbnailBaseUrl+items.thumbnailPath+
+                     ');background-size:100% 100%">' +
+                     '</div>'+
+                     '<div class="info-content">' +
+                     '<div class="info-title1">' +items.name+
+                     '</div>'+
+                     '<span class='+changeColor+'></span>'+
+                     '</div>'+
+                     '</div>';
+                   AMapUI.loadUI(['overlay/SimpleInfoWindow'], function(SimpleInfoWindow) {
+                     infoWindow = new SimpleInfoWindow({
+                       infoBody: content,
+                       //基点指向marker的头部位置
+                       offset: new AMap.Pixel(-4, -10)
+                     });
+
+                     infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
+                       //阻止冒泡
+                       event.stopPropagation();
+                       _this.dialogVisible=true;
+                       _this.deviceName=items.name;
+                       sessionStorage.setItem('deviceName',items.name);
+                       _this.deviceKey=items.key;
+                       console.log(items.name)
+                     });
+                     infoWindow.open(map, e.target.getPosition());
+                   });
+                   console.log(e.target.G.lists);
+
+                   //console.log(e.target.getPosition());
+                   //infoWindow.setContent(content);
+                   infoWindow.open(map, e.target.getPosition());
+                   map.setCenter(e.target.getPosition());
+                 });
+                 // 设置label标签
+                 marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+                   offset: new AMap.Pixel(-140, -25),//修改label相对于maker的位置
+                   content:"<div class='deviceLabelBox'>"+"<span class="+changeBackground+">"+lists[i].name+"</span>"+"</div>"
+                 });
+                 map.add(marker);
+                 map.setFitView();
+                 markers.push(marker);
+                 this.loading.close();
+               }else{
+                 //_this.$message.error(res.message);
+                 _this.loading.close();
+               }
               });
-
-              marker.on('click',function (e) {
-                console.log(e.target);
-                let items=e.target.G.lists;
-                let content='<div class="device_content">' +
-                  '<div class="device_img" style="background: url('+items.thumbnailBaseUrl+items.thumbnailPath+') no-repeat;background-size: 100% 100%;"></div>'+
-                  '<div class="device_info">' +
-                  '<div class="device_name">'+items.name+'</div>'+
-                  '<div class="device_company">'+items.comment+'</div>'+
-                  '<div class="device_stateContent">'+
-                  '<div class="device_state">下钻中</div>'+
-                  '<a class="device_details">详情 ></a>'+
-                  '</div>'+
-                  '</div>'+
-                  '</div>';
-                AMapUI.loadUI(['overlay/SimpleInfoWindow'], function(SimpleInfoWindow) {
-                  infoWindow = new SimpleInfoWindow({
-                    infoBody: content,
-                    //基点指向marker的头部位置
-                    offset: new AMap.Pixel(-4, -10)
-                  });
-
-                  /*infoWindow.get$Container().on('click', function(event) {
-
-                    alert('Click infoWindow');
-                  });
-
-                  infoWindow.get$InfoTitle().on('click', function(event) {
-
-                    //阻止冒泡
-                    event.stopPropagation();
-
-                    alert('Click infoTitle');
-
-                  });*/
-
-                  infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
-
-                    //阻止冒泡
-                    event.stopPropagation();
-
-                    _this.dialogVisible=true;
-                    _this.deviceName=items.name;
-                    sessionStorage.setItem('deviceName',items.name);
-                    _this.deviceKey=items.key;
-                    console.log(items.name)
-
-                  });
-                  infoWindow.open(map, e.target.getPosition());
-                });
-                console.log(e.target.G.lists);
-
-                //console.log(e.target.getPosition());
-                //infoWindow.setContent(content);
-                infoWindow.open(map, e.target.getPosition());
-                map.setZoomAndCenter(14, e.target.getPosition());
-              });
-
-
-              // 设置label标签
-              marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-                offset: new AMap.Pixel(-140, -25),//修改label相对于maker的位置
-                content:"<div class='deviceLabelBox'>"+"<span class='deviceLabel'>"+lists[i].name+"</span>"+"</div>"
-              });
-
-              map.add(marker);
-              map.setFitView();
-              markers.push(marker)
             }else{
               //console.log('没有经纬度')
+              _this.loading.close();
             }
           }
+        }else {
+          _this.loading.close();
+
+          that.$message.error(res.message)
         }
         //console.log(markers);
         /*AMap.plugin(["AMap.MarkerClusterer"],function() {
@@ -277,13 +300,17 @@ export default {
     },
     isFullscreen(){ //是否打开模态框
       console.log(this.changeIcon);
+      let clientWidth=document.body.clientWidth;
       if(this.changeIcon){
         this.dialogWidth='100%';
         this.dialogHeight={
-          height:'87%'
+          height:'calc(100% - 65px)'
         };
         this.dialogFullscreen=true;
         this.changeIcon=!this.changeIcon;
+        if(clientWidth<1500){
+          this.isShow=false
+        }
       }else{
         this.dialogWidth='70%';
         this.dialogHeight={
@@ -310,10 +337,10 @@ export default {
     display: flex;
     justify-content: space-around;
     height: 30px;
-    top: 30px;
-    left: 10px;
+    top: 15px;
+    left: 15px;
     position: absolute;
-    z-index: 9999;
+    z-index: 99;
     .s-box{
       box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);
     }
@@ -340,7 +367,7 @@ export default {
       height: 30px;
       color: #ffffff;
       margin-left: -4px;
-
+      cursor: pointer;
     }
   }
   #container{
@@ -378,8 +405,9 @@ export default {
   }
   }
   .t-Body{
+    height: 100px;
     overflow: auto;
-    padding: 1.5% 1%;
+    padding: 10px;
     background: #f5f5f9;
   }
 </style>

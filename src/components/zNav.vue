@@ -13,17 +13,14 @@
         </transition>
 
         <ul class="nav-box">
-
           <li v-for="(list,index) in lists" class="nav-list" :class="{'liActive':!isCollapse}">
-            <router-link :to="list.path">
+            <router-link tag="div" :to="list.path" class="nav-link">
               <el-tooltip class="item" effect="dark" :content="list.name" placement="right" :disabled="isCollapse">
-                <div class="nav-link" :class="{active:index==isActive}" @click="checkedItem(index,list.name)">
                   <div class="nav-icon">
                     <i class="iconfont" :class="list.icon"></i>
                   </div>
-                  <div class="link-title" v-if="isCollapse">{{ list.name }}</div>
-                </div>
               </el-tooltip>
+              <div class="link-title" v-show="isCollapse">{{ list.name }}</div>
             </router-link>
           </li>
         </ul>
@@ -54,15 +51,6 @@ export default {
          name:'项目总览',
          icon:'icon-project',
          path:'/project',
-         children:[
-           {
-             name:'设备监控',
-             path:'/project/classification'
-           },{
-             path:'/project/softBase',
-             name:'软基处理'
-           }
-         ]
        },{
          name:'设备列表',
          icon:'icon-device',
@@ -132,6 +120,7 @@ export default {
         _this.changeWidth();
         _this.isShow=false;
       }else{
+        console.log(_this.isCollapse);
         _this.isCollapse=true;
         _this.changeWidth();
         _this.isShow=false;
@@ -171,7 +160,7 @@ export default {
       this.changeWidth()
     }
   },
-  watch: {
+  /*watch: {
     $route(to,from){
       //console.log(to.path)
       this.lists.forEach((item,i)=>{
@@ -182,7 +171,7 @@ export default {
         }
       })
     },
-  },
+  },*/
 }
 </script>
 
@@ -265,6 +254,7 @@ export default {
     width: 100%;
     position: relative;
     .nav-list{
+      cursor: pointer;
       transition: 0.6s all ease;
       float: left;
       width: 80px;
@@ -306,7 +296,7 @@ export default {
       border: none;
     }
   }
-  .active{
+  .router-link-active{
     background: #F31A1A;
     color: #ffffff !important;
     transition: 0.6s all ease;

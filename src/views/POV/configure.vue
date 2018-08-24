@@ -50,12 +50,6 @@
         <div class="a-body">
           <el-form class="a-info" ref="form" >
             <div class="i-content">
-              <el-input v-model="form.name" placeholder="名称" size="mini" ></el-input>
-            </div>
-            <div class="i-content">
-              <el-input v-model="form.key" placeholder="标识" size="mini"></el-input>
-            </div>
-            <div class="i-content">
               <el-select v-model="form.typeId" size="mini" placeholder="类型" @change="changeType">
                 <el-option
                   v-for="item in typeOptions"
@@ -64,6 +58,12 @@
                   :value="item.value">
                 </el-option>
               </el-select>
+            </div>
+            <div class="i-content">
+              <el-input v-model="form.name" placeholder="名称" size="mini" ></el-input>
+            </div>
+            <div class="i-content">
+              <el-input v-model="form.key" placeholder="标识" size="mini"></el-input>
             </div>
             <div class="i-content">
               <el-input v-model="form.sort" placeholder="排序" size="mini"></el-input>

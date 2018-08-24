@@ -20,7 +20,7 @@ var loadingInstance;
 // POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use(
   config => {
-    if(config.url=='/foreground/realtime/data'){
+    /*if(config.url=='/foreground/realtime/data'){
       loadingInstance=Loading.service({
         lock: false,
         fullscreen:false,
@@ -35,7 +35,7 @@ axios.interceptors.request.use(
         //spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.2)'
       });
-    }
+    }*/
 
     if (config.method === 'post') {
       config.data = qs.stringify(config.data)
@@ -45,7 +45,7 @@ axios.interceptors.request.use(
     return config
   },
   err => {
-    loadingInstance.close();
+    //loadingInstance.close();
     Message.error('请求错误');
     return Promise.reject(err)
   }
@@ -54,24 +54,37 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   res => {
     if (res.status === 200) {
-      loadingInstance.close();
+      //loadingInstance.close();
       return res;
     }
   },
   err => {
-    loadingInstance.close();
-    /*if(err.request||err.request.status===401){
-      console.log(router.currentRoute.fullPath);
-
-      router.push({ path: 'login' })
-      /!*router.replace({
+    //loadingInstance.close();
+    console.log(err.request.status);
+    switch(err.request.status){
+      case 401:
+        Message.error('您的账号暂未授权');
+        router.replace({
+          path: 'login',
+          //query: {redirect: router.currentRoute.fullPath}
+        });
+        break;
+      case 500:
+        Message.error('服务器繁忙，请稍后访问');
+        break;
+    }
+    /*if(err.request&&err.request.status===401){
+      console.log('401');
+      Message.error('未授权');
+      //router.push({ path: 'login' })
+      router.replace({
         path: 'login',
         query: {redirect: router.currentRoute.fullPath}
-      })*!/
+      })
     }else {
       console.log('身份验证失败')
     }*/
-    Message.error('请求失败，请稍后再试');
+    //Message.error('请求失败，请稍后再试');
     return Promise.reject(err)
   }
 );

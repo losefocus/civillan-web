@@ -59,6 +59,7 @@
     },
     data(){
       return{
+        loading:null,
         playerList:[],
         post_data:{
           page_index:1,
@@ -115,16 +116,26 @@
     },
     methods: {
       getList(post_data){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         media.list(post_data).then(res=>{
-          res.result.items.forEach((item,i)=>{
-            console.log(item);
-            this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
-            this.playerOptions.sources[0].src=item.url;
-            this.playerOptions.createdAt=item.createdAt;
-            this.playerOptions.name=item.name;
-            console.log(this.playerOptions.sources[0].src);
-            this.playerList.push(this.playerOptions);
-          })
+          if(res.success){
+            res.result.items.forEach((item,i)=>{
+              console.log(item);
+              this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
+              this.playerOptions.sources[0].src=item.url;
+              this.playerOptions.createdAt=item.createdAt;
+              this.playerOptions.name=item.name;
+              console.log(this.playerOptions.sources[0].src);
+              this.playerList.push(this.playerOptions);
+            });
+            this.loading.close()
+          }else{
+            this.$message.error(res.message)
+            this.loading.close()
+          }
         })
       },
       // listen event

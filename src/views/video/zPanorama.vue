@@ -59,7 +59,7 @@
     },
     data(){
       return{
-        loading:true,
+        loading:null,
         lists:[],
         dialogVisible:false,
         post_data:{
@@ -79,8 +79,18 @@
       },
       //获取列表
       getList(post_data){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         media.list(post_data).then(res=>{
-          this.lists=res.result.items
+          if(res.success){
+            this.lists=res.result.items;
+            this.loading.close();
+          }else{
+            this.$message.error(res.message);
+            this.loading.close();
+          }
         })
       }
     }

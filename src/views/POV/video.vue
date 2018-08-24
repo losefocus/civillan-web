@@ -1,9 +1,9 @@
 <template>
   <div>
     <ul class="a-box">
-      <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
+      <router-link :to="{path:list.path}" tag="li" v-for="(list,index) in navList" :key="index">
         {{list.name}}
-      </li>
+      </router-link>
     </ul>
     <router-view></router-view>
   </div>
@@ -13,7 +13,6 @@
   export default {
     data(){
       return{
-        isActive:sessionStorage.getItem('bActive') || 0,
         navList:[
           {
             path:'/video/pData',
@@ -32,29 +31,6 @@
           }
         ]
       }
-    },
-    created(){
-
-    },
-
-    methods:{
-      changeTab(list,index){
-        this.$router.push(list.path);
-        this.isActive=index;
-      }
-    },
-    watch:{
-      $route(to,from){
-        console.log(to.fullPath);
-        console.log(from.fullPath);
-        this.navList.forEach((item,i)=>{
-          //console.log(item.path);
-          if(item.path==this.$route.path){
-            //sessionStorage.setItem('bActive',i);
-            this.isActive=i;
-          }
-        })
-      }
     }
   }
 </script>
@@ -62,7 +38,7 @@
 <style scoped lang="scss">
   .a-box{
     width: 100%;
-    height: 60px;
+    height: 32px;
     li{
       font-size: 14px;
       cursor: pointer;
@@ -81,7 +57,7 @@
     li:last-child{
       border-radius: 0 5px 5px 0;
     }
-    .active{
+    .router-link-active{
       background: #F76A6A;
       color: #ffffff;
       border:1px solid #F76A6A;

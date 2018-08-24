@@ -70,8 +70,8 @@
       </li>
       <li class="d-map">
         <d-map></d-map>
-        <div class="m-searchBox">
-          <span class="iconfont icon-dEnlarge" @click="enlarge()"></span>
+        <div class="m-searchBox" @click="enlarge()">
+          <span class="iconfont icon-dEnlarge"></span>
         </div>
       </li>
     </ul>
@@ -258,6 +258,11 @@
       }
     },
     created(){
+      const loading=this.$loading({
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.2)'
+      });
+
       let id=this.$store.state.project.projectId;
       let project_id=sessionStorage.getItem('projectId');
       let tenant=this.$store.state.project.tenant;
@@ -266,25 +271,45 @@
       deviceList.list({'project_id':project_id}).then(res=>{
         console.log(res);
         if(res.success){
+          loading.close();
           this.deviceTotal=res.result.total;
         }else{
-          //console.log("设备列表获取失败")
+          loading.close();
+          this.$message.error(res.message)
         }
       });
       //影像总数
       media.list().then(res=>{
-        this.videoTotal=res.result.total
+        if(res.success){
+          loading.close();
+          this.videoTotal=res.result.total
+        }else{
+          loading.close();
+          this.$message.error(res.message)
+        }
       });
       //文档总数
       document.list({ project_id:sessionStorage.getItem('projectId')}).then(res=>{
         console.log(res.result.total);
-        this.documentTotal=res.result.total
+        if(res.success){
+          loading.close();
+          this.documentTotal=res.result.total
+        }else{
+          loading.close();
+          this.$message.error(res.message)
+        }
       });
 
       project.info({'project_id':id,'tenant':tenant}).then(res=>{
         //console.log(res);
-        this.info=res.result;
-        this.organTypeList=res.result.organTypeList;
+        if(res.success){
+          loading.close();
+          this.info=res.result;
+          this.organTypeList=res.result.organTypeList;
+        }else{
+          loading.close();
+          this.$message.error(res.message)
+        }
       })
     },
     mounted(){
@@ -292,9 +317,7 @@
     },
     methods:{
       enlarge(){
-        Bus.$emit('isActive','1');
-        sessionStorage.setItem('isActive',1);
-        this.$router.push('/project/deviceMap');
+        this.$router.push('/device/deviceMap');
       }
     }
   }
@@ -407,8 +430,9 @@
         background: #ffffff;
         box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);
         position: absolute;
-        top:30px;
-        right: 10px;
+        top:15px;
+        right: 15px;
+        cursor: pointer;
       }
     }
   }

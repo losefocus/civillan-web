@@ -87,6 +87,7 @@
           }],
           poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
         },
+        loading:null,
       }
     },
     //时间格式过滤器
@@ -114,16 +115,26 @@
     },
     methods: {
       getList(post_data){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         media.camera(post_data).then(res=>{
-          res.result.items.forEach((item,i)=>{
-            console.log(item);
-            this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
-            this.playerOptions.sources[0].src=item.url;
-            console.log(this.playerOptions.sources[0].src);
-            this.playerOptions.createdAt=item.createdAt;
-            this.playerOptions.name=item.name;
-            this.playerList.push(this.playerOptions);
-          })
+          if(res.success){
+            res.result.items.forEach((item,i)=>{
+              console.log(item);
+              this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
+              this.playerOptions.sources[0].src=item.url;
+              console.log(this.playerOptions.sources[0].src);
+              this.playerOptions.createdAt=item.createdAt;
+              this.playerOptions.name=item.name;
+              this.playerList.push(this.playerOptions);
+            });
+            this.loading.close()
+          }else {
+            this.$message.error(res.message);
+            this.loading.close()
+          }
         })
       },
       // listen event

@@ -102,12 +102,17 @@
         }
       },
       submit:function(){
+        const loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         if(this.isSuccess&&this.isSuccess1){
           var that=this;
           console.log(this.userInfo);
           login.login(this.userInfo).then((res) => {
             //console.log(res);
             if(res.success==false){
+              loading.close();
               that.$message.error(res.message)
             }else{
               let wsUrl=JSON.parse(res.result.wsUrl);
@@ -118,20 +123,24 @@
                 that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
                 that.$store.dispatch('incrementToken',res.result.token);
                 that.$router.push('/');
-                that.$message.success('登陆成功')
+                that.$message.success('登陆成功');
+                loading.close();
               }else{
                 sessionStorage.setItem('token',res.result.token);
                 sessionStorage.setItem('wsUrl',wsUrl.result);
                 that.$cookies.remove('token');
                 that.$store.dispatch('incrementToken',res.result.token);
                 that.$router.push('/');
-                that.$message.success('登陆成功')
+                that.$message.success('登陆成功');
+                loading.close();
               }
             }
           }).catch(err => {
+            loading.close();
             console.log(err)
           });
         }else {
+          loading.close();
           console.log('密码账号错误');
         }
         //this.$cookie.set('user.info',JSON.stringify(this.userInfo),{ expires: '60s'});

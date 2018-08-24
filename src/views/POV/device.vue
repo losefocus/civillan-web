@@ -1,15 +1,9 @@
-
 <template>
   <div style="position: relative;height: calc(100% - 60px);" >
-    <!--<transition name="fade" mode="out-in">
-      <router-view></router-view>
-    </transition>-->
     <ul class="a-box">
-      <li v-for="(list,index) in navList" :key="index" :class="{active:index==isActive}">
-        <router-link :to="{path:list.path}" tag="li">
+        <router-link :to="{path:list.path}" tag="li" v-for="(list,index) in navList" :key="index">
           {{list.name}}
         </router-link>
-      </li>
     </ul>
     <router-view></router-view>
   </div>
@@ -29,27 +23,15 @@
       return {
         navList:[
           {
-            path:'/project/deviceList',
-            name:'设备列表',
+            path:'/device/deviceMap',
+            name:'设备地图'
           },
           {
-            path:'/project/deviceMap',
-            name:'设备地图'
-          }
-        ],
-        isActive:0,
+            path:'/device/deviceList',
+            name:'设备列表',
+          },
+        ]
       };
-    },
-    methods: {
-      changeTab(list,index){
-        this.$router.push(list.path);
-        console.log(index);
-        this.isActive=index;
-      }
-    },
-    created(){
-    },
-    mounted(){
     }
   }
 </script>
@@ -64,7 +46,7 @@
   .a-box{
     position: absolute;
     z-index: 99;
-    top: 30px;
+    top: 15px;
     right: 0;
     width: 214px;
     height: 60px;
@@ -80,17 +62,12 @@
       color: #CCCFD4;
       border:1px solid rgba(204,207,212,1);
     }
-    /*li:first-child{
+    li:first-child{
       border-radius: 5px 0 0 5px;
     }
     li:last-child{
       border-radius: 0 5px 5px 0;
-    }*/
-   /* .active{
-      background: #F76A6A;
-      color: #ffffff;
-      border:1px solid #F76A6A;
-    }*/
+    }
     .router-link-active{
       background: #F76A6A;
       color: #ffffff;

@@ -103,22 +103,81 @@ button, input, select, textarea { font-size:100%; }
   background:rgba(243,26,26,1)
 }
 /*设备地图infoWindow*/
+/*.amap-ui-smp-ifwn-content-body {
+   box-shadow: 0 0 0.5px rgba(0,0,100,.6);
+   background: 0 0 #fff;
+   border-radius: 2px;
+   text-align: left;
+   border: silver solid 1px;
+   padding: 3px;
+}*/
+.info-container{
+  width:290px;
+  height:155px;
+  background:rgba(255,255,255,1);
+  cursor:pointer;
+  box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);
+}
+.amap-ui-smp-ifwn-def-tr-close{
+  position: absolute;
+  right: 0;
+  z-index: 999;
+}
+.amap-ui-smp-ifwn-content-body{
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.amap-ui-smp-ifwn-def-tr-close:hover{
+  background: none !important;
+}
+.info-content{
+  width: calc(100% - 20px);
+  height: 25px;
+  line-height: 25px;
+  padding: 0 10px;
+  display: -webkit-box;
+  justify-content: space-between;
+}
+.info-title1{
+  font-size: 12px;
+  width: 80%;
+  height: 25px;
+}
+.runningColor{
+  display: inline-block;
+  vertical-align: center;
+  background-color: #00ff00;
+  width: 6px;
+  height: 6px;
+  box-shadow: 0px 0px 2px 4px #26c702;
+  -moz-box-shadow: 0px 0px 2px 4px #26c702;
+  -webkit-box-shadow: 0px 0px 2px 4px #26c702;
+  border-radius: 50%;
+}
+.noColor{
+  color:#A8A8AB;
+  display: inline-block;
+  vertical-align: center;
+  background-color: #6f6f6f;
+  width: 6px;
+  height: 6px;
+  box-shadow: 0px 0px 2px 4px #828282;
+  -moz-box-shadow: 0px 0px 2px 4px #828282;
+  -webkit-box-shadow: 0px 0px 2px 4px #828282;
+  border-radius: 50%;
+}
 .deviceLabelBox{
   width: 300px;
   text-align: center;
-}
-.deviceLabel{
-  background: rgba(102,208,110,1);
-  padding:2px 10px;
-  height: 20px;
-  line-height: 20px;
-  color:#ffffff;
+  color: #ffffff;
 }
 
 .device_content{
   width: 300px;
   height: 100px;
-  padding-bottom: 5px;
+  padding-bottom: 12px;
   display: flex;
   justify-content: space-around;
   background: #ffffff;
@@ -165,6 +224,26 @@ button, input, select, textarea { font-size:100%; }
   padding: 0 !important;
   border: none !important;
 }
+.amap-ui-smp-ifwn-combo-sharp{
+  margin: -4px auto 0 !important;
+}
+.runningBackground{
+  background: #24BCF7;
+  padding:2px 10px;
+  height: 20px;
+  line-height: 20px;
+  color:#ffffff;
+  border-radius: 4px;
+}
+.noBackground{
+  background: #A8A8AB;
+  padding:2px 10px;
+
+  height: 20px;
+  line-height: 20px;
+  color:#ffffff;
+}
+
 
 /*模态框重置样式*/
 .el-header{

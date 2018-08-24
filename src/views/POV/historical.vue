@@ -79,6 +79,7 @@
       </div>
     </div>
     <el-table
+      v-loading="loading"
       id="rebateSetTable"
       :data="tableData"
       style="width: 100%"
@@ -207,8 +208,10 @@
       <el-table-column
         v-if="tableRows[4].checked"
         :show-overflow-tooltip=true
-        label="深度"
-        prop="">
+        label="深度">
+        <template slot-scope="scope">
+          {{scope.row.depth | formatZ}}
+        </template>
       </el-table-column>
       <el-table-column
         v-if="tableRows[5].checked"
@@ -399,6 +402,7 @@
   export default {
     data() {
       return {
+        loading: true,
         isCollapse:true, //是否展开nav
         currentPage:1, //当前页
         pagesize:20, //条数
@@ -652,21 +656,22 @@
         let _this=this;
         let tableList=[];
         history.list(post_data).then(res=>{
-          console.log(post_data);
-          console.log(res.result.items);
-          if(res.result.items){
+          console.log(res);
+          if(res.success){
             //console.log(res.result);
             _this.total=res.result.total;
             res.result.items.forEach(function (item) {
-              tableList.push(item._v);
+              tableList.push(item);
             });
             _this.tableData=tableList;
             //_this.tableData.tableRows=_this.tableRows
             console.log(_this.tableData);
+            _this.loading=false
           }else {
-            console.log('请求不成功')
+            _this.$message.error(res.message);
+            _this.loading=false
           }
-        })
+        });
       },
 
       //统计总数
