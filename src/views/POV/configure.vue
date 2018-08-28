@@ -9,21 +9,24 @@
         <template>
           <el-table
             :data="lists"
+            v-loading="listLoading"
             style="width: 100%;padding-top: 2%">
             <el-table-column
-              prop="a"
+              prop="name"
               label="名称">
             </el-table-column>
             <el-table-column
-              prop="b"
+              prop="key"
               label="标识">
             </el-table-column>
             <el-table-column
-              prop="c"
               label="类型">
+              <template slot-scope="scope">
+                <span style="white-space:nowrap;">{{ typeMap.get(scope.row.typeId) }}</span>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="d"
+              prop="sort"
               label="排序">
             </el-table-column>
             <el-table-column
@@ -33,20 +36,27 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">复制</el-button>
+                  plain
+                  @click="copyObj(scope.row)">复制</el-button>
                 <el-button
                   size="mini"
-                  @click="handleDelete(scope.$index, scope.row)">修改</el-button>
+                  plain
+                  @click="updataObj(scope.row)">修改</el-button>
                 <el-button
                   size="mini"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                  plain
+                  @click="deleteObj(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
         </template>
+        <div v-show="!listLoading" class="pagination-container">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="post_data.page_index"  :page-size="post_data.page_size" layout="total,  prev, pager, next, jumper" :total="total">
+          </el-pagination>
+        </div>
       </div>
       <div class="j-add">
-        <div class="a-title">添加作业</div>
+        <div class="a-title"><h3>{{(flag == 'add')?'添加':'修改'}}配置</h3></div>
         <div class="a-body">
           <el-form class="a-info" ref="form" >
             <div class="i-content">
@@ -110,6 +120,7 @@
         <div class="a-preservation">
           <el-button v-if="flag == 'add'" type="primary" :loading="createLoading" @click="submitForm('form')" size="small" style="width:85px;">添加</el-button>
           <el-button v-else type="primary" :loading="createLoading" @click="updataForm('form')" size="small" style="width:85px;">修改</el-button>
+          <el-button type="info" @click="cancel('form')" size="small" style="width:85px;">取消</el-button>
         </div>
       </div>
     </div>
@@ -161,6 +172,7 @@
           sort:'',
           typeId:'',
           content:'',
+          status:1,
         },
         typeOptions:[],//类型select列表
         allListQuery:{ //类型select列表请求参数
@@ -180,7 +192,10 @@
         lastIndex:null,
         createLoading:false,
         flag:'add',
+        typeMap:{},
+        listLoading:false,
         lists: [], //主列表
+        total:0,
         post_data:{ //主列表请求参数
           page_index:1,
           page_size:10
@@ -188,21 +203,37 @@
       }
     },
     created(){
-      this.getList(this.post_data)
-    },
-    mounted(){
       this.getCategoryList();
       this.getParamsList();
+    },
+    mounted(){
+      this.getList(this.post_data)
     },
     methods:{
       //作业配置列表
       getList(post_data){
+        this.listLoading = true
         this.post_data.sort_by = 'sort';
         this.post_data.direction = 'asc';
         config.list(post_data).then(res=>{
           console.log(res);
           this.lists=res.result.items;
+          this.total = res.result.total;
+          this.listLoading = false
         })
+      },
+      handleFilter(){
+        if(this.post_data.name == '') delete this.post_data.name;
+        this.post_data.page_index = 1;
+        this.getList()
+      },
+      handleSizeChange(val) {
+        this.post_data.page_size = val;
+        this.getList(this.post_data);
+      },
+      handleCurrentChange(val) {
+        this.post_data.page_index = val;
+        this.getList(this.post_data);
       },
       //获取类型列表数据
       getCategoryList(){
@@ -212,12 +243,17 @@
           this.typeOptions = list.map(item => {
             return { value: item.id, label: item.name };
           });
+          this.typeMap = new Map();
+          for (let i=0; i<list.length; i++) {
+            this.typeMap.set(list[i].id,list[i].name)
+          }
         })
       },
       //设计参数项目列表数据
       getParamsList(){
         categories.params(this.allListQuery).then(res => {
           let list = res.result.items;
+          console.log(res);
           this.paramsList = list.map(item => {
             return { value: item.code, label: item.label,categoryId:item.categoryId};
           });
@@ -229,7 +265,7 @@
           name:'',
           value:'',
           flag:false
-        }
+        };
         this.paramsOption = this.paramsList.filter(list => {
           return list.categoryId == val
         })
@@ -242,7 +278,7 @@
         console.log('aaaaa');
         this.createLoading = true;
         let data = Object.assign({},this.form);
-        data.projectId = sessionStorage.getItem('projectId');
+        data.projectId = parseFloat(sessionStorage.getItem('projectId'));
         data.typeId = parseFloat(data.typeId);
         data.sort = parseFloat(data.sort);
         this.config_content.forEach(ele => {
@@ -250,8 +286,8 @@
         });
         data.content = JSON.stringify(this.config_content);
         config.add(data).then(res => {
-          this.$parent.$parent.$refs.config.getList();
-          this.$parent.$parent.$parent.alertNotify('添加');
+          console.log(res);
+          this.getList();
           this.cancel()
         })
       },
@@ -259,17 +295,16 @@
         console.log('aaaaa');
         this.createLoading = true;
         let data = Object.assign({},this.form);
-        data.status = data.status?1:0;
+
         this.config_content.forEach(ele => {
           delete ele.flag
         });
         data.content = JSON.stringify(this.config_content);
         this.createLoading = true;
         config.edit(data).then(res => {
-          this.$parent.$parent.$refs.config.getList();
-          this.$parent.$parent.$parent.alertNotify('修改');
+          this.getList();
           this.cancel()
-        })
+        });
         console.log('成功')
 
       },
@@ -286,8 +321,8 @@
           sort:'',
           typeId:'',
           content:'',
-          status:true
-        }
+          status:1
+        };
         this.$refs.form.resetFields();
         this.config_content = [];
         this.paramsOption = [];
@@ -305,7 +340,7 @@
           name:'',
           value:'',
           flag:false
-        }
+        };
          this.$refs.content_form.resetFields()
       },
       editContent(index,rows){
@@ -317,11 +352,55 @@
       conformContent(index,rows){
         rows[index].value = this.tempValue;
         rows[index].flag = false
-
       },
       deleteContent(index,rows){
         rows.splice(index, 1);
       },
+
+      //列表删除行
+      deleteObj(row){
+        this.$confirm(
+          "此操作将永久删除该配置(配置名:" + row.name + "), 是否继续?",
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }
+        ).then(() => {
+          console.log(row.id);
+          config.delete({"project_work_config_id":row.id}).then(res => {
+            this.getList(this.post_data);
+            //this.alertNotify('删除')
+          })
+        })
+      },
+      updataObj(row){
+        this.cardVisibel = true;
+        this.flag = 'updata';
+        this.form = Object.assign({},row);
+
+        console.log(row.content);
+        let contents = JSON.parse(row.content);
+        contents.forEach(ele => {
+          ele.flag = false
+        });
+        this.config_content = contents;
+        this.changeType(row.typeId)
+      },
+      copyObj(row){
+        this.cardVisibel = true
+        this.flag = 'add'
+        this.form = Object.assign({},row);
+        delete this.form.id
+
+        let contents = JSON.parse(row.content)
+        contents.forEach(ele => {
+          ele.flag = false
+        });
+        this.config_content = contents;
+        this.changeType(row.typeId)
+      }
     }
   }
 </script>
@@ -350,6 +429,11 @@
           cursor: pointer;
         }
       }
+    }
+    .pagination-container{
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
     }
     .j-add{
       height: 90%;

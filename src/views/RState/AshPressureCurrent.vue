@@ -182,7 +182,7 @@
     methods:{
       getData(key){
         deviceData.list({'key':key}).then(res=>{
-          //console.log(res);
+          console.log(res);
           if(res.success){
             this.RT_data=res.result;
 
@@ -209,7 +209,11 @@
           console.log(err)
         });
       }
+    },
+    beforeDestroy(){
+      clearInterval(this.timer);
     }
+
   }
 </script>
 

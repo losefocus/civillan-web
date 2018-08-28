@@ -21,7 +21,8 @@
       >
         <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)">
           <!--:class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}"-->
-          <div class="r-state r-state1" >
+          <div class="r-state" :class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}">
+            {{ deviceStatus.get(item.status) }}
           </div>
           <div class="d-name">
             <span>{{item.name}}</span>
@@ -128,10 +129,21 @@
         ],
         tIndex:0,
         currentView:'RState',
-        isBusy: false
+        isBusy: false,
+        deviceStatus:null,
+        deviceStatusLists:[
+          {id:0,name:'故障中'},
+          {id:1,name:'运行中'},
+          {id:2,name:'已断线'},
+          {id:3,name:'已离线'},
+        ]
       };
     },
     created(){
+      this.deviceStatus = new Map();
+      for (let i=0; i<this.deviceStatusLists.length; i++) {
+        this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
+      }
       /*let _this=this;
       Bus.$on('groupId',(e)=>{
         console.log(e);
@@ -156,6 +168,7 @@
         fullscreen: true,
         background: 'rgba(0, 0, 0, 0.2)'
       });
+      let _this=this
       let id=this.$store.state.project.projectId;
       let tenant=this.$store.state.project.tenant;
       deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
@@ -165,11 +178,11 @@
           this.getList(this.navList[0].id);
           this.$nextTick(()=>{
             this.isShow=true
-          })
-          this.loading.close();
+          });
+          _this.loading.close();
         }else{
-          this.$message.error(res.message);
-          this.loading.close();
+          _this.$message.error(res.message);
+          _this.loading.close();
         }
 
       });
@@ -221,16 +234,12 @@
         this.changeIcon=data;
         this.isFullscreen();
       },
-      close(){
-
-      },
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
           if(res.success){
             this.items=res.result.items;
             this.loading.close();
           }else{
-            this.$message.error(res.message);
             this.loading.close();
           }
         })
@@ -301,8 +310,11 @@
     background: #ffffff;
     padding-left: 25px;
     .r-state{
-      width: 32%;
-      height: 32%;
+      padding: 2px 15px;
+      color: #ffffff;
+      border-radius: 15px 0 0 15px;
+      margin-top: 20px;
+      background: #24BCF7;
       float: right;
       text-align: right;
       .r-stateText{
@@ -311,9 +323,14 @@
         margin: 6% 3%;
       }
     }
-    .r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: 100% 100%;}
+
+    .r-state1{background: #D44848;}
+    .r-state2{background: #24BCF7;}
+    .r-state3{background: #808080;}
+    .r-state4{background: #DADADA;}
+    /*.r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: 100% 100%;}
     .r-state2{background: url(../../assets/device/break.png) no-repeat;background-size: 100% 100%;}
-    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: 100% 100%;}
+    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: 100% 100%;}*/
 
     .d-name{
       color: #333333;

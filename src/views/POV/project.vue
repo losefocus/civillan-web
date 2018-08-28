@@ -275,7 +275,6 @@
           this.deviceTotal=res.result.total;
         }else{
           loading.close();
-          this.$message.error(res.message)
         }
       });
       //影像总数
@@ -285,18 +284,16 @@
           this.videoTotal=res.result.total
         }else{
           loading.close();
-          this.$message.error(res.message)
         }
       });
       //文档总数
       document.list({ project_id:sessionStorage.getItem('projectId')}).then(res=>{
         console.log(res.result.total);
         if(res.success){
+          this.documentTotal=res.result.total;
           loading.close();
-          this.documentTotal=res.result.total
         }else{
           loading.close();
-          this.$message.error(res.message)
         }
       });
 
@@ -308,7 +305,6 @@
           this.organTypeList=res.result.organTypeList;
         }else{
           loading.close();
-          this.$message.error(res.message)
         }
       })
     },

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import store from '@/store/store'
 
 import Router from 'vue-router'
+
 import ProjectEntrance from '@/views/ProjectEntrance'
 import login from '@/views/login'
 import ProjectOverview from '@/views/ProjectOverview'
@@ -41,32 +42,32 @@ const vRouter = new Router({
     {
       path: '/',
       name: '在线一览',
-      component: ProjectEntrance,
+      component: resolve => require(['@/views/ProjectEntrance'],resolve),
       meta: {requireAuth: true},
     },
     {
       path: '/login',
       name: '登录',
-      component: login
+      component: resolve => require(['@/views/login'],resolve),
     },
     {
       path: '/ProjectOverview',
       name: '项目总览',
       redirect:"/project",
-      component: ProjectOverview,
+      component: resolve => require(['@/views/ProjectOverview'],resolve),
       meta: {requireAuth: true},
       children:[
         {
           path: '/project',
           name:'项目分组',
-          component: project,
+          component: resolve => require(['@/views/POV/project'],resolve),
           //redirect:"/project/deviceMap",
           meta: { requireAuth: true},
           children:[
             {
               path:'/project/classification',
               name:'',
-              component:classification,
+              component:resolve => require(['@/views/Project/classification'],resolve),
               meta: { requireAuth: true}
             },
             {
@@ -79,43 +80,43 @@ const vRouter = new Router({
         },
         {
           path: '/device',
-          component: device,
+          component: resolve => require(['@/views/POV/device'],resolve),
           name:'设备信息',
           redirect:"/device/deviceList",
           meta: { requireAuth: true },
           children:[
             {
               path:'/device/deviceList',
-              component:deviceList,
+              component:resolve => require(['@/views/Project/deviceList'],resolve),
               name:'设备列表',
               meta:{requireAuth: true}
             },
             {
               path:'/device/deviceMap',
-              component:deviceMap,
+              component:resolve => require(['@/views/Project/deviceMap'],resolve),
               name:'设备地图',
               meta:{requireAuth: true}
             }
           ]
         },{
           path: '/configure',
-          component: configure,
+          component: resolve => require(['@/views/POV/configure'],resolve),
           name:'作业配置',
           meta: { requireAuth: true }
         },{
           path: '/analysis',
-          component: analysis,
+          component: resolve => require(['@/views/POV/analysis'],resolve),
           name:'统计分析',
           meta: { requireAuth: true }
         },
         {
           path: '/historical',
-          component: historical,
+          component: resolve => require(['@/views/POV/historical'],resolve),
           name:'数据报表',
           meta: { requireAuth: true }
         },{
           path: '/alarm',
-          component: alarm,
+          component: resolve => require(['@/views/POV/alarm'],resolve),
           name:'故障报警',
           redirect:'/alarm/aAnalysis',
           meta: { requireAuth: true },
@@ -123,30 +124,30 @@ const vRouter = new Router({
             {
               path:'/alarm/aAnalysis',
               name:'报警分析',
-              component:aAnalysis,
+              component:resolve => require(['@/views/alarm/aAnalysis'],resolve),
               meta: {requireAuth: true}
             },
             {
               path:'/alarm/aRealTime',
-              component:aRealTime,
+              component:resolve => require(['@/views/alarm/aRealTime'],resolve),
               name:'实时报警',
               meta:{requireAuth: true}
             },
             {
               path:'/alarm/aHistory',
-              component:aHistory,
+              component:resolve => require(['@/views/alarm/aHistory'],resolve),
               name:'历史报警',
               meta:{requireAuth: true}
             }
           ]
         },{
           path: '/document',
-          component: document,
+          component: resolve => require(['@/views/POV/document'],resolve),
           name:'文档资料',
           meta: { requireAuth: true }
         },{
           path: '/operational',
-          component: operational,
+          component: resolve => require(['@/views/POV/operational'],resolve),
           name:'作业成效',
           redirect:'/operational/oOperational',
           meta: { requireAuth: true },
@@ -154,24 +155,24 @@ const vRouter = new Router({
             {
               path:'/operational/oOperational',
               name:'单日成效',
-              component:oOperational,
+              component:resolve => require(['@/views/operational/oOperational'],resolve),
               meta: {requireAuth: true}
             },
             {
               path:'/operational/oAccumulative',
-              component:oAccumulative,
+              component:resolve => require(['@/views/operational/oAccumulative'],resolve),
               name:'累计成效',
               meta:{requireAuth: true}
             }
           ]
         },{
           path: '/quality',
-          component: quality,
+          component: resolve => require(['@/views/POV/quality'],resolve),
           name:'质量评估',
           meta: { requireAuth: true }
         },{
           path: '/video',
-          component: video,
+          component: resolve => require(['@/views/POV/video'],resolve),
           name:'现场影像',
           meta: { requireAuth: true },
           redirect:'/video/pData',
@@ -179,23 +180,23 @@ const vRouter = new Router({
             {
               path:'/video/pData',
               name:'图片资料',
-              component:pData,
+              component:resolve => require(['@/views/video/pData'],resolve),
               meta: {requireAuth: true}
             },{
               path:'/video/vData',
               name:'影像资料',
-              component:vData,
+              component:resolve => require(['@/views/video/vData'],resolve),
               meta: {requireAuth: true}
             },
             {
               path:'/video/zPanorama',
-              component:zPanorama,
+              component: resolve => require(['@/views/video/zPanorama'],resolve),
               name:'全景图片',
               meta:{requireAuth: true}
             },
             {
               path:'/video/vSurveillance',
-              component:vSurveillance,
+              component:  resolve => require(['@/views/video/vSurveillance'],resolve),
               name:'视频监控',
               meta:{requireAuth: true}
             }

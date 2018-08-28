@@ -112,8 +112,7 @@ button, input, select, textarea { font-size:100%; }
    padding: 3px;
 }*/
 .info-container{
-  width:290px;
-  height:155px;
+  width:200px;
   background:rgba(255,255,255,1);
   cursor:pointer;
   box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);
@@ -134,8 +133,6 @@ button, input, select, textarea { font-size:100%; }
 }
 .info-content{
   width: calc(100% - 20px);
-  height: 25px;
-  line-height: 25px;
   padding: 0 10px;
   display: -webkit-box;
   justify-content: space-between;
@@ -143,11 +140,11 @@ button, input, select, textarea { font-size:100%; }
 .info-title1{
   font-size: 12px;
   width: 80%;
-  height: 25px;
+  padding: 5px 0;
 }
 .runningColor{
   display: inline-block;
-  vertical-align: center;
+  vertical-align: bottom;
   background-color: #00ff00;
   width: 6px;
   height: 6px;

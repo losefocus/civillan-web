@@ -108,18 +108,17 @@ export default {
     }
   },
   mounted: function () {
-
     let project_id=sessionStorage.getItem('projectId');
     this.post_data.project_id=project_id;
-    this.init(this.post_data)
+    this.init()
   },
   methods:{
-    init(post_data){
+    init(){
       let _this=this;
-      this.loading=this.$loading({
+      /*this.loading=this.$loading({
         fullscreen: true,
         background: 'rgba(0, 0, 0, 0.2)'
-      });
+      });*/
       let map = new AMap.Map('container', {
         center: [116.397428, 39.90923],
         zoom: 5
@@ -154,7 +153,7 @@ export default {
         }
       ];
       let marker;
-      deviceList.list(post_data).then(res=>{
+      deviceList.list(this.post_data).then(res=>{
         //接口成功
         if(res.success){
           let lists=res.result.items;
@@ -200,7 +199,7 @@ export default {
                      '</div>';*/
 
                    let content='<div class="info-container device_details">' +
-                     '<div style=" position: relative; width: 290px;height: 130px;background: url(' +items.thumbnailBaseUrl+items.thumbnailPath+
+                     '<div style=" position: relative; width: 200px;height: 150px;background: url(' +items.thumbnailBaseUrl+items.thumbnailPath+
                      ');background-size:100% 100%">' +
                      '</div>'+
                      '<div class="info-content">' +
@@ -223,7 +222,7 @@ export default {
                        _this.deviceName=items.name;
                        sessionStorage.setItem('deviceName',items.name);
                        _this.deviceKey=items.key;
-                       console.log(items.name)
+                       console.log('okkk')
                      });
                      infoWindow.open(map, e.target.getPosition());
                    });
@@ -242,20 +241,19 @@ export default {
                  map.add(marker);
                  map.setFitView();
                  markers.push(marker);
-                 this.loading.close();
+                 //_this.loading.close();
                }else{
                  //_this.$message.error(res.message);
-                 _this.loading.close();
+                 //_this.loading.close();
                }
               });
             }else{
               //console.log('没有经纬度')
-              _this.loading.close();
+              //_this.loading.close();
             }
           }
         }else {
-          _this.loading.close();
-
+         // _this.loading.close();
           that.$message.error(res.message)
         }
         //console.log(markers);

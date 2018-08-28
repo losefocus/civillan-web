@@ -40,7 +40,6 @@
              <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
            </div>
            <div class="b-angle">
-             <div class="b-angle"></div>
            </div>
          </div>
 
@@ -91,7 +90,8 @@
          <a-sp></a-sp>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
-         <chart :options="ElectricCurrent" :auto-resize=true></chart>
+        <!-- <chart :options="ElectricCurrent" :auto-resize=true></chart>-->
+         <p-map></p-map>
        </li>
      </ul>
      <ul class="s-box2">
@@ -141,7 +141,7 @@
        </li>
        <li style="width: 0.4%"></li>
        <li class="s-chart1">
-         <div id="myChart1" style="width: 100%;height: 100%"></div>
+         <p-operation :dataInfo="RT_data"></p-operation>
        </li>
      </ul>
    </div>
@@ -159,6 +159,8 @@
   import deviceData from '@/api/device/deviceData'
 
   import aSp from '@/views/RState/AshPressureCurrent.vue'
+  import pOperation from '@/views/RState/pileOperation.vue'
+  import pMap from '@/views/RState/pileMap.vue'
 export default {
   name: "runningState",
   components:{
@@ -167,6 +169,8 @@ export default {
     sSpeed,
     sFlow,
     aSp,
+    pOperation,
+    pMap,
   },
   data(){
     let data = [0,10,20,30,40,50,60,70,80,90,100];
@@ -212,6 +216,7 @@ export default {
       timingFunc: 'linear',//用于CSS转换的转换计时功能
 
       RT_data:{}, //实时数据
+
 
       slurryData:[], //段浆量
       ashData:[], //段灰量
@@ -678,6 +683,9 @@ export default {
         if(res.success){
           console.log(res);
           this.RT_data=res.result;
+          this.RT_data.status=1;
+          this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
+          this.RT_data.depth_design=100;
 
           this.rflow=parseInt(res.result.rflow);
           this.rspeed=(parseInt(res.result.rspeed)+5)*20;
@@ -1276,9 +1284,10 @@ export default {
 
           }
           .b-angle{
-            width: 100px;
-            height: 100px;
-            background: #1c8de0;
+            width: 25%;
+            height: 100%;
+            background: url("../../assets/RState/angle.png") no-repeat;
+            background-size: 100% 100%;
           }
         }
 

@@ -3,10 +3,13 @@ import axios from 'axios'
 import qs from 'qs'
 import router from '../router'
 import { Message, Loading } from 'element-ui'
+import errorCode from '@/common/errorCode'
+
+
 // 响应时间
 //var root = process.env.API_ROOT;
 //console.log(process.env.API_ROOT);
-axios.defaults.timeout = 3000;
+axios.defaults.timeout = 5000;
 // 配置cookie
  //axios.defaults.withCredentials = true;
 // 配置请求头
@@ -38,7 +41,8 @@ axios.interceptors.request.use(
     }*/
 
     if (config.method === 'post') {
-      config.data = qs.stringify(config.data)
+      //config.data = qs.stringify(config.data);
+      //config.headers.post['Content-Type'] = 'application/json';
     }
     //console.log(qs.stringify(config.data));
     config.headers.token = sessionStorage.getItem("token");
@@ -55,12 +59,28 @@ axios.interceptors.response.use(
   res => {
     if (res.status === 200) {
       //loadingInstance.close();
+      /*if(!res.data.success){
+        //console.log(res.data.message);
+        Message({
+          message: res.data.message,
+          type: 'error'
+        });
+      }*/
       return res;
     }
   },
-  err => {
+  error => {
+
+    let errMsg = error.toString();
+    console.log(errMsg);
+    let code = errMsg.substr(errMsg.indexOf('code') + 5);
+    Message({
+      message: errorCode[code] || errorCode['default'],
+      type: 'error'
+    });
+
     //loadingInstance.close();
-    console.log(err.request.status);
+    /*console.log(err.request.status);
     switch(err.request.status){
       case 401:
         Message.error('您的账号暂未授权');
@@ -72,7 +92,7 @@ axios.interceptors.response.use(
       case 500:
         Message.error('服务器繁忙，请稍后访问');
         break;
-    }
+    }*/
     /*if(err.request&&err.request.status===401){
       console.log('401');
       Message.error('未授权');

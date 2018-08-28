@@ -21,7 +21,8 @@
       >
         <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)" :deviceName="deviceName">
           <!--:class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}"-->
-          <div class="r-state r-state1" >
+          <div class="r-state">
+            运行中
           </div>
           <div class="d-name">
             <span>{{item.name}}</span>
@@ -291,8 +292,7 @@
     background: #ffffff;
     padding-left: 25px;
     .r-state{
-      width: 32%;
-      height: 32%;
+      padding: 5px 10px;
       float: right;
       text-align: right;
       .r-stateText{
@@ -301,9 +301,9 @@
         margin: 6% 3%;
       }
     }
-    .r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: 100% 100%;}
+    /*.r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: 100% 100%;}
     .r-state2{background: url(../../assets/device/break.png) no-repeat;background-size: 100% 100%;}
-    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: 100% 100%;}
+    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: 100% 100%;}*/
 
     .d-name{
       color: #333333;
