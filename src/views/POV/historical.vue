@@ -295,7 +295,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tnewData.max_slope.checked"
+        v-if="newData.max_slope.checked"
         :show-overflow-tooltip=true
         label="最大斜度">
         <template slot-scope="props">
@@ -458,7 +458,7 @@
         multipleSelection:[],
 
         newData:{
-          pile_id:{title:'桩号',checked:false},
+          pile_id:{title:'桩号',checked:true},
           begin_time:{title:'开始时间',checked:true},
           end_time:{title:'结束时间',checked:true},
           depth:{title:'总桩长',checked:true},
@@ -467,19 +467,20 @@
           cumulative_ash:{title:'累计灰量',checked:true},
           cumulative_pulp:{title:'累计浆量',checked:true},
           max_current:{title:'最大钻杆电流',checked:true},
-          down_speed:{title:'平均下钻速度',checked:true},
-          up_speed:{title:'平均提钻速度',checked:true},
-          average_pulp:{title:'平均浆量',checked:true},
-          average_ash:{title:'平均灰量',checked:true},
-          average_current:{title:'平均电流',checked:true},
+          down_speed:{title:'平均下钻速度',checked:false},
+          up_speed:{title:'平均提钻速度',checked:false},
+          average_pulp:{title:'平均浆量',checked:false},
+          average_ash:{title:'平均灰量',checked:false},
+          average_current:{title:'平均电流',checked:false},
           max_down_speed:{title:'最大钻速',checked:true},
           max_up_speed:{title:'最大提速',checked:true},
           max_slope:{title:'最大斜度',checked:true},
-          sprayed_time:{title:'喷浆时间',checked:true},
-          t_type_length:{title:'扩大头桩长',checked:true},
-          t_type_slurry:{title:'扩大头浆量',checked:true},
-          bottom_part_slurry:{title:'扩大桩灰量',checked:true},
-          t_type_ash:{title:'下部桩浆量',checked:true},
+          sprayed_time:{title:'喷浆时间',checked:false},
+          t_type_length:{title:'扩大头桩长',checked:false},
+          t_type_slurry:{title:'扩大头浆量',checked:false},
+          bottom_part_slurry:{title:'扩大桩灰量',checked:false},
+          t_type_ash:{title:'下部桩浆量',checked:false},
+          bottom_part_ash:{title:'下部桩灰量',checked:false},
           rate:{title:'评分',checked:true},
         },
 
@@ -558,27 +559,29 @@
       },
       //excel导出
       importExcel() {
-        this.tableRows.forEach(item =>{
-          if(item.checked==true){
-            this.tableHeader.push(item.title);
-            this.tableName.push(item.name);
+        for(name in this.newData){
+          if(this.newData[name].checked==true){
+            this.tableHeader.push(this.newData[name].title);
+            this.tableName.push(name)
           }
-        });
+        }
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
           let tHeader = this.tableHeader; //将对应的属性名转换成中文
           let filterVal = this.tableName; //table表格中对应的属性名
+          console.log(filterVal);
           let list=[];
+          let obj = {};
           this.multipleSelection.forEach(e=>{
             console.log(e);
-            let obj = {};
+
             for(let i=0;i<filterVal.length;i++){
               obj[filterVal[i]] = e[filterVal[i]]
             }
             list.push(obj)
           });
           const data = this.formatJson(filterVal, list);
-          export_json_to_excel(tHeader, data, 'excel文件');
+          export_json_to_excel(tHeader, data, '数据报表');
         })
       },
       formatJson(filterVal, jsonData) {
