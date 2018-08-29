@@ -3,14 +3,19 @@
     <div class="j-box">
       <div class="j-table">
         <div class="i-box">
-          <div class="j-Import">导入</div>
-          <div class="j-Import">导出</div>
+          <div class="j-Import" @click="importExcel()">导出</div>
         </div>
         <template>
           <el-table
             :data="lists"
+            ref="multipleTable"
+            @selection-change="handleSelectionChange"
             v-loading="listLoading"
             style="width: 100%;padding-top: 2%">
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
             <el-table-column
               prop="name"
               label="名称">
@@ -174,6 +179,7 @@
           content:'',
           status:1,
         },
+        multipleTable:[],//列表select复选框
         typeOptions:[],//类型select列表
         allListQuery:{ //类型select列表请求参数
           page_index: 1,
@@ -210,6 +216,26 @@
       this.getList(this.post_data)
     },
     methods:{
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      //导出excel
+      importExcel() {
+        require.ensure([], () => {
+          const { export_json_to_excel } = require('@/vendor/Export2Excel');　　//引入文件　　　　
+          const tHeader = ['名称', '标识', '类型','配置项']; //将对应的属性名转换成中文
+          const filterVal = ['name', 'key', 'type','content'];//table表格中对应的属性名　　　 　　　
+          let list = this.multipleSelection.map(item => {
+            return { name: item.name, key: item.key , type: this.typeMap.get(item.typeId) , content: item.content };
+          });
+          const data = this.formatJson(filterVal, list);
+          export_json_to_excel(tHeader, data, 'excel文件');
+        })
+      },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => v[j]));
+      },
+
       //作业配置列表
       getList(post_data){
         this.listLoading = true

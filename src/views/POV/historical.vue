@@ -62,7 +62,7 @@
           placement="bottom"
           trigger="click">
           <div class="t-rows">
-            <el-dropdown-item style="width: 90px;" v-for="(row,index) in tableRows" :key="index"><el-checkbox v-model="row.checked">{{row.title}}</el-checkbox></el-dropdown-item>
+            <el-dropdown-item style="width: 90px;" v-for="(row,index) in newData" :key="index"><el-checkbox v-model="row.checked">{{row.title}}</el-checkbox></el-dropdown-item>
           </div>
           <el-button slot="reference" type="primary" icon="el-icon-caret-bottom" size="mini">选择列</el-button>
         </el-popover>
@@ -71,16 +71,16 @@
           <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
           <el-dropdown-menu slot="dropdown" >
             <el-dropdown-item command="1">Excel</el-dropdown-item>
-            <el-dropdown-item command="2">HTML</el-dropdown-item>
+            <!--<el-dropdown-item command="2">HTML</el-dropdown-item>
             <el-dropdown-item>Word</el-dropdown-item>
-            <el-dropdown-item>PDF</el-dropdown-item>
+            <el-dropdown-item>PDF</el-dropdown-item>-->
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </div>
     <el-table
       v-loading="loading"
-      id="rebateSetTable"
+      ref="multipleSelection"
       :data="tableData"
       style="width: 100%"
       :highlight-current-row=true
@@ -165,12 +165,12 @@
         width="55">
       </el-table-column>
       <el-table-column
-        v-if="tableRows[0].checked"
+        v-if="newData.pile_id.checked"
         label="桩号"
         prop="pile_id">
       </el-table-column>
       <el-table-column
-        v-if="tableRows[1].checked"
+        v-if="newData.begin_time.checked"
         width="130"
         label="开始时间"
         align="center"
@@ -180,7 +180,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[1].checked"
+        v-if="newData.end_time.checked"
         width="130"
         label="结束时间"
         align="center"
@@ -190,7 +190,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[2].checked"
+        v-if="newData.depth.checked"
         :show-overflow-tooltip=true
         label="总桩长">
         <template slot-scope="props">
@@ -198,7 +198,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[3].checked"
+        v-if="newData.water_cement_ratio.checked"
         :show-overflow-tooltip=true
         label="水灰比">
         <template slot-scope="scope">
@@ -206,23 +206,23 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[4].checked"
+        v-if="newData.re_depth.checked"
         :show-overflow-tooltip=true
-        label="深度">
+        label="复搅深度">
         <template slot-scope="scope">
-          {{scope.row.depth | formatZ}}
+          {{scope.row.re_depth | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[5].checked"
+        v-if="newData.cumulative_ash.checked"
         :show-overflow-tooltip=true
         label="累计灰量">
         <template slot-scope="props">
-          {{ props.row.average_ash | formatP}}
+          {{ props.row.cumulative_ash | formatP}}
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[6].checked"
+        v-if="newData.cumulative_pulp.checked"
         :show-overflow-tooltip=true
         label="累计浆量">
         <template slot-scope="props">
@@ -230,7 +230,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[7].checked"
+        v-if="newData.max_current.checked"
         :show-overflow-tooltip=true
         label="最大钻杆电流(A)">
         <template slot-scope="props">
@@ -238,7 +238,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[8].checked"
+        v-if="newData.down_speed.checked"
         :show-overflow-tooltip=true
         label="平均下钻速度">
         <template slot-scope="props">
@@ -246,7 +246,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[9].checked"
+        v-if="newData.up_speed.checked"
         :show-overflow-tooltip=true
         label="平均提钻速度">
         <template slot-scope="props">
@@ -254,7 +254,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[10].checked"
+        v-if="newData.average_pulp.checked"
         :show-overflow-tooltip=true
         label="平均浆量">
         <template slot-scope="props">
@@ -262,7 +262,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[11].checked"
+        v-if="newData.average_ash.checked"
         :show-overflow-tooltip=true
         label="平均灰量">
         <template slot-scope="props">
@@ -270,7 +270,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[12].checked"
+        v-if="newData.average_current.checked"
         :show-overflow-tooltip=true
         label="平均电流"
         prop="average_current">
@@ -279,7 +279,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[13].checked"
+        v-if="newData.max_down_speed.checked"
         :show-overflow-tooltip=true
         label="最大钻速">
         <template slot-scope="props">
@@ -287,7 +287,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[14].checked"
+        v-if="newData.max_up_speed.checked"
         :show-overflow-tooltip=true
         label="最大提速">
         <template slot-scope="props">
@@ -295,7 +295,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[15].checked"
+        v-if="tnewData.max_slope.checked"
         :show-overflow-tooltip=true
         label="最大斜度">
         <template slot-scope="props">
@@ -303,7 +303,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[16].checked"
+        v-if="newData.sprayed_time.checked"
         :show-overflow-tooltip=true
         label="喷浆时间">
         <template slot-scope="props">
@@ -311,13 +311,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[17].checked"
+        v-if="newData.t_type_length.checked"
         :show-overflow-tooltip=true
         label="扩大头桩长"
         prop="t_type_length">
       </el-table-column>
       <el-table-column
-        v-if="tableRows[18].checked"
+        v-if="newData.t_type_slurry.checked"
         :show-overflow-tooltip=true
         label="扩大头浆量">
         <template slot-scope="props">
@@ -325,7 +325,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[19].checked"
+        v-if="newData.bottom_part_slurry.checked"
         :show-overflow-tooltip=true
         label="下部桩浆量">
         <template slot-scope="props">
@@ -333,7 +333,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[20].checked"
+        v-if="newData.t_type_ash.checked"
         :show-overflow-tooltip=true
         label="扩大桩灰量">
         <template slot-scope="props">
@@ -341,7 +341,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[21].checked"
+        v-if="newData.bottom_part_ash.checked"
         :show-overflow-tooltip=true
         label="下部桩灰量">
         <template slot-scope="props">
@@ -349,7 +349,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableRows[22].checked"
+        v-if="newData.rate.checked"
         :show-overflow-tooltip=true
         label="评分值"
         prop="rate">
@@ -392,8 +392,6 @@
 
 
 <script>
-  import FileSaver from 'file-saver'
-  import XLSX from 'xlsx'
   import history from '@/api/project/history'
   import deviceList from '@/api/project/deviceList'
   import {formatDate} from '@/common/formatDate.js';
@@ -457,9 +455,39 @@
         tableData: [],// 列表数据
         input9: '',
 
-        tableRows:[ // 表格列是否展示
-          {name:'pileId',title:'桩号',checked:true}, // 桩号
-          {name:'begin_time',title:'作业周期',checked:true},// 开始时间
+        multipleSelection:[],
+
+        newData:{
+          pile_id:{title:'桩号',checked:false},
+          begin_time:{title:'开始时间',checked:true},
+          end_time:{title:'结束时间',checked:true},
+          depth:{title:'总桩长',checked:true},
+          re_depth:{title:'复搅深度',checked:true},
+          water_cement_ratio:{title:'水灰比',checked:true},
+          cumulative_ash:{title:'累计灰量',checked:true},
+          cumulative_pulp:{title:'累计浆量',checked:true},
+          max_current:{title:'最大钻杆电流',checked:true},
+          down_speed:{title:'平均下钻速度',checked:true},
+          up_speed:{title:'平均提钻速度',checked:true},
+          average_pulp:{title:'平均浆量',checked:true},
+          average_ash:{title:'平均灰量',checked:true},
+          average_current:{title:'平均电流',checked:true},
+          max_down_speed:{title:'最大钻速',checked:true},
+          max_up_speed:{title:'最大提速',checked:true},
+          max_slope:{title:'最大斜度',checked:true},
+          sprayed_time:{title:'喷浆时间',checked:true},
+          t_type_length:{title:'扩大头桩长',checked:true},
+          t_type_slurry:{title:'扩大头浆量',checked:true},
+          bottom_part_slurry:{title:'扩大桩灰量',checked:true},
+          t_type_ash:{title:'下部桩浆量',checked:true},
+          rate:{title:'评分',checked:true},
+        },
+
+
+        /*tableRows:[ // 表格列是否展示
+          {name:'pile_id',title:'桩号',checked:true}, // 桩号
+          {name:'begin_time',title:'开始时间',checked:true},// 开始时间
+          {name:'end_time',title:'结束时间',checked:true},// 结束时间
           {name:'depth',title:'总桩长',checked:true},// 总桩长
           {name:'water_cement_ratio',title:'水灰比',checked:true},// 水灰比
           {name:'',title:'深度',checked:true},// 深度
@@ -481,7 +509,9 @@
           {name:'t_type_ash',title:'扩大桩灰量',checked:false},// 扩大桩灰量
           {name:'bottom_part_ash',title:'下部桩灰量',checked:false},// 下部桩灰量
           {name:'score',title:'评分',checked:true},// 评分
-        ],
+        ],*/
+        tableHeader:[],
+        tableName:[],
         deviceSelect:[],// 全部设备select的列表
         recordSum:[],// 统计总数
         post_data:{ // 请求数据
@@ -515,86 +545,46 @@
         this.isCollapse=res
       })
     },
+    mounted(){
+
+    },
     methods: {
       handleExport(command){
         if(command=='1'){
-          this.exportExcel()
+          this.importExcel();
         }else if(command=='2'){
           this.exportXml('rebateSetTable')
         }
       },
-      //导出excel
-      exportExcel () {
-        /* generate workbook object from table */
-        console.log('nima')
-        let wb = XLSX.utils.table_to_book(document.querySelector('#rebateSetTable'));
-        /* get binary string as output */
-        let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' });
-        try {
-          FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '数据报表.xlsx');
-        } catch (e)
-        {
-          if (typeof console !== 'undefined')
-            console.log(e, wbout)
-        }
-        return wbout
-      },
-      //导出xml
-      exportXml(tableid) {
-        let _this=this;
-        let idTmr;
-        if (_this.getExplorer() == 'ie') {
-          var curTbl = document.getElementById(tableid);
-          var oXL = new ActiveXObject("Excel.Application");
-          var oWB = oXL.Workbooks.Add();
-          var xlsheet = oWB.Worksheets(1);
-          var sel = document.body.createTextRange();
-          sel.moveToElementText(curTbl);
-          sel.select();
-          sel.execCommand("Copy");
-          xlsheet.Paste();
-          oXL.Visible = true;
-
-          try {
-            var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
-          } catch (e) {
-            print("Nested catch caught " + e);
-          } finally {
-            oWB.SaveAs(fname);
-            oWB.Close(savechanges = false);
-            oXL.Quit();
-            oXL = null;
-            idTmr = window.setInterval("_this.Cleanup();", 1);
+      //excel导出
+      importExcel() {
+        this.tableRows.forEach(item =>{
+          if(item.checked==true){
+            this.tableHeader.push(item.title);
+            this.tableName.push(item.name);
           }
+        });
+        require.ensure([], () => {
+          const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
+          let tHeader = this.tableHeader; //将对应的属性名转换成中文
+          let filterVal = this.tableName; //table表格中对应的属性名
+          let list=[];
+          this.multipleSelection.forEach(e=>{
+            console.log(e);
+            let obj = {};
+            for(let i=0;i<filterVal.length;i++){
+              obj[filterVal[i]] = e[filterVal[i]]
+            }
+            list.push(obj)
+          });
+          const data = this.formatJson(filterVal, list);
+          export_json_to_excel(tHeader, data, 'excel文件');
+        })
+      },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => v[j]));
+      },
 
-        }
-        else {
-          _this.tableToExcel(tableid)
-        }
-      },
-      getExplorer() {
-        var explorer = window.navigator.userAgent;
-        //ie
-        if (explorer.indexOf("MSIE") >= 0) {
-          return 'ie';
-        }
-        //firefox
-        else if (explorer.indexOf("Firefox") >= 0) {
-          return 'Firefox';
-        }
-        //Chrome
-        else if (explorer.indexOf("Chrome") >= 0) {
-          return 'Chrome';
-        }
-        //Opera
-        else if (explorer.indexOf("Opera") >= 0) {
-          return 'Opera';
-        }
-        //Safari
-        else if (explorer.indexOf("Safari") >= 0) {
-          return 'Safari';
-        }
-      },
       Cleanup() {
         window.clearInterval(idTmr);
         CollectGarbage();
@@ -632,6 +622,7 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        console.log(this.multipleSelection);
       },
       //列表改变每页显示的条数
       handleSizeChange: function (size) {
@@ -641,13 +632,11 @@
 
       //列表改变当前页
       handleCurrentChange: function(currentPage){
-        console.log('好吧');
         this.device_data.page_index = currentPage;
         this.getList(this.post_data);
       },
       //列表改变当前页
       listCurrentChange: function(currentPage){
-        console.log('好吧');
         this.post_data.page_index = currentPage;
         this.getList(this.post_data);
       },

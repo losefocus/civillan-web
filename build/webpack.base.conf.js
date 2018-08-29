@@ -88,7 +88,14 @@ module.exports = {
   },
   externals: {
     'AMap': 'AMap',
-    'AMapUI': 'AMapUI'
+    'vue': 'Vue',
+    'vue-router': 'VueRouter',
+    'axios': 'axios',
+    'element-ui': 'ELEMENT',
+    'store':'store',
+    'vuex': 'Vuex',
+    'three':'THREE',
+    'jquery':'$',
   },
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
@@ -104,6 +111,8 @@ module.exports = {
   },
   devServer: {
 	  disableHostCheck:true,
+    /*hot:false,
+    inline:false,*/
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin('common.js'),

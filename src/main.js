@@ -45,6 +45,8 @@ import VueVideoPlayer from 'vue-video-player'
 import 'video.js/dist/video-js.css'
 Vue.use(VueVideoPlayer);
 
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
