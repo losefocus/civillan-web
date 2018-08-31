@@ -238,7 +238,7 @@ export default {
           }
         },
         series: [{
-          name: 'Legend 1',
+          name: '设备故障',
           type: 'line',
           symbol: 'circle',
           itemStyle: {
@@ -249,13 +249,13 @@ export default {
           symbolSize: [8, 8],
           data: [1, 0, 1, 4, 10, 8]
         }, {
-          name: 'Legend 2',
+          name: '下钻速度异常',
           type: 'line',
           symbol: 'circle',
           symbolSize: [8, 8],
           data: [2, 1, 3, 3, 5, 6]
         }, {
-          name: 'Legend 3',
+          name: '测量异常',
           type: 'line',
           symbol: 'circle',
           symbolSize: [8, 8],

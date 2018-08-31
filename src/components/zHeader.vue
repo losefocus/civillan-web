@@ -1,6 +1,6 @@
 <template>
 <div style="height:100%;">
-  <div class="hd-logo hd-left"></div>
+  <div class="hd-logo hd-left" :style="{backgroundImage: 'url(' + logoImg + ')' }"></div>
   <!--<span class="iconfont icon-collapse"></span>-->
   <div class="hd-name hd-left">工程施工实时监控系统</div>
 
@@ -61,6 +61,7 @@
   import userInfo from '@/api/userCenter/header'
 
   import no_photo from '@/assets/header/no_photo.png'
+  import logo from '@/assets/login/logo.png'
 
   export default {
     name: "zHeader",
@@ -73,6 +74,7 @@
     data(){
        return{
          topChange:true,
+         logoImg:logo,
          dialogTop:'15vh',//top值
          dialogWidth:'68%',//模态框宽度
          avatarUrl:'', //头像路径
@@ -223,7 +225,6 @@
   .hd-logo{
     width: 188px;
     height: 42px;
-    background: url("../../static/img/login/logo.png") no-repeat;
     background-size: cover;
   }
   .hd-name{

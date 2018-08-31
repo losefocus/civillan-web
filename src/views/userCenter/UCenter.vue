@@ -2,7 +2,7 @@
   <div>
     <div style="height: 100%">
       <div class="u-box">
-        <div class="u-header">
+        <div class="u-header" :style="{backgroundImage: 'url(' + userBg + ')'}">
           <div class="u-info">
             <img :src="avatarUrl" alt="头像">
             <div class="u-name">
@@ -87,9 +87,11 @@
 <script>
   import user from '@/api/userCenter/header'
   import no_photo from '@/assets/header/no_photo.png'
+  import userInfo from '@/assets/userinfo/userInfo.png'
 export default {
   data(){
     return{
+      userBg:userInfo,
       isCompany1:true,
       isCompany2:true,
       isCompany3:true,
@@ -156,7 +158,6 @@ export default {
     .u-header{
       width:100%;
       height:40%;
-      background: url("../../assets/userinfo/userInfo.png") no-repeat;
       background-size: cover;
       overflow: hidden;
       border-radius:3px 3px 0 0;

@@ -256,8 +256,8 @@ button, input, select, textarea { font-size:100%; }
 }
 
 .el-badge__content.is-fixed{
-  top: 7px;
-  right: 14px;
+  top: 7px !important;
+  right: 14px !important;
 }
 
 .el-dialog__header{
@@ -282,12 +282,12 @@ body .el-table th.gutter {
 }
 
 .el-table{
-  font-size: 12px;
+  font-size: 12px !important;
   /*background-color: rgba(79,80,89,0.2);*/
 }
 .el-table__expanded-cell{
   background-color: #E1E1E3 !important;
-  color:#666666;
+  color:#666666 !important;
 }
 /*.el-table__expanded-cell .el-table--enable-row-hover .el-table__body tr:hover>td{
   background: rgba(79,80,89,0.2);
@@ -308,10 +308,10 @@ body .el-table th.gutter {
   color: #666666;
 }*/
 .el-table__expanded-cell[class*=cell]{
-  padding: 20px 50px 20px 50px;
+  padding: 20px 50px 20px 50px !important;
 }
 .el-button--mini{
-  padding: 7px 7px;
+  padding: 7px 7px !important;
 }
 /*.el-table::before{
   background-color: rgba(79,80,89,0.2);
