@@ -3,7 +3,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;" clearable >
+        <el-select v-model="device" placeholder="全部设备" size="mini" style="margin: 0 5px 0 0;width: 16%;" clearable >
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -11,7 +11,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-select v-model="device" placeholder="全部桩" size="mini" style="margin: 0 5px;width: 16%;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -19,7 +19,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-select v-model="device" placeholder="评分等级" size="mini" style="margin: 0 5px;width: 16%;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -39,10 +39,10 @@
           :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%">
         </el-date-picker>
         <div class="c-button">
-          <el-button type="info" size="mini" @click="query">查询</el-button>
+          <el-button type="info" size="mini">查询</el-button>
         </div>
         <div class="c-button">
-          <el-button type="info" size="mini" @click="query">重置</el-button>
+          <el-button type="info" size="mini">重置</el-button>
         </div>
       </div>
       <div class="c-handle">
@@ -263,7 +263,43 @@
           i: '20min',
           j: 'A',
         }
-        ]
+        ],
+        device:'',
+        deviceSelect:[
+          {value1:1,name:'一号桩'},
+          {value1:2,name:'二号桩'},
+          {value1:3,name:'三号桩'},
+          {value1:4,name:'四号桩'},
+          {value1:5,name:'五号桩'},
+        ],
+        pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        value7:'',
       }
     },
     created(){
@@ -271,7 +307,8 @@
         console.log(res);
         this.isCollapse=res
       })
-    }
+    },
+
   }
 </script>
 
