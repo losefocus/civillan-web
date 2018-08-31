@@ -88,10 +88,8 @@ module.exports = {
   },
   externals: {
     'AMap': 'AMap',
-    'vue': 'Vue',
     'vue-router': 'VueRouter',
     'axios': 'axios',
-    'element-ui': 'ELEMENT',
     'store':'store',
     'vuex': 'Vuex',
     'three':'THREE',

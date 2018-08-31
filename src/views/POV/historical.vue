@@ -483,34 +483,6 @@
           bottom_part_ash:{title:'下部桩灰量',checked:false},
           rate:{title:'评分',checked:true},
         },
-
-
-        /*tableRows:[ // 表格列是否展示
-          {name:'pile_id',title:'桩号',checked:true}, // 桩号
-          {name:'begin_time',title:'开始时间',checked:true},// 开始时间
-          {name:'end_time',title:'结束时间',checked:true},// 结束时间
-          {name:'depth',title:'总桩长',checked:true},// 总桩长
-          {name:'water_cement_ratio',title:'水灰比',checked:true},// 水灰比
-          {name:'',title:'深度',checked:true},// 深度
-          {name:'cumulative_ash',title:'累计灰量',checked:true},// 累计灰量
-          {name:'cumulative_pulp',title:'累计浆量',checked:true},// 累计浆量
-          {name:'max_current',title:'最大钻杆电流',checked:true},// 最大钻杆电流
-          {name:'down_speed',title:'平均下钻速度',checked:false},// 平均下钻速度
-          {name:'up_speed',title:'平均提钻速度',checked:false},// 平均提钻速度
-          {name:'average_pulp',title:'平均浆量',checked:false},// 平均浆量
-          {name:'average_ash',title:'平均灰量',checked:false},// 平均灰量
-          {name:'average_current',title:'平均电流',checked:false},// 平均电流
-          {name:'max_down_speed',title:'最大钻速',checked:true},// 最大钻速
-          {name:'max_up_speed',title:'最大提速',checked:true},// 最大提速
-          {name:'max_slope',title:'最大斜度',checked:true},// 最大斜度
-          {name:'sprayed_time',title:'喷浆时间',checked:false},// 喷浆时间
-          {name:'t_type_length',title:'扩大头桩长',checked:false},// 扩大头桩长
-          {name:'t_type_slurry',title:'扩大头浆量',checked:false},// 扩大头浆量
-          {name:'bottom_part_slurry',title:'下部桩浆量',checked:false},// 下部桩浆量
-          {name:'t_type_ash',title:'扩大桩灰量',checked:false},// 扩大桩灰量
-          {name:'bottom_part_ash',title:'下部桩灰量',checked:false},// 下部桩灰量
-          {name:'score',title:'评分',checked:true},// 评分
-        ],*/
         tableHeader:[],
         tableName:[],
         deviceSelect:[],// 全部设备select的列表
@@ -566,22 +538,31 @@
           }
         }
         require.ensure([], () => {
-          const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
-          let tHeader = this.tableHeader; //将对应的属性名转换成中文
-          let filterVal = this.tableName; //table表格中对应的属性名
-          console.log(filterVal);
-          let list=[];
-          let obj = {};
-          this.multipleSelection.forEach(e=>{
-            console.log(e);
 
-            for(let i=0;i<filterVal.length;i++){
-              obj[filterVal[i]] = e[filterVal[i]]
-            }
-            list.push(obj)
-          });
-          const data = this.formatJson(filterVal, list);
-          export_json_to_excel(tHeader, data, '数据报表');
+          if(this.multipleSelection.length!==0){
+            const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
+            let tHeader = this.tableHeader; //将对应的属性名转换成中文
+            let filterVal = this.tableName; //table表格中对应的属性名
+            let list=[];
+            let obj = {};
+            this.multipleSelection.forEach(e=>{
+              //console.log(e);
+              for(let i=0;i<filterVal.length;i++){
+                obj[filterVal[i]] = e[filterVal[i]]
+              }
+              list.push(obj);
+              //console.log(list);
+            });
+            const data = this.formatJson(filterVal, list);
+            export_json_to_excel(tHeader, data, '数据报表');
+
+            //引用赋值  用完清空
+            this.tableHeader=[];
+            this.tableName=[];
+            list=[];
+          }else{
+            this.$message.error('请先选择需要导出的项目！')
+          }
         })
       },
       formatJson(filterVal, jsonData) {

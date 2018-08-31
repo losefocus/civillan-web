@@ -1,14 +1,19 @@
 <template>
   <div style="height: 100%">
     <el-container style="height: 100%">
-      <el-main style="height: 100%">
-        <div class="cp-logo"></div>
+      <el-main style="height: 100%;" :style="{backgroundImage: 'url(' + groupImg + ')' }">
+        <div class="cp-logo" :style="{backgroundImage: 'url(' + logoImg + ')' }"></div>
       </el-main>
-      <el-aside>
+      <el-aside style="height: 100%">
         <p class="user-title">用户登录</p>
         <p class="cp-system">工程施工实时监控系统</p>
 
         <form action="" @submit.prevent="submit">
+          <div class="log-spacing l-label">
+            <label for="username">公司代号</label>
+          </div>
+          <input type="text" id="domain" autocomplete placeholder="请输入公司代号" v-model="userInfo.domain" @input="getDomain(userInfo.domain)" :class={fail:isFail2,success:isSuccess2}>
+          <p class="initColor" :class={fail:isFail,success:isSuccess}></p>
           <div class="log-spacing l-label">
             <label for="username">账号</label>
           </div>
@@ -37,18 +42,25 @@
 <script>
   import { mapActions , mapState} from 'vuex'
   import login from '@/api/userCenter/login'
+  import group from '@/assets/login/group.png'
+  import logo from '@/assets/login/logo.png'
   export default {
     data() {
       return {
         userInfo:{
           checked:false
         },
+        groupImg:group,
+        logoImg:logo,
         validateRules:'',
         validateRules1:'',
+        validateRules2:'',
         isFail:false,
         isSuccess:false,
         isFail1:false,
-        isSuccess1:false
+        isSuccess1:false,
+        isFail2:false,
+        isSuccess2:false
       };
     },
     created(){
@@ -85,6 +97,17 @@
           this.isFail=false;
         }
       },
+      getDomain(u){
+        if(/^\s*$/g.test(u)||u==""||u==undefined){
+          this.validateRules2='代号不能为空';
+          this.isFail2=true;
+          this.isSuccess2=false;
+        }else{
+          this.validateRules='';
+          this.isSuccess2=true;
+          this.isFail2=false;
+        }
+      },
       getPassword:function(p){
         let reg = /^\s*$/g;
         if(reg.test(p)||p==""||p==undefined){
@@ -106,42 +129,47 @@
           fullscreen: true,
           background: 'rgba(0, 0, 0, 0.2)'
         });
-        if(this.isSuccess&&this.isSuccess1){
-          var that=this;
-          console.log(this.userInfo);
-          login.login(this.userInfo).then((res) => {
-            //console.log(res);
-            if(res.success==false){
-              loading.close();
-              that.$message.error(res.message)
-            }else{
-              let wsUrl=JSON.parse(res.result.wsUrl);
-              if(that.userInfo.checked){
-                sessionStorage.setItem('token',res.result.token);
-                sessionStorage.setItem('wsUrl',wsUrl.result);
-                that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
-                that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
-                that.$store.dispatch('incrementToken',res.result.token);
-                that.$router.push('/');
-                that.$message.success('登陆成功');
+        if(this.isSuccess2){
+          if(this.isSuccess&&this.isSuccess1&&this.isSuccess2){
+            let that=this;
+            console.log(this.userInfo);
+            login.login(this.userInfo).then((res) => {
+              //console.log(res);
+              if(res.success==false){
                 loading.close();
+                that.$message.error(res.message)
               }else{
-                sessionStorage.setItem('token',res.result.token);
-                sessionStorage.setItem('wsUrl',wsUrl.result);
-                that.$cookies.remove('token');
-                that.$store.dispatch('incrementToken',res.result.token);
-                that.$router.push('/');
-                that.$message.success('登陆成功');
-                loading.close();
+                let wsUrl=JSON.parse(res.result.wsUrl);
+                if(that.userInfo.checked){
+                  sessionStorage.setItem('token',res.result.token);
+                  sessionStorage.setItem('wsUrl',wsUrl.result);
+                  that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
+                  that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
+                  that.$store.dispatch('incrementToken',res.result.token);
+                  that.$router.push('/');
+                  that.$message.success('登陆成功');
+                  loading.close();
+                }else{
+                  sessionStorage.setItem('token',res.result.token);
+                  sessionStorage.setItem('wsUrl',wsUrl.result);
+                  that.$cookies.remove('token');
+                  that.$store.dispatch('incrementToken',res.result.token);
+                  that.$router.push('/');
+                  that.$message.success('登陆成功');
+                  loading.close();
+                }
               }
-            }
-          }).catch(err => {
+            }).catch(err => {
+              loading.close();
+              console.log(err)
+            });
+          }else {
             loading.close();
-            console.log(err)
-          });
-        }else {
+            this.$message.error('密码账号错误');
+          }
+        }else{
           loading.close();
-          console.log('密码账号错误');
+          this.$message.error('域名错误');
         }
         //this.$cookie.set('user.info',JSON.stringify(this.userInfo),{ expires: '60s'});
       },
@@ -163,6 +191,7 @@
     color : #F03E41
   }
   .success{
+
     border-top: 2px solid #0FA2FF;
     font-size: 12px;
     color : #0FA2FF
@@ -171,64 +200,65 @@
   /*头部*/
   .el-main{
     padding: 50px 70px;
-    background: url("../../static/img/login/group.png") no-repeat;
+    //background: url("../../static/img/login/group.png") no-repeat;
     background-size: cover;
     .cp-logo{
       width: 200px;
       height: 45px;
-      background: red;
-      background: url("../../static/img/login/logo.png") no-repeat;
+      //background: url("../../static/img/login/logo.png") no-repeat;
       background-size: 100% 100%;
     }
   }
   .el-aside{
     width: 32% !important;
-    padding: 7% 4% 0;
+    padding: 7% 4% 3%;
     .user-title{
+      height: 6%;
       font-size: 32px;
       font-weight: bold;
     }
     .cp-system{
+      height: 4%;
       font-size: 20px;
-      margin-top: 5%;
+      margin: 5% 0 20%;
       color: #535353;
-      margin-bottom: 30%;
     }
     .log-spacing{
-      margin-top: 20px;
+      height: 5%;
+      margin-top: 8%;
     }
     label{
       font-weight: bold;
-      height:24px;
+      height:3%;
       font-size:20px;
       color: #333333;
       line-height:23px;
     }
     .stateLine{
-      width: 330px;
+      width: 100%;
       border-bottom: 1px solid #DCE0E6;
     }
     input{
-      margin-top: 20px;
+      margin-top: 5%;
       outline: medium;
       border: none;
-      height: 30px;
+      height: 8%;
       line-height: 30px;
       font-size: 17px;
-      width: 330px;
+      width: 100%;
       color: #666666;
       background-image: none;
     }
     form p{
-      width: 330px;
-      height: 20px;
+      width: 100%;
+      height: 5%;
       line-height: 20px;
     }
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0 1000px white inset;
     }
     #log-submit{
-      width: 200px;
+      width: 60%;
       height: 40px;
       background: #F31A1A;
       color: #ffffff;
@@ -239,13 +269,16 @@
       cursor: pointer;
     }
     .log-forget{
-      margin-left: 60px;
+      width: 30%;
+      margin-left: 10%;
       font-size:14px;
       color:rgba(248,89,89,1);
       cursor: pointer;
     }
     .cp-code{
-      margin-top: 40%;
+      width: 100%;
+      text-align: center;
+      margin-top: 30%;
       font-size: 12px;
       color: #8A96A0;
     }
@@ -259,53 +292,14 @@
       }
       .cp-system{
         font-size: 18px;
-        margin-bottom: 30%;
+        margin-bottom: 20%;
       }
-      .log-spacing{
-        margin-top: 20px;
-      }
-      .stateLine{
-        width: 280px;
-        border-bottom: 1px solid #DCE0E6;
-      }
-      input{
-        margin-top: 10px;
-        outline: medium;
-        border: none;
-        height: 30px;
-        line-height: 30px;
-        font-size: 17px;
-        width: 280px;
-        color: #666666;
-        background-image: none;
-      }
-      form p{
-        width: 280px;
-        height: 20px;
-        line-height: 20px;
-      }
+
       input:-webkit-autofill {
         -webkit-box-shadow: 0 0 0 1000px white inset;
       }
-      #log-submit{
-        width: 140px;
-        height: 40px;
-        background: #F31A1A;
-        color: #ffffff;
-        outline: medium;
-        border: none;
-        box-shadow: 0 6px 15px rgba(243,26,26,0.4);
-        border-radius:6px;
-        cursor: pointer;
-      }
-      .log-forget{
-        margin-left: 60px;
-        font-size:14px;
-        color:rgba(248,89,89,1);
-        cursor: pointer;
-      }
       .cp-code{
-        margin-top: 28%;
+        margin-top: 22%;
         font-size: 12px;
         color: #8A96A0;
         text-align: center;
@@ -318,8 +312,8 @@
     }
     .el-aside{
       padding: 20px 5% 0;
-      height: 350px;
       width: 450px !important;
+      height: 400px !important;
       position: absolute;
       left:0;
       top: 100px;
@@ -394,6 +388,7 @@
         cursor: pointer;
       }
       .log-forget{
+        width: 100%;
         display: block;
         margin: 15px 0 0 0 ;
         text-align: center;

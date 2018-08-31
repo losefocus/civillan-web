@@ -1,12 +1,20 @@
 <template>
-   <div id="pileMap" style="width: 100%;height: 100%">
-   </div>
+   <div id="pileMap" style="width: 100%;height: 100%"></div>
 </template>
 
 <script>
+  import config from '@/api/configure/config.js'
 export default {
   name: "pileMap",
-  created(){
+  data(){
+    return{
+      post_data:{ //主列表请求参数
+        page_index:1,
+        page_size:50
+      }
+    }
+  },
+  mounted(){
     this.init()
   },
   methods:{
@@ -18,7 +26,7 @@ export default {
       });*/
       let map = new AMap.Map('pileMap', {
         center: [116.397428, 39.90923],
-        zoom: 5
+        zoom: 20
       });
       /*AMap.plugin(['AMap.ToolBar', 'AMap.Scale','AMap.MapType'], function () {
         map.addControl(new AMap.ToolBar());
@@ -30,6 +38,34 @@ export default {
       //获取设备列表
       let cluster, markers = [];
       let marker;
+
+      config.list(this.post_data).then(res=>{
+        //console.log(res);
+        if(res.success){
+          res.result.items.forEach(item=>{
+            let content=JSON.parse(item.content);
+
+            for(let i=0;i<content.length;i++){
+              if(content[i].label=='pile_position'){
+                marker=new AMap.Marker({
+                  position:content[i].value.split(','),
+                  content:'<div>'+item.name+'</div>',
+                  offset: new AMap.Pixel(-15,-15),
+                });
+                break;
+              }
+            }
+            marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+              offset: new AMap.Pixel(-140, -25),//修改label相对于maker的位置
+            });
+            map.add(marker);
+            map.setFitView();
+          })
+        }else{
+          console.log('CAD数据获取失败')
+        }
+      })
+
       /*deviceList.list(post_data).then(res=>{
         //接口成功
         if(res.success){

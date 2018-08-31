@@ -27,7 +27,7 @@
           </li>
           <li class="s-data">
             <router-link to="#">
-              <p class="d-num">30</p>
+              <p class="d-num">{{ userTotal }}</p>
               <p class="d-name">人员</p>
             </router-link>
           </li>
@@ -88,6 +88,7 @@
 
 <script>
   import deviceList from '@/api/project/deviceList'
+  import header from '@/api/userCenter/header'
   import document from '@/api/project/document'
   import media from '@/api/video/media'
   import marker from '@/assets/AMap/marker.png'
@@ -245,6 +246,7 @@
         }, //施工进度图表
         info:{}, //项目信息
         organTypeList:{}, //单位信息
+        userTotal:'',
         lists:{},
         deviceTotal:"", //设备总数，
         videoTotal:'', //影像总数，
@@ -303,6 +305,16 @@
           loading.close();
           this.info=res.result;
           this.organTypeList=res.result.organTypeList;
+        }else{
+          loading.close();
+        }
+      });
+
+      //人员总数
+      header.list({'project_id':project_id}).then(res=>{
+        if(res.success){
+          this.userTotal=res.result.total;
+          loading.close();
         }else{
           loading.close();
         }

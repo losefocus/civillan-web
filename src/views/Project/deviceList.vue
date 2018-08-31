@@ -21,7 +21,7 @@
       >
         <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)">
           <!--:class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}"-->
-          <div class="r-state" :class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}">
+          <div class="r-state" :class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2,'r-state4':item.status==3}">
             {{ deviceStatus.get(item.status) }}
           </div>
           <div class="d-name">
@@ -54,7 +54,7 @@
       :width="dialogWidth"
 
       :fullscreen="dialogFullscreen"
-      top="12vh"
+      top="10vh"
       style="min-width: 1024px;"
     >
       <ul class="t-header">
@@ -72,6 +72,7 @@
   import dictionary from '@/api/common/dictionary'
   import deviceGrouping from '@/api/project/deviceGrouping'
   import deviceList from '@/api/project/deviceList'
+  import deviceData from '@/api/device/deviceData'
 
 
   import SAnalysis from '@/views/softBase/SAnalysis'
@@ -101,7 +102,7 @@
         loading:null,
         isShow:true,
         dialogVisible: false,
-        dialogWidth:'80%',
+        dialogWidth:'70%',
         dialogHeight:{
           height:'700px'
         },
@@ -168,7 +169,7 @@
         fullscreen: true,
         background: 'rgba(0, 0, 0, 0.2)'
       });
-      let _this=this
+      let _this=this;
       let id=this.$store.state.project.projectId;
       let tenant=this.$store.state.project.tenant;
       deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
@@ -176,6 +177,7 @@
         if(res.success){
           this.navList=res.result.items;
           this.getList(this.navList[0].id);
+
           this.$nextTick(()=>{
             this.isShow=true
           });
@@ -184,7 +186,6 @@
           _this.$message.error(res.message);
           _this.loading.close();
         }
-
       });
       /*let group_id=sessionStorage.getItem('group_id');
       let deviceIndex=sessionStorage.getItem('deviceIndex');
@@ -237,7 +238,21 @@
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
           if(res.success){
+            res.result.items.forEach(item=>{
+              item.status=3;
+            });
             this.items=res.result.items;
+            //console.log(res.result.items);
+            for(let i=0;i<this.items.length;i++){
+              deviceData.list({key:this.items[i].key}).then(res =>{
+                console.log(res);
+                if(res.success){
+                  this.items[i].status=1
+                }else{
+                  this.items[i].status=3
+                }
+              })
+            }
             this.loading.close();
           }else{
             this.loading.close();

@@ -105,6 +105,7 @@ export default {
   }
   .item {
     position: absolute;
+    cursor: pointer;
     top: 25px;
     left: 0;
     right: 50px;

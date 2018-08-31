@@ -14,7 +14,7 @@
             style="width: 100%;padding-top: 2%">
             <el-table-column
               type="selection"
-              width="55">
+              width="30">
             </el-table-column>
             <el-table-column
               prop="name"
@@ -22,20 +22,23 @@
             </el-table-column>
             <el-table-column
               prop="key"
-              label="标识">
+              label="标识"
+              >
             </el-table-column>
             <el-table-column
-              label="类型">
+              label="类型"
+              width="100">
               <template slot-scope="scope">
                 <span style="white-space:nowrap;">{{ typeMap.get(scope.row.typeId) }}</span>
               </template>
             </el-table-column>
             <el-table-column
               prop="sort"
-              label="排序">
+              label="排序"
+              width="50">
             </el-table-column>
             <el-table-column
-              width="200"
+              width="180"
               prop="address"
               label="操作">
               <template slot-scope="scope">
@@ -63,8 +66,8 @@
       <div class="j-add">
         <div class="a-title"><h3>{{(flag == 'add')?'添加':'修改'}}配置</h3></div>
         <div class="a-body">
-          <el-form class="a-info" ref="form" >
-            <div class="i-content">
+          <el-form class="a-info" :rules="rules" :model="form" ref="form">
+            <el-form-item class="i-content" prop="typeId">
               <el-select v-model="form.typeId" size="mini" placeholder="类型" @change="changeType">
                 <el-option
                   v-for="item in typeOptions"
@@ -73,17 +76,16 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-            </div>
-            <div class="i-content">
+             </el-form-item>
+            <el-form-item class="i-content" prop="name">
               <el-input v-model="form.name" placeholder="名称" size="mini" ></el-input>
-            </div>
-            <div class="i-content">
+            </el-form-item>
+            <el-form-item class="i-content" prop="key">
               <el-input v-model="form.key" placeholder="标识" size="mini"></el-input>
-            </div>
-            <div class="i-content">
+            </el-form-item>
+            <el-form-item class="i-content">
               <el-input v-model="form.sort" placeholder="排序" size="mini"></el-input>
-            </div>
-
+            </el-form-item>
           </el-form>
           <div class="c-content">设计参数</div>
           <div class="c-body">
@@ -123,7 +125,7 @@
           </div>
         </div>
         <div class="a-preservation">
-          <el-button v-if="flag == 'add'" type="primary" :loading="createLoading" @click="submitForm('form')" size="small" style="width:85px;">添加</el-button>
+          <el-button v-if="flag == 'add'" type="primary" :loading="createLoading" @click="submitForm()" size="small" style="width:85px;">添加</el-button>
           <el-button v-else type="primary" :loading="createLoading" @click="updataForm('form')" size="small" style="width:85px;">修改</el-button>
           <el-button type="info" @click="cancel('form')" size="small" style="width:85px;">取消</el-button>
         </div>
@@ -224,12 +226,16 @@
         require.ensure([], () => {
           const { export_json_to_excel } = require('@/vendor/Export2Excel');　　//引入文件　　　　
           const tHeader = ['名称', '标识', '类型','配置项']; //将对应的属性名转换成中文
-          const filterVal = ['name', 'key', 'type','content'];//table表格中对应的属性名　　　 　　　
-          let list = this.multipleSelection.map(item => {
-            return { name: item.name, key: item.key , type: this.typeMap.get(item.typeId) , content: item.content };
-          });
-          const data = this.formatJson(filterVal, list);
-          export_json_to_excel(tHeader, data, 'excel文件');
+          const filterVal = ['name', 'key', 'type','content'];//table表格中对应的属性名
+          if(this.multipleSelection){
+            let list = this.multipleSelection.map(item => {
+              return { name: item.name, key: item.key , type: this.typeMap.get(item.typeId) , content: item.content };
+            });
+            const data = this.formatJson(filterVal, list);
+            export_json_to_excel(tHeader, data, 'excel文件');
+          }else{
+            this.$message.error('请先选择配置项！')
+          }
         })
       },
       formatJson(filterVal, jsonData) {
@@ -242,7 +248,6 @@
         this.post_data.sort_by = 'sort';
         this.post_data.direction = 'asc';
         config.list(post_data).then(res=>{
-          console.log(res);
           this.lists=res.result.items;
           this.total = res.result.total;
           this.listLoading = false
@@ -264,7 +269,6 @@
       //获取类型列表数据
       getCategoryList(){
         categories.list(this.allListQuery).then(res => {
-          console.log(res);
           let list = res.result.items;
           this.typeOptions = list.map(item => {
             return { value: item.id, label: item.name };
@@ -300,38 +304,56 @@
         this.content_form.label = val.split(',')[0]
         this.content_form.name = val.split(',')[1]
       },
-      submitForm(formName){
-        console.log('aaaaa');
-        this.createLoading = true;
-        let data = Object.assign({},this.form);
-        data.projectId = parseFloat(sessionStorage.getItem('projectId'));
-        data.typeId = parseFloat(data.typeId);
-        data.sort = parseFloat(data.sort);
-        this.config_content.forEach(ele => {
-          delete ele.flag
-        });
-        data.content = JSON.stringify(this.config_content);
-        config.add(data).then(res => {
-          console.log(res);
-          this.getList();
-          this.cancel()
+      submitForm(){
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            console.log('okkkk');
+            this.createLoading = true;
+            let data = Object.assign({},this.form);
+            data.projectId = parseFloat(sessionStorage.getItem('projectId'));
+            data.typeId = parseFloat(data.typeId);
+            data.sort = parseFloat(data.sort);
+            this.config_content.forEach(ele => {
+              delete ele.flag
+            });
+            data.content = JSON.stringify(this.config_content);
+            config.add(data).then(res => {
+              console.log(res);
+              this.getList();
+              this.cancel();
+              this.createLoading = false;
+            }).catch(e=>{
+              this.createLoading = false;
+            })
+          }else{
+            this.createLoading = false;
+          }
         })
+
       },
       updataForm(formName){
-        console.log('aaaaa');
-        this.createLoading = true;
-        let data = Object.assign({},this.form);
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            console.log('aaaaa');
+            this.createLoading = true;
+            let data = Object.assign({},this.form);
 
-        this.config_content.forEach(ele => {
-          delete ele.flag
-        });
-        data.content = JSON.stringify(this.config_content);
-        this.createLoading = true;
-        config.edit(data).then(res => {
-          this.getList();
-          this.cancel()
-        });
-        console.log('成功')
+            this.config_content.forEach(ele => {
+              delete ele.flag
+            });
+            data.content = JSON.stringify(this.config_content);
+            this.createLoading = true;
+            config.edit(data).then(res => {
+              this.createLoading = false;
+              this.getList();
+              this.cancel()
+            });
+            console.log('成功')
+          }else{
+            this.createLoading = false;
+          }
+        })
+
 
       },
       cancel(){

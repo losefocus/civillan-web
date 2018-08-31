@@ -118,17 +118,7 @@
           _this.topChange=true
         }
       };
-      let userId=sessionStorage.getItem('token').substring(0,2);
-      userInfo.userInfo({project_user_id:userId}).then(res=>{
-        //console.log(res);
-        if(res.result.avatarBaseUrl&&res.result.avatarPath){
-          this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
-        }else {
-          this.avatarUrl=no_photo;
-        }
 
-        this.username=res.result.name
-      });
 
       this.$route.path=='/'?this.isMap=false:this.isMap=true;
       message.unReadCount().then(res=>{
@@ -138,9 +128,10 @@
         this.unReadCount==0? this.isHidden=true : this.isHidden=false;
       });
 
-
       this.initWebSocket();
-
+    },
+    mounted(){
+      this.getInfo()
     },
     destroyed() {
       //页面销毁时关闭长连接
@@ -173,6 +164,19 @@
       },
       websocketclose(){ //关闭
         //console.log("关闭");
+      },
+      getInfo(){
+        let userId=sessionStorage.getItem('token').substring(0,2);
+        userInfo.userInfo({project_user_id:userId}).then(res=>{
+          //console.log(res);
+          if(res.result.avatarBaseUrl&&res.result.avatarPath){
+            this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
+          }else {
+            this.avatarUrl=no_photo;
+          }
+
+          this.username=res.result.name
+        });
       },
 
       getMessage(){

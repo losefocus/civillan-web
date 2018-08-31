@@ -72,12 +72,25 @@ axios.interceptors.response.use(
   error => {
 
     let errMsg = error.toString();
-    console.log(errMsg);
     let code = errMsg.substr(errMsg.indexOf('code') + 5);
     Message({
       message: errorCode[code] || errorCode['default'],
       type: 'error'
     });
+    console.log(error.request.status);
+    switch(error.request.status){
+      case 401:
+        Message.error('您的账号暂未授权');
+        router.replace({
+          path: 'login',
+          //query: {redirect: router.currentRoute.fullPath}
+        });
+        break;
+      case 500:
+        Message.error('服务器繁忙，请稍后访问');
+        break;
+    }
+
 
     //loadingInstance.close();
     /*console.log(err.request.status);

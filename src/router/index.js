@@ -35,7 +35,7 @@ import pData from '@/views/video/pData'
 import vSurveillance from '@/views/video/vSurveillance'
 import zPanorama from '@/views/video/zPanorama'
 
-Vue.use(Router)
+Vue.use(Router);
 
 const vRouter = new Router({
   routes: [

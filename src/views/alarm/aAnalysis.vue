@@ -2,54 +2,6 @@
 <div>
   <div class="e-box">
     <!-- 标题和控制栏 -->
-    <!--<div class="control-box">
-      <el-row>
-        <el-col :span="19">
-          <div class="grid-content bg-purple">
-            <div class="hd">
-              <div class="inline-block">
-                <el-select v-model="device" filterable remote :remote-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
-                  &lt;!&ndash;<div style="width: 90%">
-                    <el-input
-                      style="width: 96%;margin:0 0 2% 2%"
-                      size="mini"
-                      placeholder="请输入内容"
-                      suffix-icon="el-icon-search"
-                      v-model="input9">
-                    </el-input>
-                  </div>&ndash;&gt;
-                  &lt;!&ndash;<el-input suffix-icon="el-icon-search" @input="deviceSearch()" v-model="deviceName" size="mini" style="width: 92%;margin:0 0 2% 4%" placeholder="请输入内容"></el-input>&ndash;&gt;
-                  <el-option
-                    v-for="(item,index) in deviceSelect"
-                    :key="index"
-                    :label="item.name"
-                    :value="index">
-                  </el-option>
-                  <el-pagination
-                    @current-change="deviceCurrentChange"
-                    small
-                    :pager-count="5"
-                    :current-page="device_data.page_index"
-                    :page-size="device_data.page_size"
-                    layout="prev, pager, next"
-                    :total="deviceTotal">
-                  </el-pagination>
-                </el-select>
-                <el-date-picker
-                  class="inline-block"
-                  size="mini"
-                  type="daterange"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期">
-                </el-date-picker>
-                <el-button type="info" size="mini">查询</el-button>
-              </div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>-->
     <div class="t-analysis" v-if="!isShow">
       <chart :options="analysisPolar" :auto-resize=true></chart>
     </div>
@@ -197,6 +149,15 @@ export default {
         ]
       },
       alarmPolar:{
+        title : {
+          text: '报警数量',
+          x:'center',
+          top:'20',
+          textStyle: {
+            fontSize: 18,
+            color: '#333333'
+          }
+        },
         backgroundColor: '#ffffff',
         name: 'a',
         tooltip: {
@@ -223,16 +184,17 @@ export default {
           bottom: '3%',
           containLabel: true
         },
-        legend: {
+        /*legend: {
           show: true,
           icon: 'circle',
-          top:20,
+          top:'10%',
+          x:'right',
           textStyle: {
             fontSize: 12,
             color: '#333333'
           },
           data: ['Legend 1', 'Legend 2', 'Legend 3']
-        },
+        },*/
         xAxis: {
           show: true,
           type: 'category',
@@ -251,7 +213,7 @@ export default {
               color: '#999999'
             }
           },
-          data: ['2010', '2011', '2012', '2015', '2016', '2017']
+          data: ['8-2', '8-4', '8-6', '8-8', '8-10', '8-12']
         },
         yAxis: {
           show: true,
@@ -328,7 +290,7 @@ export default {
         }]
       },
       value6: '',
-      value7: '',
+      value7: [],
       device:'', //设备选定值
       deviceSelect:[], //设备select列表
       device_data:{//全部设备select列表

@@ -6,5 +6,8 @@ export default {
   },
   userInfo(params) {
     return get('/foreground/project_user/get',params)
+  },
+  list(params) {
+    return get('/foreground/project_user/list',params)
   }
 }

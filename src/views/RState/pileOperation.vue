@@ -232,7 +232,7 @@
     position: absolute;
     bottom: 40%;
     left: 0;
-    z-index: 10;
+    z-index: 9;
   }
   .item .top .info{
     position: absolute;
@@ -360,7 +360,7 @@
     position: absolute;
     left: 50%;
     top: 30%;
-    width: 85px;
+    width: 100px;
     height: 35px;
     font-size: 12px;
     line-height: 16px;

@@ -140,7 +140,7 @@ button, input, select, textarea { font-size:100%; }
 .info-title1{
   font-size: 12px;
   width: 80%;
-  padding: 5px 0;
+  padding: 2px 0 4px;
 }
 .runningColor{
   display: inline-block;

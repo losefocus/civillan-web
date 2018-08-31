@@ -58,6 +58,24 @@
               <i class="iconfont icon-modify" @click="modify4()"></i>
             </div>
 
+            <div class="i-company" >
+              <i class="iconfont icon-mail"></i>
+              <div class="i-context"  v-if="isCompany5">
+                <p>18989477589@163.com</p>
+              </div>
+              <input class="i-modify" type="text" v-else="isCompany5" v-focus>
+              <i class="iconfont icon-modify" @click="modify5()"></i>
+            </div>
+
+            <div class="i-company" >
+              <i class="iconfont icon-mail"></i>
+              <div class="i-context"  v-if="isCompany5">
+                <p>18989477589@163.com</p>
+              </div>
+              <input class="i-modify" type="text" v-else="isCompany5" v-focus>
+              <i class="iconfont icon-modify" @click="modify5()"></i>
+            </div>
+
           </div>
           <div class="u-submit">保存</div>
         </div>
@@ -76,26 +94,15 @@ export default {
       isCompany2:true,
       isCompany3:true,
       isCompany4:true,
+      isCompany5:true,
       userInfo:{},
       role:'',
       projectOrgan:{},
       avatarUrl:'', //头像路径
     }
   },
-  created(){
-    let userId=sessionStorage.getItem('token').substring(0,2);
-    user.userInfo({project_user_id:userId}).then(res=>{
-      //console.log(res);
-      this.userInfo = res.result;
-      this.role=res.result.userRole[0].projectRole.role;
-      this.projectOrgan=res.result.projectOrgan.name;
-      if(res.result.avatarBaseUr&&res.result.avatarPath){
-        this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
-      }else{
-        this.avatarUrl=no_photo
-      }
-
-    })
+  mounted(){
+    this.getInformation();
   },
   directives: {
     focus: {
@@ -107,6 +114,20 @@ export default {
     }
   },
   methods:{
+    getInformation(){
+      let userId=sessionStorage.getItem('token').substring(0,2);
+      user.userInfo({project_user_id:userId}).then(res=>{
+        //console.log(res);
+        this.userInfo = res.result;
+        this.role=res.result.userRole[0].projectRole.role;
+        this.projectOrgan=res.result.projectOrgan.name;
+        if(res.result.avatarBaseUr&&res.result.avatarPath){
+          this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
+        }else{
+          this.avatarUrl=no_photo
+        }
+      })
+    },
     modify1(){
       this.isCompany1=!this.isCompany1
     },
@@ -118,6 +139,9 @@ export default {
     },
     modify4(){
       this.isCompany4=!this.isCompany4
+    },
+    modify5(){
+      this.isCompany5=!this.isCompany5
     }
   }
 }
@@ -191,7 +215,7 @@ export default {
       }
       .i-box{
         margin-top: 5%;
-        height: 100px;
+        height: auto;
         display: flex;
         justify-content: space-between;
         flex-flow:row  wrap;

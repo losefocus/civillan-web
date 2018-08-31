@@ -7,28 +7,32 @@
 <script>
   export default {
     name: "sFlow",
+    props:[
+      'realTime'
+    ],
     data(){
       return{
         myChart:null,
         timer:null,
+        tips:0,
       }
     },
     mounted(){
-      this.init()
+      this.init(this.tips)
     },
     methods:{
-      init(){
+      init(post_data){
         let _this=this;
         this.myChart = this.$echarts.init(document.getElementById('flow'));
-        let tips=0;
+        let tips=parseInt(post_data);
         function loading() {
           return [{
             value: tips,
             itemStyle: {
               normal: {
                 color: 'rgba(31,189,238)',
-                shadowBlur: 10,
-                shadowColor: 'rgba(31,189,238)'
+                //shadowBlur: 10,
+                //shadowColor: 'rgba(31,189,238)'
               }
             }
           }, {
@@ -39,35 +43,26 @@
           title: [{
             text: tips +' '+'/'+' ' + 200,
             left: 'center',
-            top: '30%',
+            top: '35%',
             textStyle: {
               color: 'rgba(31,189,238)',
               fontSize:'18'
             }
           }, {
-            text: 'cm/L',
+            text: 'L/min',
             left: '50%',
-            top: '45%',
+            top: '53%',
             textAlign: 'center',
             textStyle: {
               color: '#999999',
               fontSize:'14'
-            }
-          },{
-            text: '流量',
-            left: '50%',
-            top: '60%',
-            textAlign: 'center',
-            textStyle: {
-              color: '#000',
-              fontSize:'18'
             }
           }],
           color:'rgba(31,189,238,0.2)',
           series: [{
             name: 'loading',
             type: 'pie',
-            radius: ['85%', '90%'],
+            radius: ['85%', '92%'],
             hoverAnimation: false,
             label: {
               normal: {
@@ -77,7 +72,7 @@
             data: loading(),
           }]
         });
-        this.timer=setInterval(function() {
+        /*this.timer=setInterval(function() {
           if (tips == 200) {
             tips = 0;
           } else {
@@ -92,12 +87,21 @@
               data: loading()
             }]
           })
-        }, 1000);
+        }, 1000);*/
       },
       resize(){
         this.myChart.resize()
       }
+    },
+    watch:{
+      realTime:{
+        handler(oldData,newData){
+          //console.log(oldData,newData);
+          this.init(newData.rflow)
+        }
+      }
     }
+
   }
 </script>
 

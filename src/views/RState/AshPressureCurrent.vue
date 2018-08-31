@@ -104,19 +104,12 @@
             {
               name: '段灰量',
               type: 'line',
-              symbol: 'circle',
-              symbolSize: 5,
-              showSymbol: false,
-              lineStyle: {
-                normal: {
-                  width: 3
-                }
-              },
+              showSymbol: false
+              ,
               itemStyle: {
                 normal: {
                   color: '#F86969',
                   borderColor: '#F86969',
-                  borderWidth: 8
                 }
               },
               data: []
@@ -124,20 +117,11 @@
             {
               name: '压力',
               type: 'line',
-              symbol: 'circle',
-              symbolSize: 5,
               showSymbol: false,
-              lineStyle: {
-                normal: {
-                  width: 3
-                }
-              },
-
               itemStyle: {
                 normal: {
                   color: '#50C9F9',
                   borderColor: '#50C9F9',
-                  borderWidth: 8
                 }
               },
               data: []
@@ -145,19 +129,11 @@
             {
               name: '电流',
               type: 'line',
-              symbol: 'circle',
-              symbolSize: 5,
               showSymbol: false,
-              lineStyle: {
-                normal: {
-                  width: 3
-                }
-              },
               itemStyle: {
                 normal: {
                   color: '#FF9933',
                   borderColor: '#FF9933',
-                  borderWidth: 8
                 }
               },
               data: []
@@ -182,7 +158,7 @@
     methods:{
       getData(key){
         deviceData.list({'key':key}).then(res=>{
-          console.log(res);
+          //console.log(res);
           if(res.success){
             this.RT_data=res.result;
 

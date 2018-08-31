@@ -1,7 +1,7 @@
 <template>
  <div style="position: relative;height: 100%">
    <transition name="fade">
-     <div class="b-device" v-if="noDevice"><div class="t-device">设备不存在！</div></div>
+     <div class="b-device" v-if="noDevice"><div class="t-device">设备已离线！</div></div>
    </transition>
    <div class="r-box">
      <div class="t-box" :class="{'t-box1':classChange==1}">
@@ -96,24 +96,25 @@
      </ul>
      <ul class="s-box2">
        <li class="s-progress" :class="{'s-progress1':classChange==1}">
-         <div class="p-box" style="padding-top: 2px">
-           <div class="p-progress" :style="{height:diameter-10+'px'}">
-             <div style="height: 100%;">
-               <div class="progressContainer">
-                 <div class="progress" :style="{height:(100-progress)+'%'}" style="font-size: 12px">
-                   <div style="border-bottom: 3px solid #24BCF7;width: 32px;"></div>
-                   <div style="margin-left: 35px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 25px;font-weight: bold;">{{parseInt(Math.abs(RT_data.rdeep))}}</span>米</div>
+         <div class="p-box" >
+           <div class="p-echart" style="display:flex;justify-content:center;align-items:center;">
+             <div class="p-progress" :style="{height:'80%'}">
+               <div style="height: 100%;">
+                 <div class="progressContainer">
+                   <div class="progress" :style="{height:(100-progress)+'%'}" style="font-size: 12px">
+                     <div style="border-bottom: 3px solid #24BCF7;width: 32px;"></div>
+                     <div style="margin-left: 35px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 25px;font-weight: bold;">{{parseInt(Math.abs(RT_data.rdeep))}}</span>米</div>
+                   </div>
+                   <span style="margin-left: -24px">0米</span>
+                   <span style="position: absolute;bottom: 0;left:-32px;">50米</span>
                  </div>
-                 <span style="margin-left: -24px">0米</span>
-                 <span style="position: absolute;bottom: 0;left:-32px;">50米</span>
-                 <div class="p-name" style="bottom:-24px;left: -5px">深度</div>
                </div>
              </div>
            </div>
-
+           <div class="p-title">深度</div>
          </div>
          <div class="p-box">
-           <div class="p-progress">
+          <!-- <div class="p-progress">
              <radial-progress-bar :diameter="diameter"
                                   :total-steps="totalSteps"
                                   :completed-steps="rflow"
@@ -128,15 +129,24 @@
                <p class="p-unit">cm/min</p>
                <div class="p-title">流量</div>
              </radial-progress-bar>
+           </div>-->
+           <div class="p-echart">
+             <s-speed ref="sSpeed" :realTime="RT_data"></s-speed>
            </div>
-
+           <div class="p-title">钻速</div>
          </div>
          <div class="p-box">
-           <s-flow ref="sFlow"></s-flow>
+           <div class="p-echart">
+             <s-flow ref="sFlow" :realTime="RT_data"></s-flow>
+           </div>
+           <div class="p-title">钻速</div>
          </div>
          <div class="p-box">
+           <div class="p-echart">
+             <s-current ref="sCurrent" :realTime="RT_data"></s-current>
+           </div>
+           <div class="p-title">钻速</div>
            <!--<div id="myChart2" style="width: 100%;height: 100%"></div>-->
-           <s-current ref="sCurrent"></s-current>
          </div>
        </li>
        <li style="width: 0.4%"></li>
@@ -178,6 +188,7 @@ export default {
 
     return {
       //timer:null,//定时器
+      angelWidth:0,
       noDevice:false,
       timer1:null,//定时器1
       deviceType:['1','2','3'],
@@ -226,366 +237,6 @@ export default {
       isWarming:true,//未发现问题显示
 
       isTab:false,//设备型号切换
-      PulpingQuantity:{
-        title: {
-          text: '段浆量、段灰量随桩机里程变化曲线',
-          show: true,
-          textStyle: {
-            fontWeight: 'bold',
-            fontSize: 16,
-            color: '#333'
-          },
-          top:'4%',
-          left: '6%'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            lineStyle: {
-              color: '#333'
-            }
-          }
-        },
-        legend: {
-          itemWidth: 12,
-          itemHeight: 5,
-          itemGap: 13,
-          textStyle: {
-            fontSize: 12,
-            color: '#333'
-          },
-          top:'8%',
-          right:'2%'
-        },
-        grid: {
-          top:'20%',
-          left: '8%',
-          right: '8%',
-          bottom: '8%',
-          containLabel: true
-        },
-        yAxis: [{
-          type: 'category',
-          inverse:true,
-          boundaryGap: false,
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
-          data: Data
-        }],
-        xAxis: [{
-          type: 'value',
-          max:120,
-          position:'top',
-
-          name: '',
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              type: 'solid',
-              color: '#ccc'
-            }
-          }
-        }],
-        series: [
-          {
-            name: '段浆量',
-            type: 'line',
-            symbol: 'circle',
-            symbolSize: 5,
-            showSymbol: false,
-            lineStyle: {
-              normal: {
-                width: 3
-              }
-            },
-            itemStyle: {
-              normal: {
-                color: '#F86969',
-                borderColor: '#F86969',
-                borderWidth: 8
-              }
-            },
-            data: []
-          },{
-            name: '段灰量',
-            type: 'line',
-            symbol: 'circle',
-            symbolSize: 5,
-            showSymbol: false,
-            lineStyle: {
-              normal: {
-                width: 3
-              }
-            },
-            /*areaStyle: {
-              normal: {
-                color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                  offset: 0,
-                  color: '#17A8F5'
-                }, {
-                  offset: 1,
-                  color: '#17A8F5'
-                }], false),
-                shadowColor: '#17A8F5',
-                shadowBlur: 10
-              }
-            },*/
-            itemStyle: {
-              normal: {
-                color: '#50C9F9',
-                borderColor: '#50C9F9',
-                borderWidth: 8
-              }
-            },
-            data: data
-          }
-        ],
-      },
-      ElectricCurrent:{
-        title: {
-          text: '喷浆压力随桩机里程变化曲线',
-          show: true,
-          textStyle: {
-            fontWeight: 'bold',
-            fontSize: 16,
-            color: '#333'
-          },
-          top:'4%',
-          left: '6%'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            lineStyle: {
-              color: '#333'
-            }
-          }
-        },
-        legend: {
-          itemWidth: 14,
-          itemHeight: 5,
-          itemGap: 13,
-          textStyle: {
-            fontSize: 12,
-            color: '#333'
-          },
-          top:'8%',
-          right:'4%'
-        },
-        grid: {
-          top:'20%',
-          left: '8%',
-          right: '8%',
-          bottom: '8%',
-          containLabel: true
-        },
-        yAxis: [{
-          type: 'category',
-          inverse:true,
-          boundaryGap: false,
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
-
-          data: Data
-        }],
-        xAxis: [{
-          type: 'value',
-          position:'top',
-          name: '',
-          max:120,
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            margin: 10,
-            textStyle: {
-              fontSize: 12,
-              color: '#999'
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              type: 'solid',
-              color: '#ccc'
-            }
-          }
-        }],
-        series: [{
-          name: '喷浆量',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              width: 3
-            }
-          },
-          /*areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                offset: 0,
-                color: 'rgba(113,226,237,1)'
-              }, {
-                offset: 1,
-                color: 'rgba(0, 136, 212, 1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },*/
-          itemStyle: {
-            normal: {
-              color: 'rgb(113,226,237)',
-              borderColor: 'rgba(0,136,212,0.2)',
-              borderWidth: 8
-            }
-          },
-          data: []
-        }]
-      },
-      /*AshBreakingAmount:{
-        title: {
-          text: '动态数据 + 时间坐标轴'
-        },
-        tooltip: {
-          trigger: 'axis',
-          formatter: function (params) {
-            params = params[0];
-            var date = new Date(params.name);
-            return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
-          },
-          axisPointer: {
-            animation: false
-          }
-        },
-        legend: {
-          x: 'right',
-          data:['NO1','NO2','NO3'],
-          textStyle:{
-            color:"#000",
-            fontsize:5
-          }
-        },
-        xAxis: {
-          type: 'time',
-          splitLine: {
-            show: false
-          }
-        },
-        yAxis: [
-          {
-          type: 'value',
-          boundaryGap: [0, '100%'],
-          axisLine: {
-            lineStyle: {
-              color:'#0B438B'
-            }
-          },
-          name:'电流 A',
-          position:'left',
-          offset:50,
-          splitNumber:10,
-          splitLine: {
-            show: false
-          }
-        },
-          {
-            type: 'value',
-            boundaryGap: [0, '100%'],
-            axisLine: {
-              lineStyle: {
-                color:'#0B438B'
-              }
-            },
-            name:'深度 C',
-            position:'left',
-            offset:100,
-            splitNumber:10,
-            splitLine: {
-              show: false
-            }
-          },
-          {
-            boundaryGap: [0, '50%'],
-            axisLine: {
-              lineStyle: {
-                color:'#0B438B'
-              }
-            },
-            splitLine:{
-              show:false,
-            },
-            type: 'value',
-            name:'转速 C',
-            position:'left',
-            axisLabel: {
-              formatter: '{value} C'
-            },
-
-          },
-        ],
-        series: [{
-          name: '模拟数据1',
-          type: 'line',
-          showSymbol: false,
-          hoverAnimation: false,
-          data: aData
-        },
-          {
-            name: '模拟数据2',
-            type: 'line',
-            showSymbol: false,
-            hoverAnimation: false,
-            data: bData
-          },
-          {
-            name: '模拟数据3',
-            type: 'line',
-            showSymbol: false,
-            hoverAnimation: false,
-            data: cData
-          }]
-      },*/
     }
   },
   props:['dialogFullscreen','deviceKey'],
@@ -612,26 +263,26 @@ export default {
     temp(isDialog,diameter,that,clientWidth) {
       if(!isDialog){
         this.classChange=2;
-        this.$refs.sCurrent.resize();
-        //this.$refs.sSpeed.resize();
-        this.$refs.sFlow.resize();
+        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
         if(clientWidth>1660){
           diameter=110;
         }else if(clientWidth<1660&&clientWidth>1500){
-          diameter=100;
+          diameter=120;
         }else if(clientWidth<1500&&clientWidth>1380){
           that.$emit('dialogFullscreen','true');
           that.$emit('zoomShow','false');
           that.isShow=false;
-          diameter=90;
+          diameter=100;
         }else if(clientWidth<1380){
           that.$emit('zoomShow','false');
           that.$emit('dialogFullscreen','true')
         }
       }else{
-        this.$refs.sCurrent.resize();
-        //this.$refs.sSpeed.resize();
-        this.$refs.sFlow.resize();
+        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()};
+        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()};
+        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()};
         if(clientWidth>1800){
           this.classChange=1;
           diameter=170;
@@ -655,10 +306,10 @@ export default {
           diameter=110;
         }else if(clientWidth<1200&&clientWidth>1100){
           this.classChange=2;
-          diameter=100;
+          diameter=120;
         }else if(clientWidth<1100&&clientWidth>1000){
           this.classChange=2;
-          diameter=100;
+          diameter=120;
         }
       }
       this.diameter=diameter
@@ -681,7 +332,7 @@ export default {
     getData(key){
       deviceData.list({'key':key}).then(res=>{
         if(res.success){
-          console.log(res);
+          //console.log(res);
           this.RT_data=res.result;
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
@@ -721,7 +372,6 @@ export default {
             this.innerStrokeColor3='rgba(151,151,151,0.3)'
           }
 
-          console.log('#F85959');
 
           let num1=Math.floor(Math.random()*10);
           let num2=Math.floor(Math.random()*10);
@@ -744,31 +394,34 @@ export default {
   },
   created(){
     this.getData(this.deviceKey);
-    console.log(this.PulpingQuantity.series[0].data);
-    this.PulpingQuantity.series[0].data=this.slurryData;
-    this.PulpingQuantity.series[1].data=this.ashData;
-    this.ElectricCurrent.series[0].data=this.ashData;
-
-    /*this.timer=setInterval(()=>{
+    this.timer=setInterval(()=>{
       this.getData(this.deviceKey)
-    },3000);*/
+    },2000);
   },
   mounted(){
     this.init();
     this.reload();
     const that = this;
 
+
+    //倾角图片的长宽相等
+    /*this.$nextTick(()=>{
+      this.angelWidth=this.$refs.angleHeight.offsetHeight;
+    });*/
+
+
     setTimeout(()=>{
       this.$refs.sCurrent.resize();
-      //this.$refs.sSpeed.resize();
+      this.$refs.sSpeed.resize();
       this.$refs.sFlow.resize();
     },100);
 
 
+
     window.onresize = function(){
-      that.$refs.sCurrent.resize();
-      //that.$refs.sSpeed.resize();
-      that.$refs.sFlow.resize();
+      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
       let clientWidth=document.body.clientWidth;
       that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
     }
@@ -1284,8 +937,8 @@ export default {
 
           }
           .b-angle{
-            width: 25%;
-            height: 100%;
+            width: 60px;
+            height: 60px;
             background: url("../../assets/RState/angle.png") no-repeat;
             background-size: 100% 100%;
           }
@@ -1519,7 +1172,7 @@ export default {
 
       .s-progress{
         width:23%;
-        padding: 10px 20px 0 20px;
+        padding:10px 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
         display: flex;
@@ -1528,14 +1181,8 @@ export default {
         justify-content:space-around;
         flex-wrap:wrap;
         .p-box{
-          position: relative;
-          flex: 0 1 50%;
-          display:flex;
           width: 50%;
           height: 50%;
-          justify-content:center;
-          border: 1px solid white;
-          box-sizing: border-box;
           .p-progress{
             .p-title{
               width: 50%;
@@ -1567,10 +1214,16 @@ export default {
           }
 
           .p-title{
-            position: absolute;
-            bottom: -25px;
-            font-size:12px;
-            color:rgba(151,151,151,1);
+            text-align: center;
+            width: 100%;
+            height: 20px;
+            font-size:16px;
+            font-weight: bold;
+            color:#000000;
+          }
+          .p-echart{
+            width: 100%;
+            height: calc( 100% - 20px);
           }
         }
       }

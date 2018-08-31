@@ -52,12 +52,12 @@
         prop="id">
       </el-table-column>
       <el-table-column
-        width="140"
+        width="300"
         label="桩机号（设备）"
         prop="startTime">
       </el-table-column>
       <el-table-column
-        width="140"
+        width="300"
         label="型号"
         prop="endTime">
       </el-table-column>
@@ -106,6 +106,17 @@
         <span class="s-total">工程质量施工评价</span>
         <span class="s-num">90</span>
       </div>
+    </div>
+    <div class="m-pagination">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="listCurrentChange"
+        :current-page="post_data.page_index"
+        layout="total,sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="10"
+        :total='total'>
+      </el-pagination>
     </div>
   </div>
 </template>

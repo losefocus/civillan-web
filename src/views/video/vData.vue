@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 20px">
     <waterfall
       :line-gap="400"
       :min-line-gap="350"
