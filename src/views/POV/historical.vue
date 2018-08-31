@@ -644,6 +644,9 @@
             _this.$message.error(res.message);
             _this.loading=false
           }
+        }).catch(err => {
+          this.loading=false;
+          console.log(err)
         });
       },
 

@@ -239,6 +239,8 @@ export default {
                   map.setFitView();
                   markers.push(marker);
                   _this.loading.close();
+                }).catch(e=>{
+                  _this.loading.close();
                 });
               }else{
                 //console.log('没有经纬度')
@@ -252,6 +254,8 @@ export default {
           _this.loading.close();
           that.$message.error(res.message)
         }
+      }).catch(e=>{
+        _this.loading.close();
       });
     },
     radioEvent(){

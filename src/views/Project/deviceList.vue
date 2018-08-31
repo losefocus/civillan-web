@@ -186,6 +186,8 @@
           _this.$message.error(res.message);
           _this.loading.close();
         }
+      }).catch(e=>{
+        _this.loading.close();
       });
       /*let group_id=sessionStorage.getItem('group_id');
       let deviceIndex=sessionStorage.getItem('deviceIndex');
@@ -251,6 +253,8 @@
                 }else{
                   this.items[i].status=3
                 }
+              }).catch(e=>{
+                _this.loading.close();
               })
             }
             this.loading.close();

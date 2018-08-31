@@ -278,6 +278,9 @@
         }else{
           loading.close();
         }
+      }).catch(err => {
+        loading.close();
+        console.log(err)
       });
       //影像总数
       media.list().then(res=>{
@@ -287,6 +290,9 @@
         }else{
           loading.close();
         }
+      }).catch(err => {
+        loading.close();
+        console.log(err)
       });
       //文档总数
       document.list({ project_id:sessionStorage.getItem('projectId')}).then(res=>{
@@ -297,6 +303,9 @@
         }else{
           loading.close();
         }
+      }).catch(err => {
+        loading.close();
+        console.log(err)
       });
 
       project.info({'project_id':id,'tenant':tenant}).then(res=>{

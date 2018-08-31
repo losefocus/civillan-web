@@ -156,6 +156,9 @@
             this.$message.error(res.message);
             this.loading=false;
           }
+        }).catch(err => {
+          this.loading=false;
+          console.log(err)
         })
       },
       //下载文件
@@ -204,6 +207,9 @@
             this.$message.error(res.message);
             this.loading=false
           }
+        }).catch(err => {
+          this.loading=false;
+          console.log(err)
         })
       }
     }

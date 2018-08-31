@@ -251,6 +251,9 @@
           this.lists=res.result.items;
           this.total = res.result.total;
           this.listLoading = false
+        }).catch(err => {
+          this.listLoading=false;
+          console.log(err)
         })
       },
       handleFilter(){

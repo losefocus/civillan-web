@@ -10,6 +10,7 @@
     </div>
     <template>
       <el-table
+        v-loading="loading"
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
@@ -73,6 +74,7 @@
   name: "message",
   data(){
     return {
+      loading:false,
       currentPage:1,
       pageSize:7,
       tableData: [],
@@ -121,10 +123,15 @@
       console.log('delete')
     },
     getList(currentPage,pageSize){  //获取消息列表
+      this.loading=true;
       message.list({'page_index':currentPage,'page_size':pageSize}).then(res=>{
         console.log(res);
         this.tableData=res.result.items;
-        this.total=res.result.total
+        this.total=res.result.total;
+        this.loading=false;
+      }).catch(err => {
+        this.loading=false;
+        console.log(err)
       })
     }
   },

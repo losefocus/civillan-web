@@ -292,6 +292,9 @@
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
           /*console.log(_this.deviceTotal)*/
+        }).catch(err => {
+          this.loading.close();
+          console.log(err)
         });
       },
     }

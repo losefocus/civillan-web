@@ -265,7 +265,7 @@ button, input, select, textarea { font-size:100%; }
 }
 
 .el-dialog__headerbtn{
-  top:11px;
+  top:11px !important;
   font-size: 21px;
   z-index: 9999;
 }

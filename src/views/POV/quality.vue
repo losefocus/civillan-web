@@ -97,6 +97,17 @@
         prop="g">
       </el-table-column>
     </el-table>
+    <div class="m-pagination">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="listCurrentChange"
+        :current-page="post_data.page_index"
+        layout="total,sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="10"
+        :total='total'>
+      </el-pagination>
+    </div>
   </div>
 </template>
 

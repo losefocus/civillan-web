@@ -258,8 +258,9 @@
               loading.close();
               _this.$message.error(res.message)
             }
-          }
-        );
+          }).catch(e=>{
+          loading.close();
+        });
       },
       close:function (list,index) {
         this.lists.forEach(i => {

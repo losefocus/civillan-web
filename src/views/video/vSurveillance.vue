@@ -135,6 +135,8 @@
             this.$message.error(res.message);
             this.loading.close()
           }
+        }).catch(e=>{
+          this.loading.close();
         })
       },
       // listen event
