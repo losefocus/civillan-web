@@ -139,13 +139,13 @@
            <div class="p-echart">
              <s-flow ref="sFlow" :realTime="RT_data"></s-flow>
            </div>
-           <div class="p-title">钻速</div>
+           <div class="p-title">流量</div>
          </div>
          <div class="p-box">
            <div class="p-echart">
              <s-current ref="sCurrent" :realTime="RT_data"></s-current>
            </div>
-           <div class="p-title">钻速</div>
+           <div class="p-title">电流</div>
            <!--<div id="myChart2" style="width: 100%;height: 100%"></div>-->
          </div>
        </li>

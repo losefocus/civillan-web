@@ -4,6 +4,6 @@ export default {
     return get('/foreground/project_media/list',params)
   },
   camera(params) {
-    return get('/foreground//project_camera/list',params)
+    return get('/foreground/project_camera/list',params)
   }
 }

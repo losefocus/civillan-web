@@ -49,7 +49,6 @@ export default {
               if(content[i].label=='pile_position'){
                 marker=new AMap.Marker({
                   position:content[i].value.split(','),
-                  content:'<div>'+item.name+'</div>',
                   offset: new AMap.Pixel(-15,-15),
                 });
                 break;
