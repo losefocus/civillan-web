@@ -383,7 +383,7 @@ export default {
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
         }else {
-          console.log('adasd')
+          console.log('adasd');
           this.noDevice=true
         }
 
@@ -403,20 +403,16 @@ export default {
     this.reload();
     const that = this;
 
-
     //倾角图片的长宽相等
     /*this.$nextTick(()=>{
       this.angelWidth=this.$refs.angleHeight.offsetHeight;
     });*/
-
 
     setTimeout(()=>{
       this.$refs.sCurrent.resize();
       this.$refs.sSpeed.resize();
       this.$refs.sFlow.resize();
     },100);
-
-
 
     window.onresize = function(){
       if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
@@ -1216,14 +1212,13 @@ export default {
           .p-title{
             text-align: center;
             width: 100%;
-            height: 20px;
+            height: 30px;
             font-size:16px;
-            font-weight: bold;
             color:#000000;
           }
           .p-echart{
             width: 100%;
-            height: calc( 100% - 20px);
+            height: calc( 100% - 30px);
           }
         }
       }

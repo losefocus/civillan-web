@@ -8,7 +8,8 @@
     <div class="a-screen">
       <div class="c-box">
         <div class="c-query">
-          <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
+          <el-select v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
+          <el-select v-else="isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
             <el-option
               v-for="(item,index) in deviceSelect"
               :key="index"
@@ -151,8 +152,8 @@ export default {
       alarmPolar:{
         title : {
           text: '报警数量',
-          x:'center',
-          top:'20',
+          x:'left',
+          top:'0',
           textStyle: {
             fontSize: 18,
             color: '#333333'
@@ -299,11 +300,12 @@ export default {
         name:''
       },
       deviceTotal:0,
-      deviceName:''
+      deviceName:'',
     }
   },
   props:['isShow'],
   created(){
+    this.deviceName=sessionStorage.getItem('deviceName');
     this.getDeviceList(this.device_data);
     console.log(this.isShow)
   },
@@ -345,7 +347,7 @@ export default {
     width: 100%;
     height: 350px;
     justify-content: space-between;
-    margin: 20px 0 20px;
+    margin: 15px 0 20px;
     .e-body{
       background: #ffffff;
       width: calc(50% - 50px);

@@ -43,9 +43,8 @@
 
 <script>
   import deviceList from '@/api/project/deviceList'
-  import marker from '@/assets/AMap/marker.png'
-  import deviceMarker from '@/assets/device/deviceMarker.png'
-  import runningMarker from '@/assets/device/runningMarker.png'
+  import offLineMarker from '@/assets/device/m-offLine.png'
+  import runningMarker from '@/assets/device/m-running.png'
   import devicePolymerization from '@/assets/device/devicePolymerization.png'
   import stateMarker from '@/assets/AMap/marker.png'
 
@@ -178,7 +177,7 @@ export default {
                     changeColor = 'runningColor';
                     _this.loading.close();
                   }else{
-                    changeMarker = deviceMarker;
+                    changeMarker = offLineMarker;
                     changeBackground = 'noBackground';
                     changeColor = 'noColor';
                     //_this.$message.error(res.message);

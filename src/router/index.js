@@ -2,38 +2,7 @@ import Vue from 'vue'
 import store from '@/store/store'
 
 import Router from 'vue-router'
-
-import ProjectEntrance from '@/views/ProjectEntrance'
-import login from '@/views/login'
-import ProjectOverview from '@/views/ProjectOverview'
-import alarm from '@/views/POV/alarm'
-import analysis from '@/views/POV/analysis'
-import device from '@/views/POV/device'
-import configure from '@/views/POV/configure'
-import document from '@/views/POV/document'
-import historical from '@/views/POV/historical'
-import operational from '@/views/POV/operational'
-import quality from '@/views/POV/quality'
-import video from '@/views/POV/video'
-import project from '@/views/POV/project'
-
 import softBase from '@/views/Project/softBase'
-import classification from '@/views/Project/classification'
-import deviceList from '@/views/Project/deviceList'
-import deviceMap from '@/views/Project/deviceMap'
-
-import aAnalysis from '@/views/alarm/aAnalysis'
-import aHistory from '@/views/alarm/aHistory'
-import aRealTime from '@/views/alarm/aRealTime'
-
-
-import oOperational from '@/views/operational/oOperational'
-import oAccumulative from '@/views/operational/oAccumulative'
-
-import vData from '@/views/video/vData'
-import pData from '@/views/video/pData'
-import vSurveillance from '@/views/video/vSurveillance'
-import zPanorama from '@/views/video/zPanorama'
 
 Vue.use(Router);
 
@@ -59,7 +28,7 @@ const vRouter = new Router({
       children:[
         {
           path: '/project',
-          name:'项目分组',
+          name:'项目总览',
           component: resolve => require(['@/views/POV/project'],resolve),
           //redirect:"/project/deviceMap",
           meta: { requireAuth: true},

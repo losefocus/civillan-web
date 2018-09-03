@@ -412,7 +412,7 @@
           display: flex;
 
           .c-icon{
-            padding-top: 3px;
+            padding-top: 6px;
             margin-right: 10px;
             color: #787F87;
           }

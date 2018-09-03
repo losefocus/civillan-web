@@ -23,7 +23,7 @@
     methods:{
       init(post_data){
         let _this=this;
-        let tips=parseInt(parseFloat(post_data)*100);
+        let tips=parseInt(parseFloat(post_data)*100) || 0;
 
         this.myChart = this.$echarts.init(document.getElementById('speed'));
         function loading() {

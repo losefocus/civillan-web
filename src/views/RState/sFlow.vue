@@ -24,7 +24,7 @@
       init(post_data){
         let _this=this;
         this.myChart = this.$echarts.init(document.getElementById('flow'));
-        let tips=parseInt(post_data);
+        let tips=parseInt(post_data) || 0;
         function loading() {
           return [{
             value: tips,

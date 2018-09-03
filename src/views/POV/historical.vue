@@ -104,8 +104,7 @@
             </el-table-column>
             <el-table-column
               prop="name"
-              label="+0.25"
-              width="180">
+              label="+0.25">
             </el-table-column>
             <el-table-column
               prop="address"

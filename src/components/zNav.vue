@@ -276,7 +276,7 @@ export default {
         color: #4F5059;
         overflow: hidden;
         .nav-icon{
-          padding-top: 12px;
+          padding-top: 15px;
           text-align: center;
           i{
             font-size: 25px;
