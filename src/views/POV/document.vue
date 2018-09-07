@@ -45,16 +45,20 @@
         label="标题">
       </el-table-column>
       <el-table-column
+        align="center"
         label="上传时间">
         <template slot-scope="props">
           {{ props.row.createdAt*1000 | formatDate }}
         </template>
       </el-table-column>
       <el-table-column
+        align="center"
         prop="userName"
         label="上传用户">
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column
+        align="center"
+        label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -133,7 +137,7 @@
       }
     },
     mounted(){
-      this.post_data.project_id=sessionStorage.getItem('projectId');
+      this.post_data.project_id=this.$cookies.get('projectId');
       this.getList(this.post_data)
     },
     methods: {
@@ -223,6 +227,7 @@
     background: #ffffff;
   }
   .c-box{
+    margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;

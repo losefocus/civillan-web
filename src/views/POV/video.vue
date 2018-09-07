@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%;height: calc(100% - 82px);">
     <ul class="a-box">
       <router-link :to="{path:list.path}" tag="li" v-for="(list,index) in navList" :key="index">
         {{list.name}}
@@ -37,6 +37,7 @@
 
 <style scoped lang="scss">
   .a-box{
+    margin-top: 15px;
     width: 100%;
     height: 32px;
     li{
@@ -46,10 +47,11 @@
       width: 100px;
       height: 30px;
       text-align: center;
-      line-height: 32px;
+      line-height: 30px;
       background: #FFFFFF;
-      color: #CCCFD4;
-      border:1px solid rgba(204,207,212,1);
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
     }
     li:first-child{
       border-radius: 5px 0 0 5px;
@@ -61,6 +63,9 @@
       background: #F76A6A;
       color: #ffffff;
       border:1px solid #F76A6A;
+    }
+    .router-link-active+li{
+      border-left: none;
     }
   }
 

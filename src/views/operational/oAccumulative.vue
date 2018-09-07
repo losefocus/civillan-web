@@ -45,10 +45,12 @@
       :data="tableData5"
       style="width: 100%">
       <el-table-column
+        align="center"
         type="index"
         width="50">
       </el-table-column>
       <el-table-column
+        align="center"
         label="序号"
         prop="id">
       </el-table-column>
@@ -63,34 +65,42 @@
         prop="endTime">
       </el-table-column>
       <el-table-column
+        align="center"
         label="累计天数"
         prop="a">
       </el-table-column>
       <el-table-column
+        align="center"
         label="累计根数"
         prop="b">
       </el-table-column>
       <el-table-column
+        align="center"
         label="累计长度"
         prop="c">
       </el-table-column>
       <el-table-column
+        align="center"
         label="日均"
         prop="d">
       </el-table-column>
       <el-table-column
+        align="center"
         label="总浆量（L）"
         prop="e">
       </el-table-column>
       <el-table-column
+        align="center"
         label="最大值"
         prop="f">
       </el-table-column>
       <el-table-column
+        align="center"
         label="最小值"
         prop="g">
       </el-table-column>
       <el-table-column
+        align="center"
         label="评级"
         prop="h">
       </el-table-column>

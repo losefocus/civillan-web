@@ -1,11 +1,11 @@
 <template>
-  <div style="position: relative;height: calc(100% - 60px);" >
+  <div style="position: relative;height: calc(100% - 35px);" >
     <ul class="a-box">
         <router-link :to="{path:list.path}" tag="li" v-for="(list,index) in navList" :key="index">
           {{list.name}}
         </router-link>
     </ul>
-    <router-view></router-view>
+    <router-view :searchStyle="searchStyle" :typeStyle="typeStyle"></router-view>
   </div>
 </template>
 
@@ -30,7 +30,15 @@
             path:'/device/deviceList',
             name:'设备列表',
           },
-        ]
+        ],
+        searchStyle: { //搜索框的位置
+          top: '0',
+          left: '180px',
+        },
+        typeStyle: { //类型过滤的位置
+          top: '0',
+          left: '0',
+        },
       };
     }
   }
@@ -57,16 +65,19 @@
       width: 100px;
       height: 30px;
       text-align: center;
-      line-height: 32px;
+      line-height: 30px;
       background: #FFFFFF;
-      color: #CCCFD4;
-      border:1px solid rgba(204,207,212,1);
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
     }
     li:first-child{
       border-radius: 5px 0 0 5px;
+      border-right: none;
     }
     li:last-child{
       border-radius: 0 5px 5px 0;
+      border-left: none;
     }
     .router-link-active{
       background: #F76A6A;

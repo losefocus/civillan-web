@@ -147,7 +147,7 @@
       this.getData(this.$parent.deviceKey);
       this.PulpingQuantity.series[0].data=this.ashData;
       this.PulpingQuantity.series[1].data=this.rpressureData;
-      console.log(this.rpressureData);
+      //console.log(this.rpressureData);
       this.PulpingQuantity.series[2].data=this.rcurrentData;
 
       this.timer=setInterval(()=>{

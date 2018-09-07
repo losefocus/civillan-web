@@ -314,6 +314,7 @@
     padding: 10px 11px;
   }
   .c-box{
+    margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;

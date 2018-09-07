@@ -70,9 +70,9 @@
         <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
           <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
           <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item command="1">Excel</el-dropdown-item>
-            <!--<el-dropdown-item command="2">HTML</el-dropdown-item>
-            <el-dropdown-item>Word</el-dropdown-item>
+            <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
+            <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
+            <!--<el-dropdown-item>Word</el-dropdown-item>
             <el-dropdown-item>PDF</el-dropdown-item>-->
           </el-dropdown-menu>
         </el-dropdown>
@@ -83,6 +83,7 @@
       ref="multipleSelection"
       :data="tableData"
       style="width: 100%"
+      align="center"
       :highlight-current-row=true
       @selection-change="handleSelectionChange"
       @expand-change="handleExpandChange"
@@ -103,59 +104,60 @@
               width="50">
             </el-table-column>
             <el-table-column
-              prop="name"
-              label="+0.25">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="+0.50">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="+0.50">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="+0.75">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="+1.00">
-            </el-table-column>
-            <el-table-column
+              align="center"
               label="段浆量（L/m）">
               <template slot-scope="props">
                 {{ props.row.p_pulp | formatP}}
               </template>
             </el-table-column>
             <el-table-column
+              label="段灰量（L/m）">
+              align="center"
+              <template slot-scope="props">
+                {{ props.row.p_ash | formatP}}
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="p_deep"
+              align="center"
               label="段深度（cm）">
             </el-table-column>
             <el-table-column
+              align="center"
               label="段电流（A）">
               <template slot-scope="props">
                 {{ props.row.p_current | formatP}}
               </template>
             </el-table-column>
             <el-table-column
+              align="center"
+              label="段密度（g/cm3）">
+              <template slot-scope="props">
+                {{ props.row.p_density | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
               label="段喷压（pa）">
               <template slot-scope="props">
                 {{ props.row.p_pressure | formatP}}
               </template>
             </el-table-column>
             <el-table-column
+              align="center"
               label="段钻速（pa）">
               <template slot-scope="props">
                 {{ props.row.p_down_speed | formatZ}}
               </template>
             </el-table-column>
             <el-table-column
-              label="密度（g/cm3）">
+              align="center"
+              label="段提速（pa）">
               <template slot-scope="props">
-                {{ props.row.p_density | formatZ}}
+                {{ props.row.p_up_speed | formatZ}}
               </template>
             </el-table-column>
+
           </el-table>
         </template>
       </el-table-column>
@@ -191,6 +193,7 @@
       <el-table-column
         v-if="newData.depth.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="总桩长">
         <template slot-scope="props">
           {{ props.row.depth | formatP}}
@@ -199,6 +202,7 @@
       <el-table-column
         v-if="newData.water_cement_ratio.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="水灰比">
         <template slot-scope="scope">
           {{scope.row.water_cement_ratio | formatZ}}
@@ -207,6 +211,7 @@
       <el-table-column
         v-if="newData.re_depth.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="复搅深度">
         <template slot-scope="scope">
           {{scope.row.re_depth | formatZ}}
@@ -215,6 +220,7 @@
       <el-table-column
         v-if="newData.cumulative_ash.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="累计灰量">
         <template slot-scope="props">
           {{ props.row.cumulative_ash | formatP}}
@@ -223,6 +229,7 @@
       <el-table-column
         v-if="newData.cumulative_pulp.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="累计浆量">
         <template slot-scope="props">
           {{ props.row.cumulative_pulp | formatP}}
@@ -231,12 +238,14 @@
       <el-table-column
         v-if="newData.max_current.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="最大钻杆电流(A)">
         <template slot-scope="props">
           {{ props.row.max_current | formatP}}
         </template>
       </el-table-column>
       <el-table-column
+        align="center"
         v-if="newData.down_speed.checked"
         :show-overflow-tooltip=true
         label="平均下钻速度">
@@ -247,6 +256,7 @@
       <el-table-column
         v-if="newData.up_speed.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="平均提钻速度">
         <template slot-scope="props">
           {{ props.row.up_speed | formatZ}}
@@ -255,6 +265,7 @@
       <el-table-column
         v-if="newData.average_pulp.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="平均浆量">
         <template slot-scope="props">
           {{ props.row.average_pulp | formatP}}
@@ -263,6 +274,7 @@
       <el-table-column
         v-if="newData.average_ash.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="平均灰量">
         <template slot-scope="props">
           {{ props.row.average_ash | formatP}}
@@ -271,6 +283,7 @@
       <el-table-column
         v-if="newData.average_current.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="平均电流"
         prop="average_current">
         <template slot-scope="props">
@@ -280,6 +293,7 @@
       <el-table-column
         v-if="newData.max_down_speed.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="最大钻速">
         <template slot-scope="props">
           {{ props.row.max_down_speed | formatZ}}
@@ -288,6 +302,7 @@
       <el-table-column
         v-if="newData.max_up_speed.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="最大提速">
         <template slot-scope="props">
           {{ props.row.max_up_speed | formatZ}}
@@ -296,6 +311,7 @@
       <el-table-column
         v-if="newData.max_slope.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="最大斜度">
         <template slot-scope="props">
           {{ props.row.max_slope | formatP}}
@@ -304,6 +320,7 @@
       <el-table-column
         v-if="newData.sprayed_time.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="喷浆时间">
         <template slot-scope="props">
           {{ props.row.sprayed_time | formatDate }}
@@ -312,12 +329,14 @@
       <el-table-column
         v-if="newData.t_type_length.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="扩大头桩长"
         prop="t_type_length">
       </el-table-column>
       <el-table-column
         v-if="newData.t_type_slurry.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="扩大头浆量">
         <template slot-scope="props">
           {{ props.row.t_type_slurry | formatP}}
@@ -326,6 +345,7 @@
       <el-table-column
         v-if="newData.bottom_part_slurry.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="下部桩浆量">
         <template slot-scope="props">
           {{ props.row.bottom_part_slurry | formatP}}
@@ -334,6 +354,7 @@
       <el-table-column
         v-if="newData.t_type_ash.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="扩大桩灰量">
         <template slot-scope="props">
           {{ props.row.t_type_ash | formatP}}
@@ -342,6 +363,7 @@
       <el-table-column
         v-if="newData.bottom_part_ash.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="下部桩灰量">
         <template slot-scope="props">
           {{ props.row.bottom_part_ash | formatP}}
@@ -350,6 +372,7 @@
       <el-table-column
         v-if="newData.rate.checked"
         :show-overflow-tooltip=true
+        align="center"
         label="评分值"
         prop="rate">
       </el-table-column>
@@ -456,6 +479,7 @@
 
         multipleSelection:[],
 
+        //选择列
         newData:{
           pile_id:{title:'桩号',checked:true},
           begin_time:{title:'开始时间',checked:true},
@@ -513,7 +537,6 @@
       this.getList(this.post_data);
       this.getRecords();
       Bus.$on('isCollapse',res=>{
-        console.log(res);
         this.isCollapse=res
       })
     },
@@ -525,32 +548,29 @@
         if(command=='1'){
           this.importExcel();
         }else if(command=='2'){
-          this.exportXml('rebateSetTable')
+          this.importExcelAll();
         }
       },
       //excel导出
       importExcel() {
-        for(name in this.newData){
-          if(this.newData[name].checked==true){
-            this.tableHeader.push(this.newData[name].title);
-            this.tableName.push(name)
-          }
-        }
         require.ensure([], () => {
-
           if(this.multipleSelection.length!==0){
+            for(name in this.newData){
+              if(this.newData[name].checked==true){
+                this.tableHeader.push(this.newData[name].title);
+                this.tableName.push(name)
+              }
+            }
             const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
             let tHeader = this.tableHeader; //将对应的属性名转换成中文
             let filterVal = this.tableName; //table表格中对应的属性名
             let list=[];
             let obj = {};
             this.multipleSelection.forEach(e=>{
-              //console.log(e);
               for(let i=0;i<filterVal.length;i++){
                 obj[filterVal[i]] = e[filterVal[i]]
               }
               list.push(obj);
-              //console.log(list);
             });
             const data = this.formatJson(filterVal, list);
             export_json_to_excel(tHeader, data, '数据报表');
@@ -564,6 +584,40 @@
           }
         })
       },
+      importExcelAll(){
+        history.list({page_index:1,page_size:200,key:''}).then(res=>{
+          if(res.success){
+            for(name in this.newData){
+              this.tableHeader.push(this.newData[name].title);
+              this.tableName.push(name)
+            }
+            const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
+            let tHeader = this.tableHeader; //将对应的属性名转换成中文
+            let filterVal = this.tableName; //table表格中对应的属性名
+            let list=[];
+            let obj = {};
+            console.log(res.result.items);
+            res.result.items.forEach(e=>{
+              for(let i=0;i<filterVal.length;i++){
+                obj[filterVal[i]] = e[filterVal[i]]
+              }
+              list.push(obj);
+            });
+            const data = this.formatJson(filterVal, list);
+            //console.log(list);
+            export_json_to_excel(tHeader, data, '数据报表');
+
+            //引用赋值  用完清空
+            this.tableHeader=[];
+            this.tableName=[];
+            list=[];
+          }else {
+            _this.$message.error(res.message);
+          }
+        }).catch(err => {
+        });
+      },
+
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => v[j]));
       },
@@ -593,11 +647,9 @@
 
       },
       handleExpandChange(row,expandedRows){
-        console.log(expandedRows)
       },
       //类型改变
       deviceChange(val){
-        console.log(val);
         this.deviceKey=val;
       },
       handleCommand(command) { //
@@ -605,7 +657,6 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(this.multipleSelection);
       },
       //列表改变每页显示的条数
       handleSizeChange: function (size) {
@@ -628,16 +679,13 @@
         let _this=this;
         let tableList=[];
         history.list(post_data).then(res=>{
-          console.log(res);
           if(res.success){
-            //console.log(res.result);
+            console.log(res);
             _this.total=res.result.total;
-            res.result.items.forEach(function (item) {
+            /*res.result.items.forEach(function (item) {
               tableList.push(item);
-            });
-            _this.tableData=tableList;
-            //_this.tableData.tableRows=_this.tableRows
-            console.log(_this.tableData);
+            });*/
+            _this.tableData=res.result.items;
             _this.loading=false
           }else {
             _this.$message.error(res.message);
@@ -645,14 +693,12 @@
           }
         }).catch(err => {
           this.loading=false;
-          console.log(err)
         });
       },
 
       //统计总数
       getRecords(){
         history.records().then(res=>{
-          console.log(res);
           this.recordSum=res.result[0]
         })
       },
@@ -671,10 +717,8 @@
       getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
-          console.log(res);
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
-          console.log(_this.deviceTotal)
         });
       },
 
@@ -697,6 +741,7 @@
     justify-content: space-between
   }
   .c-box{
+    margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;

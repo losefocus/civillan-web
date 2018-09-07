@@ -81,10 +81,10 @@ axios.interceptors.response.use(
     switch(error.request.status){
       case 401:
         Message.error('您的账号暂未授权');
-        /*router.replace({
+        router.replace({
           path: 'login',
           //query: {redirect: router.currentRoute.fullPath}
-        });*/
+        });
         break;
       case 500:
         Message.error('服务器繁忙，请稍后访问');

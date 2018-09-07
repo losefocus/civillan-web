@@ -1,11 +1,20 @@
 <template>
-  <div>
+  <div style="width: 100%;height: 100%">
     <ul class="a-box">
       <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
         {{list.name}}
       </li>
     </ul>
+    <div class="noData" v-if="noData">
+      <div>
+        <div class="iconfont icon-zanwushuju2"></div>
+        <div class="d-title">
+          暂无记录
+        </div>
+      </div>
+    </div>
     <waterfall
+      v-else="noData"
       :line-gap="320"
       :min-line-gap="280"
       :max-line-gap="320"
@@ -98,6 +107,7 @@
     data () {
       return {
         isActive:'',
+        noData:false,
         navList:[],
         loading:null,
         isShow:true,
@@ -145,58 +155,34 @@
       for (let i=0; i<this.deviceStatusLists.length; i++) {
         this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
       }
-      /*let _this=this;
-      Bus.$on('groupId',(e)=>{
-        console.log(e);
-        console.log(this);
-        _this.group_id=e;
-      });*/
-      /*let clientWidth=document.body.clientWidth;
-      if(clientWidth<1500||this.dialogFullscreen){
-        this.isShow=false
-      }else {
-        this.isShow=true
-      }
-      window.onresize=function () {
-        let clientWidth=document.body.clientWidth;
-        if(clientWidth<1500||this.dialogFullscreen){
-          this.isShow=false
-        }else {
-          this.isShow=true
-        }
-      };*/
+
       this.loading=this.$loading({
         fullscreen: true,
         background: 'rgba(0, 0, 0, 0.2)'
       });
-      let _this=this;
-      let id=this.$store.state.project.projectId;
-      let tenant=this.$store.state.project.tenant;
-      deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
-        console.log(res);
-        if(res.success){
-          this.navList=res.result.items;
-          this.getList(this.navList[0].id);
-
-          this.$nextTick(()=>{
-            this.isShow=true
-          });
-          _this.loading.close();
-        }else{
-          _this.$message.error(res.message);
-          _this.loading.close();
-        }
-      }).catch(e=>{
-        _this.loading.close();
-      });
-      /*let group_id=sessionStorage.getItem('group_id');
-      let deviceIndex=sessionStorage.getItem('deviceIndex');
-      this.getList(group_id);*/
+      let id=this.$cookies.get('projectId');
+      let tenant=this.$cookies.get('tenant');
+      this.getGroup(id,tenant)
     },
     methods: {
+      getGroup(id,tenant){
+        deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
+          if(res.success){
+            this.navList=res.result.items;
+            this.getList(this.navList[0].id);
+
+            this.$nextTick(()=>{
+              this.isShow=true
+            });
+          }else{
+            this.$message.error(res.message);
+          }
+        }).catch(e=>{
+
+        });
+      },
       changeTab1(list,index){ //切换tab
         this.isActive=index;
-        console.log(list.id);
         this.getList(list.id)
       },
       radioEvent(){
@@ -207,14 +193,12 @@
         this.deviceName=item.name;
         sessionStorage.setItem('deviceName',item.name);
         this.deviceKey=item.key;
-        console.log(item.name)
       },
       changeTab(i){ //模态框tab
         this.tIndex=i;
         this.currentView=this.tBody[i]
       },
       isFullscreen(){ //是否打开模态框
-        console.log(this.changeIcon);
         if(this.changeIcon){
 
           this.dialogWidth='100%';
@@ -233,31 +217,34 @@
         }
       },
       changeScreen(data){
-        console.log(data);
         this.changeIcon=data;
         this.isFullscreen();
       },
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
           if(res.success){
-            res.result.items.forEach(item=>{
-              item.status=3;
-            });
-            this.items=res.result.items;
-            //console.log(res.result.items);
-            for(let i=0;i<this.items.length;i++){
-              deviceData.list({key:this.items[i].key}).then(res =>{
-                console.log(res);
-                if(res.success){
-                  this.items[i].status=1
-                }else{
-                  this.items[i].status=3
-                }
-              }).catch(e=>{
-                _this.loading.close();
-              })
+            if(res.result.items.length>0){
+              this.noData=false;
+              res.result.items.forEach(item=>{
+                item.status=3;
+              });
+              this.items=res.result.items;
+              for(let i=0;i<this.items.length;i++){
+                deviceData.list({key:this.items[i].key}).then(res =>{
+                  if(res.success){
+                    this.items[i].status=1
+                  }else{
+                    this.items[i].status=3
+                  }
+                }).catch(e=>{
+                  _this.loading.close();
+                })
+              }
+              this.loading.close();
+            }else{
+              this.noData=true;
+              this.loading.close();
             }
-            this.loading.close();
           }else{
             this.loading.close();
           }
@@ -270,7 +257,7 @@
   .a-box{
     width: 100%;
     padding-top: 15px;
-    height: 80px;
+    height: 60px;
     li{
       font-size: 14px;
       cursor: pointer;
@@ -278,10 +265,11 @@
       width: 100px;
       height: 30px;
       text-align: center;
-      line-height: 32px;
+      line-height: 30px;
       background: #FFFFFF;
-      color: #CCCFD4;
-      border:1px solid rgba(204,207,212,1);
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
     }
     li:first-child{
       border-radius: 5px 0 0 5px;
@@ -294,11 +282,34 @@
       color: #ffffff;
       border:1px solid #F76A6A;
     }
+    .active+li{
+      border-left: none;
+    }
   }
   .item-move {
     transition: all .5s cubic-bezier(.55,0,.1,1);
     -webkit-transition: all .5s cubic-bezier(.55,0,.1,1);
   }
+
+  .noData{
+    width: 100%;
+    height: calc(100% - 95px);
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    align-items:center;/*垂直居中*/
+    justify-content: center;/*水平居中*/
+    .icon-zanwushuju2{
+      font-size: 80px;
+      color: #cccccc;
+    }
+    .d-title{
+      margin-top: 10px;
+      font-size: 28px;
+      color: #cccccc;
+    }
+  }
+
   waterfall-slot{
     background: black;
   }

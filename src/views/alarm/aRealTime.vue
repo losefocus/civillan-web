@@ -5,6 +5,7 @@
     style="width: 100%">
     <el-table-column
       type="index"
+      align="center"
       width="50">
     </el-table-column>
     <el-table-column
@@ -14,14 +15,17 @@
     </el-table-column>
     <el-table-column
       prop="b"
+      align="center"
       label="触发时间">
     </el-table-column>
     <el-table-column
       prop="c"
+      align="center"
       label="恢复时间">
     </el-table-column>
     <el-table-column
       prop="d"
+      align="center"
       label="恢复状态">
     </el-table-column>
   </el-table>

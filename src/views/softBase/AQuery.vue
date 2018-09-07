@@ -58,8 +58,9 @@ export default {
       text-align: center;
       line-height: 30px;
       background: #FFFFFF;
-      color: #CCCFD4;
-      border:1px solid rgba(204,207,212,1);
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
     }
     li:first-child{
       border-radius: 5px 0 0 5px;
@@ -71,6 +72,9 @@ export default {
       background: #F76A6A;
       color: #ffffff;
       border:1px solid #F76A6A;
+    }
+    .active+li{
+      border-left: none;
     }
   }
 </style>

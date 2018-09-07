@@ -1,6 +1,15 @@
 <template>
-  <div>
+  <div style="width: 100%;height: 100%;">
+    <div class="noData" v-if="noData">
+      <div>
+        <div class="iconfont icon-zanwushuju2"></div>
+        <div class="d-title">
+          暂无记录
+        </div>
+      </div>
+    </div>
     <waterfall
+      v-else="noData"
       :line-gap="350"
       :min-line-gap="350"
       :max-line-gap="450"
@@ -59,6 +68,7 @@
     },
     data(){
       return{
+        noData:false,
         loading:null,
         lists:[],
         dialogVisible:false,
@@ -85,8 +95,14 @@
         });
         media.list(post_data).then(res=>{
           if(res.success){
-            this.lists=res.result.items;
-            this.loading.close();
+            if(res.result.items.length>0){
+              this.noData=false;
+              this.lists=res.result.items;
+              this.loading.close();
+            }else{
+              this.noData=true;
+              this.loading.close();
+            }
           }else{
             this.$message.error(res.message);
             this.loading.close();
@@ -103,6 +119,24 @@
   .item-move {
     transition: all .5s cubic-bezier(.55,0,.1,1);
     -webkit-transition: all .5s cubic-bezier(.55,0,.1,1);
+  }
+  .noData{
+    width: 100%;
+    height: 100%;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    align-items:center;/*垂直居中*/
+    justify-content: center;/*水平居中*/
+    .icon-zanwushuju2{
+      font-size: 80px;
+      color: #cccccc;
+    }
+    .d-title{
+      margin-top: 10px;
+      font-size: 28px;
+      color: #cccccc;
+    }
   }
   waterfall-slot{
     background: black;

@@ -31,6 +31,7 @@
 
 <style scoped lang="scss">
   .a-box{
+    margin-top: 15px;
     width: 100%;
     height: 60px;
     li{
@@ -40,16 +41,18 @@
       width: 100px;
       height: 30px;
       text-align: center;
-      line-height: 32px;
+      line-height: 30px;
       background: #FFFFFF;
-      color: #CCCFD4;
-      border:1px solid rgba(204,207,212,1);
+      color: #cccccc;
+      border:1px solid #cccccc;
     }
     li:first-child{
       border-radius: 5px 0 0 5px;
+      border-right: none;
     }
     li:last-child{
       border-radius: 0 5px 5px 0;
+      border-left: none;
     }
     .router-link-active{
       background: #F76A6A;

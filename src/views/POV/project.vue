@@ -22,25 +22,25 @@
           <li class="s-data">
             <router-link to="device">
               <p class="d-num">{{ deviceTotal }}</p>
-              <p class="d-name">设备</p>
+              <p class="d-name">现场设备</p>
             </router-link>
           </li>
           <li class="s-data">
             <router-link to="#">
               <p class="d-num">{{ userTotal }}</p>
-              <p class="d-name">人员</p>
+              <p class="d-name">施工人员</p>
             </router-link>
           </li>
           <li class="s-data">
             <router-link to="video">
               <p class="d-num">{{ videoTotal }}</p>
-              <p class="d-name">影像</p>
+              <p class="d-name">影像资料</p>
             </router-link>
           </li>
           <li class="s-data">
             <router-link to="document">
               <p class="d-num">{{ documentTotal }}</p>
-              <p class="d-name">文档</p>
+              <p class="d-name">文档资料</p>
             </router-link>
           </li>
         </ul>
@@ -69,7 +69,7 @@
         </div>
       </li>
       <li class="d-map">
-        <d-map></d-map>
+        <d-map :searchStyle="searchStyle" :typeStyle="typeStyle"></d-map>
         <div class="m-searchBox" @click="enlarge()">
           <span class="iconfont icon-dEnlarge"></span>
         </div>
@@ -108,6 +108,7 @@
     },
     data(){
       return{
+        loading:null,
         polar1:{
           title : {
             text: '统计分析',
@@ -161,6 +162,14 @@
             }
           ]
         }, //统计分析图表
+        searchStyle:{ //搜索框的位置
+          top:'0',
+          right:'85px',
+        },
+        typeStyle:{ //类型过滤的位置
+          top:'0',
+          left:'0',
+        },
         polar2:{
           color: ['#3398DB'],
           title: {
@@ -260,81 +269,91 @@
       }
     },
     created(){
-      const loading=this.$loading({
+    },
+    mounted(){
+      this.loading=this.$loading({
         fullscreen: true,
         background: 'rgba(0, 0, 0, 0.2)'
       });
 
-      let id=this.$store.state.project.projectId;
-      let project_id=sessionStorage.getItem('projectId');
-      let tenant=this.$store.state.project.tenant;
+      let id=this.$cookies.get('projectId');
+      let tenant=this.$cookies.get('tenant');
 
-      //设备总数获取
-      deviceList.list({'project_id':project_id}).then(res=>{
-        console.log(res);
-        if(res.success){
-          loading.close();
-          this.deviceTotal=res.result.total;
-        }else{
-          loading.close();
-        }
-      }).catch(err => {
-        loading.close();
-        console.log(err)
-      });
-      //影像总数
-      media.list().then(res=>{
-        if(res.success){
-          loading.close();
-          this.videoTotal=res.result.total
-        }else{
-          loading.close();
-        }
-      }).catch(err => {
-        loading.close();
-        console.log(err)
-      });
-      //文档总数
-      document.list({ project_id:sessionStorage.getItem('projectId')}).then(res=>{
-        console.log(res.result.total);
-        if(res.success){
-          this.documentTotal=res.result.total;
-          loading.close();
-        }else{
-          loading.close();
-        }
-      }).catch(err => {
-        loading.close();
-        console.log(err)
-      });
-
-      project.info({'project_id':id,'tenant':tenant}).then(res=>{
-        //console.log(res);
-        if(res.success){
-          loading.close();
-          this.info=res.result;
-          this.organTypeList=res.result.organTypeList;
-        }else{
-          loading.close();
-        }
-      });
-
-      //人员总数
-      header.list({'project_id':project_id}).then(res=>{
-        if(res.success){
-          this.userTotal=res.result.total;
-          loading.close();
-        }else{
-          loading.close();
-        }
-      })
-    },
-    mounted(){
-
+      this.getDeviceTotal(id);
+      this.getMediaTotal();
+      this.getDocumentTotal(id);
+      this.getInfo(id,tenant);
+      this.getPersonnel(id);
     },
     methods:{
       enlarge(){
         this.$router.push('/device/deviceMap');
+      },
+      getDeviceTotal(id){
+        //设备总数获取
+        deviceList.list({'project_id':id}).then(res=>{
+          console.log(res);
+          if(res.success){
+            this.loading.close();
+            this.deviceTotal=res.result.total;
+          }else{
+            this.loading.close();
+          }
+        }).catch(err => {
+          this.loading.close();
+        });
+      },
+      getMediaTotal(){
+        //影像总数
+        media.list().then(res=>{
+          if(res.success){
+            this.loading.close();
+            this.videoTotal=res.result.total
+          }else{
+            this.loading.close();
+          }
+        }).catch(err => {
+          this.loading.close();
+        });
+      },
+      getDocumentTotal(id){
+        //文档总数
+        document.list({ project_id:id}).then(res=>{
+          console.log(res.result.total);
+          if(res.success){
+            this.documentTotal=res.result.total;
+            this.loading.close();
+          }else{
+            this.loading.close();
+          }
+        }).catch(err => {
+          this.loading.close();
+        });
+      },
+      getInfo(id,tenant){
+        project.info({'project_id':id,'tenant':tenant}).then(res=>{
+          //console.log(res);
+          if(res.success){
+            this.info=res.result;
+            this.organTypeList=res.result.organTypeList;
+            this.loading.close();
+          }else{
+            this.loading.close();
+          }
+        }).catch(err => {
+          this.loading.close();
+        });
+      },
+      getPersonnel(id){
+        //人员总数
+        header.list({'project_id':id}).then(res=>{
+          if(res.success){
+            this.userTotal=res.result.total;
+            this.loading.close();
+          }else{
+            this.loading.close();
+          }
+        })
       }
     }
   }

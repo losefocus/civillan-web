@@ -63,36 +63,45 @@
         width="50">
       </el-table-column>
       <el-table-column
+        align="center"
+        width="80"
         label="序号"
         prop="id">
       </el-table-column>
       <el-table-column
+        align="center"
         width="140"
         label="施工日期"
         prop="startTime">
       </el-table-column>
       <el-table-column
+        align="center"
         width="140"
         label="完成根数"
         prop="endTime">
       </el-table-column>
       <el-table-column
+        align="center"
         label="日桩长（m)"
         prop="c">
       </el-table-column>
       <el-table-column
+        align="center"
         label="日注浆量（L）"
         prop="d">
       </el-table-column>
       <el-table-column
+        align="center"
         label="日注灰量（kg)"
         prop="e">
       </el-table-column>
       <el-table-column
+        align="center"
         label="成桩时间（min）"
         prop="f">
       </el-table-column>
       <el-table-column
+        align="center"
         label="日成效"
         prop="g">
       </el-table-column>
@@ -121,7 +130,7 @@
           {
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'5',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -135,7 +144,7 @@
         }, {
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'1',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -149,7 +158,7 @@
         }, {
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'2',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -163,7 +172,7 @@
         }, {
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'3',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -177,7 +186,7 @@
         },{
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'4',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -191,7 +200,7 @@
         },{
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'5',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -205,7 +214,7 @@
         },{
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'3',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -219,7 +228,7 @@
         },{
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'7',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -233,7 +242,7 @@
         },{
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'8',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -247,7 +256,7 @@
         },{
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'9',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -261,7 +270,7 @@
         },{
           id: '12987122',
           startTime:'2018-02-22 19:00',
-          endTime:'2018-02-22 19:00',
+          endTime:'3',
           a: '6m',
           b: '20m',
           c: '20L',
@@ -324,6 +333,7 @@
 
 <style scoped lang="scss">
   .c-box{
+    margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;

@@ -35,6 +35,7 @@ export default {
 
 <style scoped lang="scss">
   .a-box{
+    margin-top: 15px;
     width: 100%;
     height: 60px;
     li{
@@ -44,10 +45,11 @@ export default {
       width: 100px;
       height: 30px;
       text-align: center;
-      line-height: 32px;
+      line-height: 30px;
       background: #FFFFFF;
-      color: #CCCFD4;
-      border:1px solid rgba(204,207,212,1);
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
     }
     li:first-child{
       border-radius: 5px 0 0 5px;
@@ -59,6 +61,9 @@ export default {
       background: #F76A6A;
       color: #ffffff;
       border:1px solid #F76A6A;
+    }
+    .router-link-active+li{
+      border-left: none;
     }
   }
 

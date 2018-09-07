@@ -16,68 +16,57 @@
           </div>
         </div>
         <div class="u-body">
-          <p class="u-information">联系方式</p>
+          <div class="u-information">
+            <div>联系方式</div>
+            <div>
+              <el-dropdown trigger="click" @command="handleCommand">
+                <span class="el-dropdown-link" style="cursor: pointer">
+                  <i class="el-icon-circle-plus"></i><span style="margin-left: 10px">添加</span>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item v-for="(list,index) in contactSelect" :key="index" :command="list">{{list.label}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </div>
 
           <!--机构名称-->
           <div class="i-box">
             <div class="i-company">
-              <i class="iconfont icon-company"></i>
-              <div class="i-context" v-if="isCompany1">
+              <span class="iconfont icon-company"></span>
+              <div class="i-context" v-if="isCompany">
                 <p>{{ projectOrgan }}</p>
               </div>
-              <input class="i-modify" type="text" v-else="isCompany1" v-focus>
-              <i class="iconfont icon-modify" @click="modify1()"></i>
+              <input class="i-modify" v-model="projectOrgan" type="text" v-else="isCompany" v-focus>
+              <i class="iconfont icon-modify" @click="edit('company')" v-if="isCompany"></i>
+              <i class="iconfont icon-wancheng" @click="update('company')" v-else="isCompany"></i>
             </div>
 
             <!--电话号码-->
             <div class="i-company">
               <i class="iconfont icon-phone"></i>
-              <div class="i-context"  v-if="isCompany3">
+              <div class="i-context"  v-if="isPhone">
                 <p>{{ userInfo.phone }}</p>
               </div>
-              <input class="i-modify" type="text" v-else="isCompany3" v-focus>
-              <i class="iconfont icon-modify" @click="modify3()"></i>
+              <input class="i-modify" type="text" v-else="isPhone" v-focus>
+              <i class="iconfont icon-modify" @click="edit('phone')" v-if="isPhone"></i>
+              <i class="iconfont icon-wancheng" @click="update('phone')" v-else="isPhone"></i>
             </div>
 
-            <!--联系方式-->
-            <div class="i-company">
-              <i class="iconfont icon-WeChat"></i>
-              <div class="i-context"  v-if="isCompany2">
-                <p>wx199299</p>
+
+
+            <!--添加联系方式-->
+            <div class="i-company" v-for="(list,index) in contactList" :key="index">
+              <span style="margin-right: 21px" class="iconfont" :class="{'icon-WeChat':list.type=='wechat','icon-mail':list.type=='email','icon-sms':list.type=='sms'}"></span>
+              <input class="i-modify" type="text" v-if="list.flag" v-model="content" v-focus>
+              <div class="i-context"  v-else>
+                <p style="width: 140px;">{{ list.value }}</p>
               </div>
-              <input class="i-modify" type="text" v-else="isCompany2" v-focus>
-              <i class="iconfont icon-modify" @click="modify2()"></i>
+              <i class="iconfont icon-wancheng" @click="addContact(list,index)" v-if="list.flag"></i>
+              <i class="iconfont icon-modify" @click="editContact(list,index)" v-else></i>
+              <i class="iconfont icon-delete" @click="deleteContact(list)"></i>
             </div>
-
-            <div class="i-company" >
-              <i class="iconfont icon-mail"></i>
-              <div class="i-context"  v-if="isCompany4">
-                <p>18989477589@163.com</p>
-              </div>
-              <input class="i-modify" type="text" v-else="isCompany4" v-focus>
-              <i class="iconfont icon-modify" @click="modify4()"></i>
-            </div>
-
-            <div class="i-company" >
-              <i class="iconfont icon-mail"></i>
-              <div class="i-context"  v-if="isCompany5">
-                <p>18989477589@163.com</p>
-              </div>
-              <input class="i-modify" type="text" v-else="isCompany5" v-focus>
-              <i class="iconfont icon-modify" @click="modify5()"></i>
-            </div>
-
-            <div class="i-company" >
-              <i class="iconfont icon-mail"></i>
-              <div class="i-context"  v-if="isCompany5">
-                <p>18989477589@163.com</p>
-              </div>
-              <input class="i-modify" type="text" v-else="isCompany5" v-focus>
-              <i class="iconfont icon-modify" @click="modify5()"></i>
-            </div>
-
           </div>
-          <div class="u-submit">保存</div>
         </div>
       </div>
     </div>
@@ -86,24 +75,36 @@
 
 <script>
   import user from '@/api/userCenter/header'
+  import contact from '@/api/userCenter/contact'
+  import dictionary from '@/api/common/dictionary'
   import no_photo from '@/assets/header/no_photo.png'
   import userInfo from '@/assets/userinfo/userInfo.png'
 export default {
   data(){
     return{
       userBg:userInfo,
-      isCompany1:true,
-      isCompany2:true,
+      contactSelect:[],
+      isCompany:true,
+      isPhone:true,
       isCompany3:true,
       isCompany4:true,
       isCompany5:true,
+      contactList:[],
+      content:'',
+      contactIndex:0,
+      contactPostData:{},
+      nameList:[],
       userInfo:{},
       role:'',
-      projectOrgan:{},
+      projectOrgan:'',
       avatarUrl:'', //头像路径
     }
   },
+  created(){
+    this.getContactInformation()
+  },
   mounted(){
+    this.getContentList();
     this.getInformation();
   },
   directives: {
@@ -117,33 +118,129 @@ export default {
   },
   methods:{
     getInformation(){
+      this.loading=this.$loading({
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.2)'
+      });
       let userId=sessionStorage.getItem('token').substring(0,2);
       user.userInfo({project_user_id:userId}).then(res=>{
         //console.log(res);
-        this.userInfo = res.result;
-        this.role=res.result.userRole[0].projectRole.role;
-        this.projectOrgan=res.result.projectOrgan.name;
-        if(res.result.avatarBaseUr&&res.result.avatarPath){
-          this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
+        if(res.success){
+          this.userInfo = res.result;
+          this.role=res.result.userRole[0].projectRole.role;
+          this.projectOrgan=res.result.projectOrgan.name;
+          if(res.result.avatarBaseUr&&res.result.avatarPath){
+            this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
+          }else{
+            this.avatarUrl=no_photo
+          }
+          this.loading.close()
         }else{
-          this.avatarUrl=no_photo
+          this.loading.close()
+        }
+      }).catch(e=>{
+        this.loading.close()
+      })
+    },
+    getContactInformation(){
+      dictionary.list({'type':'contact'}).then(res=>{
+        console.log(res);
+        if(res.success){
+          //this.contactSelect=res.result;
+          let lists=res.result;
+
+          this.contactSelect=this.array_diff(lists,this.contactList)
         }
       })
     },
-    modify1(){
-      this.isCompany1=!this.isCompany1
+    getContentList(){
+      contact.list().then(res=>{
+        console.log(res);
+        this.contactList=res.result.items;
+        let array = [];
+        this.contactList.forEach(item=>{
+          item.flag=false;
+          let obj = Object.assign({},item);
+          array.push(obj)
+        });
+        this.contactList = array
+      })
     },
-    modify2(){
-      this.isCompany2=!this.isCompany2
+
+    array_diff(a, b) {
+      for (var i = 0; i < b.length; i++) {
+        for (var j = 0; j < a.length; j++) {
+          if (a[j].value == b[i].type) {
+            a.splice(j, 1);
+            j = j - 1;
+          }
+        }
+      }
+      return a;
     },
-    modify3(){
-      this.isCompany3=!this.isCompany3
+    handleCommand(command) {
+      let obj = Object.assign({},command);
+      obj.flag = true;
+      delete obj.id
+      this.contactList.push(obj);
     },
-    modify4(){
-      this.isCompany4=!this.isCompany4
+
+    edit(x){
+      if(x=='company'){
+        this.isCompany=!this.isCompany
+      }else if(x=='phone'){
+        this.isPhone=!this.isPhone
+      }
     },
-    modify5(){
-      this.isCompany5=!this.isCompany5
+    update(x){
+      if(x=='company'){
+        this.isCompany=!this.isCompany
+      }else if(x=='phone'){
+        this.isPhone=!this.isPhone
+      }
+    },
+    addContact(list,index){
+      list.flag = false;
+      let post_data = {}
+
+      if(list.id){    //修改
+        post_data=list;
+        post_data.value = this.content;
+        delete post_data.flag
+      }else{      //添加
+        post_data={
+          'projectId':this.$cookies.get('projectId'),
+          'userId':sessionStorage.getItem('token').substring(0,2),
+          'type':list.value,
+          'value':this.content,
+          'status':1,
+        }
+      }
+      contact.addContact(post_data).then(res=>{
+        console.log(res);
+        this.content = '';
+        this.getContentList()
+      });
+      console.log(list);
+
+      // list.flag=false;
+    },
+    editContact(list,index){
+      console.log(index);
+      this.content = list.value;
+      list.flag=true;
+    },
+    deleteContact(list){
+      if(list.id){
+        contact.deleteContact({'project_user_contact_id':list.id}).then(res=>{
+          console.log(res.message);
+          this.getContentList();
+          this.getInformation();
+        })
+      }else{
+        this.contactList.pop()
+      }
+
     }
   }
 }
@@ -207,12 +304,16 @@ export default {
       }
     }
     .u-body{
-      width: 450px;
+      width: 520px;
       margin: 0 auto;
       .u-information{
         margin-top: 10%;
+        border-left: 3px solid #999999;
         font-size:14px;
+        padding-left: 15px;
         color:rgba(102,102,102,1);
+        display: flex;
+        justify-content: space-between;
       }
       .i-box{
         margin-top: 5%;
@@ -251,6 +352,11 @@ export default {
           }
           .icon-modify{
             cursor: pointer;
+          }
+          .icon-wancheng{
+            cursor: pointer;
+            font-size: 18px;
+            color: #13ce66;
           }
         }
       }

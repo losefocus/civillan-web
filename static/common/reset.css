@@ -273,8 +273,10 @@ button, input, select, textarea { font-size:100%; }
   padding: 0 !important;
   height: 100%;
 }
-
-
+/*表单重置样式*/
+.el-form-item__label{
+  line-height: 20px !important;
+}
 /*表格重置样式*/
 
 body .el-table th.gutter {

@@ -43,16 +43,16 @@
           title: [{
             text: tips +' '+'/'+' ' + 200,
             left: 'center',
-            top: '35%',
+            top: '42%',
             textStyle: {
               color: 'rgba(31,189,238)',
               fontSize:'18'
             }
           }, {
             text: 'L/min',
-            left: '50%',
-            top: '53%',
-            textAlign: 'center',
+            left: 'center',
+            top: '58%',
+            //textAlign: 'center',
             textStyle: {
               color: '#999999',
               fontSize:'14'

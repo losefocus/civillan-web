@@ -4,7 +4,7 @@
       <el-main style="height: 100%;" :style="{backgroundImage: 'url(' + groupImg + ')' }">
         <div class="cp-logo" :style="{backgroundImage: 'url(' + logoImg + ')' }"></div>
       </el-main>
-      <el-aside style="height: 100%">
+      <el-aside style="height: 100%;min-height: 645px;">
         <p class="user-title">用户登录</p>
         <p class="cp-system">工程施工实时监控系统</p>
 
@@ -141,8 +141,8 @@
               }else{
                 let wsUrl=JSON.parse(res.result.wsUrl);
                 if(that.userInfo.checked){
-                  sessionStorage.setItem('token',res.result.token);
-                  sessionStorage.setItem('wsUrl',wsUrl.result);
+                  //sessionStorage.setItem('token',res.result.token);
+                  //sessionStorage.setItem('wsUrl',wsUrl.result);
                   that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
                   that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
                   that.$store.dispatch('incrementToken',res.result.token);
@@ -150,9 +150,11 @@
                   that.$message.success('登陆成功');
                   loading.close();
                 }else{
-                  sessionStorage.setItem('token',res.result.token);
-                  sessionStorage.setItem('wsUrl',wsUrl.result);
-                  that.$cookies.remove('token');
+                  that.$cookies.set('token',res.result.token);
+                  that.$cookies.set('wsUrl',wsUrl.result);
+                  //sessionStorage.setItem('token',res.result.token);
+                  //sessionStorage.setItem('wsUrl',wsUrl.result);
+                  //that.$cookies.remove('token');
                   that.$store.dispatch('incrementToken',res.result.token);
                   that.$router.push('/');
                   that.$message.success('登陆成功');

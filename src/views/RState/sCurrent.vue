@@ -43,16 +43,16 @@ export default {
         title: [{
           text: tips +' '+'/'+' ' + 200,
           left: 'center',
-          top: '35%',
+          top: '42%',
           textStyle: {
             color: 'rgba(31,189,238)',
-            fontSize:'20'
+            fontSize:'18'
           }
         }, {
           text: 'A',
-          left: '48%',
-          top: '53%',
-          textAlign: 'center',
+          left: 'center',
+          top: '58%',
+          //textAlign: 'center',
           textStyle: {
             color: '#999999',
             fontSize:'14'

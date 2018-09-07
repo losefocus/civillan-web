@@ -1,7 +1,7 @@
 const state = {
   projectId: sessionStorage.getItem('projectId') || 0,
   tenant:sessionStorage.getItem('tenant') || 0,
-  projectLogo:sessionStorage.getItem('projectId') || 0
+  projectLogo:sessionStorage.getItem('projectLogo') || 0
 };
 
 // getters

@@ -1,6 +1,15 @@
 <template>
-  <div style="margin-top: 20px">
+  <div style="margin-top: 20px;width: 100%;height: 100%;">
+    <div class="noData" v-if="noData">
+      <div>
+        <div class="iconfont icon-zanwushuju2"></div>
+        <div class="d-title">
+          暂无记录
+        </div>
+      </div>
+    </div>
     <waterfall
+      v-else="noData"
       :line-gap="400"
       :min-line-gap="350"
       :max-line-gap="480"
@@ -59,6 +68,7 @@
     },
     data(){
       return{
+        noData:false,
         loading:null,
         playerList:[],
         post_data:{
@@ -122,18 +132,24 @@
         });
         media.list(post_data).then(res=>{
           if(res.success){
-            res.result.items.forEach((item,i)=>{
-              console.log(item);
-              this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
-              this.playerOptions.sources[0].src=item.url;
-              this.playerOptions.createdAt=item.createdAt;
-              this.playerOptions.name=item.name;
-              console.log(this.playerOptions.sources[0].src);
-              this.playerList.push(this.playerOptions);
-            });
-            this.loading.close()
+            if( res.result.items.length>0){
+              res.result.items.forEach((item,i)=>{
+                this.noData=false;
+                this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
+                this.playerOptions.sources[0].src=item.url;
+                this.playerOptions.createdAt=item.createdAt;
+                this.playerOptions.name=item.name;
+                console.log(this.playerOptions.sources[0].src);
+                this.playerList.push(this.playerOptions);
+              });
+              this.loading.close()
+            }else{
+              this.noData=true;
+              this.loading.close()
+            }
+
           }else{
-            this.$message.error(res.message)
+            this.$message.error(res.message);
             this.loading.close()
           }
         }).catch(e=>{
@@ -190,6 +206,24 @@
   }
   waterfall-slot{
     background: black;
+  }
+  .noData{
+    width: 100%;
+    height: 100%;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    align-items:center;/*垂直居中*/
+    justify-content: center;/*水平居中*/
+    .icon-zanwushuju2{
+      font-size: 80px;
+      color: #cccccc;
+    }
+    .d-title{
+      margin-top: 10px;
+      font-size: 28px;
+      color: #cccccc;
+    }
   }
   .item {
     //border: 20px solid #ffffff;

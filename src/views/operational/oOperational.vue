@@ -49,6 +49,7 @@
       </el-table-column>
       <el-table-column
         label="序号"
+        align="center"
         prop="id">
       </el-table-column>
       <el-table-column
@@ -63,21 +64,26 @@
       </el-table-column>
       <el-table-column
         label="桩基数量"
+        align="center"
         prop="a">
       </el-table-column>
       <el-table-column
+        align="center"
         label="施工总长（m)"
         prop="b">
       </el-table-column>
       <el-table-column
+        align="center"
         label="总灰量（kg)"
         prop="c">
       </el-table-column>
       <el-table-column
+        align="center"
         label="总浆量（L）"
         prop="d">
       </el-table-column>
       <el-table-column
+        align="center"
         label="评级"
         prop="e">
       </el-table-column>

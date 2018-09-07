@@ -1,14 +1,14 @@
 <template>
-<div style="width: 100%;height:100%;position: relative">
+<div style="width: 100%;height:100%;">
   <div class="m-screen">
-    <div class="s-box">
-      <input v-model="searchKey" id="deviceSearch" name="deviceSearch" type="text">
+    <div class="s-box" :style="searchStyle">
+      <input v-model="searchKey" placeholder="设备名称" id="deviceSearch" name="deviceSearch" type="text">
       <label for="deviceSearch" class="m-iconBox" @click="search()">
         <span class="el-icon-search"></span>
       </label>
     </div>
-    <div class="s-box s-box1">
-      <el-select size="small" v-model="productType" placeholder="按类型过滤" style="width: 120px">
+    <div class="s-box s-box1" :style="typeStyle">
+      <el-select size="small" v-model="productType" placeholder="按设备类型过滤" style="width: 150px">
         <el-option
           v-for="item in productLists"
           :key="item.value"
@@ -108,8 +108,12 @@ export default {
       },
     }
   },
+  props:[
+    'searchStyle',
+    'typeStyle'
+  ],
   mounted: function () {
-    let project_id=sessionStorage.getItem('projectId');
+    let project_id=this.$cookies.get('projectId');
     this.post_data.project_id=project_id;
     this.init()
   },
@@ -122,7 +126,7 @@ export default {
       });
       let map = new AMap.Map('container', {
         center: [116.397428, 39.90923],
-        zoom: 5
+        zoom: 20
       });
       /*AMap.plugin(['AMap.ToolBar', 'AMap.Scale','AMap.MapType'], function () {
         map.addControl(new AMap.ToolBar());
@@ -132,27 +136,7 @@ export default {
         ))
       });*/
       //获取设备列表
-      let cluster, markers = [];
-      let sts=[
-        {
-          url:devicePolymerization,
-          size:new AMap.Size(24,34),
-          offset:new AMap.Pixel(-16,-30),
-          textColor:'#ffffff',
-          textSize:16
-        },
-        {
-          url:stateMarker,
-          size:new AMap.Size(32,39),
-          offset:new AMap.Pixel(-16,-30)
-        },
-        {
-          url:marker,
-          size:new AMap.Size(48,48),
-          offset:new AMap.Pixel(-24,-45),
-          textColor:'#CC0066'
-        }
-      ];
+      let markers = [];
       let marker;
       deviceList.list(this.post_data).then(res=>{
         //接口成功
@@ -186,7 +170,7 @@ export default {
 
                   marker=new AMap.Marker({
                     position:lists[i].position.split(','),
-                    content: '<div style="background:url('+changeMarker+') no-repeat; height: 40px; width: 32px; border-radius: 12px; "></div>',
+                    content: '<div style="background:url('+changeMarker+') no-repeat; height: 43px; width: 32px; border-radius: 12px; "></div>',
                     offset: new AMap.Pixel(-15,-15),
                     lists:lists[i]
                   });
@@ -208,7 +192,7 @@ export default {
                       infoWindow = new SimpleInfoWindow({
                         infoBody: content,
                         //基点指向marker的头部位置
-                        offset: new AMap.Pixel(-4, -10)
+                        offset: new AMap.Pixel(-1, -10)
                       });
 
                       infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
@@ -313,19 +297,21 @@ export default {
   .m-screen{
     display: flex;
     justify-content: space-around;
-    height: 30px;
     top: 15px;
     left: 15px;
-    position: absolute;
+    position: relative;
     z-index: 99;
     .s-box{
       box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);
+      position: absolute;
     }
     .s-box1{
       margin-left: 10px;
+      position: absolute;
     }
     #deviceSearch{
-      height: 30px;
+      height: 32px;
+      font-size: 14px;
       padding-left: 10px;
       border: none;
       vertical-align: top;
@@ -337,11 +323,11 @@ export default {
       vertical-align: top;
       display: inline-block;
       background: #F31A1A;
-      width: 30px;
-      line-height: 30px;
+      width: 32px;
+      line-height: 32px;
       text-align: center;
       border-radius: 0 4px 4px 0;
-      height: 30px;
+      height: 32px;
       color: #ffffff;
       margin-left: -4px;
       cursor: pointer;

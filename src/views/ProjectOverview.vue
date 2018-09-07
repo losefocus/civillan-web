@@ -51,24 +51,16 @@
     },
     methods:{
       change(msg){
-        console.log(msg)
       }
     },
     watch:{
       $route(to,from){
         if(to.path=='/project'){
           this.isActive=false;
-          console.log(this.isActive);
         }else {
           this.isActive=true;
         }
         this.title=this.$route.name;
-        /*if(!this.$route.name){
-          this.title='';
-          this.isActive=false;
-        }else {
-          this.isActive=true;
-        }*/
       }
     }
   }
@@ -90,7 +82,7 @@
 
   .breadcrumb-box{
     width: calc(100% - 20px);
-    height: 45px;
+    height: 35px;
     text-align: right;
     .el-breadcrumb{
       float: right;

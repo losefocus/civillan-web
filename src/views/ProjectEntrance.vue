@@ -52,7 +52,7 @@
       init: function () {
         let _this=this;
         //console.log(sessionStorage.getItem('isActive'));
-        sessionStorage.setItem('isActive',0);
+        //sessionStorage.setItem('isActive',0);
         let map = new AMap.Map('container', {
           center: [116.397428, 39.90923],
           zoom: 10
@@ -163,7 +163,8 @@
                       },
                       getInfoWindow: function(dataItem, context, recycledInfoWindow) {
                         let projectLogo=dataItem.thumbnailUrl+dataItem.thumbnailPath;
-                        _this.$store.dispatch('incrementLogo',projectLogo);
+                        //_this.$store.dispatch('incrementLogo',projectLogo);
+                        _this.$cookies.set('projectLogo',projectLogo);
                         //console.log(dataItem.beginAt);
                         let beginTime=timeStamp(dataItem.beginAt);
                         let endTime=timeStamp(dataItem.endAt);
@@ -221,8 +222,10 @@
 
                     markerList.on('infoWindowClick',function (event,info) {
                       console.log(info.data);
-                      _this.$store.dispatch('incrementId',info.id);
-                      _this.$store.dispatch('incrementTenant',info.data.tenant);
+                      //_this.$store.dispatch('incrementId',info.id);
+                      _this.$cookies.set('projectId',info.id);
+                      _this.$cookies.set('tenant',info.data.tenant);
+                      //_this.$store.dispatch('incrementTenant',info.data.tenant);
                       _this.$router.push('project')
                     });
 

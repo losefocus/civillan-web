@@ -1,8 +1,6 @@
 <template>
   <div style="width: 100%;">
-    <div id="photoViewer">
-
-    </div>
+    <div id="photoViewer"></div>
   </div>
 </template>
 

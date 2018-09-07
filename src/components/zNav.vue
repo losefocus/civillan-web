@@ -92,14 +92,14 @@ export default {
    }
   },
   created(){
-    let id=this.$store.state.project.projectId;
-    let tenant=this.$store.state.project.tenant;
+    let id=this.$cookies.get('projectId');
+    let tenant=this.$cookies.get('tenant');
     project.info({'project_id':id,'tenant':tenant}).then(res=>{
       //console.log(res);
       this.projectName=res.result.name;
     });
     this.isActive=0;
-    this.projectLogo=sessionStorage.getItem('projectLogo');
+    this.projectLogo=this.$cookies.get('projectLogo');
     let _this=this;
     let cWidth=document.body.clientWidth;
     if(cWidth<1450){

@@ -1,168 +1,135 @@
 <template>
-   <div id="pileMap" style="width: 100%;height: 100%"></div>
+  <div class="mycanvas" style="width: 100%;height: 100%;">
+    <!-- <div id="map" style="width:100%;height:100%;"></div> -->
+    <canvas  id="canvas" width="100%" height="100%" ></canvas>
+  </div>
 </template>
-
 <script>
-  import config from '@/api/configure/config.js'
-export default {
-  name: "pileMap",
-  data(){
-    return{
-      post_data:{ //主列表请求参数
-        page_index:1,
-        page_size:50
+  export default {
+    props:["dataInfo"],
+    data(){
+      return{
+        maxLon:null, minLon:null, maxLat:null, minLat:null,
+        canvas:null
+      }
+    },
+    components:{
+
+    },
+    created(){},
+    mounted(){
+      this.init()
+    },
+    methods:{
+      init(){
+        var context;
+        this.canvas = document.getElementById('canvas');
+        context = this.canvas.getContext('2d');
+        context.fillStyle = "#fff";
+        context.fillRect(0, 0, 800, 800);
+
+        //桩数据
+        let ps = this.dataInfo.ps;
+        //当前桩
+        var current = this.dataInfo.pile_id//{lon:120.042071817, lat:30.862442958,title:"A8"};
+        console.log(current)
+        //画布坐标显示范围
+        let laglgn = JSON.parse(current.content);
+
+        laglgn.every(res=>{
+          if(res.label == "pile_position"){
+            this.minLon = parseFloat(res.value.split(",")[0]) - 0.00004;
+            this.minLat = parseFloat(res.value.split(",")[1]) + 0.00004;
+            this.maxLon = parseFloat(res.value.split(",")[0]) + 0.00004;
+            this.maxLat = parseFloat(res.value.split(",")[1]) - 0.00004;
+            return false
+          }
+        });
+        ps.forEach(ll => {
+
+          let markerColor = "#726763"
+          if(ll.status == 0) markerColor = '#72676333'
+          else if(ll.status == 1) markerColor = '#726763'
+          else if(ll.status == 2) markerColor = '#66D06E'
+          ll.content = JSON.parse(ll.content)
+          ll.content.every(res=>{
+            if(res.label == "pile_position"){
+              drawPoint(this.mapToScreen(res.value.split(",")[0], res.value.split(",")[1]),markerColor, "#FFFFFF")
+              return false
+            }
+          })
+        });
+        document.onmousemove = this.mouseMove;
+
+        //画桩位MARK
+        function drawPoint(point,bgColor,fontColor) {
+          //console.log(point);
+          context.fillStyle = bgColor;
+          context.beginPath();
+          context.arc(point.x, point.y, 15, 0, Math.PI * 2, true);
+          context.closePath();
+          context.fill();
+
+          context.fillStyle = fontColor;//颜色
+          context.font = "normal 12px 微软雅黑";//字体
+          context.textBaseline = "middle";//竖直对齐
+          context.textAlign = "center";//水平对齐　
+          context.fillText(point.title, point.x, point.y, 50);//绘制文字
+
+        }
+      },
+      //地理坐标转换为屏幕坐标
+      //longitude 经度  120.248333
+      //latitude  纬度  30.340919
+      mapToScreen(longitude, latitude, title) {
+        var scaleX, scaleY, screenX, screenY, X, Y, minX, minY;
+
+        scaleX = ((this.maxLon - this.minLon) * 3600) / 800;
+        scaleY = ((this.maxLat - this.minLat) * 3600) / 400;
+
+        screenX = longitude * 3600 / scaleX;
+        screenY = latitude * 3600 / scaleY;
+
+        minX = this.minLon * 3600 / scaleX;
+        minY = this.minLat * 3600 / scaleY;
+
+        X = (longitude - this.minLon) * 3600 / scaleX;
+        Y = (this.maxLat - latitude) * 3600 / scaleY;
+
+        let tit = (title)?title:''
+        return { x: X, y: Y, title: tit };
+      },
+      mousePosition(ev) {
+        if (ev.pageX || ev.pageY) {
+          return { x: ev.pageX, y: ev.pageY };
+        }
+        return {
+          x: ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+          y: ev.clientY + document.body.scrollTop - document.body.clientTop
+        };
+      },
+      mouseMove(ev) {
+        ev = ev || window.event;
+        var mousePos = this.mousePosition(ev);
+        // document.getElementById('x').innerHTML = "X:" + mousePos.x;
+        // document.getElementById('y').innerHTML = "Y:" + mousePos.y;
+      }
+    },
+    watch:{
+      dataInfo:{//深度监听，可监听到对象、数组的变化
+        handler(val, oldVal){
+          this.init()
+        },
       }
     }
-  },
-  mounted(){
-    this.init()
-  },
-  methods:{
-    init(post_data){
-      let _this=this;
-      /*this.loading=this.$loading({
-        fullscreen: true,
-        background: 'rgba(0, 0, 0, 0.2)'
-      });*/
-      let map = new AMap.Map('pileMap', {
-        center: [116.397428, 39.90923],
-        zoom: 20
-      });
-      /*AMap.plugin(['AMap.ToolBar', 'AMap.Scale','AMap.MapType'], function () {
-        map.addControl(new AMap.ToolBar());
-        map.addControl(new AMap.Scale());
-        map.addControl(new AMap.MapType(
-          {defaultType:0,showTraffic:false,position:{top:'100px'}}
-        ))
-      });*/
-      //获取设备列表
-      let cluster, markers = [];
-      let marker;
-
-      config.list(this.post_data).then(res=>{
-        //console.log(res);
-        if(res.success){
-          res.result.items.forEach(item=>{
-            let content=JSON.parse(item.content);
-
-            for(let i=0;i<content.length;i++){
-              if(content[i].label=='pile_position'){
-                marker=new AMap.Marker({
-                  position:content[i].value.split(','),
-                  offset: new AMap.Pixel(-15,-15),
-                });
-                break;
-              }
-            }
-            marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-              offset: new AMap.Pixel(-140, -25),//修改label相对于maker的位置
-            });
-            map.add(marker);
-            map.setFitView();
-          })
-        }else{
-          console.log('CAD数据获取失败')
-        }
-      })
-
-      /*deviceList.list(post_data).then(res=>{
-        //接口成功
-        if(res.success){
-          let lists=res.result.items;
-          let infoWindow= new AMap.InfoWindow({offset: new AMap.Pixel(0, 5)});
-          for(let i=0;i<lists.length;i++){
-            //console.log(lists[i]);
-            //判断设备是否有经纬度
-            if(lists[i].position){
-              //设备的运行状态
-              deviceData.list({key:lists[i].key}).then(res =>{
-                if(res.success){
-                  let changeMarker = null;
-                  let changeBackground= null;
-                  let changeColor=null;
-                  if(res.success){
-                    changeMarker = runningMarker;
-                    changeBackground = 'runningBackground';
-                    changeColor = 'runningColor'
-                  }else{
-                    changeMarker = deviceMarker;
-                    changeBackground = 'noBackground';
-                    changeColor = 'noColor'
-                  }
-                  marker=new AMap.Marker({
-                    position:lists[i].position.split(','),
-                    content: '<div style="background:url('+changeMarker+') no-repeat; height: 40px; width: 32px; border-radius: 12px; "></div>',
-                    offset: new AMap.Pixel(-15,-15),
-                    lists:lists[i]
-                  });
-                  marker.on('click',function (e) {
-                    console.log(e.target);
-                    let items=e.target.G.lists;
-
-                    let content='<div class="info-container device_details">' +
-                      '<div style=" position: relative; width: 200px;height: 150px;background: url(' +items.thumbnailBaseUrl+items.thumbnailPath+
-                      ');background-size:100% 100%">' +
-                      '</div>'+
-                      '<div class="info-content">' +
-                      '<div class="info-title1">' +items.name+
-                      '</div>'+
-                      '<span class='+changeColor+'></span>'+
-                      '</div>'+
-                      '</div>';
-                    AMapUI.loadUI(['overlay/SimpleInfoWindow'], function(SimpleInfoWindow) {
-                      infoWindow = new SimpleInfoWindow({
-                        infoBody: content,
-                        //基点指向marker的头部位置
-                        offset: new AMap.Pixel(-4, -10)
-                      });
-
-                      infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
-                        //阻止冒泡
-                        event.stopPropagation();
-                        _this.dialogVisible=true;
-                        _this.deviceName=items.name;
-                        sessionStorage.setItem('deviceName',items.name);
-                        _this.deviceKey=items.key;
-                        console.log(items.name)
-                      });
-                      infoWindow.open(map, e.target.getPosition());
-                    });
-                    console.log(e.target.G.lists);
-
-                    //console.log(e.target.getPosition());
-                    //infoWindow.setContent(content);
-                    infoWindow.open(map, e.target.getPosition());
-                    map.setCenter(e.target.getPosition());
-                  });
-                  // 设置label标签
-                  marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-                    offset: new AMap.Pixel(-140, -25),//修改label相对于maker的位置
-                    content:"<div class='deviceLabelBox'>"+"<span class="+changeBackground+">"+lists[i].name+"</span>"+"</div>"
-                  });
-                  map.add(marker);
-                  map.setFitView();
-                  markers.push(marker);
-                  this.loading.close();
-                }else{
-                  //_this.$message.error(res.message);
-                  _this.loading.close();
-                }
-              });
-            }else{
-              //console.log('没有经纬度')
-              _this.loading.close();
-            }
-          }
-        }else {
-          _this.loading.close();
-          that.$message.error(res.message)
-        }
-      });*/
-    }
   }
-}
 </script>
-
 <style scoped>
+  .mycanvas{
+    width: 100%;
+    height: 100%;
+    margin: auto;
+  }
+
 
 </style>

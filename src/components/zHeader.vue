@@ -134,10 +134,12 @@
     },
     mounted(){
       this.getInfo()
+      window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
     },
     destroyed() {
       //页面销毁时关闭长连接
       this.websocketclose();
+      window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
     },
     methods:{
       initWebSocket(){ //初始化webSocket
@@ -176,7 +178,6 @@
           }else {
             this.avatarUrl=no_photo;
           }
-
           this.username=res.result.name
         });
       },
@@ -198,8 +199,19 @@
           this.tIndex=command;
           this.currentView=this.tBody[command];
         }
+      },
+      beforeunloadHandler (e) {
+        e = e || window.event;
 
+        console.log(e);
+        this.$cookies.remove('token');
+        // 兼容IE8和Firefox 4之前的版本
+        /*if (e) {
+          e.returnValue = '关闭提示';
+        }*/
 
+        // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+        //return '关闭提示';
       },
       close(){
         if(window.$cookies.get('token')){

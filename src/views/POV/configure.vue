@@ -3,7 +3,16 @@
     <div class="j-box">
       <div class="j-table">
         <div class="i-box">
-          <div class="j-Import" @click="importExcel()">导出</div>
+
+          <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
+            <div class="j-Import">导出</div>
+            <el-dropdown-menu slot="dropdown" >
+              <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
+              <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
+              <!--<el-dropdown-item>Word</el-dropdown-item>
+              <el-dropdown-item>PDF</el-dropdown-item>-->
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
         <template>
           <el-table
@@ -18,27 +27,32 @@
             </el-table-column>
             <el-table-column
               prop="name"
+              min-width="110"
               label="名称">
             </el-table-column>
             <el-table-column
               prop="key"
+              min-width="110"
               label="标识"
               >
             </el-table-column>
             <el-table-column
+              align="center"
               label="类型"
-              width="100">
+              min-width="80">
               <template slot-scope="scope">
                 <span style="white-space:nowrap;">{{ typeMap.get(scope.row.typeId) }}</span>
               </template>
             </el-table-column>
             <el-table-column
+              align="center"
               prop="sort"
               label="排序"
-              width="50">
+              min-width="50">
             </el-table-column>
             <el-table-column
-              width="180"
+              min-width="180"
+              align="center"
               prop="address"
               label="操作">
               <template slot-scope="scope">
@@ -59,16 +73,16 @@
           </el-table>
         </template>
         <div v-show="!listLoading" class="pagination-container">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="post_data.page_index"  :page-size="post_data.page_size" layout="total,  prev, pager, next, jumper" :total="total">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="post_data.page_index" :pager-count="5" :page-size="post_data.page_size" layout="total,  prev, pager, next, jumper" :total="total">
           </el-pagination>
         </div>
       </div>
       <div class="j-add">
-        <div class="a-title"><h3>{{(flag == 'add')?'添加':'修改'}}配置</h3></div>
+        <div class="a-title"><h3>{{(flag == 'add')?'添加':'修改'}}作业配置</h3></div>
         <div class="a-body">
-          <el-form class="a-info" :rules="rules" :model="form" ref="form">
-            <el-form-item class="i-content" prop="typeId">
-              <el-select v-model="form.typeId" size="mini" placeholder="类型" @change="changeType">
+          <el-form class="a-info" :inline="true" :rules="rules" :model="form" ref="form">
+            <el-form-item class="i-content" style="width: 220px" prop="typeId" label="设备类型">
+              <el-select v-model="form.typeId" size="mini" placeholder="设备类型" @change="changeType">
                 <el-option
                   v-for="item in typeOptions"
                   :key="item.value"
@@ -77,30 +91,37 @@
                 </el-option>
               </el-select>
              </el-form-item>
-            <el-form-item class="i-content" prop="name">
-              <el-input v-model="form.name" placeholder="名称" size="mini" ></el-input>
+            <el-form-item class="i-content" prop="name" label="作业名称">
+              <el-input v-model="form.name" placeholder="请输入名称" size="mini" ></el-input>
             </el-form-item>
-            <el-form-item class="i-content" prop="key">
-              <el-input v-model="form.key" placeholder="标识" size="mini"></el-input>
+            <el-form-item class="i-content" prop="key" label="作业标识">
+              <el-input v-model="form.key" placeholder="请输入英文字符" size="mini"></el-input>
             </el-form-item>
-            <el-form-item class="i-content">
-              <el-input v-model="form.sort" placeholder="排序" size="mini"></el-input>
+            <el-form-item class="i-content" style="width: 100px" label="排序">
+              <el-input v-model="form.sort" size="mini"></el-input>
             </el-form-item>
           </el-form>
           <div class="c-content">设计参数</div>
           <div class="c-body">
-            <el-form class="c-add" ref="content_form">
-              <el-select v-model="content_form.name"  size="mini" placeholder="项目" style="margin: 0 5px 0 5px">
-                <el-option
-                  v-for="item in paramsOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-              <el-input v-model="content_form.value" style="width: 45%" placeholder="值" size="mini"></el-input>
-              <el-button size="mini" style="margin: 0 5px 0 5px;width: 45%;" @click="addContent">添加</el-button>
+            <el-form class="c-add" ref="content_form" :rules="rules1" :model="content_form">
+              <el-form-item style="width: 41%" prop="name">
+                <el-select v-model="content_form.name"  size="mini" placeholder="项目" style="width: 100%">
+                  <el-option
+                    v-for="item in paramsOption"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item style="width: 41%" prop="value">
+                <el-input v-model="content_form.value" style="width: 100%" placeholder="设计值" size="mini"></el-input>
+              </el-form-item >
+              <el-form-item style="width: 15%">
+                <el-button size="mini" style="width: 100%;" @click="addContent">添加</el-button>
+              </el-form-item >
+
             </el-form>
             <el-table class="config_content" :data="config_content" border max-height="250" :show-header="false" style="width:100%;border-radius: 4px;margin:10px 0 20px 0;">
               <el-table-column prop="name" align="center" label="配置项">
@@ -117,7 +138,7 @@
               <el-table-column label="操作" align="center" width="90">
                 <template slot-scope="scope" >
                   <a v-if="!scope.row.flag" size="mini" type="" plain @click="editContent(scope.$index, config_content)" style="width:30px;cursor:pointer;">修改</a>
-                  <a v-else size="mini" type="" plain @click="conformContent(scope.$index, config_content)" style="width:30px;cursor:pointer;">确定</a>
+                  <a v-else size="mini" type="" plain @click="conformContent(scope.$index, config_content)" style="width:30px;cursor:pointer;color: #13ce66">确定</a>
                   <a size="mini" type="" plain @click="deleteContent(scope.$index, config_content)" style="width:30px;cursor:pointer;">删除</a>
                 </template>
               </el-table-column>
@@ -137,8 +158,13 @@
 <script>
   import config from '@/api/configure/config'
   import categories from '@/api/configure/categories'
+  import FloatLabel from "vue-float-label/components/FloatLabel";
+
   export default {
     name: "configure",
+    components: {
+      FloatLabel
+    },
     data(){
       let validataName = (rule, value, callback) => {
         if(value === '' || value== undefined){
@@ -161,22 +187,45 @@
           callback()
         }
       };
+      let validataProject = (rule, value, callback) => {
+        if(value === '' || value== undefined){
+          callback(new Error('请选择项目'));
+        }else{
+          callback()
+        }
+      };
+      let validataValue = (rule, value, callback) => {
+        if(value === '' || value== undefined){
+          callback(new Error('请输入值'));
+        }else{
+          callback()
+        }
+      };
       return{
+        email: '',
         rules: { //添加作业表单验证
           name: [
-            {  validator: validataName, trigger: 'blur' }
+            {  validator: validataName, trigger: 'change' }
           ],
           typeId: [
             {  validator: validataTypeId, trigger: 'change' }
           ],
           key: [
             {  validator: validataKey, trigger: 'change' }
+          ]
+        },
+        rules1: { //添加作业表单验证
+          name: [
+            {  validator: validataProject, trigger: 'change' }
           ],
+          value: [
+            {  validator: validataValue, trigger: 'change' }
+          ]
         },
         form:{ //配置作业的参数
           name:'',
           key:'',
-          sort:'',
+          sort:0,
           typeId:'',
           content:'',
           status:1,
@@ -221,10 +270,38 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      handleExport(command){
+        if(command=='1'){
+          this.importExcel();
+        }else if(command=='2'){
+          this.importExcelAll();
+        }
+      },
+      importExcelAll(){
+        const { export_json_to_excel } = require('@/vendor/Export2Excel');　　//引入文件　　　
+        const tHeader = ['名称', '标识', '类型','配置项']; //将对应的属性名转换成中文
+        const filterVal = ['name', 'key', 'type','content'];//table表格中对应的属性名
+        config.list({page_index:1, page_size:1000}).then(res=>{
+          if(res.success){
+
+            let list = res.result.items.map(item => {
+              return { name: item.name, key: item.key , type: this.typeMap.get(item.typeId) , content: item.content };
+            });
+            const data = this.formatJson(filterVal, list);
+            export_json_to_excel(tHeader, data, 'excel文件');
+
+            this.total = res.result.total;
+          }else{
+            this.$message.error('没有配置参数')
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      },
       //导出excel
       importExcel() {
         require.ensure([], () => {
-          const { export_json_to_excel } = require('@/vendor/Export2Excel');　　//引入文件　　　　
+          const { export_json_to_excel } = require('@/vendor/Export2Excel');　　//引入文件　　　
           const tHeader = ['名称', '标识', '类型','配置项']; //将对应的属性名转换成中文
           const filterVal = ['name', 'key', 'type','content'];//table表格中对应的属性名
           if(this.multipleSelection){
@@ -244,7 +321,7 @@
 
       //作业配置列表
       getList(post_data){
-        this.listLoading = true
+        this.listLoading = true;
         this.post_data.sort_by = 'sort';
         this.post_data.direction = 'asc';
         config.list(post_data).then(res=>{
@@ -385,18 +462,28 @@
         }
       },
       addContent(){
-        this.config_content.unshift(Object.assign({}, this.content_form));
-        this.content_form = {
-          label:'',
-          name:'',
-          value:'',
-          flag:false
-        };
-         this.$refs.content_form.resetFields()
+        this.$refs.content_form.validate((valid) => {
+          if (valid) {
+            console.log(this.$refs.content_form);
+            this.config_content.unshift(Object.assign({}, this.content_form));
+            this.content_form = {
+              label:'',
+              name:'',
+              value:'',
+              flag:false
+            };
+            this.$refs.content_form.resetFields()
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+
       },
       editContent(index,rows){
         if(this.lastIndex!=null)rows[this.lastIndex].flag = false;
         rows[index].flag = true;
+        console.log(rows[index].flag);
         this.tempValue = rows[index].value;
         this.lastIndex = index
       },
@@ -456,15 +543,41 @@
   }
 </script>
 <style scoped lang="scss">
+  .vfl-label {
+    text-transform: uppercase;
+  }
+
+  .vfl-label-on-input {
+    top: -1em;
+  }
+
+  .vfl-label-on-focus {
+    color: #ff851b;
+  }
+
+  .vfl-label + input {
+    padding-left: 0;
+    font-size: 100%;
+    border: 0;
+    border-bottom: 2px solid #aaa;
+    transition: border 0.2s;
+  }
+
+  .vfl-label-on-focus + input {
+    border-bottom: 2px solid #ff851b;
+  }
+
+
 
   .j-box{
+    margin-top: 15px;
     height: 100%;
     display: flex;
     justify-content: space-between;
     .j-table{
-      width: 51%;
-      height: 90%;
-      padding: 2% 2%;
+      width: 55%;
+      height: calc( 100% - 40px );
+      padding: 20px;
       background: #ffffff;
       .i-box{
         display: flex;
@@ -487,13 +600,13 @@
       margin-top: 20px;
     }
     .j-add{
-      height: 90%;
-      padding: 2% 2%;
-      width: 40%;
+      height: calc( 100% - 40px );
+      padding: 20px;
+      width: calc(45% - 100px);
       background: #ffffff;
       position: relative;
       .a-title{
-        width:81px;
+        width:100%;
         height:28px;
         font-size:20px;
         font-weight: bold;
@@ -522,8 +635,8 @@
           .c-add{
             display: flex;
             justify-content: space-between;
-            width: 98%;
-            padding: 10px 1%;
+            width: calc(100% - 20px);
+            padding: 10px 10px 0;
             background:rgba(239,240,242,1);
           }
         }

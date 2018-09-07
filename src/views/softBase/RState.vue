@@ -89,9 +89,9 @@
        <li class="s-chart" v-if="isRouterAlive">
          <a-sp></a-sp>
        </li>
-       <li class="s-chart" v-if="isRouterAlive">
+       <li class="s-chart" id="pile">
         <!-- <chart :options="ElectricCurrent" :auto-resize=true></chart>-->
-         <p-map></p-map>
+         <p-map :data-info="pileData" ref="pMap"></p-map>
        </li>
      </ul>
      <ul class="s-box2">
@@ -167,6 +167,7 @@
   import sFlow from '@/views/RState/sFlow'
   import {formatDate} from '@/common/formatDate.js';
   import deviceData from '@/api/device/deviceData'
+  import config from '@/api/configure/config.js'
 
   import aSp from '@/views/RState/AshPressureCurrent.vue'
   import pOperation from '@/views/RState/pileOperation.vue'
@@ -187,7 +188,61 @@ export default {
     let Data=data;
 
     return {
-      //timer:null,//定时器
+      //timer:null,//定时器,
+      pileData:{
+        ps:[
+          // {
+          //   content:'[{"label":"pile_position","name":"桩位置","value":"120.042065789,30.862455417"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
+          //   createdAt:1535618538,
+          //   createdBy:70,
+          //   id:7533,
+          //   key:"k2230_940_E18",
+          //   name:"k2230_940_E18",
+          //   projectId:21,
+          //   sort:0,
+          //   status:1,
+          //   tenant:"21fe87251b01541399c7c1a8cec741c5",
+          //   typeId:124,
+          // },
+          // {
+          //   content:'[{"label":"pile_position","name":"桩位置","value":"120.042077844,30.862430509"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
+          //   createdAt:1535618538,
+          //   createdBy:70,
+          //   id:7533,
+          //   key:"k2230_940_E17",
+          //   name:"k2230_940_E17",
+          //   projectId:21,
+          //   sort:0,
+          //   status:0,
+          //   tenant:"21fe87251b01541399c7c1a8cec741c5",
+          //   typeId:124,
+          // },
+          // {
+          //   content:'[{"label":"pile_position","name":"桩位置","value":"120.042071817,30.862442958"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
+          //   createdAt:1535618538,
+          //   createdBy:70,
+          //   id:7533,
+          //   key:"k2230_940_E16",
+          //   name:"k2230_940_E16",
+          //   projectId:21,
+          //   sort:0,
+          //   status:2,
+          //   tenant:"21fe87251b01541399c7c1a8cec741c5",
+          //   typeId:124,
+          // }
+        ],
+        pile_id:{content:'[{"label":"pile_position","name":"桩位置","value":"120.049345774,30.850305056"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
+          createdAt:1535618538,
+          createdBy:70,
+          id:7533,
+          key:"k2230_940_E17",
+          name:"k2230_940_E17",
+          projectId:21,
+          sort:0,
+          status:2,
+          tenant:"21fe87251b01541399c7c1a8cec741c5",
+          typeId:124,},
+      },
       angelWidth:0,
       noDevice:false,
       timer1:null,//定时器1
@@ -329,6 +384,19 @@ export default {
       this.$nextTick(() => (this.isRouterAlive = true))
     },
 
+    getPileData(){
+      config.list({page_index:1, page_size:10000}).then(res=>{
+        //console.log(res);
+        if(res.success){
+          this.pileData.ps=res.result.items;
+          this.$refs.pMap.init()
+          //console.log(this.pileData)
+        }else{
+          console.log('CAD数据获取失败')
+        }
+      })
+    },
+
     getData(key){
       deviceData.list({'key':key}).then(res=>{
         if(res.success){
@@ -383,8 +451,7 @@ export default {
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
         }else {
-          console.log('adasd');
-          this.noDevice=true
+          this.noDevice=false;
         }
 
       }).catch(err=>{
@@ -397,11 +464,22 @@ export default {
     this.timer=setInterval(()=>{
       this.getData(this.deviceKey)
     },2000);
+
   },
   mounted(){
     this.init();
     this.reload();
     const that = this;
+    this.getPileData();
+
+
+    let pile=document.getElementById('pile');
+    let pileHeight = window.getComputedStyle(pile).height;
+    let pileWidth = window.getComputedStyle(pile).width;
+    console.log(pileHeight);
+    console.log(pileWidth);
+    this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+    this.$refs.pMap.canvas.height = parseFloat(pileHeight);
 
     //倾角图片的长宽相等
     /*this.$nextTick(()=>{
@@ -414,7 +492,15 @@ export default {
       this.$refs.sFlow.resize();
     },100);
 
+    let _this=this;
     window.onresize = function(){
+      let pileHeight = window.getComputedStyle(pile).height;
+      let pileWidth = window.getComputedStyle(pile).width;
+      console.log(pileHeight);
+      console.log(pileWidth);
+      _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+      _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+      _this.$refs.pMap.init()
       if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
       if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
       if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
@@ -755,12 +841,13 @@ export default {
     height: 100%;
     background: rgba(255,255,255,0.7);
     z-index: 10;
-    text-align: center;
+    display:flex;
+    align-items:center;/*垂直居中*/
+    justify-content: center;/*水平居中*/
     overflow: hidden;
     .t-device{
       color: #666666;
       font-size: 30px;
-      padding-top: 25%;
     }
   }
   .r-box{
