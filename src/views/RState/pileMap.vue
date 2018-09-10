@@ -10,7 +10,9 @@
     data(){
       return{
         maxLon:null, minLon:null, maxLat:null, minLat:null,
-        canvas:null
+        canvas:null,
+        width:1,
+        height:1,
       }
     },
     components:{
@@ -18,7 +20,7 @@
     },
     created(){},
     mounted(){
-      this.init()
+      this.init();
     },
     methods:{
       init(){
@@ -32,16 +34,19 @@
         let ps = this.dataInfo.ps;
         //当前桩
         var current = this.dataInfo.pile_id//{lon:120.042071817, lat:30.862442958,title:"A8"};
-        console.log(current)
         //画布坐标显示范围
-        let laglgn = JSON.parse(current.content);
-
+        let laglgn = current.content;
+        let lng_,lat_,title
         laglgn.every(res=>{
           if(res.label == "pile_position"){
-            this.minLon = parseFloat(res.value.split(",")[0]) - 0.00004;
-            this.minLat = parseFloat(res.value.split(",")[1]) + 0.00004;
-            this.maxLon = parseFloat(res.value.split(",")[0]) + 0.00004;
-            this.maxLat = parseFloat(res.value.split(",")[1]) - 0.00004;
+            this.minLon = parseFloat(res.value.split(",")[0]) - 0.00006;
+            this.minLat = parseFloat(res.value.split(",")[1]) + 0.00006;
+            this.maxLon = parseFloat(res.value.split(",")[0]) + 0.00006;
+            this.maxLat = parseFloat(res.value.split(",")[1]) - 0.00006;
+            lng_ = res.value.split(",")[0]
+            lat_ = res.value.split(",")[1]
+            title = current.name.split('_')[2]
+            console.log(title)
             return false
           }
         });
@@ -51,14 +56,15 @@
           if(ll.status == 0) markerColor = '#72676333'
           else if(ll.status == 1) markerColor = '#726763'
           else if(ll.status == 2) markerColor = '#66D06E'
-          ll.content = JSON.parse(ll.content)
           ll.content.every(res=>{
             if(res.label == "pile_position"){
-              drawPoint(this.mapToScreen(res.value.split(",")[0], res.value.split(",")[1]),markerColor, "#FFFFFF")
+              drawPoint(this.mapToScreen(res.value.split(",")[0], res.value.split(",")[1],ll.name.split('_')[2]),markerColor, "#FFFFFF")
               return false
             }
           })
         });
+
+        drawPoint(this.mapToScreen(lng_, lat_,title),"#66D06E", "#fff")
         document.onmousemove = this.mouseMove;
 
         //画桩位MARK
@@ -84,8 +90,8 @@
       mapToScreen(longitude, latitude, title) {
         var scaleX, scaleY, screenX, screenY, X, Y, minX, minY;
 
-        scaleX = ((this.maxLon - this.minLon) * 3600) / 800;
-        scaleY = ((this.maxLat - this.minLat) * 3600) / 400;
+        scaleX = ((this.maxLon - this.minLon) * 3600) / this.width;
+        scaleY = ((this.maxLat - this.minLat) * 3600) / this.height;
 
         screenX = longitude * 3600 / scaleX;
         screenY = latitude * 3600 / scaleY;

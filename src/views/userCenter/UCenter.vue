@@ -358,6 +358,9 @@ export default {
             font-size: 18px;
             color: #13ce66;
           }
+          .iconfont{
+            cursor: pointer;
+          }
         }
       }
       .u-submit{

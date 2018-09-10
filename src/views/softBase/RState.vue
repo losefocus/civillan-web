@@ -190,48 +190,8 @@ export default {
     return {
       //timer:null,//定时器,
       pileData:{
-        ps:[
-          // {
-          //   content:'[{"label":"pile_position","name":"桩位置","value":"120.042065789,30.862455417"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
-          //   createdAt:1535618538,
-          //   createdBy:70,
-          //   id:7533,
-          //   key:"k2230_940_E18",
-          //   name:"k2230_940_E18",
-          //   projectId:21,
-          //   sort:0,
-          //   status:1,
-          //   tenant:"21fe87251b01541399c7c1a8cec741c5",
-          //   typeId:124,
-          // },
-          // {
-          //   content:'[{"label":"pile_position","name":"桩位置","value":"120.042077844,30.862430509"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
-          //   createdAt:1535618538,
-          //   createdBy:70,
-          //   id:7533,
-          //   key:"k2230_940_E17",
-          //   name:"k2230_940_E17",
-          //   projectId:21,
-          //   sort:0,
-          //   status:0,
-          //   tenant:"21fe87251b01541399c7c1a8cec741c5",
-          //   typeId:124,
-          // },
-          // {
-          //   content:'[{"label":"pile_position","name":"桩位置","value":"120.042071817,30.862442958"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
-          //   createdAt:1535618538,
-          //   createdBy:70,
-          //   id:7533,
-          //   key:"k2230_940_E16",
-          //   name:"k2230_940_E16",
-          //   projectId:21,
-          //   sort:0,
-          //   status:2,
-          //   tenant:"21fe87251b01541399c7c1a8cec741c5",
-          //   typeId:124,
-          // }
-        ],
-        pile_id:{content:'[{"label":"pile_position","name":"桩位置","value":"120.049345774,30.850305056"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
+        ps:[],
+        pile_id:{content:[{"label":"pile_position","name":"桩位置","value":"120.049345774,30.850305056"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}],
           createdAt:1535618538,
           createdBy:70,
           id:7533,
@@ -307,7 +267,6 @@ export default {
     clearInterval(this.timer1)
   },
   methods:{
-
     init(){
       let clientWidth=document.body.clientWidth;
       this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
@@ -388,8 +347,14 @@ export default {
       config.list({page_index:1, page_size:10000}).then(res=>{
         //console.log(res);
         if(res.success){
-          this.pileData.ps=res.result.items;
+          let aa = res.result.items;
+          aa.forEach(item=>{
+            let arr = JSON.parse(item.content)
+            item.content=arr
+          });
+          this.pileData.ps=aa;
           this.$refs.pMap.init()
+
           //console.log(this.pileData)
         }else{
           console.log('CAD数据获取失败')
@@ -451,7 +416,7 @@ export default {
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
         }else {
-          this.noDevice=false;
+          this.noDevice=true;
         }
 
       }).catch(err=>{
@@ -473,13 +438,19 @@ export default {
     this.getPileData();
 
 
-    let pile=document.getElementById('pile');
-    let pileHeight = window.getComputedStyle(pile).height;
-    let pileWidth = window.getComputedStyle(pile).width;
-    console.log(pileHeight);
-    console.log(pileWidth);
-    this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-    this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+    this.$nextTick(()=>{
+      let pile=document.getElementById('pile');
+      let pileHeight = window.getComputedStyle(pile).height;
+      let pileWidth = window.getComputedStyle(pile).width;
+      console.log(pileHeight);
+      console.log(pileWidth);
+      this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+      this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+
+      this.$refs.pMap.width = parseFloat(pileWidth);
+      this.$refs.pMap.height = parseFloat(pileHeight);
+    });
+
 
     //倾角图片的长宽相等
     /*this.$nextTick(()=>{
@@ -494,13 +465,19 @@ export default {
 
     let _this=this;
     window.onresize = function(){
-      let pileHeight = window.getComputedStyle(pile).height;
-      let pileWidth = window.getComputedStyle(pile).width;
-      console.log(pileHeight);
-      console.log(pileWidth);
-      _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-      _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-      _this.$refs.pMap.init()
+      _this.$nextTick(()=>{
+        let pileHeight = window.getComputedStyle(pile).height;
+        let pileWidth = window.getComputedStyle(pile).width;
+        console.log(pileHeight);
+        console.log(pileWidth);
+        _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+        _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+        _this.$refs.pMap.width = parseFloat(pileWidth);
+        _this.$refs.pMap.height = parseFloat(pileHeight);
+        _this.$refs.pMap.init();
+      });
+
+
       if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
       if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
       if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
@@ -795,9 +772,21 @@ export default {
   },
   watch:{
     dialogFullscreen:function (val,oldVal) {
-      let that=this;
+
+      let _this=this;
+      _this.$nextTick(()=>{
+        let pileHeight = window.getComputedStyle(pile).height;
+        let pileWidth = window.getComputedStyle(pile).width;
+        console.log(pileHeight);
+        console.log(pileWidth);
+        _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+        _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+        _this.$refs.pMap.width = parseFloat(pileWidth);
+        _this.$refs.pMap.height = parseFloat(pileHeight);
+        _this.$refs.pMap.init();
+      });
       let clientWidth=document.body.clientWidth;
-      that.temp(val,that.diameter,that,clientWidth)
+      _this.temp(val,_this.diameter,_this,clientWidth)
     }
   }
 }

@@ -294,6 +294,9 @@ export default {
       margin: 20px 0 0 20px;
       transition: 0.6s all ease;
       border: none;
+      .nav-icon{
+        padding-top: 12px !important;
+      }
     }
   }
   .router-link-active{

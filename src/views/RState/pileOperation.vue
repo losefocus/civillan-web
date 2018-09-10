@@ -129,40 +129,41 @@
     },
     methods:{
       init(dataInfo){
+        console.log(dataInfo);
         let data = dataInfo;
         if(data.rpipe_sta === 0){}
         else if(data.rpipe_sta === 1){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             let d0 = data.rdeep/data.depth_design;
-            let l = 35*(1-d0)+5
+            let l = 35*(1-d0)+5;
             this.tiem_1.style_stake = {bottom:l+'%'}
           }
         }else if((data.rpipe_sta === 2)){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
-            this.tiem_1.style_stake = {bottom:'5%'}
-            let d0 = data.rdeep/data.depth_design
+            this.tiem_1.style_stake = {bottom:'5%'};
+            let d0 = data.rdeep/data.depth_design;
             let l = 35*(1-d0)+5
-            this.tiem_2.style_stake = {bottom:l+'%'}
+            this.tiem_2.style_stake = {bottom:l+'%'};
             this.tiem_2.style_hole = {height:(1-d0)*100+'%'}
           }
         }else if((data.rpipe_sta === 3)){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
-            this.tiem_1.style_stake = {bottom:'5%'}
-            this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}}
+            this.tiem_1.style_stake = {bottom:'5%'};
+            this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}};
             let d0 = data.rdeep/data.depth_design
-            let l = 35*(1-d0)+5
-            this.tiem_3.style_stake = {bottom:l+'%'}
+            let l = 35*(1-d0)+5;
+            this.tiem_3.style_stake = {bottom:l+'%'};
             this.tiem_3.style_hole = {height:'100%'}
           }
         }else if((data.rpipe_sta === 4)){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
-            this.tiem_1.style_stake = {bottom:'5%'}
-            this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}}
-            this.tiem_3= {style_stake:{bottom:'5%'},style_hole:{height:'100%'}}
+            this.tiem_1.style_stake = {bottom:'5%'};
+            this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}};
+            this.tiem_3= {style_stake:{bottom:'5%'},style_hole:{height:'100%'}};
             let d0 = data.rdeep/data.depth_design
             let l = 35*(1-d0)+5
-            this.tiem_4.style_stake = {bottom:l+'%'}
-            this.tiem_4.style_hole = {height:'100%'}
+            this.tiem_4.style_stake = {bottom:l+'%'};
+            this.tiem_4.style_hole = {height:'100%'};
             this.tiem_4.style_hole_over = {height:(1-d0)*100+'%'}
           }
         }else if((data.rpipe_sta === 5)){
@@ -181,7 +182,6 @@
           this.init(val)
         },
       }
-
     }
   }
 </script>
