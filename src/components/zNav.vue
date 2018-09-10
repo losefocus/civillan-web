@@ -95,7 +95,6 @@ export default {
     let id=this.$cookies.get('projectId');
     let tenant=this.$cookies.get('tenant');
     project.info({'project_id':id,'tenant':tenant}).then(res=>{
-      //console.log(res);
       this.projectName=res.result.name;
     });
     this.isActive=0;
@@ -103,7 +102,6 @@ export default {
     let _this=this;
     let cWidth=document.body.clientWidth;
     if(cWidth<1450){
-      //console.log(cWidth);
       _this.isCollapse=false;
       _this.changeWidth();
       _this.isShow=false;
@@ -115,12 +113,10 @@ export default {
     window.onresize = function (){
       let clientWidth=document.body.clientWidth;
       if(clientWidth<=1450){
-        //console.log(clientWidth);
         _this.isCollapse=false;
         _this.changeWidth();
         _this.isShow=false;
       }else{
-        console.log(_this.isCollapse);
         _this.isCollapse=true;
         _this.changeWidth();
         _this.isShow=false;
@@ -129,9 +125,7 @@ export default {
   },
   mounted(){
     this.isActive=sessionStorage.getItem('isActive') || 0;
-    //console.log(this.isCollapse);
     this.changeWidth()
-    //console.log(this.isActive)
     let _this=this;
     Bus.$on('isActive',function (res) {
       _this.isActive=res;

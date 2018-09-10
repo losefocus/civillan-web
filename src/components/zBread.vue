@@ -19,9 +19,7 @@
     },
     mounted(){
       Bus.$on('Title', content => {
-        //console.log(content);
         this.changeName = content;
-        //sessionStorage.setItem('pGrouping',content)
       });
     },
     created() {
@@ -36,13 +34,6 @@
         var breadList=JSON.stringify(breadList);
         //this.$store.commit('breadListMutations',breadList);
         this.breadList=this.$store.getters.breadListState;
-
-
-        /*this.breadList = [].concat(this.$route.matched);
-        console.log(this.breadList);
-        this.$route.matched.forEach((item, index) => {
-          item.name === '在线一览' ? item.path = '/' : this.$route.path === item.path ? this.title = item.name : '';
-        })*/
       }
     },
     watch: {

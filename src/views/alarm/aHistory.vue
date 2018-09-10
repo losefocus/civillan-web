@@ -102,7 +102,7 @@
     name: "aHistory",
     data() {
       return {
-        total:0,
+        total:2,
         multipleSelection: [],
         tableData: [
           {
@@ -177,6 +177,9 @@
           }]
         },
         value2: '',
+        isCollapse:false,
+        device:{},
+        deviceSelect:[],
       }
     },
     methods: {

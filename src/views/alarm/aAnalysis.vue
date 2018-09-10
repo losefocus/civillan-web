@@ -307,7 +307,6 @@ export default {
   created(){
     this.deviceName=sessionStorage.getItem('deviceName');
     this.getDeviceList(this.device_data);
-    console.log(this.isShow)
   },
   methods:{
     deviceCurrentChange:function(currentPage){ //全部设备select当前页
@@ -315,7 +314,6 @@ export default {
       this.getDeviceList(this.device_data);
     },
     deviceChange(val){ //类型改变
-      console.log(val);
       this.deviceKey=val;
     },
     deviceSearch(query){ //select搜索框
@@ -327,10 +325,8 @@ export default {
     getDeviceList(post_data){
       let _this=this;
       deviceList.list(post_data).then(res=>{
-        console.log(res);
         _this.deviceSelect=res.result.items;
         _this.deviceTotal=res.result.total;
-        console.log(_this.deviceTotal)
       });
     },
   }

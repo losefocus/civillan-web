@@ -292,7 +292,6 @@
       getDeviceTotal(id){
         //设备总数获取
         deviceList.list({'project_id':id}).then(res=>{
-          console.log(res);
           if(res.success){
             this.loading.close();
             this.deviceTotal=res.result.total;
@@ -319,7 +318,6 @@
       getDocumentTotal(id){
         //文档总数
         document.list({ project_id:id}).then(res=>{
-          console.log(res.result.total);
           if(res.success){
             this.documentTotal=res.result.total;
             this.loading.close();
@@ -332,7 +330,6 @@
       },
       getInfo(id,tenant){
         project.info({'project_id':id,'tenant':tenant}).then(res=>{
-          //console.log(res);
           if(res.success){
             this.info=res.result;
             this.organTypeList=res.result.organTypeList;

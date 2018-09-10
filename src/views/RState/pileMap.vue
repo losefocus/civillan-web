@@ -46,7 +46,6 @@
             lng_ = res.value.split(",")[0]
             lat_ = res.value.split(",")[1]
             title = current.name.split('_')[2]
-            console.log(title)
             return false
           }
         });
@@ -69,7 +68,6 @@
 
         //画桩位MARK
         function drawPoint(point,bgColor,fontColor) {
-          //console.log(point);
           context.fillStyle = bgColor;
           context.beginPath();
           context.arc(point.x, point.y, 15, 0, Math.PI * 2, true);

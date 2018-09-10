@@ -51,8 +51,6 @@
     methods: {
       init: function () {
         let _this=this;
-        //console.log(sessionStorage.getItem('isActive'));
-        //sessionStorage.setItem('isActive',0);
         let map = new AMap.Map('container', {
           center: [116.397428, 39.90923],
           zoom: 10
@@ -72,7 +70,6 @@
         project.list().then(res=>{
             if(res.success){
               loading.close();
-              //console.log(res.result);
               let lists=toTree(res.result);
               lists.forEach(function (item) {
                 item.show=false;
@@ -88,7 +85,6 @@
                 if(index==0){
                   item.show=true
                 }
-                //console.log(item);
                 AMapUI.define("polyfill/require/require-css/css!plug/ext/font-awesome/css/font-awesome", [], function () {
                   //留空即可
                 });
@@ -165,7 +161,6 @@
                         let projectLogo=dataItem.thumbnailUrl+dataItem.thumbnailPath;
                         //_this.$store.dispatch('incrementLogo',projectLogo);
                         _this.$cookies.set('projectLogo',projectLogo);
-                        //console.log(dataItem.beginAt);
                         let beginTime=timeStamp(dataItem.beginAt);
                         let endTime=timeStamp(dataItem.endAt);
                         let content='<div style="width:290px;\n' +
@@ -221,7 +216,6 @@
                     });
 
                     markerList.on('infoWindowClick',function (event,info) {
-                      console.log(info.data);
                       //_this.$store.dispatch('incrementId',info.id);
                       _this.$cookies.set('projectId',info.id);
                       _this.$cookies.set('tenant',info.data.tenant);
@@ -275,7 +269,6 @@
         this.isShow=list;
       },
       getDom:function (e) {
-        console.log(e.target.className);
         $('#my-list ul li li').removeClass('selected');
         for (var i=0;i<$('#my-list p').length;i++){
             if($('#my-list p').eq(i).hasClass(e.target.className)){

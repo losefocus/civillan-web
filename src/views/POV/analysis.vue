@@ -251,7 +251,6 @@
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
       Bus.$on('isCollapse',res=>{
-        console.log(res);
         this.isCollapse=res
       })
     },
@@ -261,7 +260,6 @@
       },
       handleCurrentChange: function(currentPage){
         this.currentPage = currentPage;
-        console.log(this.ajax);
       },
       handleClose(done) {
         done();
@@ -276,7 +274,6 @@
         this.getDeviceList(this.device_data);
       },
       deviceChange(val){ //类型改变
-        console.log(val);
         this.deviceKey=val;
       },
       deviceSearch(query){ //select搜索框
@@ -288,13 +285,10 @@
       getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
-          /*console.log(res);*/
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
-          /*console.log(_this.deviceTotal)*/
         }).catch(err => {
           this.loading.close();
-          console.log(err)
         });
       },
     }

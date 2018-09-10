@@ -295,7 +295,6 @@
             this.$message.error('没有配置参数')
           }
         }).catch(err => {
-          console.log(err)
         })
       },
       //导出excel
@@ -330,7 +329,6 @@
           this.listLoading = false
         }).catch(err => {
           this.listLoading=false;
-          console.log(err)
         })
       },
       handleFilter(){
@@ -363,7 +361,6 @@
       getParamsList(){
         categories.params(this.allListQuery).then(res => {
           let list = res.result.items;
-          console.log(res);
           this.paramsList = list.map(item => {
             return { value: item.code, label: item.label,categoryId:item.categoryId};
           });
@@ -387,7 +384,6 @@
       submitForm(){
         this.$refs.form.validate((valid) => {
           if (valid) {
-            console.log('okkkk');
             this.createLoading = true;
             let data = Object.assign({},this.form);
             data.projectId = parseFloat(sessionStorage.getItem('projectId'));
@@ -398,7 +394,6 @@
             });
             data.content = JSON.stringify(this.config_content);
             config.add(data).then(res => {
-              console.log(res);
               this.getList();
               this.cancel();
               this.createLoading = false;
@@ -414,7 +409,6 @@
       updataForm(formName){
         this.$refs.form.validate((valid) => {
           if (valid) {
-            console.log('aaaaa');
             this.createLoading = true;
             let data = Object.assign({},this.form);
 
@@ -428,7 +422,6 @@
               this.getList();
               this.cancel()
             });
-            console.log('成功')
           }else{
             this.createLoading = false;
           }
@@ -464,7 +457,6 @@
       addContent(){
         this.$refs.content_form.validate((valid) => {
           if (valid) {
-            console.log(this.$refs.content_form);
             this.config_content.unshift(Object.assign({}, this.content_form));
             this.content_form = {
               label:'',
@@ -474,7 +466,6 @@
             };
             this.$refs.content_form.resetFields()
           } else {
-            console.log('error submit!!');
             return false;
           }
         })
@@ -483,7 +474,6 @@
       editContent(index,rows){
         if(this.lastIndex!=null)rows[this.lastIndex].flag = false;
         rows[index].flag = true;
-        console.log(rows[index].flag);
         this.tempValue = rows[index].value;
         this.lastIndex = index
       },
@@ -506,7 +496,6 @@
             type: "warning"
           }
         ).then(() => {
-          console.log(row.id);
           config.delete({"project_work_config_id":row.id}).then(res => {
             this.getList(this.post_data);
             //this.alertNotify('删除')
@@ -517,8 +506,6 @@
         this.cardVisibel = true;
         this.flag = 'updata';
         this.form = Object.assign({},row);
-
-        console.log(row.content);
         let contents = JSON.parse(row.content);
         contents.forEach(ele => {
           ele.flag = false

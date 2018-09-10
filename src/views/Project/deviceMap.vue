@@ -147,7 +147,6 @@ export default {
             let lists=res.result.items;
             let infoWindow= new AMap.InfoWindow({offset: new AMap.Pixel(0, 5)});
             for(let i=0;i<lists.length;i++){
-              //console.log(lists[i]);
               //判断设备是否有经纬度
               if(lists[i].position){
                 //设备的运行状态
@@ -175,7 +174,6 @@ export default {
                     lists:lists[i]
                   });
                   marker.on('click',function (e) {
-                    console.log(e.target);
                     let items=e.target.G.lists;
 
                     let content='<div class="info-container device_details">' +
@@ -202,13 +200,10 @@ export default {
                         _this.deviceName=items.name;
                         sessionStorage.setItem('deviceName',items.name);
                         _this.deviceKey=items.key;
-                        console.log('okkk')
                       });
                       infoWindow.open(map, e.target.getPosition());
                     });
-                    console.log(e.target.G.lists);
 
-                    //console.log(e.target.getPosition());
                     //infoWindow.setContent(content);
                     infoWindow.open(map, e.target.getPosition());
                     map.setCenter(e.target.getPosition());
@@ -226,7 +221,6 @@ export default {
                   _this.loading.close();
                 });
               }else{
-                //console.log('没有经纬度')
                 _this.loading.close();
               }
             }
@@ -253,14 +247,12 @@ export default {
       this.deviceName=item.name;
       sessionStorage.setItem('deviceName',item.name);
       this.deviceKey=item.key;
-      console.log(item.name)
     },
     changeTab(i){ //模态框tab
       this.tIndex=i;
       this.currentView=this.tBody[i]
     },
     isFullscreen(){ //是否打开模态框
-      console.log(this.changeIcon);
       let clientWidth=document.body.clientWidth;
       if(this.changeIcon){
         this.dialogWidth='100%';
@@ -282,7 +274,6 @@ export default {
       }
     },
     changeScreen(data){
-      console.log(data);
       this.changeIcon=data;
       this.isFullscreen();
     },

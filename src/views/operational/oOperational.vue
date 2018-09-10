@@ -301,7 +301,8 @@
           name: ''
         },
         deviceTotal: 0,
-        deviceName: ''
+        deviceName: '',
+        total:0,
       }
     },
     created(){
@@ -314,6 +315,11 @@
     methods: {
       displayScreening(){
 
+      },
+      //列表改变当前页
+      listCurrentChange: function(currentPage){
+        this.post_data.page_index = currentPage;
+        this.getList(this.post_data);
       },
       handleExpandChange(row,expandedRows){
         console.log(expandedRows)
@@ -348,8 +354,6 @@
               tableList.push(item._v);
             });
             _this.tableData=tableList;
-            //_this.tableData.tableRows=_this.tableRows
-            console.log(_this.tableData);
           }else {
             console.log('请求不成功')
           }
@@ -367,10 +371,8 @@
       getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
-          console.log(res);
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
-          console.log(_this.deviceTotal)
         });
       },
       query(){

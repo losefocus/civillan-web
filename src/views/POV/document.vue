@@ -145,7 +145,6 @@
         this.multipleSelection = val;
       },
       handleCurrentChange: function(currentPage){
-        console.log(currentPage);
       },
       Refresh(){
         this.getList(this.post_data);
@@ -162,7 +161,6 @@
           }
         }).catch(err => {
           this.loading=false;
-          console.log(err)
         })
       },
       //下载文件
@@ -203,7 +201,6 @@
         this.loading=true;
         document.list(postData).then(res=>{
           if(res.success){
-            console.log(res);
             this.total=res.result.total;
             this.tableData=res.result.items;
             this.loading=false
@@ -213,7 +210,6 @@
           }
         }).catch(err => {
           this.loading=false;
-          console.log(err)
         })
       }
     }

@@ -109,30 +109,28 @@
         },
         tiem_2:{
           style_stake:{bottom:'5%'},
-          style_hole:{height:'5%'}
+          style_hole:{height:'0%'}
         },
         tiem_3:{
           style_stake:{bottom:'5%'},
-          style_hole:{height:'5%'}
+          style_hole:{height:'0%'}
         },
         tiem_4:{
           style_stake:{bottom:'5%'},
-          style_hole:{height:'5%'},
-          style_hole_over:{height:'5%'},
+          style_hole:{height:'0%'},
+          style_hole_over:{height:'0%'},
         },
       }
     },
     created(){},
     mounted(){
-      console.log();
       this.init(this.dataInfo)
     },
     methods:{
       init(dataInfo){
-        console.log(dataInfo);
         let data = dataInfo;
-        if(data.rpipe_sta === 0){}
-        else if(data.rpipe_sta === 1){
+        if( !('rpipe_sta' in data) || data.rpipe_sta === 0 ){
+        }else if(data.rpipe_sta === 1){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             let d0 = data.rdeep/data.depth_design;
             let l = 35*(1-d0)+5;

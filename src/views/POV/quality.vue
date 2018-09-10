@@ -319,6 +319,7 @@
           }]
         },
         value7:'',
+        total:0,
       }
     },
     created(){
@@ -327,6 +328,17 @@
         this.isCollapse=res
       })
     },
+    methods:{
+      handleSizeChange: function (size) {  //列表改变每页显示的条数
+        this.post_data.page_size=size;
+        this.getList(this.post_data);
+      },
+      //列表改变当前页
+      listCurrentChange: function(currentPage){
+        this.post_data.page_index = currentPage;
+        this.getList(this.post_data);
+      },
+    }
 
   }
 </script>

@@ -75,9 +75,7 @@
       ...mapActions('token',['incrementToken']),
 
       keyDown(e) {
-        //console.log(e.code)
         if (e.code == 'Enter') {
-          console.log(this);
           this.submit();
           //this.$options.methods.submitForm('loginForm')
         }
@@ -132,9 +130,7 @@
         if(this.isSuccess2){
           if(this.isSuccess&&this.isSuccess1&&this.isSuccess2){
             let that=this;
-            console.log(this.userInfo);
             login.login(this.userInfo).then((res) => {
-              //console.log(res);
               if(res.success==false){
                 loading.close();
                 that.$message.error(res.message)
@@ -163,7 +159,6 @@
               }
             }).catch(err => {
               loading.close();
-              console.log(err)
             });
           }else {
             loading.close();
@@ -176,7 +171,7 @@
         //this.$cookie.set('user.info',JSON.stringify(this.userInfo),{ expires: '60s'});
       },
       getCookie:function () {
-        console.log(this.$cookie.get('token'));
+
       }
     }
   }

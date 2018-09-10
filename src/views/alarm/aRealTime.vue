@@ -47,7 +47,7 @@ export default {
   name: "realTime",
   data() {
     return {
-      total:'',
+      total:0,
       tableData: [{
         a: '设备仪器故障出现短暂的报警',
         b: '2018-02-26 19:00',

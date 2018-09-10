@@ -345,7 +345,6 @@ export default {
 
     getPileData(){
       config.list({page_index:1, page_size:10000}).then(res=>{
-        //console.log(res);
         if(res.success){
           let aa = res.result.items;
           aa.forEach(item=>{
@@ -354,8 +353,6 @@ export default {
           });
           this.pileData.ps=aa;
           this.$refs.pMap.init()
-
-          //console.log(this.pileData)
         }else{
           console.log('CAD数据获取失败')
         }
@@ -365,7 +362,6 @@ export default {
     getData(key){
       deviceData.list({'key':key}).then(res=>{
         if(res.success){
-          //console.log(res);
           this.RT_data=res.result;
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
@@ -420,8 +416,15 @@ export default {
         }
 
       }).catch(err=>{
-        console.log(err)
       });
+    },
+    getStyle(obj,attr) {
+      if(obj.currentStyle)
+      {
+        return obj.currentStyle[attr];
+      }else{
+        return getComputedStyle(obj,false)[attr];
+      }
     }
   },
   created(){
@@ -440,22 +443,20 @@ export default {
 
     this.$nextTick(()=>{
       let pile=document.getElementById('pile');
-      let pileHeight = window.getComputedStyle(pile).height;
-      let pileWidth = window.getComputedStyle(pile).width;
-      console.log(pileHeight);
-      console.log(pileWidth);
+      let pileHeight,pileWidth
+      if(pile.currentStyle){
+        pileHeight = pile.currentStyle.height
+        pileWidth = pile.currentStyle.width
+      }else {
+        pileHeight = window.getComputedStyle(pile).height;
+        pileWidth = window.getComputedStyle(pile).width;
+      }
       this.$refs.pMap.canvas.width = parseFloat(pileWidth);
       this.$refs.pMap.canvas.height = parseFloat(pileHeight);
 
       this.$refs.pMap.width = parseFloat(pileWidth);
       this.$refs.pMap.height = parseFloat(pileHeight);
     });
-
-
-    //倾角图片的长宽相等
-    /*this.$nextTick(()=>{
-      this.angelWidth=this.$refs.angleHeight.offsetHeight;
-    });*/
 
     setTimeout(()=>{
       this.$refs.sCurrent.resize();
@@ -466,15 +467,25 @@ export default {
     let _this=this;
     window.onresize = function(){
       _this.$nextTick(()=>{
-        let pileHeight = window.getComputedStyle(pile).height;
-        let pileWidth = window.getComputedStyle(pile).width;
-        console.log(pileHeight);
-        console.log(pileWidth);
-        _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-        _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-        _this.$refs.pMap.width = parseFloat(pileWidth);
-        _this.$refs.pMap.height = parseFloat(pileHeight);
-        _this.$refs.pMap.init();
+        let pile=document.getElementById('pile');
+        if(!pile){
+          //console.log('dom销毁')
+        }else{
+          let pileHeight,pileWidth
+          if(pile.currentStyle){
+            pileHeight = pile.currentStyle.height
+            pileWidth = pile.currentStyle.width
+          }else {
+            pileHeight = window.getComputedStyle(pile).height;
+            pileWidth = window.getComputedStyle(pile).width;
+          }
+          _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+          _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+          _this.$refs.pMap.width = parseFloat(pileWidth);
+          _this.$refs.pMap.height = parseFloat(pileHeight);
+          _this.$refs.pMap.init();
+        }
+
       });
 
 
@@ -484,309 +495,23 @@ export default {
       let clientWidth=document.body.clientWidth;
       that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
     }
-
-
-
-    /*let myChart = this.$echarts.init(document.getElementById('myChart1'));
-    function randomData() {
-      now = new Date(+now + oneDay);
-      value = value + Math.random() * 21 - 10;
-      return {
-        name: now.toString(),
-        value: [
-          [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
-          Math.round(value)
-        ]
-      }
-    }
-    let data = [];
-    let now = +new Date(2018, 7, 1);
-    let oneDay = 24 * 3600 * 1000;
-    let value = Math.random() * 1000;
-    for (var i = 0; i < 1000; i++) {
-      data.push(randomData());
-    }
-
-    myChart.setOption({
-      title: {
-        text: '电流随桩机里程变化曲线',
-        show: true,
-        textStyle: {
-          fontWeight: 'bold',
-          fontSize: 16,
-          color: '#333'
-        },
-        top:'4%',
-        left: '3%'
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          lineStyle: {
-            color: '#333'
-          }
-        }
-      },
-      legend: {
-        itemWidth: 14,
-        itemHeight: 5,
-        itemGap: 13,
-        textStyle: {
-          fontSize: 12,
-          color: '#333'
-        },
-        top:'8%',
-        right:'4%'
-      },
-      grid: {
-        top:'25%',
-        left:'185px',
-        bottom: '15%',
-        right:'4%'
-        //containLabel: true
-      },
-      xAxis: {
-        type: 'time',
-        splitLine: {
-          show: false
-        },axisLine: {
-          lineStyle: {
-            color: '#ccc'
-          }
-        },
-        axisLabel: {
-          margin: 10,
-          textStyle: {
-            fontSize: 12,
-            color: '#666666'
-          }
-        }
-      },
-      yAxis: [
-        {
-          type: 'value',
-          boundaryGap: [0, '10%'],
-          axisLine: {
-            lineStyle: {
-              color:'#999'
-            }
-          },
-          name:'电流A',
-          position:'left',
-          offset:50,
-          splitNumber:10,
-          splitLine: {
-            show: false
-          }
-        },
-        {
-          type: 'value',
-          boundaryGap: [0, '100%'],
-          axisLine: {
-            lineStyle: {
-              color:'#999'
-            }
-          },
-          name:'深度 C',
-          position:'left',
-          offset:100,
-          splitNumber:10,
-          splitLine: {
-            show: false
-          }
-        },
-        {
-          boundaryGap: [0, '50%'],
-          axisLine: {
-            lineStyle: {
-              color:'#999'
-            }
-          },
-          splitLine:{
-            show:false,
-          },
-          type: 'value',
-          name:'转速 C',
-          position:'left',
-          axisLabel: {
-            formatter: '{value} C'
-          },
-
-        },
-      ],
-      series: [{
-        name: '深度',
-        type: 'line',
-        showSymbol: false,
-        hoverAnimation: false,
-        itemStyle: {
-          normal: {
-            color: '#F86969',
-            borderColor: '#F86969',
-            borderWidth: 12
-          }
-        },
-        data: data
-      },
-        {
-          name: '钻速',
-          type: 'line',
-          showSymbol: false,
-          hoverAnimation: false,
-          itemStyle: {
-            normal: {
-              color: '#50C9F9',
-              borderColor: '#50C9F9',
-              borderWidth: 12
-            }
-          },
-          data: data
-        },
-        {
-          name: '电流',
-          type: 'line',
-          showSymbol: false,
-          hoverAnimation: false,
-          itemStyle: {
-            normal: {
-              color: '#FFC285',
-              borderColor: '#FFC285',
-              borderWidth: 12
-            }
-          },
-          data: data
-        }]
-    });
-    this.timer1=setInterval(function () {
-
-      for (var i = 0; i < 5; i++) {
-        data.shift();
-        data.push(randomData());
-      }
-
-      myChart.setOption({
-        series: [{
-          name:'深度',
-          data: data,
-          yAxisIndex:0,
-        },{
-          name:'钻速',
-          data: data,
-          yAxisIndex:1,
-        },{
-          name:'电流',
-          data: data,
-          yAxisIndex:2,
-        }]
-      });
-    }, 1000);
-
-    this.$nextTick(() => (myChart.resize()));
-    window.onresize = function(){
-      myChart.resize();
-      let clientWidth=document.body.clientWidth;
-      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
-    }*/
-
-    /*let myChart2 = this.$echarts.init(document.getElementById('myChart2'));
-    let tips = 0;
-    function loading() {
-      return [{
-        value: tips,
-        itemStyle: {
-          normal: {
-            color: '#fb358a',
-            shadowBlur: 10,
-            shadowColor: '#fb358a'
-          }
-        }
-      }, {
-        value: 200 - tips,
-      }];
-    }
-
-    myChart2.setOption({
-      title: [{
-        text: tips +' '+'/'+' ' + 200,
-        left: 'center',
-        top: '30%',
-        textStyle: {
-          color: '#fb358a',
-          fontSize:20
-        }
-      }, {
-        text: 'cm/L',
-        left: '50%',
-        top: '45%',
-        textAlign: 'center',
-        textStyle: {
-          color: '#000'
-        }
-      },{
-        text: '深度',
-        left: '50%',
-        top: '60%',
-        textAlign: 'center',
-        textStyle: {
-          color: '#000',
-          fontSize:20
-        }
-      }],
-      series: [{
-        name: 'loading',
-        type: 'pie',
-        radius: ['80%', '83%'],
-        hoverAnimation: false,
-        label: {
-          normal: {
-            show: false,
-          }
-        },
-        data: loading(),
-      }]
-    });
-
-    this.timer1=setInterval(function() {
-
-      if (tips == 200) {
-        tips = 0;
-      } else {
-        ++tips;
-      }
-      myChart2.setOption({
-        title: {
-          text: tips +' '+'/'+' ' + 200
-        },
-        series: [{
-          name: 'loading',
-          data: loading()
-        }]
-      })
-    }, 100);
-    this.$nextTick(() => (myChart2.resize()));
-    window.onresize = function(){
-      myChart2.resize();
-      let clientWidth=document.body.clientWidth;
-      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
-    }*/
   },
   watch:{
     dialogFullscreen:function (val,oldVal) {
-
       let _this=this;
+      let clientWidth=document.body.clientWidth;
+      _this.temp(val,_this.diameter,_this,clientWidth);
       _this.$nextTick(()=>{
+        let pile=document.getElementById('pile');
         let pileHeight = window.getComputedStyle(pile).height;
         let pileWidth = window.getComputedStyle(pile).width;
-        console.log(pileHeight);
-        console.log(pileWidth);
         _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
         _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
         _this.$refs.pMap.width = parseFloat(pileWidth);
         _this.$refs.pMap.height = parseFloat(pileHeight);
         _this.$refs.pMap.init();
       });
-      let clientWidth=document.body.clientWidth;
-      _this.temp(val,_this.diameter,_this,clientWidth)
+
     }
   }
 }

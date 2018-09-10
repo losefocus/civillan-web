@@ -194,7 +194,7 @@
         v-if="newData.depth.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="总桩长">
+        label="实际桩长">
         <template slot-scope="props">
           {{ props.row.depth | formatP}}
         </template>
@@ -484,7 +484,7 @@
           pile_id:{title:'桩号',checked:true},
           begin_time:{title:'开始时间',checked:true},
           end_time:{title:'结束时间',checked:true},
-          depth:{title:'总桩长',checked:true},
+          depth:{title:'实际桩长',checked:true},
           re_depth:{title:'复搅深度',checked:true},
           water_cement_ratio:{title:'水灰比',checked:true},
           cumulative_ash:{title:'累计灰量',checked:true},
@@ -680,7 +680,6 @@
         let tableList=[];
         history.list(post_data).then(res=>{
           if(res.success){
-            console.log(res);
             _this.total=res.result.total;
             /*res.result.items.forEach(function (item) {
               tableList.push(item);

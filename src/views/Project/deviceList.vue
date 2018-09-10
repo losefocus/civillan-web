@@ -61,7 +61,6 @@
     <el-dialog
       :visible.sync="dialogVisible"
       :width="dialogWidth"
-
       :fullscreen="dialogFullscreen"
       top="10vh"
       style="min-width: 1024px;"
@@ -72,7 +71,7 @@
           <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
         </div>
       </ul>
-      <r-state :deviceName="deviceName"  v-if="dialogVisible" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
+      <r-state :deviceName="deviceName"  v-show="dialogVisible" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
     </el-dialog>
   </div>
 </template>

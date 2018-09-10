@@ -114,7 +114,6 @@
         if(cHeight<800){
           _this.dialogTop='6vh';
           _this.topChange=false;
-          console.log('123')
         }else {
           _this.dialogTop='15vh';
           _this.topChange=true
@@ -124,9 +123,7 @@
 
       this.$route.path=='/'?this.isMap=false:this.isMap=true;
       message.unReadCount().then(res=>{
-        //console.log(res.result);
         this.unReadCount=res.result;
-        //console.log(res.result);
         this.unReadCount==0? this.isHidden=true : this.isHidden=false;
       });
 
@@ -143,7 +140,6 @@
     },
     methods:{
       initWebSocket(){ //初始化webSocket
-
         let wsUrl='ws:'+sessionStorage.getItem('wsUrl');//ws地址
         this.webSocket = new WebSocket(wsUrl);
         this.webSocket.onopen = this.websocketonopen;
@@ -200,19 +196,17 @@
           this.currentView=this.tBody[command];
         }
       },
-      beforeunloadHandler (e) {
+      /*beforeunloadHandler (e) {
         e = e || window.event;
-
-        console.log(e);
         this.$cookies.remove('token');
         // 兼容IE8和Firefox 4之前的版本
-        /*if (e) {
+        /!*if (e) {
           e.returnValue = '关闭提示';
-        }*/
+        }*!/
 
         // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
         //return '关闭提示';
-      },
+      },*/
       close(){
         if(window.$cookies.get('token')){
           window.$cookies.remove('token')
