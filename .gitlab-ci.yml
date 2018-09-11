@@ -10,6 +10,7 @@ before_script:
 stages:
   - deploy
 
+
 maven-build:
   stage: deploy
   only:
