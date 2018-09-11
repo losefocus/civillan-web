@@ -140,12 +140,16 @@
     },
     methods:{
       initWebSocket(){ //初始化webSocket
-        let wsUrl='ws:'+sessionStorage.getItem('wsUrl');//ws地址
-        this.webSocket = new WebSocket(wsUrl);
-        this.webSocket.onopen = this.websocketonopen;
-        this.webSocket.onerror = this.websocketonerror;
-        this.webSocket.onmessage = this.websocketonmessage;
-        this.webSocket.onclose = this.websocketclose;
+        if(this.$cookies.get('wsUrl')){
+          let wsUrl='ws:'+this.$cookies.get('wsUrl');//ws地址
+          this.webSocket = new WebSocket(wsUrl);
+          this.webSocket.onopen = this.websocketonopen;
+          this.webSocket.onerror = this.websocketonerror;
+          this.webSocket.onmessage = this.websocketonmessage;
+          this.webSocket.onclose = this.websocketclose;
+        }else{
+          console.log('未登录')
+        }
       },
 
       websocketonopen() {

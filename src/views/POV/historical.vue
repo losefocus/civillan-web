@@ -585,7 +585,7 @@
         })
       },
       importExcelAll(){
-        history.list({page_index:1,page_size:200,key:''}).then(res=>{
+        history.list({page_index:1,page_size:100,key:''}).then(res=>{
           if(res.success){
             for(name in this.newData){
               this.tableHeader.push(this.newData[name].title);
@@ -596,7 +596,6 @@
             let filterVal = this.tableName; //table表格中对应的属性名
             let list=[];
             let obj = {};
-            console.log(res.result.items);
             res.result.items.forEach(e=>{
               for(let i=0;i<filterVal.length;i++){
                 obj[filterVal[i]] = e[filterVal[i]]

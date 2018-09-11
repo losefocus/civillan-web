@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store/store'
+import 'es6-promise/auto'
+import 'babel-polyfill'
 import '../static/common/reset.css'
 
 Vue.config.productionTip = false;
