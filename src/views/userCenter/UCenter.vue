@@ -157,13 +157,6 @@ export default {
       contact.list().then(res=>{
         console.log(res);
         this.contactList=res.result.items;
-        let array = [];
-        this.contactList.forEach(item=>{
-          item.flag=false;
-          let obj = Object.assign({},item);
-          array.push(obj)
-        });
-        this.contactList = array
       })
     },
 

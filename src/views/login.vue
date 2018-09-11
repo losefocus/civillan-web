@@ -1,10 +1,10 @@
 <template>
   <div style="height: 100%">
-    <el-container style="height: 100%">
-      <el-main style="height: 100%;" :style="{backgroundImage: 'url(' + groupImg + ')' }">
+    <el-container style="height: 100%;">
+      <div style="height: 100%;width: 68% !important;" :style="{backgroundImage: 'url(' + groupImg + ')' }">
         <div class="cp-logo" :style="{backgroundImage: 'url(' + logoImg + ')' }"></div>
-      </el-main>
-      <el-aside style="height: 100%;min-height: 645px;">
+      </div>
+      <el-aside style="height: 100%;min-height: 645px;" @keyup.enter.native="keyDown">
         <p class="user-title">用户登录</p>
         <p class="cp-system">工程施工实时监控系统</p>
 
@@ -32,10 +32,21 @@
             <span class="log-forget" @click="getCookie()">忘记密码?</span>
           </div>
         </form>
-
         <p class="cp-code">Copyright 2018 智握领程 版权所有.</p>
       </el-aside>
     </el-container>
+    <el-dialog
+      :visible.sync="isBrowser"
+      :show-close=false
+      :close-on-click-modal=false
+      width="70%"
+      center>
+      <div class="b-tips">为了获得更好体验，平台不支持ie8及以下版本浏览器，推荐使用下列浏览器</div>
+       <div class="b-IconBox">
+         <img class="b-Icon" :src="chromeImg">
+         <img class="b-Icon" style="margin-left: 50px" :src="firefoxImg">
+       </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,14 +55,19 @@
   import login from '@/api/userCenter/login'
   import group from '@/assets/login/group.png'
   import logo from '@/assets/login/logo.png'
+  import chromeImg from '@/assets/login/chrome.png'
+  import firefoxImg from '@/assets/login/firefox.png'
   export default {
     data() {
       return {
         userInfo:{
           checked:false
         },
+
         groupImg:group,
         logoImg:logo,
+        chromeImg:chromeImg,
+        firefoxImg:firefoxImg,
         validateRules:'',
         validateRules1:'',
         validateRules2:'',
@@ -60,13 +76,15 @@
         isFail1:false,
         isSuccess1:false,
         isFail2:false,
-        isSuccess2:false
+        isSuccess2:false,
+        isBrowser:false,
       };
     },
     created(){
     },
     mounted() {
-      document.body.onkeydown = this.keyDown;
+      //document.body.onkeydown = this.keyDown;
+      this.checkBrowser()
     },
     computed: {
       ...mapState({token:state=>state.login.token})
@@ -74,11 +92,9 @@
     methods: {
       ...mapActions('token',['incrementToken']),
 
-      keyDown(e) {
-        if (e.code == 'Enter') {
+      keyDown() {
           this.submit();
           //this.$options.methods.submitForm('loginForm')
-        }
       },
       getUser(u){
         if(/^\s*$/g.test(u)||u==""||u==undefined){
@@ -104,6 +120,48 @@
           this.validateRules='';
           this.isSuccess2=true;
           this.isFail2=false;
+        }
+      },
+      checkBrowser(){
+        if (this.myBrowser() == "FF") {
+          console.log("我是 Firefox");
+        }
+        if (this.myBrowser() == "Opera") {
+          console.log("我是 Opera");
+        }
+        if (this.myBrowser() == "Safari") {
+          console.log("我是 Safari");
+        }
+        if (this.myBrowser() == "Chrome") {
+          console.log("我是 Chrome");
+        }
+      },
+      myBrowser(){
+        let userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+        let isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器
+        let isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
+        let isChrome = userAgent.indexOf("Chrome") > -1; //判断是否IE浏览器
+        let isFF = userAgent.indexOf("Firefox") > -1; //判断是否Firefox浏览器
+        let isSafari = userAgent.indexOf("Safari") > -1; //判断是否Safari浏览器
+
+        if (isIE) {
+          return "IE";
+        }
+        if (isFF) {
+          return "FF";
+        }
+        if (isOpera) {
+          return "Opera";
+        }
+        if (isChrome) {
+          return "Chrome";
+        }
+        if (isSafari) {
+          return "Safari";
+        }
+
+        if(!(isFF||isChrome||isSafari)){
+
         }
       },
       getPassword:function(p){
@@ -179,6 +237,26 @@
 
 <style scoped lang="scss">
   $percent:100%;
+  .b-tips{
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    padding-top: 50px;
+  }
+  .b-IconBox{
+    width: 100%;
+    padding: 50px 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    .b-Icon{
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+
   .initColor{
     border-top:2px solid rgba(220,224,230,1);
   }
@@ -240,7 +318,7 @@
       outline: medium;
       border: none;
       height: 8%;
-      line-height: 30px;
+      //line-height: 30px;
       font-size: 17px;
       width: 100%;
       color: #666666;
