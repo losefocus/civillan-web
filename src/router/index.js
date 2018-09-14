@@ -18,6 +18,10 @@ const vRouter = new Router({
       path: '/login',
       name: '登录',
       component: resolve => require(['@/views/login'],resolve),
+    },{
+      path: '/login_new',
+      name: '登录',
+      component: resolve => require(['@/views/login_new'],resolve),
     },
     {
       path: '/ProjectOverview',

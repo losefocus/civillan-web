@@ -37,12 +37,13 @@
             <span>{{item.name}}</span>
           </div>
           <div class="d-title">
-            <span>{{item.product.alias}}</span>
+            <span v-if="item.product">{{item.product.alias}}</span>
+            <span v-else>-</span>
             <!--<span v-if="item.device_type=='双头搅拌桩'">双头搅拌桩</span>
             <span v-if="item.device_type=='高压旋桩'">高压旋桩</span>-->
           </div>
           <ul class="d-info">
-            <li class="d-img"><img :src="item.product.productCategory.thumbnailBaseUrl+item.product.productCategory.thumbnailPath"></li>
+            <li class="d-img"><img :src="item.thumbnailBaseUrl+item.thumbnailPath"></li>
             <li class="d-statistics">
               <div class="d-date">段浆量：10L</div>
               <div class="d-progress">
@@ -62,7 +63,7 @@
       :visible.sync="dialogVisible"
       :width="dialogWidth"
       :fullscreen="dialogFullscreen"
-      top="10vh"
+      top="7vh"
       style="min-width: 1024px;"
     >
       <ul class="t-header">
@@ -71,7 +72,7 @@
           <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
         </div>
       </ul>
-      <r-state :deviceName="deviceName"  v-show="dialogVisible" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
+      <r-state :deviceName="deviceName" v-if="dialogVisible" :is="currentView" :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
     </el-dialog>
   </div>
 </template>
@@ -149,11 +150,13 @@
         ]
       };
     },
+
     created(){
       this.deviceStatus = new Map();
       for (let i=0; i<this.deviceStatusLists.length; i++) {
         this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
       }
+
 
       this.loading=this.$loading({
         fullscreen: true,
@@ -173,11 +176,13 @@
             this.$nextTick(()=>{
               this.isShow=true
             });
+            this.loading.close()
           }else{
             this.$message.error(res.message);
+            this.loading.close()
           }
         }).catch(e=>{
-
+          this.loading.close()
         });
       },
       changeTab1(list,index){ //切换tab
@@ -209,7 +214,7 @@
         }else{
           this.dialogWidth='70%';
           this.dialogHeight={
-            height:'580px'
+            height:'700px'
           };
           this.dialogFullscreen=false;
           this.changeIcon=!this.changeIcon
@@ -228,6 +233,7 @@
                 item.status=3;
               });
               this.items=res.result.items;
+              console.log(res.result.items);
               for(let i=0;i<this.items.length;i++){
                 deviceData.list({key:this.items[i].key}).then(res =>{
                   if(res.success){

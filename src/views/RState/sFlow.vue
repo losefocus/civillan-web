@@ -24,7 +24,10 @@
       init(post_data){
         let _this=this;
         this.myChart = this.$echarts.init(document.getElementById('flow'));
-        let tips=parseInt(post_data) || 0;
+        let tips=Number(post_data).toFixed(2);
+        if(isNaN(tips)){
+          tips=0
+        }
         function loading() {
           return [{
             value: tips,
@@ -49,7 +52,7 @@
               fontSize:'18'
             }
           }, {
-            text: 'L/min',
+            text: 'L/Min',
             left: 'center',
             top: '58%',
             //textAlign: 'center',

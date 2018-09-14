@@ -1,37 +1,29 @@
 <template>
   <div style="height: 100%">
     <el-container style="height: 100%;">
-      <el-main style="height: 100%;width: 68% !important;" :style="{backgroundImage: 'url(' + groupImg + ')' }">
+      <div style="height: 100%;width: 68% !important;" :style="{backgroundImage: 'url(' + groupImg + ')' }">
         <div class="cp-logo" :style="{backgroundImage: 'url(' + logoImg + ')' }"></div>
-      </el-main>
+      </div>
       <el-aside style="height: 100%;min-height: 645px;" @keyup.enter.native="keyDown">
         <p class="user-title">用户登录</p>
         <p class="cp-system">工程施工实时监控系统</p>
 
-        <form action="" @submit.prevent="submit">
-          <div class="log-spacing l-label">
-            <label for="username">公司代号</label>
-          </div>
-          <input type="text" id="domain" autocomplete placeholder="请输入公司代号" v-model="userInfo.domain" @input="getDomain(userInfo.domain)" :class={fail:isFail2,success:isSuccess2}>
-          <p class="initColor" :class={fail:isFail,success:isSuccess}></p>
-          <div class="log-spacing l-label">
-            <label for="username">账号</label>
-          </div>
-          <input type="text" id="username" autocomplete placeholder="请输入账号" v-model="userInfo.username" @input="getUser(userInfo.username)" :class={fail:isFail,success:isSuccess}>
-          <p class="initColor" :class={fail:isFail,success:isSuccess}>{{validateRules}}</p>
-          <div class="log-spacing l-label">
-            <label for="password">密码</label>
-          </div>
-          <input type="password" id="password" autocomplete placeholder="请输入密码" v-model="userInfo.password" @input="getPassword(userInfo.password)">
-          <p class="initColor" :class={fail:isFail1,success:isSuccess1}>{{validateRules1}}</p>
-          <div class="log-spacing">
-            <el-checkbox v-model="userInfo.checked">自动登录</el-checkbox>
-          </div>
-          <div class="log-spacing l-submit">
-            <button type="submit" id="log-submit">登录</button>
-            <span class="log-forget" @click="getCookie()">忘记密码?</span>
-          </div>
-        </form>
+        <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="密码" prop="pass">
+            <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="checkPass">
+            <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="年龄" prop="age">
+            <el-input v-model.number="ruleForm2.age"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+          </el-form-item>
+        </el-form>
+
         <p class="cp-code">Copyright 2018 智握领程 版权所有.</p>
       </el-aside>
     </el-container>
@@ -41,10 +33,10 @@
       width="70%"
       center>
       <div class="b-tips">为了获得更好体验，平台不支持ie8及以下版本浏览器，推荐使用下列浏览器</div>
-       <div class="b-IconBox">
-         <img class="b-Icon" :src="chromeImg">
-         <img class="b-Icon" style="margin-left: 50px" :src="firefoxImg">
-       </div>
+      <div class="b-IconBox">
+        <img class="b-Icon" :src="chromeImg">
+        <img class="b-Icon" style="margin-left: 50px" :src="firefoxImg">
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -58,6 +50,41 @@
   import firefoxImg from '@/assets/login/firefox.png'
   export default {
     data() {
+      let checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('年龄不能为空'));
+        }
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if (value < 18) {
+              callback(new Error('必须年满18岁'));
+            } else {
+              callback();
+            }
+          }
+        }, 1000);
+      };
+      let validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm2.checkPass !== '') {
+            this.$refs.ruleForm2.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      let validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm2.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
       return {
         userInfo:{
           checked:false
@@ -67,16 +94,24 @@
         logoImg:logo,
         chromeImg:chromeImg,
         firefoxImg:firefoxImg,
-        validateRules:'',
-        validateRules1:'',
-        validateRules2:'',
-        isFail:false,
-        isSuccess:false,
-        isFail1:false,
-        isSuccess1:false,
-        isFail2:false,
-        isSuccess2:false,
         isBrowser:false,
+
+        ruleForm2: {
+          pass: '',
+          checkPass: '',
+          age: ''
+        },
+        rules2: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          age: [
+            { validator: checkAge, trigger: 'blur' }
+          ]
+        }
       };
     },
     created(){
@@ -89,11 +124,24 @@
       ...mapState({token:state=>state.login.token})
     },
     methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
       ...mapActions('token',['incrementToken']),
 
       keyDown() {
-          this.submit();
-          //this.$options.methods.submitForm('loginForm')
+        this.submit();
+        //this.$options.methods.submitForm('loginForm')
       },
       getUser(u){
         if(/^\s*$/g.test(u)||u==""||u==undefined){
@@ -476,7 +524,4 @@
       }
     }
   }
-
-
-
 </style>

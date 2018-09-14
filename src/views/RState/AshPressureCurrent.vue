@@ -1,10 +1,12 @@
 <template>
   <div style="width: 100%;height: 100%;">
-    <chart :options="PulpingQuantity" :auto-resize=true></chart>
+    <!--<chart :options="PulpingQuantity" :auto-resize=true></chart>-->
+    <div id="myCharts" style="width: 100%;height: 100%;"></div>
   </div>
 </template>
 
 <script>
+  import echarts from 'echarts'
   import deviceData from '@/api/device/deviceData'
   export default {
     name: "AshPressureCurrent",
@@ -15,8 +17,28 @@
         rcurrentData:[], //段浆量
         ashData:[], //段灰量
         rpressureData:[], //压力
-        timer:null,
-        PulpingQuantity:{
+        myChart:null,
+      }
+    },
+    props:[
+      'dataInfo'
+    ],
+    created(){
+
+    },
+    mounted(){
+      this.myCharts()
+    },
+    methods:{
+      myCharts(){
+        let _this=this;
+        this.ashData.push(this.dataInfo.par_ash);
+        this.rpressureData.push(this.dataInfo.rpressure);
+        this.rcurrentData.push(this.dataInfo.rcurrent);
+        //console.log(this.dataInfo);
+        let Data=[10,20,30,40,50,60,70,80,90,100,120,140];
+        this.myChart = this.$echarts.init(document.getElementById('myCharts'));
+        this.myChart.setOption({
           title: {
             text: '段灰量、压力、电流随桩机里程变化曲线',
             show: true,
@@ -112,7 +134,7 @@
                   borderColor: '#F86969',
                 }
               },
-              data: []
+              data: _this.ashData
             },
             {
               name: '压力',
@@ -124,7 +146,7 @@
                   borderColor: '#50C9F9',
                 }
               },
-              data: []
+              data: _this.rpressureData
             },
             {
               name: '电流',
@@ -136,66 +158,25 @@
                   borderColor: '#FF9933',
                 }
               },
-              data: []
+              data: _this.rcurrentData
             }
           ],
+        });
+      },
+      resize(){
+        this.myChart.resize()
+      }
+    },
+    watch:{
+      dataInfo:{//深度监听，可监听到对象、数组的变化
+        handler(val, oldVal){
+          this.myCharts()
         },
       }
-    },
-    created(){
-      let _this=this;
-      this.getData(this.$parent.deviceKey);
-      this.PulpingQuantity.series[0].data=this.ashData;
-      this.PulpingQuantity.series[1].data=this.rpressureData;
-      //console.log(this.rpressureData);
-      this.PulpingQuantity.series[2].data=this.rcurrentData;
-
-      this.timer=setInterval(()=>{
-        _this.getData(_this.$parent.deviceKey)
-      },3000);
-
-    },
-    methods:{
-      getData(key){
-        deviceData.list({'key':key}).then(res=>{
-          //console.log(res);
-          if(res.success){
-            this.RT_data=res.result;
-
-            this.rflow=parseInt(res.result.rflow); //实时流量
-            this.rspeed=(parseInt(res.result.rspeed)+5)*20; //实时速度
-            this.rcurrent=parseInt(res.result.rcurrent); //实时电流
-            this.progress=Math.abs(res.result.rdeep)*2; //实时深度
-
-            let num1=Math.floor(Math.random()*19);
-            let num2=Math.floor(Math.random()*22);
-            let num3=Math.floor(Math.random()*23);
-
-            let par_ash=parseInt(res.result.par_ash/100000)*num1; //段灰量
-            let rpressure=parseInt(res.result.rpressure/100000)*num2;//实时压力
-            let rcurrent=parseFloat((res.result.rcurrent+10)/10)*num3;//实时电流
-
-            this.ashData.push(par_ash);
-            this.rpressureData.push(rpressure);
-            this.rcurrentData.push(rcurrent);
-          }else{
-
-          }
-        }).catch(err=>{
-          console.log(err)
-        });
-      }
-    },
-    beforeDestroy(){
-      clearInterval(this.timer);
     }
-
   }
 </script>
 
 <style scoped lang="scss">
-  .echarts {
-    width: 100%;
-    height: 100%;
-  }
+
 </style>

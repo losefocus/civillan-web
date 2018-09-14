@@ -36,6 +36,19 @@
   </router-link>
 
   <el-dialog
+    :visible.sync="isOut"
+    :show-close=false
+    width="30%"
+
+    center>
+    <div style="width: 100%;text-align: center;font-size: 20px;padding: 30px 0;">您确定离开吗？</div>
+    <span slot="footer" class="dialog-footer">
+    <el-button size="mini" @click="isOut = false">取 消</el-button>
+    <el-button size="mini" type="primary" @click="out()">确 定</el-button>
+  </span>
+  </el-dialog>
+
+  <el-dialog
     :visible.sync="dialogVisible"
     :width="dialogWidth"
     style="min-width: 1024px"
@@ -74,6 +87,7 @@
     data(){
        return{
          topChange:true,
+         isOut:false,
          logoImg:logo,
          dialogTop:'15vh',//top值
          dialogWidth:'68%',//模态框宽度
@@ -212,6 +226,10 @@
         //return '关闭提示';
       },*/
       close(){
+        this.isOut=true
+
+      },
+      out(){
         if(window.$cookies.get('token')){
           window.$cookies.remove('token')
         }

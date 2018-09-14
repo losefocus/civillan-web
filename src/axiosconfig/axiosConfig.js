@@ -77,13 +77,13 @@ axios.interceptors.response.use(
       message: errorCode[code] || errorCode['default'],
       type: 'error'
     });
-    console.log(error.request.status);
+    //console.log(error.request.status);
     switch(error.request.status){
       case 401:
         Message.error('您的账号暂未授权');
         router.replace({
           path: 'login',
-          //query: {redirect: router.currentRoute.fullPath}
+          query: {redirect: router.currentRoute.fullPath}
         });
         break;
       case 500:

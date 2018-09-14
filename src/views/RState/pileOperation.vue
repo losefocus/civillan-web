@@ -17,15 +17,15 @@
     <div class="item" :class="{visible:dataInfo.rpipe_sta<1}">
       <div class="top" :style="tiem_1.style_stake">
         <div class="stake">
-          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta === 1 && dataInfo.rpipe_sta === 1"></div>
+          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 1"></div>
         </div>
-        <div class="info" v-show="dataInfo.rpipe_sta === 1">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed}}</span> cm/min</p>
-          <p>电流 <span>{{dataInfo.rcurrent}}</span> A</p>
-          <p>流量 <span>{{dataInfo.flux}}</span> L/min</p>
+        <div class="info" v-show="dataInfo.rpipe_sta == 1">
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
         </div>
-        <i v-show="dataInfo.rpipe_sta === 1" class="iconfont icon-jiantou-down icon_down" style="color:#4dbce6;font-size:20px;"></i>
+        <i v-show="dataInfo.rpipe_sta == 1 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-down icon_down" style="color:#4dbce6;font-size:20px;"></i>
         <div class="img_down"></div>
       </div>
       <div class="bot">
@@ -35,15 +35,15 @@
     <div class="item" :class="{visible:dataInfo.rpipe_sta<2}">
       <div class="top" :style="tiem_2.style_stake">
         <div class="stake">
-          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta === 1 && dataInfo.rpipe_sta === 2"></div>
+          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 2"></div>
         </div>
-        <div class="info" v-show="dataInfo.rpipe_sta === 2">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed}}</span> cm/min</p>
-          <p>电流 <span>{{dataInfo.rcurrent}}</span> A</p>
-          <p>流量 <span>{{dataInfo.flux}}</span> L/min</p>
+        <div class="info" v-show="dataInfo.rpipe_sta == 2">
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
         </div>
-        <i v-show="dataInfo.rpipe_sta === 2" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
+        <i v-show="dataInfo.rpipe_sta == 2 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
       </div>
       <div class="bot">
         <div class="hole">
@@ -54,15 +54,15 @@
     <div class="item" :class="{visible:dataInfo.rpipe_sta<3}">
       <div class="top" :style="tiem_3.style_stake">
         <div class="stake">
-          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta === 1 && dataInfo.rpipe_sta === 3"></div>
+          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 3"></div>
         </div>
-        <div class="info" v-show="dataInfo.rpipe_sta === 3">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed}}</span> cm/min</p>
-          <p>电流 <span>{{dataInfo.rcurrent}}</span> A</p>
-          <p>流量 <span>{{dataInfo.flux}}</span> L/min</p>
+        <div class="info" v-show="dataInfo.rpipe_sta == 3">
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
         </div>
-        <i v-show="dataInfo.rpipe_sta === 3" class="iconfont icon-jiantou-down icon_down" style="color:#4dbce6;font-size:20px;"></i>
+        <i v-show="dataInfo.rpipe_sta == 3 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-down icon_down" style="color:#4dbce6;font-size:20px;"></i>
       </div>
       <div class="bot">
         <div class="hole">
@@ -73,16 +73,16 @@
     <div class="item" :class="{visible:dataInfo.rpipe_sta<4}">
       <div class="top" :style="tiem_4.style_stake">
         <div class="stake">
-          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta === 1 && dataInfo.rpipe_sta === 4 && parseInt(tiem_4.style_stake.bottom)>=12"></div>
+          <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 4 && parseInt(tiem_4.style_stake.bottom)>=12"></div>
         </div>
-        <div class="info" v-show="dataInfo.rpipe_sta === 4||dataInfo.rpipe_sta === 5">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed}}</span> cm/min</p>
-          <p>电流 <span>{{dataInfo.rcurrent}}</span> A</p>
-          <p>流量 <span>{{dataInfo.flux}}</span> L/min</p>
-          <p v-if="dataInfo.rpipe_sta === 5" style="font-size:16px;line-height:20px;font-weight:bold;color:red">complete</p>
+        <div class="info" v-show="dataInfo.rpipe_sta == 4||dataInfo.rpipe_sta == 5">
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
+          <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:red">complete</p>
         </div>
-        <i v-show="dataInfo.rpipe_sta === 4" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
+        <i v-show="dataInfo.rpipe_sta == 4 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
       </div>
       <div class="bot">
         <div class="hole">
@@ -129,14 +129,14 @@
     methods:{
       init(dataInfo){
         let data = dataInfo;
-        if( !('rpipe_sta' in data) || data.rpipe_sta === 0 ){
-        }else if(data.rpipe_sta === 1){
+        if( !('rpipe_sta' in data) || data.rpipe_sta == 0 ){
+        }else if(data.rpipe_sta == 1){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             let d0 = data.rdeep/data.depth_design;
             let l = 35*(1-d0)+5;
             this.tiem_1.style_stake = {bottom:l+'%'}
           }
-        }else if((data.rpipe_sta === 2)){
+        }else if((data.rpipe_sta == 2)){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             this.tiem_1.style_stake = {bottom:'5%'};
             let d0 = data.rdeep/data.depth_design;
@@ -144,7 +144,7 @@
             this.tiem_2.style_stake = {bottom:l+'%'};
             this.tiem_2.style_hole = {height:(1-d0)*100+'%'}
           }
-        }else if((data.rpipe_sta === 3)){
+        }else if((data.rpipe_sta == 3)){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             this.tiem_1.style_stake = {bottom:'5%'};
             this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}};
@@ -153,7 +153,7 @@
             this.tiem_3.style_stake = {bottom:l+'%'};
             this.tiem_3.style_hole = {height:'100%'}
           }
-        }else if((data.rpipe_sta === 4)){
+        }else if((data.rpipe_sta == 4)){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             this.tiem_1.style_stake = {bottom:'5%'};
             this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}};
@@ -164,7 +164,7 @@
             this.tiem_4.style_hole = {height:'100%'};
             this.tiem_4.style_hole_over = {height:(1-d0)*100+'%'}
           }
-        }else if((data.rpipe_sta === 5)){
+        }else if((data.rpipe_sta == 5)){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             this.tiem_1.style_stake = {bottom:'5%'}
             this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}}
@@ -236,8 +236,8 @@
     position: absolute;
     top: 25%;
     left: 50%;
-    width: 85px;
-    height: 85px;
+    width: 70%;
+    height: 110px;
     background: url(../../assets/RState/stake-03.png)no-repeat center bottom;
     background-size: contain;
     font-size: 12px;
@@ -356,7 +356,7 @@
   }
   .item .bot .depth_design{
     position: absolute;
-    left: 50%;
+    left: 55%;
     top: 30%;
     width: 100px;
     height: 35px;

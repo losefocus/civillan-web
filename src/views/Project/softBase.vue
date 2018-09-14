@@ -1,69 +1,12 @@
 <template>
-  <div>
-    <ul class="a-box">
-      <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
-        {{list.name}}
-      </li>
+  <div style="width: 100%;height: 700px;">
+    <ul class="t-header">
+      <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
+      <div class="t-handle" v-show="isShow">
+        <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
+      </div>
     </ul>
-    <waterfall
-      :line-gap="320"
-      :min-line-gap="280"
-      :max-line-gap="320"
-      :single-max-width="350"
-      :watch="items">
-      <waterfall-slot
-        v-for="(item, index) in items"
-        :width="210"
-        :height="210"
-        :order="index"
-        :key="item.id"
-        move-class="item-move"
-      >
-        <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)" :deviceName="deviceName">
-          <!--:class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}"-->
-          <div class="r-state">
-            运行中
-          </div>
-          <div class="d-name">
-            <span>{{item.name}}</span>
-          </div>
-          <div class="d-title">
-            <span>{{item.product.alias}}</span>
-            <!--<span v-if="item.device_type=='双头搅拌桩'">双头搅拌桩</span>
-            <span v-if="item.device_type=='高压旋桩'">高压旋桩</span>-->
-          </div>
-          <ul class="d-info">
-            <li class="d-img"><img :src="item.product.productCategory.thumbnailBaseUrl+item.product.productCategory.thumbnailPath"></li>
-            <li class="d-statistics">
-              <div class="d-date">段浆量：10L</div>
-              <div class="d-progress">
-                <el-progress :percentage="30" color="#999999" :show-text='false'></el-progress>
-              </div>
-
-              <div class="d-date">段灰量：20KG</div>
-              <div>
-                <el-progress  :percentage="80" color="#999999" :show-text='false'></el-progress>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </waterfall-slot>
-    </waterfall>
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :width="dialogWidth"
-      :fullscreen="dialogFullscreen"
-      top="12vh"
-      style="min-width: 1024px;"
-      >
-      <ul class="t-header">
-        <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
-        <div class="t-handle" v-show="isShow">
-          <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
-        </div>
-      </ul>
-      <r-state v-if="dialogVisible" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
-    </el-dialog>
+    <r-state :deviceName="deviceName" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
   </div>
 </template>
 
@@ -71,6 +14,7 @@
   import dictionary from '@/api/common/dictionary'
   import deviceGrouping from '@/api/project/deviceGrouping'
   import deviceList from '@/api/project/deviceList'
+  import deviceData from '@/api/device/deviceData'
 
 
   import SAnalysis from '@/views/softBase/SAnalysis'
@@ -80,14 +24,9 @@
   import NRecord from '@/views/softBase/NRecord'
   import JConfig from '@/views/softBase/JConfig'
 
-  import Bus from '@/common/eventBus'
-  import Waterfall from 'vue-waterfall/lib/waterfall'
-  import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   export default {
-    name: "project",
+    name: "softBase",
     components: {
-      Waterfall,
-      WaterfallSlot,
       SAnalysis,
       RState,
       AQuery,
@@ -97,10 +36,11 @@
     },
     data () {
       return {
-        isActive:sessionStorage.getItem('aActive') || 0,
+        isActive:'',
+        noData:false,
         navList:[],
+        loading:null,
         isShow:true,
-        dialogVisible: false,
         dialogWidth:'70%',
         dialogHeight:{
           height:'700px'
@@ -118,8 +58,7 @@
           {name:'历史数据'},
           {name:'统计分析'},
           //{name:'通知记录'},
-          {name:'报警查询'},
-          {name:'作业配置'},
+          {name:'故障报警'},
         ],
         tBody:[
           'RState',
@@ -127,104 +66,117 @@
           'SAnalysis',
           //'NRecord',
           'AQuery',
-          'JConfig'
         ],
         tIndex:0,
         currentView:'RState',
-        isBusy: false
+        isBusy: false,
+        deviceStatus:null,
+        deviceStatusLists:[
+          {id:0,name:'故障中'},
+          {id:1,name:'运行中'},
+          {id:2,name:'已断线'},
+          {id:3,name:'已离线'},
+        ]
       };
     },
     created(){
-      /*let _this=this;
-      Bus.$on('groupId',(e)=>{
-        console.log(e);
-        console.log(this);
-        _this.group_id=e;
-      });*/
-      /*let clientWidth=document.body.clientWidth;
-      if(clientWidth<1500||this.dialogFullscreen){
-        this.isShow=false
-      }else {
-        this.isShow=true
+      this.deviceStatus = new Map();
+      for (let i=0; i<this.deviceStatusLists.length; i++) {
+        this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
       }
-      window.onresize=function () {
-        let clientWidth=document.body.clientWidth;
-        if(clientWidth<1500||this.dialogFullscreen){
-          this.isShow=false
-        }else {
-          this.isShow=true
-        }
-      };*/
-      let id=this.$store.state.project.projectId;
-      let tenant=this.$store.state.project.tenant;
-      deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
-        console.log(res);
-        this.navList=res.result.items;
-        /*this.$nextTick(()=>{
-          this.isShow=true
-        })*/
-      });
 
-      let group_id=sessionStorage.getItem('group_id');
-      let deviceIndex=sessionStorage.getItem('deviceIndex');
-      this.getList(group_id)
+      this.loading=this.$loading({
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.2)'
+      });
+      let id=this.$cookies.get('projectId');
+      let tenant=this.$cookies.get('tenant');
+      this.getGroup(id,tenant)
     },
     methods: {
-      changeTab1(list,index){
+      getGroup(id,tenant){
+        deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
+          if(res.success){
+            this.navList=res.result.items;
+            this.getList(this.navList[0].id);
+
+            this.$nextTick(()=>{
+              this.isShow=true
+            });
+            this.loading.close()
+          }else{
+            this.$message.error(res.message);
+            this.loading.close()
+          }
+        }).catch(e=>{
+          this.loading.close()
+        });
+      },
+      changeTab1(list,index){ //切换tab
         this.isActive=index;
+        this.getList(list.id)
       },
-      radioEvent(){
-        this.dialogVisible = false;
-      },
-      getDetails(item,index){
+      getDetails(item,index){ //获取详情
         this.dialogVisible=true;
         this.deviceName=item.name;
+        sessionStorage.setItem('deviceName',item.name);
         this.deviceKey=item.key;
-        console.log(this.deviceKey)
       },
-      changeTab(i){
+      changeTab(i){ //模态框tab
         this.tIndex=i;
         this.currentView=this.tBody[i]
       },
-      isFullscreen(){
-        console.log(this.changeIcon);
+      isFullscreen(){ //是否打开模态框
         if(this.changeIcon){
+
           this.dialogWidth='100%';
           this.dialogHeight={
-            height:'87%'
+            height:'calc(100% - 65px)'
           };
           this.dialogFullscreen=true;
           this.changeIcon=!this.changeIcon;
         }else{
           this.dialogWidth='70%';
           this.dialogHeight={
-            height:'580px'
+            height:'700px'
           };
           this.dialogFullscreen=false;
           this.changeIcon=!this.changeIcon
         }
       },
       changeScreen(data){
-        console.log(data);
         this.changeIcon=data;
         this.isFullscreen();
       },
-      close(){
-
-      },
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
-          this.items=res.result.items;
-          this.items.forEach((item,i)=>{
-            console.log(item);
-            /*dictionary.list({'type':'device_type'}).then(res=>{
-              res.result.forEach((dict,j)=>{
-                if(item.product.alias==dict.label){
-                  item.device_type=dict.label
-                }
+          if(res.success){
+            if(res.result.items.length>0){
+              this.noData=false;
+              res.result.items.forEach(item=>{
+                item.status=3;
               });
-            })*/
-          });
+              this.items=res.result.items;
+              console.log(res.result.items);
+              for(let i=0;i<this.items.length;i++){
+                deviceData.list({key:this.items[i].key}).then(res =>{
+                  if(res.success){
+                    this.items[i].status=1
+                  }else{
+                    this.items[i].status=3
+                  }
+                }).catch(e=>{
+                  _this.loading.close();
+                })
+              }
+              this.loading.close();
+            }else{
+              this.noData=true;
+              this.loading.close();
+            }
+          }else{
+            this.loading.close();
+          }
         })
       }
     }

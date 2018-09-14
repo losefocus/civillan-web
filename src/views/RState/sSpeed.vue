@@ -23,7 +23,7 @@
     methods:{
       init(post_data){
         let _this=this;
-        let tips=parseInt(parseFloat(post_data)*100) || 0;
+        let tips=Math.abs(post_data) || 0;
 
         this.myChart = this.$echarts.init(document.getElementById('speed'));
         function loading() {
@@ -50,7 +50,7 @@
               fontSize:'18'
             }
           }, {
-            text: 'cm/min',
+            text: 'cm/Min',
             left: 'center',
             top: '58%',
             //textAlign: 'center',

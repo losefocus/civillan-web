@@ -21,7 +21,7 @@
            <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
            <div class="i-progress">
              <div class="i-progressName" style="width: 80px">成桩进度：</div>
-             <el-progress :stroke-width="15" :text-inside="true" :percentage="progress" color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
+             <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
            </div>
          </div>
          <div class="i-box">
@@ -31,7 +31,7 @@
            </div>
            <div>
              <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
-             <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==0}"></div></div>
+             <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
          <div class="h-box">
@@ -40,11 +40,14 @@
              <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
            </div>
            <div class="b-angle">
+             <div class="a-spot"></div>
            </div>
          </div>
 
          <div class="i-normal" v-if="isWarming">
-           未发现问题
+           <marquee direction="up" width="250" height="100%" behavior="scroll">
+               This text will bounce
+           </marquee>
          </div>
          <div class="i-warning" v-else>
            <i class="iconfont icon-warming"></i>
@@ -87,7 +90,7 @@
          </div>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
-         <a-sp></a-sp>
+         <a-sp :dataInfo="RT_data" ref="aSp"></a-sp>
        </li>
        <li class="s-chart" id="pile">
         <!-- <chart :options="ElectricCurrent" :auto-resize=true></chart>-->
@@ -101,12 +104,12 @@
              <div class="p-progress" :style="{height:'80%'}">
                <div style="height: 100%;">
                  <div class="progressContainer">
-                   <div class="progress" :style="{height:(100-progress)+'%'}" style="font-size: 12px">
+                   <div class="progress" :style="{height:progressHeight}" style="font-size: 12px">
                      <div style="border-bottom: 3px solid #24BCF7;width: 32px;"></div>
-                     <div style="margin-left: 35px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 25px;font-weight: bold;">{{parseInt(Math.abs(RT_data.rdeep))}}</span>米</div>
+                     <div style="margin-left: 35px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 20px;font-weight: bold;">{{progress}}</span>米</div>
                    </div>
-                   <span style="margin-left: -24px">0米</span>
-                   <span style="position: absolute;bottom: 0;left:-32px;">50米</span>
+                   <span style="margin-left: -32px">0米</span>
+                   <span style="position: absolute;bottom: 0;left:-45px;">100米</span>
                  </div>
                </div>
              </div>
@@ -114,22 +117,6 @@
            <div class="p-title">深度</div>
          </div>
          <div class="p-box">
-          <!-- <div class="p-progress">
-             <radial-progress-bar :diameter="diameter"
-                                  :total-steps="totalSteps"
-                                  :completed-steps="rflow"
-                                  :animate-speed="animateSpeed"
-                                  :stroke-width="strokeWidth"
-                                  :start-color="startColor1"
-                                  :stop-color="stopColor1"
-                                  :inner-stroke-color="innerStrokeColor1"
-                                  :timing-func="timingFunc"
-                                  >
-               <p><span class="p-completedSteps">{{ rflow }}</span> <span class="p-totalSteps">/{{ totalSteps }}</span></p>
-               <p class="p-unit">cm/min</p>
-               <div class="p-title">流量</div>
-             </radial-progress-bar>
-           </div>-->
            <div class="p-echart">
              <s-speed ref="sSpeed" :realTime="RT_data"></s-speed>
            </div>
@@ -166,6 +153,7 @@
   import sSpeed from '@/views/RState/sSpeed'
   import sFlow from '@/views/RState/sFlow'
   import {formatDate} from '@/common/formatDate.js';
+
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
 
@@ -188,7 +176,7 @@ export default {
     let Data=data;
 
     return {
-      //timer:null,//定时器,
+      timer:null,//定时器,
       pileData:{
         ps:[],
         pile_id:{content:[{"label":"pile_position","name":"桩位置","value":"120.049345774,30.850305056"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}],
@@ -205,7 +193,6 @@ export default {
       },
       angelWidth:0,
       noDevice:false,
-      timer1:null,//定时器1
       deviceType:['1','2','3'],
       deviceIndex:1,
       deviceName:[
@@ -221,51 +208,106 @@ export default {
       rspeed:3,//速度实时数据
       rcurrent:3,//电流实时数据
 
-      totalSteps: 200,//完成进度条的步骤总数。
-      animateSpeed: 500,//动画一步的时间量（以毫秒为单位）
-      diameter: 110,//进度条圆的直径，以像素为单位。
-      strokeWidth: 8,//进度条的宽度
-
-      startColor1: '#17A8F5',//进度条渐变的前沿颜色。
-      stopColor1: '#20CEDE',//进度条渐变的辅助颜色。
-      innerStrokeColor1: 'rgba(151,151,151,0.3)',//进度条的背景颜色。
-
-      startColor2: '#17A8F5',//进度条渐变的前沿颜色。
-      stopColor2: '#20CEDE',//进度条渐变的辅助颜色。
-      innerStrokeColor2: 'rgba(151,151,151,0.3)',//进度条的背景颜色。
-
-      startColor3: '#17A8F5',//进度条渐变的前沿颜色。
-      stopColor3: '#20CEDE',//进度条渐变的辅助颜色。
-      innerStrokeColor3: 'rgba(151,151,151,0.3)',//进度条的背景颜色。
-
-
-      timingFunc: 'linear',//用于CSS转换的转换计时功能
-
       RT_data:{}, //实时数据
-
 
       slurryData:[], //段浆量
       ashData:[], //段灰量
       rpressureData:[], //段灰量
-      progress:40,//深度进度
+      progressNum:40,//深度进度
+      progress:0,
+      progressHeight:'',
+      DesignDeep:30,
 
       isWarming:true,//未发现问题显示
 
       isTab:false,//设备型号切换
     }
   },
-  props:['dialogFullscreen','deviceKey'],
+  props:['dialogFullscreen','deviceKey','isClose'],
   filters: {
     formatDate(time) {
       let date = new Date(time);
       return formatDate(date, 'yyyy-MM-dd'); //yyyy-MM-dd hh:mm
     }
   },
+  created(){
+    this.getConfig();
+    this.getData(this.deviceKey);
+    this.timer=setInterval(()=>{
+      this.getData(this.deviceKey);
+      this.getAlarms(this.deviceKey)
+    },5000);
 
+  },
+  mounted(){
+    this.init();
+    this.reload();
+    const that = this;
+    this.getPileData();
+
+
+    this.$nextTick(()=>{
+      let pile=document.getElementById('pile');
+      let pileHeight,pileWidth
+      if(pile.currentStyle){
+        pileHeight = pile.currentStyle.height
+        pileWidth = pile.currentStyle.width
+      }else {
+        pileHeight = window.getComputedStyle(pile).height;
+        pileWidth = window.getComputedStyle(pile).width;
+      }
+      this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+      this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+
+      this.$refs.pMap.width = parseFloat(pileWidth);
+      this.$refs.pMap.height = parseFloat(pileHeight);
+    });
+
+    setTimeout(()=>{
+      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+      if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
+      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
+    },100);
+
+    let _this=this;
+    window.onresize = function(){
+      _this.$nextTick(()=>{
+        let pile=document.getElementById('pile');
+        if(!pile){
+          //console.log('dom销毁')
+        }else{
+          let pileHeight,pileWidth
+          if(pile.currentStyle){
+            pileHeight = pile.currentStyle.height
+            pileWidth = pile.currentStyle.width
+          }else {
+            pileHeight = window.getComputedStyle(pile).height;
+            pileWidth = window.getComputedStyle(pile).width;
+          }
+          _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+          _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+          _this.$refs.pMap.width = parseFloat(pileWidth);
+          _this.$refs.pMap.height = parseFloat(pileHeight);
+          _this.$refs.pMap.init();
+        }
+
+      });
+
+
+      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+      if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
+      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
+      let clientWidth=document.body.clientWidth;
+      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
+    }
+  },
   beforeDestroy(){
     clearInterval(this.timer);
-    clearInterval(this.timer1)
+    console.log('已销毁');
   },
+
   methods:{
     init(){
       let clientWidth=document.body.clientWidth;
@@ -280,6 +322,7 @@ export default {
         if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
         if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
         if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
+        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();};
         if(clientWidth>1660){
           diameter=110;
         }else if(clientWidth<1660&&clientWidth>1500){
@@ -297,6 +340,7 @@ export default {
         if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()};
         if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()};
         if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()};
+        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();};
         if(clientWidth>1800){
           this.classChange=1;
           diameter=170;
@@ -328,9 +372,6 @@ export default {
       }
       this.diameter=diameter
     },
-    add(){
-      this.progress+=10
-    },
     tabChange(x){
       if(x==0){
         this.isTab=false;
@@ -348,65 +389,38 @@ export default {
         if(res.success){
           let aa = res.result.items;
           aa.forEach(item=>{
-            let arr = JSON.parse(item.content)
+            let arr = JSON.parse(item.content);
             item.content=arr
           });
           this.pileData.ps=aa;
-          this.$refs.pMap.init()
+          if(this.$refs.pMap){this.$refs.pMap.init()}
         }else{
           console.log('CAD数据获取失败')
         }
       })
     },
-
+    //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
         if(res.success){
           this.RT_data=res.result;
+          console.log(res);
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
-          this.RT_data.depth_design=100;
+          this.RT_data.depth_design=30;
 
-          this.rflow=parseInt(res.result.rflow);
-          this.rspeed=(parseInt(res.result.rspeed)+5)*20;
-          this.rcurrent=parseInt(res.result.rcurrent);
-          this.progress=Math.abs(res.result.rdeep)*2;
-          if(this.rflow>=this.totalSteps){
-            this.startColor1='#F85959';
-            this.stopColor1='#F85959';
-            this.innerStrokeColor1='#F85959 '
-          }else{
-            this.startColor1='#17A8F5';
-            this.stopColor1='#20CEDE';
-            this.innerStrokeColor1='rgba(151,151,151,0.3)'
+          this.rflow=res.result.rflow;
+          this.rspeed=Math.abs(res.result.rspeed);
+          this.rcurrent=res.result.rcurrent;
+          this.progress=res.result.rdeep.toFixed(2);
+          if(isNaN(this.progress)){
+            this.progress=0
           }
+          this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
 
-          if(this.rspeed>=this.totalSteps){
-            this.startColor2='#F85959';
-            this.stopColor2='#F85959';
-            this.innerStrokeColor2='#F85959'
-          }else{
-            this.startColor2='#17A8F5';
-            this.stopColor2='#20CEDE';
-            this.innerStrokeColor2='rgba(151,151,151,0.3)'
-          }
-
-          if(this.rcurrent>=this.totalSteps){
-            this.startColor3='#F85959';
-            this.stopColor3='#F85959';
-            this.innerStrokeColor3='#F85959'
-          }else{
-            this.startColor3='#17A8F5';
-            this.stopColor3='#20CEDE';
-            this.innerStrokeColor3='rgba(151,151,151,0.3)'
-          }
-
-
-          let num1=Math.floor(Math.random()*10);
-          let num2=Math.floor(Math.random()*10);
-          let par_slurry=parseInt(res.result.par_slurry/1000000)*num1*10;
-          let par_ash=parseInt(res.result.par_ash/1000000)*num2*10;
-          let rpressure=parseInt(res.result.rpressure/1000000)*num1*10;
+          let par_slurry=res.result.par_slurry;
+          let par_ash=res.result.par_ash;
+          let rpressure=res.result.rpressure;
 
           this.slurryData.push(par_slurry);
           this.ashData.push(par_ash);
@@ -425,77 +439,25 @@ export default {
       }else{
         return getComputedStyle(obj,false)[attr];
       }
+    },
+    //配置参数
+    getConfig(){
+      let projectId=this.$cookies.get('projectId');
+      config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
+        console.log(res);
+      })
+    },
+    //报警信息
+    getAlarms(key){
+      deviceData.alarms({'key':key}).then(res=>{
+        console.log(res)
+      }).catch(e=>{
+        console.log(e)
+      })
     }
   },
-  created(){
-    this.getData(this.deviceKey);
-    this.timer=setInterval(()=>{
-      this.getData(this.deviceKey)
-    },2000);
-
-  },
-  mounted(){
-    this.init();
-    this.reload();
-    const that = this;
-    this.getPileData();
 
 
-    this.$nextTick(()=>{
-      let pile=document.getElementById('pile');
-      let pileHeight,pileWidth
-      if(pile.currentStyle){
-        pileHeight = pile.currentStyle.height
-        pileWidth = pile.currentStyle.width
-      }else {
-        pileHeight = window.getComputedStyle(pile).height;
-        pileWidth = window.getComputedStyle(pile).width;
-      }
-      this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-      this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-
-      this.$refs.pMap.width = parseFloat(pileWidth);
-      this.$refs.pMap.height = parseFloat(pileHeight);
-    });
-
-    setTimeout(()=>{
-      this.$refs.sCurrent.resize();
-      this.$refs.sSpeed.resize();
-      this.$refs.sFlow.resize();
-    },100);
-
-    let _this=this;
-    window.onresize = function(){
-      _this.$nextTick(()=>{
-        let pile=document.getElementById('pile');
-        if(!pile){
-          //console.log('dom销毁')
-        }else{
-          let pileHeight,pileWidth
-          if(pile.currentStyle){
-            pileHeight = pile.currentStyle.height
-            pileWidth = pile.currentStyle.width
-          }else {
-            pileHeight = window.getComputedStyle(pile).height;
-            pileWidth = window.getComputedStyle(pile).width;
-          }
-          _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-          _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-          _this.$refs.pMap.width = parseFloat(pileWidth);
-          _this.$refs.pMap.height = parseFloat(pileHeight);
-          _this.$refs.pMap.init();
-        }
-
-      });
-
-
-      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-      let clientWidth=document.body.clientWidth;
-      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
-    }
-  },
   watch:{
     dialogFullscreen:function (val,oldVal) {
       let _this=this;
@@ -511,7 +473,9 @@ export default {
         _this.$refs.pMap.height = parseFloat(pileHeight);
         _this.$refs.pMap.init();
       });
-
+    },
+    isClose(val,oldVal){
+      console.log(val,oldVal)
     }
   }
 }
@@ -696,12 +660,22 @@ export default {
             }
             .led-gray{
               display: inline-block;
-              background-color: #6f6f6f;
+              background-color: #FFAB35;
               width: 6px;
               height: 6px;
-              box-shadow: 0px 0px 2px 4px #828282;
-              -moz-box-shadow: 0px 0px 2px 4px #828282;
-              -webkit-box-shadow: 0px 0px 2px 4px #828282;
+              box-shadow: 0px 0px 2px 4px #FFAB35;
+              -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
+              -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
+              border-radius: 50%;
+            }
+            .led-blue{
+              display: inline-block;
+              background-color: #403BFF;
+              width: 6px;
+              height: 6px;
+              box-shadow: 0px 0px 2px 4px #403BFF;
+              -moz-box-shadow: 0px 0px 2px 4px #403BFF;
+              -webkit-box-shadow: 0px 0px 2px 4px #403BFF;
               border-radius: 50%;
             }
             span{
@@ -738,6 +712,16 @@ export default {
             height: 60px;
             background: url("../../assets/RState/angle.png") no-repeat;
             background-size: 100% 100%;
+            position: relative;
+            .a-spot{
+              position: absolute;
+              width: 5px;
+              height: 5px;
+              border-radius: 50%;
+              left: 27px;
+              top: 26px;
+              background: red;
+            }
           }
         }
 

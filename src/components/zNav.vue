@@ -49,43 +49,43 @@ export default {
      lists:[
        {
          name:'项目总览',
-         icon:'icon-project',
+         icon:'icon-xiangmuzonglan',
          path:'/project',
        },{
          name:'设备列表',
-         icon:'icon-device',
+         icon:'icon-quanbushebei',
          path:'/device'
        },{
          name:'数据报表',
-         icon:'icon-history',
+         icon:'icon-lishishuju',
          path:'/historical'
        },{
          name:'统计分析',
-         icon:'icon-analysis',
+         icon:'icon-Group',
          path:'/analysis'
        },{
          name:'作业成效',
-         icon:'icon-operational',
+         icon:'icon-zuoyechengxiao',
          path:'/operational'
        },{
          name:'作业配置',
-         icon:'icon-config',
+         icon:'icon-zuoyepeizhi',
          path:'/configure'
        },{
          name:'故障报警',
-         icon:'icon-alarm',
+         icon:'icon-alarm1',
          path:'/alarm'
        },{
          name:'质量评估',
-         icon:'icon-quality1',
+         icon:'icon-zuoyepinggu-',
          path:'/quality'
        },{
          name:'现场影像',
-         icon:'icon-video1',
+         icon:'icon-shipinjiankong',
          path:'/video'
        },{
          name:'文档资料',
-         icon:'icon-document',
+         icon:'icon-wendangziliao',
          path:'/document'
        },
      ]

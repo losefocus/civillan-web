@@ -27,7 +27,10 @@
     :visible.sync="dialogVisible"
     :width="dialogWidth"
     :fullscreen="dialogFullscreen"
-    top="12vh"
+    top="7vh"
+    @open="isClose=false"
+    @close="isClose=true"
+    :isClose="isClose"
     style="min-width: 1024px;"
   >
     <ul class="t-header">
@@ -68,12 +71,13 @@ export default {
   data(){
     return{
       loading:null,
+      isClose:false,
       navList:[],
       productLists:[],
       productType:'',
       isShow:true,
       dialogVisible: false,
-      dialogWidth:'70%',
+      dialogWidth:'75%',
       dialogHeight:{
         height:'700px'
       },
@@ -110,7 +114,7 @@ export default {
   },
   props:[
     'searchStyle',
-    'typeStyle'
+    'typeStyle',
   ],
   mounted: function () {
     let project_id=this.$cookies.get('projectId');
@@ -128,13 +132,6 @@ export default {
         center: [116.397428, 39.90923],
         zoom: 20
       });
-      /*AMap.plugin(['AMap.ToolBar', 'AMap.Scale','AMap.MapType'], function () {
-        map.addControl(new AMap.ToolBar());
-        map.addControl(new AMap.Scale());
-        map.addControl(new AMap.MapType(
-          {defaultType:0,showTraffic:false,position:{top:'100px'}}
-        ))
-      });*/
       //获取设备列表
       let markers = [];
       let marker;
@@ -142,7 +139,8 @@ export default {
         //接口成功
         if(res.success){
           if(res.result.total==0){
-            _this.$message.error('未搜索到任何设备！')
+            _this.$message.error('未搜索到任何设备！');
+            _this.loading.close();
           }else{
             let lists=res.result.items;
             let infoWindow= new AMap.InfoWindow({offset: new AMap.Pixel(0, 5)});
@@ -200,6 +198,7 @@ export default {
                         _this.deviceName=items.name;
                         sessionStorage.setItem('deviceName',items.name);
                         _this.deviceKey=items.key;
+                        console.log(_this.deviceKey)
                       });
                       infoWindow.open(map, e.target.getPosition());
                     });
@@ -225,7 +224,6 @@ export default {
               }
             }
           }
-
           _this.loading.close();
         }else {
           _this.loading.close();
@@ -265,13 +263,16 @@ export default {
           this.isShow=false
         }
       }else{
-        this.dialogWidth='70%';
+        this.dialogWidth='75%';
         this.dialogHeight={
           height:'580px'
         };
         this.dialogFullscreen=false;
         this.changeIcon=!this.changeIcon
       }
+    },
+    dialogClose(){
+      console.log('关闭对话框')
     },
     changeScreen(data){
       this.changeIcon=data;
