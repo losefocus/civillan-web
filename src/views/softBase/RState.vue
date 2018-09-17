@@ -449,11 +449,11 @@ export default {
       })
     },
     //设备配置参数
-    getDeviceConfig(post_data){
+    /*getDeviceConfig(post_data){
       deviceConfig.list({'device_id':post_data}).then(res=>{
         console.log(res)
       })
-    },
+    },*/
 
     //报警信息
     getAlarms(key){
