@@ -13,7 +13,7 @@
             <label for="username">公司代号</label>
           </div>
           <input type="text" id="domain" autocomplete placeholder="请输入公司代号" v-model="userInfo.domain" @input="getDomain(userInfo.domain)" :class={fail:isFail2,success:isSuccess2}>
-          <p class="initColor" :class={fail:isFail,success:isSuccess}></p>
+          <p class="initColor" :class={fail:isFail2,success:isSuccess2}></p>
           <div class="log-spacing l-label">
             <label for="username">账号</label>
           </div>
@@ -185,6 +185,8 @@
           background: 'rgba(0, 0, 0, 0.2)'
         });
         if(this.isSuccess2){
+          this.isFail2=false;
+          this.isSuccess2=true;
           if(this.isSuccess&&this.isSuccess1&&this.isSuccess2){
             let that=this;
             login.login(this.userInfo).then((res) => {
@@ -223,8 +225,10 @@
             this.$message.error('密码账号错误');
           }
         }else{
-          loading.close();
+          this.isFail2=true;
+          this.isSuccess2=false;
           this.$message.error('域名错误');
+          loading.close();
         }
         //this.$cookie.set('user.info',JSON.stringify(this.userInfo),{ expires: '60s'});
       },

@@ -45,15 +45,12 @@
          </div>
 
          <div class="i-normal" v-if="isWarming">
-           <marquee direction="up" width="250" height="100%" behavior="scroll">
-               This text will bounce
-           </marquee>
+           <p>设备正常运行中</p>
          </div>
          <div class="i-warning" v-else>
            <i class="iconfont icon-warming"></i>
            <div class="w-text">
-             <p>下钻钻速超过50cm/min</p>
-             <p>下钻钻速超过50cm/min</p>
+             <p>{{warmingText}}</p>
            </div>
          </div>
        </li>
@@ -156,6 +153,7 @@
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
+  import deviceConfig from '@/api/device/deviceConfig.js'
 
   import aSp from '@/views/RState/AshPressureCurrent.vue'
   import pOperation from '@/views/RState/pileOperation.vue'
@@ -219,6 +217,7 @@ export default {
       DesignDeep:30,
 
       isWarming:true,//未发现问题显示
+      warmingText:'',
 
       isTab:false,//设备型号切换
     }
@@ -232,7 +231,9 @@ export default {
   },
   created(){
     this.getConfig();
+    this.getDeviceConfig(this.deviceKey);
     this.getData(this.deviceKey);
+    this.getAlarms(this.deviceKey);
     this.timer=setInterval(()=>{
       this.getData(this.deviceKey);
       this.getAlarms(this.deviceKey)
@@ -322,7 +323,7 @@ export default {
         if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
         if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
         if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();};
+        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
         if(clientWidth>1660){
           diameter=110;
         }else if(clientWidth<1660&&clientWidth>1500){
@@ -440,17 +441,31 @@ export default {
         return getComputedStyle(obj,false)[attr];
       }
     },
-    //配置参数
+    //项目配置参数
     getConfig(){
       let projectId=this.$cookies.get('projectId');
       config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
-        console.log(res);
+        //console.log(res.result.items[0].message);
       })
     },
+    //设备配置参数
+    getDeviceConfig(post_data){
+      deviceConfig.list({'device_id':post_data}).then(res=>{
+        console.log(res)
+      })
+    },
+
     //报警信息
     getAlarms(key){
       deviceData.alarms({'key':key}).then(res=>{
-        console.log(res)
+        //console.log(res.result[0].message);
+        if(res.success){
+          this.isWarming=false;
+          this.warmingText=res.result[0].message
+        }else{
+          this.isWarming=true
+        }
+
       }).catch(e=>{
         console.log(e)
       })
@@ -561,10 +576,10 @@ export default {
     }
     .t-box1{
       .r-stateTab{
-        font-size: 16px;
+        font-size: 14px;
       }
       .p-designTab{
-        font-size: 16px;
+        font-size: 14px;
       }
     }
 
@@ -749,25 +764,28 @@ export default {
         }
         .i-warning{
           width:100%;
-          padding-top: 10px;
           height:47px;
+          line-height: 45px;
           background:rgba(248,89,89,0.06);
           text-align: center;
+          overflow: auto;
           .icon-warming{
             vertical-align: top;
             color: #DF2A2A;
           }
           .w-text{
             margin-left: 10px;
+            max-width: 80%;
             vertical-align: top;
             display: inline-block;
+            text-align: left;
           }
         }
 
         .d-name{
           span{
             margin-left: 5%;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
           }
         }
@@ -782,29 +800,28 @@ export default {
             width: 33%;
           }
           .d-key{
-            font-size: 12px;
-
+            font-size: 14px;
             color: #666666;
           }
           .d-value{
             margin-top: 10px;
             font-weight: bold;
             height: 30px;
-            font-size: 20px;
+            font-size: 25px;
             color: #333333;
           }
           .d-value1{
             margin-top: 10px;
             font-weight: bold;
             height: 30px;
-            font-size: 17px;
+            font-size: 25px;
             color: #333333;
           }
         }
       }
       .s-info1{
         .i-id{
-          font-size:30px;
+          //font-size:30px;
           color:#DADADA;
           line-height:42px;
           .d-model{
@@ -816,9 +833,9 @@ export default {
           .d-kind{
             height: 40px;
             div{
-              width: 35px;
-              height: 35px;
-              line-height: 38px;
+              width: 30px;
+              height: 30px;
+              line-height: 30px;
               border-radius: 50%;
               border: 1px solid rgba(218,218,218,1);
               text-align: center;
@@ -827,7 +844,7 @@ export default {
           }
         }
         .deviceActive{
-          font-size:30px;
+          font-size:20px;
           background: #24BCF7;
           color:#ffffff;
         }
@@ -841,7 +858,7 @@ export default {
             line-height: 45px;
             font-weight: bold;
             .i-name{
-              font-size:20px;
+              font-size:18px;
               color:rgba(51,51,51,1);
             }
             .b-info{
@@ -854,17 +871,17 @@ export default {
             }
 
             .i-company{
-              font-size:16px;
+              font-size:14px;
               color:rgba(153,153,153,1);
             }
           }
           .i-state{
             line-height: 45px;
-            font-size:16px;
+            font-size:14px;
             color:rgba(153,153,153,1);
           }
           .icon-state{
-            font-size: 16px;
+            font-size: 14px;
             color: #24BCF7;
             margin-right: 20px;
           }
@@ -897,8 +914,8 @@ export default {
         }
         .i-warning{
           width:100%;
-          padding-top: 10px;
-          height:120px;
+          height:80px;
+          line-height: 40px;
           background:rgba(248,89,89,0.06);
           text-align: center;
           .icon-warming{
@@ -906,6 +923,7 @@ export default {
             color: #DF2A2A;
           }
           .w-text{
+            max-width: 80%;
             margin-left: 10px;
             vertical-align: top;
             display: inline-block;
@@ -914,11 +932,11 @@ export default {
 
         .d-name{
           i{
-            font-size: 30px;
+            font-size: 20px;
           }
           span{
             margin-left: 5%;
-            font-size: 30px;
+            font-size: 20px;
             font-weight: bold;
           }
         }
@@ -932,14 +950,14 @@ export default {
             width: 33.3%;
           }
           .d-key{
-            font-size: 18px;
+            font-size: 16px;
             margin-top: 30px;
             color: #666666;
           }
           .d-value{
             font-weight: bold;
             height: 30px;
-            font-size: 40px;
+            font-size: 25px;
             color: #333333;
           }
           .d-value1{

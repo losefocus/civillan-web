@@ -265,7 +265,7 @@ export default {
       }else{
         this.dialogWidth='75%';
         this.dialogHeight={
-          height:'580px'
+          height:'700px'
         };
         this.dialogFullscreen=false;
         this.changeIcon=!this.changeIcon
@@ -327,7 +327,6 @@ export default {
   }
   #container{
     position: relative;
-
   }
   .t-header{
     height: 45px;
