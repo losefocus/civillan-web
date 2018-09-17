@@ -231,7 +231,7 @@ export default {
   },
   created(){
     this.getConfig();
-    this.getDeviceConfig(this.deviceKey);
+    //this.getDeviceConfig(this.deviceKey);
     this.getData(this.deviceKey);
     this.getAlarms(this.deviceKey);
     this.timer=setInterval(()=>{
