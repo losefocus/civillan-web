@@ -2,9 +2,9 @@
   <div>
     <div class="c-box">
       <div class="c-query">
-        <el-select placeholder="文档标题" size="mini" v-model="value" style="margin: 0 5px 0 0;width: 20%;" clearable >
+        <el-select placeholder="文档标题" size="mini" v-model="value" style="margin: 0 5px 0 0;width: 20%;float: left;" clearable >
         </el-select>
-        <el-select placeholder="上传用户" size="mini" v-model="value" style="margin: 0 5px;width: 20%;">
+        <el-select placeholder="上传用户" size="mini" v-model="value" style="margin: 0 5px;width: 20%;;float: left;">
         </el-select>
         <el-date-picker
           size="mini"
@@ -15,7 +15,7 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2" style="margin: 0 5px;width: 40%">
+          :picker-options="pickerOptions2" style="margin: 0 5px;width: 40%;float: left;">
         </el-date-picker>
         <div class="c-button">
           <el-button type="info" size="mini">查询</el-button>
@@ -227,12 +227,10 @@
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
-    display: flex;
-    justify-content: space-between;
+    overflow: hidden;
     .c-handle{
       margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
+      float: right;
       div{
         width: 51px;
         line-height: 27px;
@@ -249,9 +247,9 @@
       width: 625px;
       margin-top: 20px;
       margin-right: 30px;
-      display: flex;
-      justify-content: space-between;
+      float: left;
       .c-button{
+        float: left;
         margin:0 3px;
       }
       .el-dropdown-link{

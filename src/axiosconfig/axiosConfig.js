@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import axios from 'axios'
 import qs from 'qs'
-import router from '../router'
+import router from '../router/index.js'
 import { Message, Loading } from 'element-ui'
 import errorCode from '@/common/errorCode'
 
 
 // 响应时间
 //var root = process.env.API_ROOT;
-//console.log(process.env.API_ROOT);
+//console.log(router);
 axios.defaults.timeout = 5000;
 // 配置cookie
  //axios.defaults.withCredentials = true;
@@ -19,7 +19,7 @@ Vue.prototype.$static = '';
 
 // 配置接口地址
 //axios.defaults.baseURL = root;
-var loadingInstance;
+let loadingInstance;
 // POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use(
   config => {
@@ -57,6 +57,7 @@ axios.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
+    console.log(router)
     if (res.status === 200) {
       //loadingInstance.close();
       /*if(!res.data.success){
@@ -70,7 +71,6 @@ axios.interceptors.response.use(
     }
   },
   error => {
-
     let errMsg = error.toString();
     let code = errMsg.substr(errMsg.indexOf('code') + 5);
     Message({
@@ -81,17 +81,12 @@ axios.interceptors.response.use(
     switch(error.request.status){
       case 401:
         Message.error('您的账号暂未授权');
-        router.replace({
-          path: 'login',
-          query: {redirect: router.currentRoute.fullPath}
-        });
+        router.push({path: '/login'});
         break;
       case 500:
         Message.error('服务器繁忙，请稍后访问');
         break;
     }
-
-
     //loadingInstance.close();
     /*console.log(err.request.status);
     switch(err.request.status){

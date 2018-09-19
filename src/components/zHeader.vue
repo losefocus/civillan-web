@@ -37,14 +37,12 @@
 
   <el-dialog
     :visible.sync="isOut"
-    :show-close=false
-    width="30%"
-
-    center>
-    <div style="width: 100%;text-align: center;font-size: 20px;padding: 30px 0;">您确定离开吗？</div>
+    width="30%">
+    <div style="font-size: 16px;padding: 16px 20px;font-weight: bold;">提示</div>
+    <div style="width: calc(100% - 40px);font-size: 14px;padding: 20px;">您确定要退出该系统吗？</div>
     <span slot="footer" class="dialog-footer">
-    <el-button size="mini" @click="isOut = false">取 消</el-button>
-    <el-button size="mini" type="primary" @click="out()">确 定</el-button>
+    <el-button size="small" @click="isOut = false">取 消</el-button>
+    <el-button size="small" type="danger" @click="out()">确 定</el-button>
   </span>
   </el-dialog>
 
@@ -230,11 +228,16 @@
 
       },
       out(){
-        if(window.$cookies.get('token')){
-          window.$cookies.remove('token')
+        let isLogin=this.$cookies.get('checked');
+        if(isLogin){
+          this.$router.push('/login')
+        }else{
+          if(window.$cookies.get('token')){
+            window.$cookies.remove('token')
+          }
+          sessionStorage.removeItem('token');
+          this.$router.push('/login')
         }
-        sessionStorage.removeItem('token');
-        this.$router.push('/login')
       }
     }
   }

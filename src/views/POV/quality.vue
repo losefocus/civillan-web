@@ -3,46 +3,57 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" placeholder="全部设备" size="mini" style="margin: 0 5px 0 0;width: 16%;" clearable >
+        <el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
+        <el-select  v-else="!isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
           <el-option
-            v-for="item in deviceSelect"
-            :key="item.key"
+            v-for="(item,index) in deviceSelect"
+            :key="index"
             :label="item.name"
-            :value="item.key">
+            :value="index">
+          </el-option>
+          <el-pagination
+            @current-change="deviceCurrentChange"
+            small
+            :pager-count="5"
+            :current-page="device_data.page_index"
+            :page-size="device_data.page_size"
+            layout="prev, pager, next"
+            :total="deviceTotal">
+          </el-pagination>
+        </el-select>
+
+        <el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+          <el-option
+            v-for="item in deviceSelect1"
+            :key="item.value1"
+            :label="item.name"
+            :value="item.value1">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="全部桩" size="mini" style="margin: 0 5px;width: 16%;">
+        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
-            v-for="item in deviceSelect"
-            :key="item.key"
+            v-for="item in deviceSelect2"
+            :key="item.value2"
             :label="item.name"
-            :value="item.key">
-          </el-option>
-        </el-select>
-        <el-select v-model="device" placeholder="评分等级" size="mini" style="margin: 0 5px;width: 16%;">
-          <el-option
-            v-for="item in deviceSelect"
-            :key="item.key"
-            :label="item.name"
-            :value="item.key">
+            :value="item.value2">
           </el-option>
         </el-select>
         <el-date-picker
-          size="mini"
           v-model="value7"
+          size="mini"
           type="daterange"
           align="center"
           unlink-panels
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%">
+          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%;float: left;">
         </el-date-picker>
         <div class="c-button">
-          <el-button type="info" size="mini">查询</el-button>
+          <el-button type="info" size="mini" @click="query">查询</el-button>
         </div>
         <div class="c-button">
-          <el-button type="info" size="mini">重置</el-button>
+          <el-button type="info" size="mini" @click="query">重置</el-button>
         </div>
       </div>
       <div class="c-handle">
@@ -349,12 +360,10 @@
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
-    display: flex;
-    justify-content: space-between;
+    overflow: hidden;
     .c-handle{
       margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
+      float: right;
       div{
         width: 51px;
         line-height: 27px;
@@ -371,9 +380,9 @@
       width: 675px;
       margin-top: 20px;
       margin-right: 30px;
-      display: flex;
-      justify-content: space-between;
+      float: left;
       .c-button{
+        float: right;
         margin:0 3px;
       }
       .el-dropdown-link{

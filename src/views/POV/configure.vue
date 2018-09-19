@@ -82,7 +82,7 @@
         <div class="a-body">
           <el-form class="a-info" :inline="true" :rules="rules" :model="form" ref="form">
             <el-form-item class="i-content" style="width: 220px" prop="typeId" label="设备类型">
-              <el-select v-model="form.typeId" size="mini" placeholder="设备类型" @change="changeType">
+              <el-select v-model="form.typeId" size="mini" placeholder="设备类型" @change="changeType" style="width: 40%;">
                 <el-option
                   v-for="item in typeOptions"
                   :key="item.value"
@@ -92,7 +92,7 @@
               </el-select>
              </el-form-item>
             <el-form-item class="i-content" prop="name" label="作业名称">
-              <el-input v-model="form.name" placeholder="请输入名称" size="mini" ></el-input>
+              <el-input v-model="form.name" placeholder="请输入名称" size="mini" style="width: 20%;"></el-input>
             </el-form-item>
             <el-form-item class="i-content" prop="key" label="作业标识">
               <el-input v-model="form.key" placeholder="请输入英文字符" size="mini"></el-input>
@@ -559,9 +559,9 @@
   .j-box{
     margin-top: 15px;
     height: 100%;
-    display: flex;
-    justify-content: space-between;
+    overflow: hidden;
     .j-table{
+      float: left;
       width: 55%;
       height: calc( 100% - 40px );
       padding: 20px;
@@ -587,6 +587,7 @@
       margin-top: 20px;
     }
     .j-add{
+      float: right;
       height: calc( 100% - 40px );
       padding: 20px;
       width: calc(45% - 100px);

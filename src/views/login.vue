@@ -1,10 +1,10 @@
 <template>
   <div style="height: 100%">
     <el-container style="height: 100%;">
-      <el-main style="height: 100%;width: 68% !important;" :style="{backgroundImage: 'url(' + groupImg + ')' }">
+      <div class="l-bg" :style="{backgroundImage: 'url(' + groupImg + ')' }">
         <div class="cp-logo" :style="{backgroundImage: 'url(' + logoImg + ')' }"></div>
-      </el-main>
-      <el-aside style="height: 100%;min-height: 645px;" @keyup.enter.native="keyDown">
+      </div>
+      <div class="l-side" @keyup.enter.native="keyDown">
         <p class="user-title">用户登录</p>
         <p class="cp-system">工程施工实时监控系统</p>
 
@@ -33,7 +33,7 @@
           </div>
         </form>
         <p class="cp-code">Copyright 2018 智握领程 版权所有.</p>
-      </el-aside>
+      </div>
     </el-container>
     <el-dialog
       :visible.sync="isBrowser"
@@ -200,6 +200,7 @@
                   //sessionStorage.setItem('wsUrl',wsUrl.result);
                   that.$cookies.set('token',res.result.token,60 * 60 * 24 * 31);
                   that.$cookies.set('wsUrl',wsUrl.result,60 * 60 * 24 * 31);
+                  that.$cookies.set('checked',that.userInfo.checked,60 * 60 * 24 * 31);
                   that.$store.dispatch('incrementToken',res.result.token);
                   that.$router.push('/');
                   that.$message.success('登陆成功');
@@ -207,6 +208,7 @@
                 }else{
                   that.$cookies.set('token',res.result.token);
                   that.$cookies.set('wsUrl',wsUrl.result);
+                  that.$cookies.set('checked',that.userInfo.checked);
                   //sessionStorage.setItem('token',res.result.token);
                   //sessionStorage.setItem('wsUrl',wsUrl.result);
                   //that.$cookies.remove('token');
@@ -277,20 +279,25 @@
   }
 
   /*头部*/
-  .el-main{
+  .l-bg{
+    float: left;
+    width: calc(65% - 140px);
+    height: calc(100% - 100px);
     padding: 50px 70px;
-    //background: url("../../static/img/login/group.png") no-repeat;
     background-size: cover;
     .cp-logo{
       width: 200px;
       height: 45px;
-      //background: url("../../static/img/login/logo.png") no-repeat;
       background-size: 100% 100%;
     }
   }
-  .el-aside{
-    width: 32% !important;
-    padding: 7% 4% 3%;
+  .l-side{
+
+    width: 27%;
+    height: 79%;
+    min-height: 645px;
+    float: left;
+    padding: 5% 4% 3%;
     .user-title{
       height: 6%;
       font-size: 32px;
@@ -357,14 +364,15 @@
     .cp-code{
       width: 100%;
       text-align: center;
-      margin-top: 30%;
+      margin-top: 20%;
       font-size: 12px;
       color: #8A96A0;
     }
   }
 
   @media screen and (min-width: 1200px) and (max-width: 1600px)  {
-    .el-aside{
+    .l-side{
+      height: 75%;
       padding: 5% 4% 0;
       .user-title{
         font-size: 28px;
@@ -389,10 +397,16 @@
     .el-container{
       position: relative;
     }
-    .el-aside{
+    .l-bg{
+      float: left;
+      width: calc(100% - 140px);
+      height: calc(100% - 100px);
+    }
+    .l-side{
       padding: 20px 5% 0;
       width: 450px !important;
       height: 400px !important;
+      min-height: 400px;
       position: absolute;
       left:0;
       top: 100px;
@@ -480,7 +494,4 @@
       }
     }
   }
-
-
-
 </style>

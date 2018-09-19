@@ -9,7 +9,7 @@
       <div class="c-box">
         <div class="c-query">
           <el-select v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-          <el-select v-else="isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%" clearable >
+          <el-select v-else="isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%;float: left;" clearable >
             <el-option
               v-for="(item,index) in deviceSelect"
               :key="index"
@@ -36,7 +36,7 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :picker-options="pickerOptions2" style="margin: 0 5px;">
+            :picker-options="pickerOptions2" style="margin: 0 5px;float: left;">
           </el-date-picker>
           <div class="c-button">
             <el-button type="info" size="mini">查询</el-button>
@@ -339,15 +339,17 @@ export default {
     height: 100%;
   }
   .a-chart{
-    display: flex;
     width: 100%;
     height: 350px;
-    justify-content: space-between;
     margin: 15px 0 20px;
+    overflow: hidden;
     .e-body{
+      float: left;
       background: #ffffff;
       width: calc(50% - 50px);
+      height: 100%;
       padding: 20px;
+      margin-left: 10px;
     }
 
   }
@@ -356,15 +358,14 @@ export default {
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
-    display: flex;
-    justify-content: space-between;
+    overflow: hidden;
     .c-query{
-      width: 600px;
+      width: 100%;
       margin-top: 20px;
       margin-right: 30px;
-      display: flex;
-      justify-content: space-between;
+      overflow: hidden;
       .c-button{
+        float: left;
         margin:0 3px;
       }
       .el-dropdown-link{
