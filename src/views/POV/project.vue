@@ -43,6 +43,7 @@
               <p class="d-name">文档资料</p>
             </router-link>
           </li>
+          <div class="clear"></div>
         </ul>
         <div class="i-box p-item" style="width: 100%;">
           <el-popover
@@ -362,12 +363,13 @@
     width: 100%;
     height: 100%;
   }
+  .clear{
+    clear: both;
+  }
   .p-box{
     height: 50%;
-    display: flex;
     .p-info{
-      display: flex;
-      flex-flow: wrap;
+      float: left;
       padding: 20px;
       width: 410px;
       height:calc(100% - 40px);
@@ -398,9 +400,11 @@
         width: 100%;
         padding: 0 5% 0 0;
         margin-top: 5%;
-        display: flex;
-        justify-content: space-around;
-        .s-data{
+
+
+      .s-data{
+          float: left;
+          margin-left: 30px;
           cursor: pointer;
           .d-num{
             text-align: center;
@@ -418,21 +422,21 @@
       .i-box {
         margin-top: 8%;
         background: #ffffff;
-        display: flex;
-        //justify-content: space-between;
-        flex-flow: wrap;
         .c-info{
+          float: left;
           width: 195px;
           margin: 3% 5px 0 0;
           cursor: pointer;
           display: flex;
 
           .c-icon{
+            float: left;
             padding-top: 6px;
             margin-right: 10px;
             color: #787F87;
           }
           p{
+            float: left;
             width: 160px;
             overflow:hidden;
             text-overflow:ellipsis;
@@ -449,6 +453,7 @@
       }
     }
     .d-map{
+      float: left;
       width: calc( 100% - 470px );
       height:100%;
       min-height: 375px;
@@ -471,17 +476,17 @@
   }
   .a-box{
     height: calc(50% - 20px);
-    display: flex;
     margin-top: 20px;
     .p-info{
+      float: left;
       padding: 20px;
       width: 410px;
       height:calc(100% - 40px);
       background: #ffffff;
       margin-right: 20px;
-
     }
     .d-map{
+      float: left;
       padding: 20px;
       width: calc( 100% - 510px ) ;
       height:calc(100% - 40px);

@@ -49,43 +49,43 @@ export default {
      lists:[
        {
          name:'项目总览',
-         icon:'icon-xiangmuzonglan',
+         icon:'icon-project_new',
          path:'/project',
        },{
          name:'设备列表',
-         icon:'icon-quanbushebei',
+         icon:'icon-device_new',
          path:'/device'
        },{
          name:'数据报表',
-         icon:'icon-lishishuju',
+         icon:'icon-history_new',
          path:'/historical'
        },{
          name:'统计分析',
-         icon:'icon-Group',
+         icon:'icon-statistics_new',
          path:'/analysis'
        },{
          name:'作业成效',
-         icon:'icon-zuoyechengxiao',
+         icon:'icon-results_new',
          path:'/operational'
        },{
          name:'作业配置',
-         icon:'icon-zuoyepeizhi',
+         icon:'icon-config_new',
          path:'/configure'
        },{
          name:'故障报警',
-         icon:'icon-alarm1',
+         icon:'icon-alarm_new',
          path:'/alarm'
        },{
          name:'质量评估',
-         icon:'icon-zuoyepinggu-',
+         icon:'icon-assessment_new',
          path:'/quality'
        },{
          name:'现场影像',
-         icon:'icon-shipinjiankong',
+         icon:'icon-video_new',
          path:'/video'
        },{
          name:'文档资料',
-         icon:'icon-wendangziliao',
+         icon:'icon-document_new',
          path:'/document'
        },
      ]
@@ -273,7 +273,7 @@ export default {
           padding-top: 15px;
           text-align: center;
           i{
-            font-size: 25px;
+            font-size: 30px;
           }
         }
         .link-title{
@@ -289,7 +289,7 @@ export default {
       transition: 0.6s all ease;
       border: none;
       .nav-icon{
-        padding-top: 12px !important;
+        padding-top: 10px !important;
       }
     }
   }

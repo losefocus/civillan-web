@@ -267,13 +267,14 @@
       height: 10%;
       margin-top: 5%;
       text-align: center;
-      display: flex;
-      justify-content: space-between;
+      overflow: hidden;
       .v-title{
+        float: left;
         color:rgba(51,51,51,1);
         font-size: 12px;
       }
       .v-time{
+        float: right;
         font-size: 12px;
       }
     }

@@ -5,8 +5,8 @@
         <z-header></z-header>
       </el-header>
       <el-container style="height: 100%">
-        <z-nav></z-nav>
-        <el-main style="height: 100%;">
+        <z-nav style="float: left"></z-nav>
+        <div class="z-main" style="height: calc(100% - 35px);">
           <div v-show="isActive" class="breadcrumb-box">
             <div :class="{'b-title':isActive}">{{ title }}</div>
             <div class="el-breadcrumb">
@@ -16,7 +16,7 @@
           <transition name="fade" mode="out-in">
             <router-view></router-view>
           </transition>
-        </el-main>
+        </div>
       </el-container>
     </el-container>
   </div>
@@ -99,8 +99,18 @@
     }
 
   }
-  .el-main{
-    height: 100%;
+  .z-main{
     background: #f5f5f9;
+    float: left;
+    padding: 20px;
+    width: calc(100% - 285px);
+  }
+  @media screen and (min-width: 1000px) and (max-width: 1467px){
+    .z-main{
+      background: #f5f5f9;
+      float: left;
+      padding: 20px;
+      width: calc(100% - 130px);
+    }
   }
 </style>

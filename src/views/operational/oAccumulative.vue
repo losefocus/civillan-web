@@ -4,7 +4,8 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;" clearable >
+        <el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
+        <el-select  v-else="!isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
@@ -21,13 +22,33 @@
             :total="deviceTotal">
           </el-pagination>
         </el-select>
-        <el-select v-model="device" placeholder="记录检验标准" size="mini" @change="deviceChange" style="margin: 0 5px;">
+
+        <el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+          <el-option
+            v-for="item in deviceSelect1"
+            :key="item.value1"
+            :label="item.name"
+            :value="item.value1">
+          </el-option>
+        </el-select>
+        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+          <el-option
+            v-for="item in deviceSelect2"
+            :key="item.value2"
+            :label="item.name"
+            :value="item.value2">
+          </el-option>
         </el-select>
         <el-date-picker
-          v-model="value1"
+          v-model="value7"
           size="mini"
-          type="date"
-          placeholder="选择日期">
+          type="daterange"
+          align="center"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%;float: left;">
         </el-date-picker>
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">查询</el-button>
@@ -37,8 +58,24 @@
         </div>
       </div>
       <div class="c-handle">
-        <el-button type="primary" icon="el-icon-refresh" size="mini">刷新</el-button>
-        <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
+        <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
+          <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
+          <el-dropdown-menu slot="dropdown" >
+            <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
+            <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
+            <!--<el-dropdown-item>Word</el-dropdown-item>
+            <el-dropdown-item>PDF</el-dropdown-item>-->
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-button style="margin-left: 7px" type="primary" icon="el-icon-refresh" size="mini" @click="Refresh">刷新</el-button>
+        <el-popover
+          placement="bottom"
+          trigger="click">
+          <div class="t-rows">
+            <el-dropdown-item style="width: 90px;" v-for="(row,index) in newData" :key="index"><el-checkbox v-model="row.checked">{{row.title}}</el-checkbox></el-dropdown-item>
+          </div>
+          <el-button slot="reference" type="primary" icon="el-icon-caret-bottom" size="mini">选择列</el-button>
+        </el-popover>
       </div>
     </div>
     <el-table
@@ -394,12 +431,10 @@
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
-    display: flex;
-    justify-content: space-between;
+    overflow: hidden;
     .c-handle{
       margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
+      float: right;
       div{
         width: 51px;
         line-height: 27px;
@@ -416,10 +451,10 @@
       width: 675px;
       margin-top: 20px;
       margin-right: 30px;
-      display: flex;
-      justify-content: space-between;
+      float: left;
       .c-button{
         margin:0 3px;
+        float: left;
       }
       .el-dropdown-link{
         cursor: pointer;
@@ -442,14 +477,15 @@
     flex-wrap:wrap;
   }
   .s-box{
-    display: flex;
-    justify-content: flex-end;
+    width: 100%;
+    text-align: center;
     height: 60px;
     line-height: 60px;
     background: #ffffff;
     border-bottom: 2px solid #ebeef5;
     .s-body{
-      margin-right: 60px;
+      float: left;
+      margin-left: 30%;
       .s-total{
         font-size: 12px;
         color:rgba(102,102,102,1);

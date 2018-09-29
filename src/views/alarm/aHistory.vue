@@ -2,7 +2,7 @@
   <div>
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" placeholder="报警编号" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;" clearable >
+        <el-select v-model="device" placeholder="报警编号" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;float: left;" clearable >
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -10,7 +10,7 @@
             :value="item.key">
           </el-option>
         </el-select>
-        <el-select v-model="device" placeholder="恢复状态" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;">
+        <el-select v-model="device" placeholder="恢复状态" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;float: left;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -25,7 +25,7 @@
           type="date"
           placeholder="触发时间"
           :picker-options="pickerOptions1"
-          style="margin: 0 5px;width: 26%">
+          style="margin: 0 5px;width: 24%;float: left;">
         </el-date-picker>
         <el-date-picker
           v-model="value2"
@@ -34,7 +34,7 @@
           type="date"
           placeholder="恢复时间"
           :picker-options="pickerOptions1"
-          style="margin: 0 5px;width: 26%">
+          style="margin: 0 5px;width: 24%;float: left;">
         </el-date-picker>
         <div class="c-button">
           <el-button  type="info" size="mini" @click="query">查询</el-button>
@@ -354,12 +354,10 @@
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
-    display: flex;
-    justify-content: space-between;
+    overflow: hidden;
     .c-handle{
       margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
+      float: right;
       div{
         width: 51px;
         line-height: 27px;
@@ -376,9 +374,9 @@
       width: 675px;
       margin-top: 20px;
       margin-right: 30px;
-      display: flex;
-      justify-content: space-between;
+      float: left;
       .c-button{
+        float: left;
         margin:0 3px;
       }
       .el-dropdown-link{

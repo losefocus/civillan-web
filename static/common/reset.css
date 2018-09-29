@@ -50,6 +50,8 @@ button, input, select, textarea { font-size:100%; }
   text-decoration: none;
 }
 .info-type{
+  float: left;
+  margin-right: 6px;
   width:46px;
   height:19px;
   font-size :12px;
@@ -60,8 +62,8 @@ button, input, select, textarea { font-size:100%; }
   border-radius:2px;
 }
 .info-box{
-  display: flex;
-  justify-content: space-between;
+  /*display: flex;
+  justify-content: space-between;*/
   width: 100%;
 }
 .info-title{
@@ -277,6 +279,9 @@ button, input, select, textarea { font-size:100%; }
 .el-form-item__label{
   line-height: 20px !important;
 }
+#closeBtn{
+  background: #F85959 !important;
+}
 /*表格重置样式*/
 
 body .el-table th.gutter {
@@ -342,6 +347,10 @@ body .el-table th.gutter {
   background-color: #E1E1E3 !important;
 }*/
 
+/*兼容ie*/
+.el-input__inner.el-range-editor--mini{
+  line-height: 20px;
+}
 
 
 

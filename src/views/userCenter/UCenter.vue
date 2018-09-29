@@ -57,7 +57,7 @@
 
             <!--添加联系方式-->
             <div class="i-company" v-for="(list,index) in contactList" :key="index">
-              <span style="margin-right: 21px" class="iconfont" :class="{'icon-WeChat':list.type=='wechat' || typeFont=='wechat','icon-mail':list.type=='email' || typeFont=='email','icon-sms':list.type=='sms'}"></span>
+              <span style="margin-right: 21px" class="iconfont" :class="{'icon-WeChat':list.type=='wechat' || typeFont=='wechat','icon-mail':list.type=='email' || typeFont=='email','icon-sms':list.type=='sms' || typeFont=='sms'}"></span>
               <input class="i-modify" type="text" v-if="list.flag" v-model="content" v-focus>
               <div class="i-context"  v-else>
                 <p style="width: 140px;">{{ list.value }}</p>

@@ -5,6 +5,7 @@ import Router from 'vue-router'
 import softBase from '@/views/Project/softBase'
 
 Vue.use(Router);
+console.log(Router)
 
 const vRouter = new Router({
   routes: [
@@ -188,15 +189,10 @@ vRouter.beforeEach(function (to,from,next) {
       sessionStorage.setItem('wsUrl',window.$cookies.get('wsUrl'));
       next();
     }else {
-      if (store.state.login.token) { //token存在 已经登陆
-        next();
-      }
-      else {
         next({
           path: '/login',
           query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
         })
-      }
     }
   }
   else {
