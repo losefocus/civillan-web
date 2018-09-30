@@ -1,12 +1,12 @@
 <template>
-  <div style="width: 100%;height: 100%">
+  <div class="n-box">
     <ul class="a-box">
       <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
         {{list.name}}
       </li>
     </ul>
     <div class="noData" v-if="noData">
-      <div>
+      <div style="display: table-cell;vertical-align: middle;">
         <div class="iconfont icon-zanwushuju2"></div>
         <div class="d-title">
           暂无记录
@@ -65,6 +65,7 @@
       :fullscreen="dialogFullscreen"
       top="7vh"
       style="min-width: 1024px;"
+      @close="closeDialog"
     >
       <ul class="t-header">
         <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
@@ -72,7 +73,8 @@
           <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
         </div>
       </ul>
-      <r-state :deviceName="deviceName" v-if="dialogVisible" :is="currentView" :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
+      <f-concrete :deviceName="deviceName" v-if="dialogVisible" :is="currentView" :device-key="deviceKey" :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></f-concrete>
+
     </el-dialog>
   </div>
 </template>
@@ -86,6 +88,7 @@
 
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
+  import FConcrete from '@/views/softBase/FConcrete'
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
@@ -103,6 +106,7 @@
       AQuery,
       HData,
       NRecord,
+      FConcrete
     },
     data () {
       return {
@@ -147,7 +151,7 @@
           {id:1,name:'运行中'},
           {id:2,name:'已断线'},
           {id:3,name:'已离线'},
-        ]
+        ],
       };
     },
 
@@ -193,6 +197,14 @@
         this.dialogVisible = false;
       },
       getDetails(item,index){ //获取详情
+        console.log(item);
+        if(item.type=='dzj'){
+          this.tBody[0]='FConcrete';
+          this.currentView='FConcrete'
+        }else {
+          this.tBody[0]='RState';
+          this.currentView='RState'
+        }
         this.dialogVisible=true;
         this.deviceName=item.name;
         sessionStorage.setItem('deviceName',item.name);
@@ -227,6 +239,7 @@
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
           if(res.success){
+            console.log(res);
             if(res.result.items.length>0){
               this.noData=false;
               res.result.items.forEach(item=>{
@@ -254,11 +267,21 @@
             this.loading.close();
           }
         })
+      },
+      closeDialog(){
+        //console.log('关闭弹窗');
+        this.tIndex=0
       }
     }
   }
 </script>
 <style scoped lang="scss">
+  .n-box{
+    width: calc(100% - 40px);
+    height: auto;
+    padding: 20px;
+    background: #f5f5f9;
+  }
   .a-box{
     width: 100%;
     padding-top: 15px;
@@ -301,9 +324,8 @@
     height: calc(100% - 95px);
     font-size: 30px;
     font-weight: bold;
-    display: flex;
-    align-items:center;/*垂直居中*/
-    justify-content: center;/*水平居中*/
+    display: table;
+    text-align: center;
     .icon-zanwushuju2{
       font-size: 80px;
       color: #cccccc;

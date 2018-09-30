@@ -30,7 +30,7 @@ export default {
           value: tips,
           itemStyle: {
             normal: {
-              color: 'rgba(31,189,238)',
+              color: '#1FBDEE',
               //shadowBlur: 10,
               //shadowColor: 'rgba(31,189,238)'
             }
@@ -45,7 +45,7 @@ export default {
           left: 'center',
           top: '42%',
           textStyle: {
-            color: 'rgba(31,189,238)',
+            color: '#333333',
             fontSize:'18'
           }
         }, {

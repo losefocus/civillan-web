@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="n-box" :style="newStyle">
   <div class="e-box">
     <!-- 标题和控制栏 -->
     <div class="t-analysis" v-if="!isShow">
@@ -303,7 +303,7 @@ export default {
       deviceName:'',
     }
   },
-  props:['isShow'],
+  props:['isShow','newStyle'],
   created(){
     this.deviceName=sessionStorage.getItem('deviceName');
     this.getDeviceList(this.device_data);
@@ -334,6 +334,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .n-box{
+    padding: 20px;
+    height: calc(100% - 60px);
+    background: #f5f5f9;
+  }
   .echarts {
     width: 100%;
     height: 100%;
@@ -341,20 +346,20 @@ export default {
   .a-chart{
     width: 100%;
     height: 350px;
-    margin: 15px 0 20px;
+    margin: 20px 0 0;
     overflow: hidden;
     .e-body{
       float: left;
       background: #ffffff;
       width: calc(50% - 50px);
-      height: 100%;
+      height: calc(100% - 40px);
       padding: 20px;
-      margin-left: 10px;
     }
-
+    .e-body:last-child{
+      margin-left: 20px;
+    }
   }
   .c-box{
-
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
@@ -392,6 +397,7 @@ export default {
     padding: 20px;
     margin-bottom: 20px;
   }
+
   .control-box{
     padding: 20px 30px;
     //background: #fff;

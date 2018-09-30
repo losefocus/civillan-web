@@ -22,6 +22,7 @@
            <div class="i-progress">
              <div class="i-progressName" style="width: 80px">成桩进度：</div>
              <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
+             <div class="clear"></div>
            </div>
          </div>
          <div class="i-box">
@@ -34,6 +35,7 @@
              <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
+         <div class="clear"></div>
          <div class="h-box">
            <div class="i-body">
              <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
@@ -97,7 +99,7 @@
      <ul class="s-box2">
        <li class="s-progress" :class="{'s-progress1':classChange==1}">
          <div class="p-box" >
-           <div class="p-echart" style="display:flex;justify-content:center;align-items:center;">
+           <div class="p-echart" style="">
              <div class="p-progress" :style="{height:'80%'}">
                <div style="height: 100%;">
                  <div class="progressContainer">
@@ -133,13 +135,11 @@
            <!--<div id="myChart2" style="width: 100%;height: 100%"></div>-->
          </div>
        </li>
-       <li style="width: 0.4%"></li>
        <li class="s-chart1">
          <p-operation :dataInfo="RT_data"></p-operation>
        </li>
      </ul>
    </div>
-
  </div>
 </template>
 
@@ -248,23 +248,22 @@ export default {
 
 
     this.$nextTick(()=>{
+      console.log('进来了')
       let pile=document.getElementById('pile');
-      let pileHeight,pileWidth
-      if(pile.currentStyle){
-        pileHeight = pile.currentStyle.height
-        pileWidth = pile.currentStyle.width
-      }else {
-        pileHeight = window.getComputedStyle(pile).height;
-        pileWidth = window.getComputedStyle(pile).width;
-      }
+      let pileHeight,pileWidth;
+      pileHeight = pile.offsetHeight;
+      pileWidth = pile.offsetWidth;
       this.$refs.pMap.canvas.width = parseFloat(pileWidth);
       this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+      console.log(pileHeight,pileWidth);
 
       this.$refs.pMap.width = parseFloat(pileWidth);
       this.$refs.pMap.height = parseFloat(pileHeight);
     });
 
     setTimeout(()=>{
+      this.$refs.pMap.width = parseFloat(pileWidth);
+      this.$refs.pMap.height = parseFloat(pileHeight);
       if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
       if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
       if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
@@ -280,7 +279,7 @@ export default {
         }else{
           let pileHeight,pileWidth
           if(pile.currentStyle){
-            pileHeight = pile.currentStyle.height
+            pileHeight = pile.currentStyle.height;
             pileWidth = pile.currentStyle.width
           }else {
             pileHeight = window.getComputedStyle(pile).height;
@@ -465,7 +464,6 @@ export default {
         }else{
           this.isWarming=true
         }
-
       }).catch(e=>{
         console.log(e)
       })
@@ -529,16 +527,17 @@ export default {
   .b-device{
     position: absolute;
     top:0;
-    left:-10px;
-    width: calc(100% + 10px);
+    left:0;
+    width: 100%;
     height: 100%;
     background: rgba(255,255,255,0.7);
     z-index: 10;
-    display:flex;
-    align-items:center;/*垂直居中*/
-    justify-content: center;/*水平居中*/
     overflow: hidden;
+    text-align: center;
+    display: table;
     .t-device{
+      display: table-cell;
+      vertical-align: middle;
       color: #666666;
       font-size: 30px;
     }
@@ -583,41 +582,41 @@ export default {
       }
     }
 
+    .clear{
+      clear: both;
+    }
     .s-box1,.s-box2{
       height: 49%;
-      display: flex;
       background-color: #F5F5F9;
-      justify-content:space-between;
-
+      overflow: hidden;
       .s-info{
+        float: left;
         width:23%;
         height: 100%;
         padding:0 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-        display: flex;
-        flex-direction: column;
-        justify-content:space-around;
         .i-id{
           font-size: 20px;
           color: rgba(218,218,218,1);
           margin-top: 20px;
           width:100%;
-          display: flex;
-          justify-content: space-between;
           //line-height:42px;
+          overflow: hidden;
           .d-model{
-            width: 150px;
+            float: left;
+            width: 50%;
             font-size: 30px;
             font-weight: bold;
             color: #333333;
           }
           .d-kind{
+            float: right;
             height: 40px;
+            width: 48%;
             padding-top: 5px;
-            display: flex;
-            justify-content: space-between;
             div{
+              float: left;
               cursor: pointer;
               width: 24px;
               height: 24px;
@@ -635,10 +634,10 @@ export default {
           color:#ffffff;
         }
         .i-box{
-          display: flex;
-          justify-content:space-between;
-            height: 15%;
+          margin-top: 10%;
+          height: 15%;
           .i-body{
+            float: left;
             width: 60%;
             height: 45px;
             line-height: 30px;
@@ -659,6 +658,7 @@ export default {
             }
           }
           .i-state{
+            float: right;
             line-height: 30px;
             font-size:12px;
             color:rgba(153,153,153,1);
@@ -703,10 +703,12 @@ export default {
           }
         }
         .h-box{
-          display: flex;
-          justify-content:space-between;
+          width: 100%;
           height: 15%;
+          margin-top: 5%;
+          overflow: hidden;
           .i-body{
+            float: left;
             width: 60%;
             height: 45px;
             line-height: 30px;
@@ -723,6 +725,7 @@ export default {
 
           }
           .b-angle{
+            float: right;
             width: 60px;
             height: 60px;
             background: url("../../assets/RState/angle.png") no-repeat;
@@ -752,10 +755,13 @@ export default {
           width: 100%;
           height: 15px;
           line-height: 15px;
-          display: flex;
-          justify-content:space-between;
+          overflow: hidden;
+          div{
+            float: left;
+          }
         }
         .i-normal{
+          margin-top: 5%;
           width:100%;
           line-height: 57px;
           text-align: center;
@@ -763,6 +769,7 @@ export default {
           background:rgba(141,232,240,0.06);
         }
         .i-warning{
+          margin-top: 10%;
           width:100%;
           height:47px;
           line-height: 45px;
@@ -783,6 +790,7 @@ export default {
         }
 
         .d-name{
+          margin-top: 20px;
           span{
             margin-left: 5%;
             font-size: 16px;
@@ -791,11 +799,10 @@ export default {
         }
         .d-box{
           height: 60%;
-          display: flex;
-          flex-direction: row;/*决定主轴的方向*/
-          flex-wrap:wrap;
-          justify-content:space-around;
+
           div{
+            margin-top: 50px;
+            float: left;
             text-align: center;
             width: 33%;
           }
@@ -819,7 +826,7 @@ export default {
           }
         }
       }
-      .s-info1{
+      /*.s-info1{
         .i-id{
           //font-size:30px;
           color:#DADADA;
@@ -943,7 +950,7 @@ export default {
         .d-box{
           height: 60%;
           display: flex;
-          flex-direction: row;/*决定主轴的方向*/
+          flex-direction: row;!*决定主轴的方向*!
           flex-wrap:wrap;
           justify-content:space-around;
           div{
@@ -967,21 +974,19 @@ export default {
             color: #333333;
           }
         }
-      }
+      }*/
 
       .s-progress{
+        float: left;
         width:23%;
+        height: 100%;
         padding:10px 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-        display: flex;
-        display: -webkit-flex;
-        flex-direction: row;/*决定主轴的方向*/
-        justify-content:space-around;
-        flex-wrap:wrap;
         .p-box{
           width: 50%;
           height: 50%;
+          float: left;
           .p-progress{
             .p-title{
               width: 50%;
@@ -1022,12 +1027,15 @@ export default {
           .p-echart{
             width: 100%;
             height: calc( 100% - 30px);
+            .p-progress{
+              margin-left: 45%;
+            }
           }
         }
       }
-      .s-progress1{
+      /*.s-progress1{
         .p-box{
-          /*margin-bottom: 6%;
+          !*margin-bottom: 6%;
           .p-progress{
             .p-title{
               font-size: 18px;
@@ -1048,15 +1056,19 @@ export default {
           .p-title{
             font-size:18px;
           }
-        }*/}
-      }
+        }*!}
+      }*/
       .s-chart{
+        float: left;
+        height: 100%;
         margin-left: 10px;
         width:calc( 38.5% - 30px );
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
       }
       .s-chart1{
+        float: right;
+        height: 100%;
         width:calc(77% - 50px);
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);

@@ -3,7 +3,8 @@
   <ul class="t-header">
     <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
   </ul>
-  <r-state :isShow="isShow" :is="currentView" keep-alive  :data="currentView"></r-state>
+  <div class="clear"></div>
+  <a-analysis :isShow="isShow" :is="currentView" keep-alive  :data="currentView" :newStyle="newStyle"></a-analysis>
 </div>
 </template>
 
@@ -32,6 +33,9 @@ export default {
         'aRealTime',
         'aHistory',
       ],
+      newStyle:{
+        padding:0
+      },
       currentView:'aAnalysis',
       tIndex:0,
       isShow:true //是否打开弹窗
@@ -47,9 +51,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .clear{
+    clear: both;
+  }
   .t-header{
     width: 100%;
-    height: 50px;
+    height: 30px;
+    margin-bottom: 20px;
     li{
       cursor: pointer;
       float: left;

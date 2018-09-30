@@ -1,23 +1,67 @@
 <template>
   <div>
     <div style="height: 100%">
-      <div class="u-box">
+      <div v-if="isModify" style="width: 100%;height: 100%;">
+        <m-information></m-information>
+      </div>
+
+      <div class="u-box" v-else>
         <div class="u-header" :style="{backgroundImage: 'url(' + userBg + ')'}">
           <div class="u-info">
-            <img :src="avatarUrl" alt="头像">
+            <div class="b-photo">
+              <!--<img :src="avatarUrl" alt="头像">-->
+              <el-upload
+                :data="params"
+                class="avatar-uploader"
+                :headers="header"
+                name="uploadFile"
+                action="/foreground/project_file/add"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="avatarUrl" :src="avatarUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </div>
+            <div class=""></div>
             <div class="u-name">
               <p class="n-text">{{userInfo.name}}</p>
-              <p class="n-num">{{userInfo.username}}</p>
+              <!--<p class="j-title">{{ role }}</p>-->
+              <p class="j-title">{{ userInfo.phone }}</p>
             </div>
             <div class="u-jurisdiction">
-              <p class="j-title">{{ role }}</p>
-              <p class="j-password">修改密码</p>
+              <!--电话号码-->
+              <div class="i-company">
+                <i class="iconfont icon-yonghu"></i>
+                <div class="i-context">
+                  <p>{{ userInfo.phone }}</p>
+                </div>
+                <P style="float: left;cursor: pointer;">修改密码</P>
+              </div>
+              <div class="i-company">
+                <span class="iconfont icon-company"></span>
+                <div class="i-context">
+                  <div>{{ projectOrgan }}</div>
+                </div>
+              </div>
+              <div class="i-company">
+                <i class="iconfont icon-phone"></i>
+                <div class="i-context">
+                  <div>{{ userInfo.phone }}</div>
+                </div>
+              </div>
+              <div class="i-company">
+                <i class="iconfont icon-mail"></i>
+                <div class="i-context">
+                  <div>{{ userInfo.phone }}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="u-body">
           <div class="u-information">
-            <div>联系方式</div>
+            <div>扩展联系方式</div>
             <div>
               <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link" style="cursor: pointer">
@@ -32,41 +76,23 @@
 
           <!--机构名称-->
           <div class="i-box">
-            <div class="i-company">
-              <span class="iconfont icon-company"></span>
-              <div class="i-context" v-if="isCompany">
-                <p>{{ projectOrgan }}</p>
-              </div>
-              <input class="i-modify" v-model="projectOrgan" type="text" v-else="isCompany" v-focus>
-              <i class="iconfont icon-modify" @click="edit('company')" v-if="isCompany"></i>
-              <i class="iconfont icon-wancheng" @click="update('company')" v-else="isCompany"></i>
-            </div>
-
-            <!--电话号码-->
-            <div class="i-company">
-              <i class="iconfont icon-phone"></i>
-              <div class="i-context"  v-if="isPhone">
-                <p>{{ userInfo.phone }}</p>
-              </div>
-              <input class="i-modify" type="text" v-else="isPhone" v-focus>
-              <i class="iconfont icon-modify" @click="edit('phone')" v-if="isPhone"></i>
-              <i class="iconfont icon-wancheng" @click="update('phone')" v-else="isPhone"></i>
-            </div>
-
-
-
             <!--添加联系方式-->
             <div class="i-company" v-for="(list,index) in contactList" :key="index">
-              <span style="margin-right: 21px" class="iconfont" :class="{'icon-WeChat':list.type=='wechat' || typeFont=='wechat','icon-mail':list.type=='email' || typeFont=='email','icon-sms':list.type=='sms' || typeFont=='sms'}"></span>
+              <span style="margin-right: 10px;float: left">{{list.label}}</span>
               <input class="i-modify" type="text" v-if="list.flag" v-model="content" v-focus>
               <div class="i-context"  v-else>
-                <p style="width: 140px;">{{ list.value }}</p>
+                <p>{{ list.value }}</p>
               </div>
               <i class="iconfont icon-wancheng" @click="addContact(list,index)" v-if="list.flag"></i>
               <i class="iconfont icon-modify" @click="editContact(list,index)" v-else></i>
               <i class="iconfont icon-delete" @click="deleteContact(list)"></i>
             </div>
           </div>
+
+
+        </div>
+        <div class="m-formation">
+          <el-button type="info" @click="modifyInformation">修改资料</el-button>
         </div>
       </div>
     </div>
@@ -74,11 +100,13 @@
 </template>
 
 <script>
+  import Bus from '@/common/eventBus.js'
   import user from '@/api/userCenter/header'
   import contact from '@/api/userCenter/contact'
   import dictionary from '@/api/common/dictionary'
   import no_photo from '@/assets/header/no_photo.png'
   import userInfo from '@/assets/userinfo/userInfo.png'
+  import MInformation from '@/views/userCenter/MInformation.vue'
 export default {
   data(){
     return{
@@ -99,14 +127,25 @@ export default {
       projectOrgan:'',
       avatarUrl:'', //头像路径
       typeFont:'',
+      header:{token:this.$cookies.get('token')},
+      params:{component :'project',project_id:0},
+      isModify:false
     }
   },
+  components: {
+    MInformation
+  },
   created(){
-    this.getContactInformation()
+    this.getContactInformation();
+    this.getInformation();
+
   },
   mounted(){
     this.getContentList();
-    this.getInformation();
+    Bus.$on('msg', (e) => {
+      console.log('yes')
+      this.isModify = e;
+    })
   },
   directives: {
     focus: {
@@ -125,7 +164,7 @@ export default {
       });
       let userId=sessionStorage.getItem('token').substring(0,2);
       user.userInfo({project_user_id:userId}).then(res=>{
-        //console.log(res);
+        console.log(res);
         if(res.success){
           this.userInfo = res.result;
           this.role=res.result.userRole[0].projectRole.role;
@@ -147,31 +186,21 @@ export default {
       dictionary.list({'type':'contact'}).then(res=>{
         console.log(res);
         if(res.success){
-          //this.contactSelect=res.result;
-          let lists=res.result;
-          this.contactSelect=this.array_diff(lists,this.contactList)
+          this.contactSelect=res.result;
+
+          //let lists=res.result;
+          //this.contactSelect=this.array_diff(lists,this.contactList)
         }
       })
     },
     getContentList(){
       contact.list().then(res=>{
-        console.log(res);
+        console.log(this.contactSelect);
         this.contactList=res.result.items;
       })
     },
-
-    array_diff(a, b) {
-      for (var i = 0; i < b.length; i++) {
-        for (var j = 0; j < a.length; j++) {
-          if (a[j].value == b[i].type) {
-            a.splice(j, 1);
-            j = j - 1;
-          }
-        }
-      }
-      return a;
-    },
     handleCommand(command) {
+      console.log(command);
       let obj = Object.assign({},command);
       obj.flag = true;
       delete obj.id;
@@ -195,7 +224,7 @@ export default {
     },
     addContact(list,index){
       list.flag = false;
-      let post_data = {}
+      let post_data = {};
 
       if(list.id){    //修改
         post_data=list;
@@ -235,64 +264,165 @@ export default {
         this.contactList.pop()
       }
 
+    },
+
+    handleAvatarSuccess(res, file) {
+      console.log(res);
+      this.avatarUrl = URL.createObjectURL(file.raw);
+
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
+
+    modifyInformation(){
+      this.isModify=true
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
   .u-box{
     width: 100%;
     height: 100%;
     background-color: #ffffff;
-    overflow: hidden;
     .u-header{
       width:100%;
-      height:40%;
+      height:50%;
       background-size: cover;
-      overflow: hidden;
       border-radius:3px 3px 0 0;
-      display: flex;
-      justify-content:center;
-      align-items:Center;
+      position: relative;
       .u-info{
-        height: 35%;
-        width: 280px;
-        display: flex;
-        justify-content: space-around;
-        img{
+        height: calc(100% - 50px);
+        width: 520px;
+        position: absolute;
+        left:50%;
+        top:50%;
+        margin-left:-260px;
+        margin-top:-100px;
+        text-align: center;
+        .b-photo{
           width: 80px;
           height: 80px;
-          border-radius: 50%;
+          margin: 0 auto;
+          img{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+
+          }
         }
+
         .u-name{
-          line-height: 40px;
+          text-align: center;
+          line-height: 35px;
           .n-text{
             font-size:22px;
             color:#ffffff;
           }
-          .n-num{
-            font-size:14px;
-            color:#ffffff;
-          }
-        }
-        .u-jurisdiction{
-          line-height: 67px;
           .j-title{
             padding:0 5px;
             height:18px;
-            background:rgba(111,221,232,1);
+            width: auto;
+            display: inline-block;
+            background:#ffffff;
             border-radius:4px;
-            color: #ffffff;
+            color: #F85959;
             line-height: 18px;
             text-align: center;
             font-size: 12px;
-            margin-top: 10px;
+            margin: 0 auto;
           }
-          .j-password{
-            font-size: 12px;
+        }
+        .u-jurisdiction{
+          width: 100%;
+          margin-top: 5px;
+          height: auto;
+          i{
+            font-size: 18px;
+          }
+          .i-company{
             color: #ffffff;
-            cursor: pointer;
+            width: 45%;
+            height: 40px;
+            line-height: 40px;
+
+            float: left;
+            //border-bottom: 1px solid rgba(218,218,218,1);
+            .i-context{
+              float: left;
+              width: 150px;
+              margin-left: 10px;
+              p{
+                width: 150px;
+                text-align: left;
+                font-size: 14px;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+              }
+              div{
+                width: 210px;
+                text-align: left;
+                font-size: 14px;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+              }
+            }
+            .i-modify{
+              float: left;
+              width: 150px;
+              border: none;
+              outline: medium;
+            }
+            .icon-modify{
+              float: left;
+              cursor: pointer;
+            }
+            .icon-wancheng{
+              float: left;
+              cursor: pointer;
+              font-size: 18px;
+              color: #13ce66;
+            }
+            .iconfont{
+              float: left;
+              cursor: pointer;
+            }
+          }
+          .i-company:nth-child(even){
+            margin-left: 10%;
           }
         }
       }
@@ -323,14 +453,12 @@ export default {
           width: 45%;
           height: 40px;
           line-height: 40px;
-
-          display: flex;
-          justify-content: space-between;
           border-bottom: 1px solid rgba(218,218,218,1);
           .i-context{
-            width: 150px;
+            float: left;
+            width: 155px;
             p{
-              width: 150px;
+              width: 120px;
               text-align: left;
               font-size: 14px;
               color: #666666;
@@ -340,11 +468,12 @@ export default {
             }
           }
           .i-modify{
-            width: 150px;
+            width: 151px;
             border: none;
             outline: medium;
           }
           .icon-modify{
+
             cursor: pointer;
           }
           .icon-wancheng{
@@ -371,5 +500,10 @@ export default {
       }
     }
 
+  }
+  .m-formation{
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
   }
 </style>

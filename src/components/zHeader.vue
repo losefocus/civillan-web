@@ -143,17 +143,18 @@
     },
     mounted(){
       this.getInfo()
-      window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
     },
     destroyed() {
       //页面销毁时关闭长连接
       this.websocketclose();
-      window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
     },
     methods:{
       initWebSocket(){ //初始化webSocket
         if(this.$cookies.get('wsUrl')){
-          let wsUrl='ws:'+this.$cookies.get('wsUrl');//ws地址
+          console.log(this.$cookies.get('wsUrl'))
+          // let wsUrl='ws:'+this.$cookies.get('wsUrl');//ws地址
+          let wsUrl='ws://192.168.0.33:4050/ws/message/token=nT6yz42brkB7C02I+IYBeA==';//ws地址
+
           this.webSocket = new WebSocket(wsUrl);
           this.webSocket.onopen = this.websocketonopen;
           this.webSocket.onerror = this.websocketonerror;
@@ -170,7 +171,8 @@
       websocketonerror() { //错误
         //console.log("WebSocket连接发生错误");
       },
-      websocketonmessage(){ //数据接收
+      websocketonmessage(res){ //数据接收
+        console.log(res);
         this.unReadCount+=1;
         if(this.$refs.child){
           this.$refs.child.getList()
@@ -343,7 +345,7 @@
   }
   .t-Body{
     overflow: auto;
-    padding: 20px;
+    padding: 10px;
     background: #f5f5f9;
   }
   .t-BodyHeight1{

@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative;height: calc(100% - 35px);" >
+  <div style="position: relative;height: calc(100% - 75px);" >
     <ul class="a-box">
         <router-link :to="{path:list.path}" tag="li" v-for="(list,index) in navList" :key="index">
           {{list.name}}
@@ -54,8 +54,8 @@
   .a-box{
     position: absolute;
     z-index: 99;
-    top: 15px;
-    right: 0;
+    top: 35px;
+    right: 20px;
     width: 214px;
     height: 60px;
     li{

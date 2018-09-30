@@ -1,6 +1,6 @@
 <template>
   <div>
-    <analysis :isShow="isShow"></analysis>
+    <analysis :isShow="isShow" :newStyle="newStyle"></analysis>
   </div>
 </template>
 
@@ -13,7 +13,11 @@ export default {
   },
   data(){
     return{
-      isShow:true
+      isShow:true,
+      newStyle:{
+        'padding':'0',
+        'margin-top':'-15px'
+      },
     }
   }
 }

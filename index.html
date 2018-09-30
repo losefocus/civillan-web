@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>工程施工实时监控系统 - 浙江智握领程科技股份有限公司</title>
     <link rel="shortcut icon" type="image/x-icon" href="static/img/bLogo.png">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_716432_iagj8drgyv.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_716432_e7jv2au4k9.css">
   </head>
   <body>
     <div id="app"></div>
@@ -19,5 +19,9 @@
     <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
     <script src="https://cdn.bootcss.com/three.js/92/three.min.js"></script>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+      window.requestAnimationFrame = window.requestAnimationFrame||function (fn) {return setTimeout(fn,1000/60)};
+      window.cancelAnimationFrame = window.cancelAnimationFrame ||clearTimeout;
+    </script>
   </body>
 </html>

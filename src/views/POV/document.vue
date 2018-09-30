@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="n-box">
     <div class="c-box">
       <div class="c-query">
         <el-select placeholder="文档标题" size="mini" v-model="value" style="margin: 0 5px 0 0;width: 20%;float: left;" clearable >
@@ -217,6 +217,11 @@
 </script>
 
 <style scoped lang="scss">
+  .n-box{
+    padding: 20px;
+    height: calc(100% - 100px);
+    background: #f5f5f9;
+  }
   .m-pagination{
     padding: 20px;
     text-align: center;

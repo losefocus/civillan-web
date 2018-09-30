@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="n-box" :style="newStyle">
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
         <el-select v-model="device" placeholder="报警编号" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;float: left;" clearable >
@@ -182,6 +182,7 @@
         deviceSelect:[],
       }
     },
+    props:['newStyle'],
     methods: {
       handleExport(command){
         if(command=='1'){
@@ -350,6 +351,11 @@
 </script>
 
 <style scoped lang="scss">
+  .n-box{
+    padding: 20px;
+    height: calc(100% - 60px);
+    background: #f5f5f9;
+  }
   .c-box{
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);

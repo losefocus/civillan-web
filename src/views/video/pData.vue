@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;height: 100%;">
+  <div class="n-box" style="width: 100%;height: 100%;">
     <div class="noData" v-if="noData">
       <div>
         <div class="iconfont icon-zanwushuju2"></div>

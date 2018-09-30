@@ -1,9 +1,9 @@
 <template>
   <div>
     <transition name="fade" mode="out-in">
-      <el-aside :width='navWidth'>
+      <div class="nav-bar">
         <transition name="fade">
-          <div class="pj-img" v-if="imgShow">
+          <div class="pj-img">
             <div class="pj-title" :style="{'background-image': 'url(' + projectLogo+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
               <p>
                 {{projectName}}
@@ -13,19 +13,19 @@
         </transition>
 
         <ul class="nav-box">
-          <li v-for="(list,index) in lists" class="nav-list" :class="{'liActive':!isCollapse}">
+          <li v-for="(list,index) in lists" class="nav-list">
             <router-link tag="div" :to="list.path" class="nav-link">
               <el-tooltip class="item" effect="dark" :content="list.name" placement="right" :disabled="isCollapse">
                   <div class="nav-icon">
                     <i class="iconfont" :class="list.icon"></i>
                   </div>
               </el-tooltip>
-              <div class="link-title" v-show="isCollapse">{{ list.name }}</div>
+              <div class="link-title">{{ list.name }}</div>
             </router-link>
           </li>
         </ul>
         <div id="resize" @click="collapse()" :class="{'navOpen':!isCollapse,'navClose':isCollapse}" v-show="isShow"></div>
-      </el-aside>
+      </div>
     </transition>
   </div>
 </template>
@@ -125,7 +125,7 @@ export default {
   },
   mounted(){
     this.isActive=sessionStorage.getItem('isActive') || 0;
-    this.changeWidth()
+    this.changeWidth();
     let _this=this;
     Bus.$on('isActive',function (res) {
       _this.isActive=res;
@@ -170,11 +170,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .el-aside{
+  .nav-bar{
     width: 245px;
     height: 100%;
     position: relative;
     transition: 0.4s all ease;
+    overflow: auto;
     #resize{
       transition: 0.4s all ease;
       position: absolute;
@@ -185,20 +186,20 @@ export default {
       height: 21px;
     }
   }
-  .el-aside::-webkit-scrollbar {/*滚动条整体样式*/
+  .nav-bar::-webkit-scrollbar {/*滚动条整体样式*/
     width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
     height: 4px;
     background: #ffffff;
   }
-  .el-aside::-webkit-scrollbar-button{
+  .nav-bar::-webkit-scrollbar-button{
     background: rgba(0,0,0,0.2);
   }
-  .el-aside::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  .nav-bar::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
     border-radius: 5px;
     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     background: rgba(0,0,0,0.2);
   }
-  .el-aside::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  .nav-bar::-webkit-scrollbar-track {/*滚动条里面轨道*/
     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     border-radius: 0;
     background: rgba(0,0,0,0.1);
@@ -220,8 +221,10 @@ export default {
      opacity: 0;
      height: 0;
   }
+
   .pj-img{
     position: relative;
+    display: block;
     width: 100%;
     //background: url(../assets/Nav/projectLogo.png);
     background-size: cover;
@@ -247,6 +250,7 @@ export default {
   .nav-box{
     width: 100%;
     position: relative;
+    overflow: auto;
     .nav-list{
       cursor: pointer;
       transition: 0.6s all ease;
@@ -279,6 +283,7 @@ export default {
         .link-title{
           font-size: 14px;
           margin-top: 5px;
+          display: block;
         }
       }
     };
@@ -303,5 +308,39 @@ export default {
   }
   .navClose{
     background: url("../assets/Nav/navClose.png");
+  }
+
+  @media screen and (max-width: 1467px){
+    .nav-bar{
+      width: 90px;
+      overflow: auto;
+      .pj-img{
+        display: none;
+      }
+      .nav-box{
+        width: 100%;
+        position: relative;
+        .nav-list{
+          width: 50px;
+          height: 50px;
+          margin: 20px 0 0 20px;
+          .nav-link{
+            border-radius: 6px;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: 0.6s all ease;
+            color: #4F5059;
+            overflow: hidden;
+            .nav-icon{
+              padding-top: 10px !important;
+            }
+            .link-title{
+              display: none;
+            }
+          }
+        };
+      }
+    }
   }
 </style>

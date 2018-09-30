@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="n-box" :style="newStyle">
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
@@ -529,7 +529,7 @@
         return formatDate(date, 'MM-dd hh:mm'); //yyyy-MM-dd hh:mm
       }
     },
-    props:['isShow'],
+    props:['isShow','newStyle'],
     created(){
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
@@ -678,10 +678,12 @@
         let tableList=[];
         history.list(post_data).then(res=>{
           if(res.success){
+            console.log(res);
             _this.total=res.result.total;
             /*res.result.items.forEach(function (item) {
               tableList.push(item);
             });*/
+            //console.log(res.result.items);
             _this.tableData=res.result.items;
             _this.loading=false
           }else {
@@ -731,6 +733,11 @@
   }
 </script>
 <style lang="scss" scoped>
+  .n-box{
+    padding: 20px;
+    height: calc(100% - 100px);
+    background: #f5f5f9;
+  }
   .t-rows{
     width:260px;
     display: flex;

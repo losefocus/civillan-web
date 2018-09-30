@@ -14,6 +14,11 @@ const vRouter = new Router({
       name: '在线一览',
       component: resolve => require(['@/views/ProjectEntrance'],resolve),
       meta: {requireAuth: true},
+    },{
+      path: '/test',
+      name: '测试',
+      component: resolve => require(['@/views/POV/project_old.vue'],resolve),
+      meta: {requireAuth: true},
     },
     {
       path: '/login',

@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 100%;min-height: 756px">
-    <ul class="p-box">
+  <div class="n-box">
+    <ul class="p-box" style="background: #f5f5f9">
       <li class="p-info">
         <div class="i-name">
           {{ info.name }}
@@ -70,7 +70,7 @@
         </div>
       </li>
       <li class="d-map">
-        <d-map :searchStyle="searchStyle" :typeStyle="typeStyle"></d-map>
+        <d-map :searchStyle="searchStyle" :typeStyle="typeStyle" :newStyle="newStyle"></d-map>
         <div class="m-searchBox" @click="enlarge()">
           <span class="iconfont icon-dEnlarge"></span>
         </div>
@@ -170,6 +170,11 @@
         typeStyle:{ //类型过滤的位置
           top:'0',
           left:'0',
+        },
+        newStyle:{
+          padding:0,
+          height:'100%',
+          width:'100%'
         },
         polar2:{
           color: ['#3398DB'],
@@ -366,8 +371,15 @@
   .clear{
     clear: both;
   }
+  .n-box{
+    height: calc(100% - 40px);
+    width:calc(100% - 40px);
+    min-height: 756px;
+    padding: 20px;
+    background: #f5f5f9;
+  }
   .p-box{
-    height: 50%;
+    height: calc(50% - 10px);
     .p-info{
       float: left;
       padding: 20px;
@@ -404,7 +416,7 @@
 
       .s-data{
           float: left;
-          margin-left: 30px;
+          margin:0 6%;
           cursor: pointer;
           .d-num{
             text-align: center;
@@ -418,6 +430,9 @@
             color: #666666;
           }
         }
+      }
+      .s-data:last-child{
+        margin-right: 0 !important;
       }
       .i-box {
         margin-top: 8%;
@@ -475,7 +490,7 @@
     }
   }
   .a-box{
-    height: calc(50% - 20px);
+    height: calc(50% - 10px);
     margin-top: 20px;
     .p-info{
       float: left;
