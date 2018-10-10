@@ -66,6 +66,10 @@ export default {
   data(){
     return{
       devicePolar:{
+        title : {
+          text: '占比分析',
+          x:'left',
+        },
         aria: {
           show: true
         },
@@ -77,16 +81,16 @@ export default {
           type: 'scroll',
           orient: 'vertical',
           x: 'left',
-          top:'30',
+          top:'50',
           itemGap: 15,
           data:['设备故障','下钻速度异常','电流异常','掺量异常','电压异常','流量异常','压力异常','喷浆异常','测量异常']
         },
         series: [
           {
-            name:'报警来源',
+            name:'报警类型',
             type:'pie',
             radius: '60%',
-            center: ['55%', '50%'],
+            center: ['60%', '60%'],
             avoidLabelOverlap: true,
             labelLine: {
               normal: {

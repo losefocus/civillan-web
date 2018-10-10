@@ -32,7 +32,7 @@
 <style scoped lang="scss">
   .n-box{
     padding: 20px;
-    height: calc(100% - 100px);
+    //height: calc(100% - 100px);
     background: #f5f5f9;
   }
   .a-box{

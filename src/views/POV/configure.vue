@@ -15,7 +15,7 @@
             </el-dropdown>
           </div>
           <div style="float: right">
-            <el-select size="small" v-model="value" placeholder="请选择">
+            <el-select size="small" v-model="value" placeholder="请选择" @change="typeScreen">
               <el-option
                 v-for="item in options"
                 :key="item.id"
@@ -345,6 +345,11 @@
           this.listLoading=false;
         })
       },
+      typeScreen(val){
+        console.log(val);
+        this.post_data.type_id=val;
+        this.getList(this.post_data)``
+      },
       handleFilter(){
         if(this.post_data.name == '') delete this.post_data.name;
         this.post_data.page_index = 1;
@@ -360,6 +365,7 @@
       },
       //获取类型列表数据
       getCategoryList(){
+        this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
           console.log(res);
           let list = res.result.items;
@@ -485,7 +491,6 @@
             return false;
           }
         })
-
       },
       editContent(index,rows){
         if(this.lastIndex!=null)rows[this.lastIndex].flag = false;
@@ -550,6 +555,13 @@
     padding: 20px;
     height: calc(100% - 95px);
     background: #f5f5f9;
+  }
+  @media screen and (max-width: 1467px){
+    .n-box{
+      padding: 20px;
+      height: auto;
+      background: #f5f5f9;
+    }
   }
   .vfl-label {
     text-transform: uppercase;

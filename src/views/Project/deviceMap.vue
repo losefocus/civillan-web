@@ -8,7 +8,7 @@
       </label>
     </div>
     <div class="s-box s-box1" :style="typeStyle">
-      <el-select size="small" v-model="productType" placeholder="按设备类型过滤" style="width: 150px">
+      <el-select size="small" v-model="productType" placeholder="按设备类型过滤" style="width: 150px" @change="typeSelect">
         <el-option
           v-for="item in productLists"
           :key="item.id"
@@ -129,11 +129,11 @@ export default {
   mounted: function () {
     let project_id=this.$cookies.get('projectId');
     this.post_data.project_id=project_id;
-    this.init();
+    this.init(this.post_data);
     this.getCategoryList();
   },
   methods:{
-    init(){
+    init(post_data){
       let _this=this;
       this.loading=this.$loading({
         fullscreen: true,
@@ -146,7 +146,7 @@ export default {
       //获取设备列表
       let markers = [];
       let marker;
-      deviceList.list(this.post_data).then(res=>{
+      deviceList.list(post_data).then(res=>{
         //接口成功
         if(res.success){
           console.log(res);
@@ -219,7 +219,7 @@ export default {
                       });
 
                       infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
-                        if(lists[i].type=='dzj'){
+                        if(lists[i].type=='FPJ'){
                           _this.tBody[0]='FConcrete';
                           _this.currentView='FConcrete'
                         }else {
@@ -268,6 +268,7 @@ export default {
       });
     },
     getCategoryList(){
+      this.allListQuery.tenant=this.$cookies.get('tenant');
       categories.list(this.allListQuery).then(res => {
         console.log(res);
         let list = res.result.items;
@@ -282,7 +283,7 @@ export default {
     },
     search(){
       this.post_data.name=this.searchKey;
-      this.init()
+      this.init(this.post_data)
     },
     getDetails(item,index){ //获取详情
       console.log(item);
@@ -333,6 +334,12 @@ export default {
     close(){
 
     },
+    //类型筛选
+    typeSelect(val){
+      console.log(val);
+      this.post_data.type=val;
+      this.init(this.post_data)
+    }
   }
 }
 </script>

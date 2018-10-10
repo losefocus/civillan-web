@@ -1,33 +1,23 @@
 <template>
   <div style="width: 100%;height: 100%;background: #ffffff;overflow: hidden;">
     <div class="m-box">
-      <div class="m-return" @click="getReturn">返回</div>
+      <!--<div class="m-return" @click="getReturn">返回</div>-->
       <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="企业">
+        <el-form-item label="机构" prop="name">
           <el-input v-model="ruleForm2.name"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
+        <el-form-item label="电话" prop="phone">
           <el-input v-model="ruleForm2.phone"></el-input>
         </el-form-item>
         <el-form-item
           prop="email"
-          label="邮箱"
-          :rules="[
-          { message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-        ]"
-        >
-          <el-input v-model="rules2.email"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码" prop="checkPass">
-          <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+          label="邮箱">
+          <el-input v-model="ruleForm2.email"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
-          <el-button @click="resetForm('ruleForm2')">重置</el-button>
+          <!--<el-button @click="resetForm('ruleForm2')">返回</el-button>-->
+          <el-button @click="getReturn">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -39,40 +29,47 @@
 export default {
   name: "MInformation",
   data() {
-
     var validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入机构名'));
       } else {
-        if (this.ruleForm2.checkPass !== '') {
-          this.$refs.ruleForm2.validateField('checkPass');
-        }
         callback();
       }
     };
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm2.pass) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error('请输入电话号码'));
+      } else if (!(/^1[34578]\d{9}$/.test(value))) {
+        callback(new Error('请输入正确的邮箱'));
+      } else {
+        callback();
+      }
+    };
+    var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+    var validateEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入邮箱'));
+      } else if (!myreg.test(value)) {
+        callback(new Error('请输入正确的电话号码'));
       } else {
         callback();
       }
     };
     return {
       ruleForm2: {
-        pass: '',
-        checkPass: '',
         name: '',
         phone:'',
         email:''
       },
       rules2: {
-        pass: [
+        name: [
           { validator: validatePass, trigger: 'blur' }
         ],
-        checkPass: [
+        phone: [
           { validator: validatePass2, trigger: 'blur' }
+        ],
+        email: [
+          { validator: validateEmail, trigger: 'blur' }
         ]
       }
     };
@@ -80,6 +77,7 @@ export default {
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
+        console.log(valid);
         if (valid) {
           alert('submit!');
         } else {
@@ -92,7 +90,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     getReturn(){
-      console.log('okk')
+      console.log('okk');
       Bus.$emit('msg',false)
     }
   }

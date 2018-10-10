@@ -2,15 +2,7 @@
   <div class="n-box" :style="newStyle">
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" placeholder="报警编号" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 16%;float: left;" clearable >
-          <el-option
-            v-for="item in deviceSelect"
-            :key="item.key"
-            :label="item.name"
-            :value="item.key">
-          </el-option>
-        </el-select>
-        <el-select v-model="device" placeholder="恢复状态" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;float: left;">
+        <el-select v-model="device" placeholder="报警状态" size="mini" @change="deviceChange" style="margin: 0 5px;width: 16%;float: left;">
           <el-option
             v-for="item in deviceSelect"
             :key="item.key"
@@ -19,22 +11,16 @@
           </el-option>
         </el-select>
         <el-date-picker
-          v-model="value2"
-          align="center"
+          style="float: left"
+          v-model="value7"
           size="mini"
-          type="date"
-          placeholder="触发时间"
-          :picker-options="pickerOptions1"
-          style="margin: 0 5px;width: 24%;float: left;">
-        </el-date-picker>
-        <el-date-picker
-          v-model="value2"
+          type="daterange"
           align="right"
-          size="mini"
-          type="date"
-          placeholder="恢复时间"
-          :picker-options="pickerOptions1"
-          style="margin: 0 5px;width: 24%;float: left;">
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions2">
         </el-date-picker>
         <div class="c-button">
           <el-button  type="info" size="mini" @click="query">查询</el-button>
@@ -69,19 +55,14 @@
         min-width="400">
       </el-table-column>
       <el-table-column
-        prop="b"
-        align="center"
-        label="触发时间">
-      </el-table-column>
-      <el-table-column
         prop="c"
         align="center"
-        label="恢复时间">
+        label="时间">
       </el-table-column>
       <el-table-column
         prop="d"
         align="center"
-        label="恢复状态">
+        label="状态">
       </el-table-column>
     </el-table>
     <div class="m-pagination">
@@ -151,35 +132,40 @@
           c: '2018-03-26 19:00',
           d: '已恢复',
         }],
-        pickerOptions1: {
-          disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
+        pickerOptions2: {
           shortcuts: [{
-            text: '今天',
+            text: '最近一周',
             onClick(picker) {
-              picker.$emit('pick', new Date());
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
             }
           }, {
-            text: '昨天',
+            text: '最近一个月',
             onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
             }
           }, {
-            text: '一周前',
+            text: '最近三个月',
             onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
             }
           }]
         },
-        value2: '',
+        value7: '',
         isCollapse:false,
-        device:{},
-        deviceSelect:[],
+        device:'',
+        deviceSelect:[
+          {key:0,name:'触发'},
+          {key:1,name:'恢复'}
+        ],
       }
     },
     props:['newStyle'],
@@ -261,7 +247,7 @@
       //类型改变
       deviceChange(val){
         console.log(val);
-        this.deviceKey=val;
+        this.device=val;
       },
       handleCommand(command) { //
         this.$message(command);
@@ -328,7 +314,7 @@
         this.getDeviceList(this.device_data);
       },
       //全部设备的列表
-      getDeviceList(post_data){
+      /*getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
           console.log(res);
@@ -336,7 +322,7 @@
           _this.deviceTotal=res.result.total;
           console.log(_this.deviceTotal)
         });
-      },
+      },*/
 
       query(){
         this.post_data.key=this.deviceKey;

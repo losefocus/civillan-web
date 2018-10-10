@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <transition name="fade" mode="out-in">
       <div class="nav-bar">
         <transition name="fade">
@@ -175,7 +175,7 @@ export default {
     height: 100%;
     position: relative;
     transition: 0.4s all ease;
-    overflow: auto;
+    //overflow: auto;
     #resize{
       transition: 0.4s all ease;
       position: absolute;
@@ -249,8 +249,9 @@ export default {
   }
   .nav-box{
     width: 100%;
+    //height: 100%;
     position: relative;
-    overflow: auto;
+    //overflow: auto;
     .nav-list{
       cursor: pointer;
       transition: 0.6s all ease;
@@ -313,7 +314,7 @@ export default {
   @media screen and (max-width: 1467px){
     .nav-bar{
       width: 90px;
-      overflow: auto;
+      //overflow: auto;
       .pj-img{
         display: none;
       }

@@ -74,7 +74,6 @@
         </div>
       </ul>
       <f-concrete :deviceName="deviceName" v-if="dialogVisible" :is="currentView" :device-key="deviceKey" :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></f-concrete>
-
     </el-dialog>
   </div>
 </template>
@@ -161,7 +160,6 @@
         this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
       }
 
-
       this.loading=this.$loading({
         fullscreen: true,
         background: 'rgba(0, 0, 0, 0.2)'
@@ -198,7 +196,7 @@
       },
       getDetails(item,index){ //获取详情
         console.log(item);
-        if(item.type=='dzj'){
+        if(item.type=='FPJ'){
           this.tBody[0]='FConcrete';
           this.currentView='FConcrete'
         }else {
@@ -324,6 +322,7 @@
     height: calc(100% - 95px);
     font-size: 30px;
     font-weight: bold;
+    margin-top: 10%;
     display: table;
     text-align: center;
     .icon-zanwushuju2{

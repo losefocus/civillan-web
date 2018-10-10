@@ -4,7 +4,7 @@
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
       <el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-      <el-select  v-else="!isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
+      <el-select v-model="device"  filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini"  style="margin: 0 5px 0 0;width: 25%;float: left;" clearable >
         <el-option
           v-for="(item,index) in deviceSelect"
           :key="index"
@@ -22,15 +22,15 @@
         </el-pagination>
       </el-select>
 
-      <el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+      <!--<el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
         <el-option
           v-for="item in deviceSelect1"
           :key="item.value1"
           :label="item.name"
           :value="item.value1">
         </el-option>
-      </el-select>
-      <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+      </el-select>-->
+      <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
         <el-option
           v-for="item in deviceSelect2"
           :key="item.value2"
@@ -379,21 +379,25 @@
     <div class="s-box">
       <div class="s-body">
         <span class="s-total">总桩数</span>
-        <span class="s-num">{{recordSum.total_pile_num}}</span>
+        <span class="s-num" v-if="recordSum">{{recordSum.total_pile_num}}</span>
+        <span class="s-num" v-else>0</span>
       </div>
       <div class="s-body">
         <span class="s-total">总桩长</span>
-        <span class="s-num">{{recordSum.total_depth | formatZ}}</span>
+        <span class="s-num" v-if="recordSum">{{recordSum.total_depth | formatZ}}</span>
+        <span class="s-num" v-else>0</span>
         <span class="s-total">m</span>
       </div>
       <div class="s-body">
         <span class="s-total">总浆量</span>
-        <span class="s-num">{{recordSum.total_cumulative_pulp | formatZ}}</span>
+        <span class="s-num" v-if="recordSum">{{recordSum.total_cumulative_pulp | formatZ}}</span>
+        <span class="s-num" v-else>0</span>
         <span class="s-total">L</span>
       </div>
       <div class="s-body">
         <span class="s-total">总灰量</span>
-        <span class="s-num">{{recordSum.total_cumulative_ash | formatZ}}</span>
+        <span class="s-num" v-if="recordSum">{{recordSum.total_cumulative_ash | formatZ}}</span>
+        <span class="s-num" v-else>0</span>
         <span class="s-total">KG</span>
       </div>
     </div>
@@ -471,7 +475,7 @@
           {value2:5,name:'E (40-50)'},
         ],// 评分等级选定值
         value7: '',// 时间选定值
-        device:'',// 全部设备选定值
+        device:'哈哈哈',// 全部设备选定值
         deviceKey:'',// 设备key值
         tableData: [],// 列表数据
         input9: '',
@@ -648,6 +652,12 @@
       },
       //类型改变
       deviceChange(val){
+        console.log(val);
+        //this.post_data.key=val;
+        //this.getList(this.post_data)
+      },
+      deviceChange1(val){
+        console.log(val);
         this.deviceKey=val;
       },
       handleCommand(command) { //
@@ -709,6 +719,7 @@
       },
       //全部设备select搜索框
       deviceSearch(query){
+        console.log(query);
         this.device_data.name=query;
         this.getDeviceList(this.device_data);
       },
@@ -716,6 +727,7 @@
       getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
+          console.log(res.result.items);
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
         });
@@ -804,7 +816,7 @@
     border-bottom: 2px solid #ebeef5;
     .s-body{
       float: left;
-      margin-left: 10%;
+      margin-left: 15%;
       margin-right: 10px;
       .s-total{
         font-size: 12px;

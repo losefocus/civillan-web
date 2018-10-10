@@ -151,10 +151,9 @@
     methods:{
       initWebSocket(){ //初始化webSocket
         if(this.$cookies.get('wsUrl')){
-          console.log(this.$cookies.get('wsUrl'))
-          // let wsUrl='ws:'+this.$cookies.get('wsUrl');//ws地址
-          let wsUrl='ws://192.168.0.33:4050/ws/message/token=nT6yz42brkB7C02I+IYBeA==';//ws地址
-
+          console.log(this.$cookies.get('wsUrl'));
+          let wsUrl='ws:'+this.$cookies.get('wsUrl');//ws地址
+          //let wsUrl='ws://192.168.0.33:4050/ws/message/token=nT6yz42brkB7C02I+IYBeA==';//ws地址
           this.webSocket = new WebSocket(wsUrl);
           this.webSocket.onopen = this.websocketonopen;
           this.webSocket.onerror = this.websocketonerror;
@@ -184,8 +183,8 @@
         //console.log("关闭");
       },
       getInfo(){
-        let userId=sessionStorage.getItem('token').substring(0,2);
-        userInfo.userInfo({project_user_id:userId}).then(res=>{
+        //let userId=sessionStorage.getItem('token').substring(0,2);
+        userInfo.userInfo().then(res=>{
           //console.log(res);
           if(res.result.avatarBaseUrl&&res.result.avatarPath){
             this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;

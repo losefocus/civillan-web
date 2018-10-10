@@ -5,7 +5,7 @@
         <m-information></m-information>
       </div>
 
-      <div class="u-box" v-else>
+      <div class="u-box"  v-else>
         <div class="u-header" :style="{backgroundImage: 'url(' + userBg + ')'}">
           <div class="u-info">
             <div class="b-photo">
@@ -27,14 +27,14 @@
             <div class="u-name">
               <p class="n-text">{{userInfo.name}}</p>
               <!--<p class="j-title">{{ role }}</p>-->
-              <p class="j-title">{{ userInfo.phone }}</p>
+              <p class="j-title">{{ role }}</p>
             </div>
             <div class="u-jurisdiction">
               <!--电话号码-->
               <div class="i-company">
                 <i class="iconfont icon-yonghu"></i>
                 <div class="i-context">
-                  <p>{{ userInfo.phone }}</p>
+                  <p>{{ userInfo.username }}</p>
                 </div>
                 <P style="float: left;cursor: pointer;">修改密码</P>
               </div>
@@ -167,7 +167,7 @@ export default {
         console.log(res);
         if(res.success){
           this.userInfo = res.result;
-          this.role=res.result.userRole[0].projectRole.role;
+          this.role=res.result.userRole[0].projectRole.name;
           this.projectOrgan=res.result.projectOrgan.name;
           if(res.result.avatarBaseUr&&res.result.avatarPath){
             this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
@@ -187,7 +187,6 @@ export default {
         console.log(res);
         if(res.success){
           this.contactSelect=res.result;
-
           //let lists=res.result;
           //this.contactSelect=this.array_diff(lists,this.contactList)
         }

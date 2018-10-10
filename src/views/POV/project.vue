@@ -112,7 +112,7 @@
         loading:null,
         polar1:{
           title : {
-            text: '统计分析',
+            text: '报警统计',
             x:'left'
           },
           toolbox: {
@@ -142,7 +142,7 @@
           },*/
           series: [
             {
-              name:'报警来源',
+              name:'报警类型',
               type:'pie',
               radius : '65%',
               center: ['50%', '55%'],

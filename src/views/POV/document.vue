@@ -2,10 +2,7 @@
   <div class="n-box">
     <div class="c-box">
       <div class="c-query">
-        <el-select placeholder="文档标题" size="mini" v-model="value" style="margin: 0 5px 0 0;width: 20%;float: left;" clearable >
-        </el-select>
-        <el-select placeholder="上传用户" size="mini" v-model="value" style="margin: 0 5px;width: 20%;;float: left;">
-        </el-select>
+        <el-input v-model="searchName" size="mini" style="margin: 0 5px;width: 20%;float: left;" placeholder="请输入内容"></el-input>
         <el-date-picker
           size="mini"
           v-model="value7"
@@ -127,6 +124,7 @@
         },
         value7: '',
         value:'',
+        searchName:'',
 
       }
     },
@@ -200,6 +198,7 @@
       getList(postData){
         this.loading=true;
         document.list(postData).then(res=>{
+          console.log(res);
           if(res.success){
             this.total=res.result.total;
             this.tableData=res.result.items;
