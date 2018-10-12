@@ -12,35 +12,30 @@
         <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
           <div class="i-id">
             <div class="d-model">{{deviceName[deviceIndex-1].name}}</div>
-            <div class="d-kind">
+            <!--<div class="d-kind">
               <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
-            </div>
+            </div>-->
 
           </div>
-          <div class="">
-            <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
-            <div class="i-progress">
-              <div class="i-progressName" style="width: 80px">成桩进度：</div>
-              <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
-              <div class="clear"></div>
-            </div>
+          <div class="i-progress">
+            <div class="i-progressName" style="width: 80px">成桩进度：</div>
+            <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
+            <div class="clear"></div>
           </div>
           <div class="i-box">
             <div class="i-body">
-              <div class="i-name">泡沫混凝土</div>
-              <div class="i-company">宏远建设记录仪一号</div>
+              <div class="i-name">喷凝系统</div>
+              <div class="i-state"><span style="vertical-align: center">在线状态</span><div class="led-green" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
             </div>
-            <div>
-              <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
-              <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
+            <div class="i-body">
+              <div class="i-company">宏远建设记录仪一号</div>
+              <div class="i-state"><span>养护状态</span><div class="led-green" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
             </div>
           </div>
           <div class="clear"></div>
           <div class="h-box">
-            <div class="i-body">
               <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
               <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
-            </div>
           </div>
 
           <div class="i-normal" v-if="isWarming">
@@ -590,7 +585,7 @@
     },
     beforeDestroy(){
       clearInterval(this.timer);
-      console.log('已销毁');
+      //console.log('已销毁');
     },
 
     methods:{
@@ -751,146 +746,13 @@
           }
 
         }).catch(e=>{
-          console.log(e)
+          //console.log(e)
         })
       },
-      /*energySphere() {
-        var canvas = document.getElementById('c');
-        var ctx = canvas.getContext('2d');
-        var range = document.getElementById('r');
-
-        //range控件信息
-        var rangeValue = range.value;// 默认5
-        var nowRange = 0;    //用于做一个临时的range
-
-        //画布属性
-        var mW = canvas.width = 250;
-        var mH = canvas.height = 250;
-        var lineWidth = 2;
-
-        //圆属性
-        var r = mH / 2; //圆心
-        var cR = r - 16 * lineWidth; //圆半径
-
-        //Sin 曲线属性
-        var sX = 0;
-        var sY = mH / 2;
-        var axisLength = mW; //轴长
-        var waveWidth = 0.03 ;   // 绝对值 波浪宽度,数越小越宽
-        var waveHeight = 6; //波浪高度,数越大越高
-        var speed = 0.10; //波浪速度，数越大速度越快 改变sin 的值
-        var xOffset = 0; //波浪x偏移量
-
-        ctx.lineWidth = lineWidth;
-
-        //画圈函数
-        var IsdrawCircled = false;
-        var drawCircle = function(){
-
-          ctx.beginPath();
-          ctx.strokeStyle = '#1080d0';
-          ctx.arc(r, r, cR+5, 0, 2 * Math.PI);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(r, r, cR, 0, 2 * Math.PI);
-          ctx.clip();
-
-        };
-
-        //画sin 曲线函数
-        var drawSin = function(xOffset){
-
-          ctx.save();
-
-          var points=[];    //用于存放绘制Sin曲线的点
-
-          ctx.beginPath();
-          //在整个轴长上取点
-          // 250     20/250  ==3125 个点  绘制多个 x.y 点
-          for(var x = sX; x < axisLength; x += 20 / axisLength){
-            //此处坐标(x,y)的取点，依靠公式 “振幅高*sin(x*振幅宽 + 振幅偏移量)”
-            var y = -Math.sin(x * waveWidth + xOffset);  // 返回-1 到 1 的值
-            var dY = mH * (1 - nowRange / 100 );
-
-            points.push([x, dY + y * waveHeight]);
-            ctx.lineTo(x, dY + y * waveHeight);
-
-          }//--------------绘制波浪
-
-
-          //封闭路径
-
-          ctx.lineTo(axisLength, mH); //250 250  ---最右边
-          ctx.lineTo(sX, mH); //0 250  ----最左边
-
-          ctx.fillStyle = '#1c86d1';
-          ctx.fill();
-
-          ctx.restore();
-        };
-
-        //写百分比文本函数
-        var drawText = function(){
-          ctx.save();
-
-          var size = 0.4*cR;
-          ctx.font = size + 'px Microsoft Yahei';
-          ctx.textAlign = 'center';
-          ctx.fillStyle = "rgba(06, 85, 128, 0.8)";
-          ctx.fillText(nowRange + '%', r, r + size / 2);
-
-          ctx.restore();
-        };
-
-        var render = function(){
-          ctx.clearRect(0, 0, mW, mH);
-          rangeValue = range.value;
-
-          if(IsdrawCircled == false){
-            drawCircle();
-          }
-
-          if(nowRange <= rangeValue){
-            var tmp = 1;
-            nowRange += tmp;
-          }
-
-          if(nowRange > rangeValue){
-            var tmp = 1;
-            nowRange -= tmp;
-          }
-
-          if(rangeValue>0)
-          {
-            drawSin(xOffset);
-          }
-          drawText();
-
-          xOffset += speed;
-
-          requestAnimationFrame(render);
-        }
-        render();
-      }*/
     },
 
 
     watch:{
-      /*dialogFullscreen:function (val,oldVal) {
-        let _this=this;
-        let clientWidth=document.body.clientWidth;
-        _this.temp(val,_this.diameter,_this,clientWidth);
-        _this.$nextTick(()=>{
-          let pile=document.getElementById('pile');
-          let pileHeight = window.getComputedStyle(pile).height;
-          let pileWidth = window.getComputedStyle(pile).width;
-          _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-          _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-          _this.$refs.pMap.width = parseFloat(pileWidth);
-          _this.$refs.pMap.height = parseFloat(pileHeight);
-          _this.$refs.pMap.init();
-        });
-      },*/
       isClose(val,oldVal){
         console.log(val,oldVal)
       }
@@ -1022,12 +884,17 @@
         padding:0 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+        .deviceActive{
+          font-size:20px;
+          background: #24BCF7;
+          color:#ffffff;
+        }
         .i-id{
           font-size: 20px;
           color: rgba(218,218,218,1);
-          margin-top: 20px;
           width:100%;
-          //line-height:42px;
+          height: 10%;
+          margin-top: 10%;
           overflow: hidden;
           .d-model{
             float: left;
@@ -1036,91 +903,68 @@
             font-weight: bold;
             color: #333333;
           }
-          .d-kind{
-            float: right;
-            height: 40px;
-            width: 48%;
-            padding-top: 5px;
-            div{
-              float: left;
-              cursor: pointer;
-              width: 24px;
-              height: 24px;
-              line-height: 26px;
-              border-radius: 50%;
-              border: 1px solid rgba(218,218,218,1);
-              text-align: center;
-              margin-left:20px;
-            }
-          }
-        }
-        .deviceActive{
-          font-size:20px;
-          background: #24BCF7;
-          color:#ffffff;
         }
         .i-box{
-          margin-top: 10%;
-          height: 15%;
+          height: 20%;
           .i-body{
-            float: left;
-            width: 60%;
-            height: 45px;
-            line-height: 30px;
+            width: 100%;
+            height: 40%;
             font-weight: bold;
             .i-name{
-              font-size:16px;
+              float: left;
+              font-size:15px;
               color:rgba(51,51,51,1);
             }
             .i-company{
+              float: left;
+              font-size:10px;
+              color:rgba(51,51,51,1);
+            }
+            .i-state{
+              float: right;
               font-size:10px;
               color:rgba(153,153,153,1);
+              .led-green{
+                vertical-align: middle;
+                display: inline-block;
+                background-color: #00ff00;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #26c702;
+                -moz-box-shadow: 0px 0px 2px 4px #26c702;
+                -webkit-box-shadow: 0px 0px 2px 4px #26c702;
+                border-radius: 50%;
+              }
+              .led-gray{
+                display: inline-block;
+                background-color: #FFAB35;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #FFAB35;
+                -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
+                -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
+                border-radius: 50%;
+              }
+              .led-blue{
+                display: inline-block;
+                background-color: #403BFF;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #403BFF;
+                -moz-box-shadow: 0px 0px 2px 4px #403BFF;
+                -webkit-box-shadow: 0px 0px 2px 4px #403BFF;
+                border-radius: 50%;
+              }
+              span{
+                vertical-align: middle;
+                margin-right: 20px;
+              }
             }
             .icon-portrait{
               color: #787F87;
             }
             .icon-phonenew{
               color: #787F87;
-            }
-          }
-          .i-state{
-            float: right;
-            line-height: 30px;
-            font-size:12px;
-            color:rgba(153,153,153,1);
-            .led-green{
-              vertical-align: center;
-              display: inline-block;
-              background-color: #00ff00;
-              width: 6px;
-              height: 6px;
-              box-shadow: 0px 0px 2px 4px #26c702;
-              -moz-box-shadow: 0px 0px 2px 4px #26c702;
-              -webkit-box-shadow: 0px 0px 2px 4px #26c702;
-              border-radius: 50%;
-            }
-            .led-gray{
-              display: inline-block;
-              background-color: #FFAB35;
-              width: 6px;
-              height: 6px;
-              box-shadow: 0px 0px 2px 4px #FFAB35;
-              -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
-              -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
-              border-radius: 50%;
-            }
-            .led-blue{
-              display: inline-block;
-              background-color: #403BFF;
-              width: 6px;
-              height: 6px;
-              box-shadow: 0px 0px 2px 4px #403BFF;
-              -moz-box-shadow: 0px 0px 2px 4px #403BFF;
-              -webkit-box-shadow: 0px 0px 2px 4px #403BFF;
-              border-radius: 50%;
-            }
-            span{
-              margin-right: 20px;
             }
           }
           .icon-state{
@@ -1130,14 +974,11 @@
         }
         .h-box{
           width: 100%;
-          height: 15%;
-          margin-top: 5%;
+          height: 20%;
           overflow: hidden;
-          .i-body{
-            float: left;
+          .b-info{
             width: 60%;
-            height: 45px;
-            line-height: 30px;
+            height: 40%;
             font-weight: bold;
             .i-info{
               margin-left: 10px;
@@ -1148,56 +989,27 @@
             .icon-phonenew{
               color: #787F87;
             }
-
           }
-          .b-angle{
-            float: right;
-            width: 60px;
-            height: 60px;
-            background: url("../../assets/RState/angle.png") no-repeat;
-            background-size: 100% 100%;
-            position: relative;
-            .a-spot{
-              position: absolute;
-              width: 5px;
-              height: 5px;
-              border-radius: 50%;
-              left: 27px;
-              top: 26px;
-              background: red;
-            }
-          }
-        }
-
-        .i-start{
-          width:100%;
-          height:17px;
-          font-size:12px;
-          color:rgba(102,102,102,1);
-          line-height:17px;
         }
         .i-progress{
-          margin-top: 10px;
           width: 100%;
-          height: 15px;
-          line-height: 15px;
+          margin-top: 5%;
+          height: 10%;
           overflow: hidden;
           div{
             float: left;
           }
         }
         .i-normal{
-          margin-top: 5%;
           width:100%;
-          line-height: 57px;
           text-align: center;
-          height:57px;
+          height:15%;
           background:rgba(141,232,240,0.06);
+          padding-top: 13%;
         }
         .i-warning{
-          margin-top: 10%;
           width:100%;
-          height:47px;
+          height:25%;
           line-height: 45px;
           background:rgba(248,89,89,0.06);
           text-align: center;

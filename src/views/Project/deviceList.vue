@@ -67,13 +67,7 @@
       style="min-width: 1024px;"
       @close="closeDialog"
     >
-      <ul class="t-header">
-        <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
-        <div class="t-handle" v-show="isShow">
-          <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
-        </div>
-      </ul>
-      <f-concrete :deviceName="deviceName" v-if="dialogVisible" :is="currentView" :device-key="deviceKey" :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></f-concrete>
+      <new-running @changeIcon="isFullscreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType"></new-running>
     </el-dialog>
   </div>
 </template>
@@ -87,10 +81,11 @@
 
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
-  import FConcrete from '@/views/softBase/FConcrete'
+  import FConcrete from '@/views/FConcrete/FConcrete'
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
+  import newRunning from '@/views/softBase/newRunning.vue'
 
   import Bus from '@/common/eventBus'
   import Waterfall from 'vue-waterfall/lib/waterfall'
@@ -105,7 +100,8 @@
       AQuery,
       HData,
       NRecord,
-      FConcrete
+      FConcrete,
+      newRunning
     },
     data () {
       return {
@@ -127,20 +123,7 @@
         group_id:0,
         deviceKey:'',
         deviceName:'',
-        tHeader:[
-          {name:'运行状况'},
-          {name:'历史数据'},
-          {name:'统计分析'},
-          //{name:'通知记录'},
-          {name:'故障报警'},
-        ],
-        tBody:[
-          'RState',
-          'HData',
-          'SAnalysis',
-          //'NRecord',
-          'AQuery',
-        ],
+        deviceType:'',
         tIndex:0,
         currentView:'RState',
         isBusy: false,
@@ -168,6 +151,7 @@
       let tenant=this.$cookies.get('tenant');
       this.getGroup(id,tenant)
     },
+
     methods: {
       getGroup(id,tenant){
         deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
@@ -195,44 +179,39 @@
         this.dialogVisible = false;
       },
       getDetails(item,index){ //获取详情
-        console.log(item);
-        if(item.type=='FPJ'){
-          this.tBody[0]='FConcrete';
-          this.currentView='FConcrete'
-        }else {
-          this.tBody[0]='RState';
-          this.currentView='RState'
-        }
+        //console.log(item.type);
+        this.deviceType=item.type;
         this.dialogVisible=true;
         this.deviceName=item.name;
-        sessionStorage.setItem('deviceName',item.name);
+        sessionStorage.setItem('deviceType',item.type);
+        sessionStorage.setItem('deviceKey',item.key);
         this.deviceKey=item.key;
       },
       changeTab(i){ //模态框tab
         this.tIndex=i;
         this.currentView=this.tBody[i]
       },
-      isFullscreen(){ //是否打开模态框
-        if(this.changeIcon){
-
+      isFullscreen(val){ //是否打开模态框
+        //console.log(val);
+        if(!val){
           this.dialogWidth='100%';
           this.dialogHeight={
             height:'calc(100% - 65px)'
           };
-          this.dialogFullscreen=true;
           this.changeIcon=!this.changeIcon;
+          this.dialogFullscreen=true;
         }else{
           this.dialogWidth='70%';
           this.dialogHeight={
             height:'700px'
           };
-          this.dialogFullscreen=false;
           this.changeIcon=!this.changeIcon
+          this.dialogFullscreen=false;
         }
       },
       changeScreen(data){
-        this.changeIcon=data;
-        this.isFullscreen();
+        //this.changeIcon=data;
+        //this.isFullscreen();
       },
       getList(group_id){
         deviceList.list({'group_id':group_id}).then(res=>{
@@ -384,9 +363,6 @@
     .r-state2{background: #24BCF7;}
     .r-state3{background: #808080;}
     .r-state4{background: #DADADA;}
-    /*.r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: 100% 100%;}
-    .r-state2{background: url(../../assets/device/break.png) no-repeat;background-size: 100% 100%;}
-    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: 100% 100%;}*/
 
     .d-name{
       color: #333333;
@@ -433,41 +409,6 @@
     }
   }
 
-  .t-header{
-    height: 45px;
-    background: #ffffff;
-    li{
-      cursor: pointer;
-      float: left;
-      width:160px;
-      height:45px;
-      text-align: center;
-      line-height: 45px;
-      font-size:14px;
-      color:rgba(153,153,153,1);
-    }
-    .t-handle{
-      float: right;
-      width: 60px;
-      height: 45px;
-      line-height: 45px;
-      margin-right: 30px;
-      display: flex;
-      justify-content: space-around;
-      div{
-        cursor: pointer;
-      }
-    }
-    .active {
-      background-color: #F85959;
-      color: #ffffff;
-    }
-  }
-  .t-Body{
-    overflow: auto;
-    padding: 10px;
-    background: #f5f5f9;
-  }
 
   .wf-transition {
     transition: opacity .3s ease;

@@ -31,13 +31,7 @@
     @close="tIndex=0"
     style="min-width: 1024px;"
   >
-    <ul class="t-header">
-      <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
-      <div class="t-handle" v-show="isShow">
-        <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
-      </div>
-    </ul>
-    <r-state :deviceName="deviceName"  v-if="dialogVisible" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
+    <new-running @changeIcon="isFullscreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType"></new-running>
   </el-dialog>
 </div>
 </template>
@@ -52,11 +46,12 @@
   import foamRunning from '@/assets/device/foamRunning.png'
   import devicePolymerization from '@/assets/device/devicePolymerization.png'
   import stateMarker from '@/assets/AMap/marker.png'
+  import newRunning from '@/views/softBase/newRunning.vue'
 
 
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
-  import FConcrete from '@/views/softBase/FConcrete'
+  import FConcrete from '@/views/FConcrete/FConcrete'
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
@@ -72,6 +67,7 @@ export default {
     AQuery,
     HData,
     NRecord,
+    newRunning,
   },
   data(){
     return{
@@ -95,6 +91,7 @@ export default {
       group_id:0,
       deviceKey:'',
       deviceName:'',
+      deviceType:'',
       tHeader:[
         {name:'运行状况'},
         {name:'历史数据'},
@@ -165,7 +162,7 @@ export default {
                   let changeBackground= null;
                   let changeColor=null;
                   if(res.success){
-                    if(lists[i].type=='dzj'){
+                    if(lists[i].type=='FPJ'){
                       changeMarker = foamRunning;
                       changeBackground = 'runningBackground';
                       changeColor = 'runningColor';
@@ -176,7 +173,7 @@ export default {
                     }
                     _this.loading.close();
                   }else{
-                    if(lists[i].type=='dzj'){
+                    if(lists[i].type=='FPJ'){
                       changeMarker = foamOff;
                       changeBackground = 'noBackground';
                       changeColor = 'noColor';
@@ -219,6 +216,7 @@ export default {
                       });
 
                       infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
+                        _this.deviceType=lists[i].type;
                         if(lists[i].type=='FPJ'){
                           _this.tBody[0]='FConcrete';
                           _this.currentView='FConcrete'
@@ -303,25 +301,22 @@ export default {
       this.tIndex=i;
       this.currentView=this.tBody[i]
     },
-    isFullscreen(){ //是否打开模态框
-      let clientWidth=document.body.clientWidth;
-      if(this.changeIcon){
+    isFullscreen(val){ //是否打开模态框
+      //console.log(val);
+      if(!val){
         this.dialogWidth='100%';
         this.dialogHeight={
           height:'calc(100% - 65px)'
         };
-        this.dialogFullscreen=true;
         this.changeIcon=!this.changeIcon;
-        if(clientWidth<1500){
-          this.isShow=false
-        }
+        this.dialogFullscreen=true;
       }else{
-        this.dialogWidth='75%';
+        this.dialogWidth='70%';
         this.dialogHeight={
           height:'700px'
         };
-        this.dialogFullscreen=false;
         this.changeIcon=!this.changeIcon
+        this.dialogFullscreen=false;
       }
     },
     dialogClose(){
