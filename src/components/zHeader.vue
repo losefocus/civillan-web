@@ -10,11 +10,11 @@
       <span class="el-dropdown-link" style="cursor: pointer">
         <div class="u-name">{{username}}</div><i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
-      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="0">用户中心</el-dropdown-item>
-        <el-dropdown-item command="1">个人设置</el-dropdown-item>
-        <el-dropdown-item command="2">消息通知</el-dropdown-item>
-        <el-dropdown-item command="3">帮助中心</el-dropdown-item>
+        <!--<el-dropdown-item command="1">个人设置</el-dropdown-item>-->
+        <el-dropdown-item command="1">消息通知</el-dropdown-item>
+        <el-dropdown-item command="2">帮助中心</el-dropdown-item>
         <el-dropdown-item divided command="close">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -50,7 +50,7 @@
     :visible.sync="dialogVisible"
     :width="dialogWidth"
     style="min-width: 1024px"
-    :top="dialogTop"
+    top="8vh"
   >
     <ul class="t-header">
       <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
@@ -97,13 +97,13 @@
          isMap:true, //地图入口是否显示
          tHeader:[
            {name:'用户中心'},
-           {name:'个人设置'},
+           /*{name:'个人设置'},*/
            {name:'消息通知'},
            {name:'帮助中心'},
          ],
          tBody:[
            'UCenter',
-           'PSettings',
+           /*'PSettings',*/
            'NMessage',
            'HCenter'
          ],
@@ -114,7 +114,7 @@
     created(){
       let _this=this;
       let clientHeight=document.body.clientHeight;
-      if(clientHeight<800){
+      /*if(clientHeight<800){
         _this.dialogTop='6vh';
         _this.topChange=false;
       }else {
@@ -130,7 +130,7 @@
           _this.dialogTop='15vh';
           _this.topChange=true
         }
-      };
+      };*/
 
 
       this.$route.path=='/'?this.isMap=false:this.isMap=true;
@@ -197,8 +197,8 @@
 
       getMessage(){
         this.dialogVisible=true;
-        this.tIndex=2;
-        this.currentView=this.tBody[2]
+        this.tIndex=1;
+        this.currentView=this.tBody[1]
       },
       changeTab(i){
         this.tIndex=i;
@@ -305,7 +305,7 @@
     }
   }
   .u-name{
-    height: 27px;
+    //height: 27px;
     padding-top: 5px;
     display: inline-block;
     cursor: pointer;
@@ -351,6 +351,6 @@
     height: 460px;
   }
   .t-BodyHeight2{
-    height: 600px;
+    height: 480px;
   }
 </style>

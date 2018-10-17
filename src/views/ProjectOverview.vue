@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <el-container style="height: 100%">
       <el-header height="70px" style="border-bottom: 1px solid rgba(230,234,238,1);">
-        <z-header></z-header>
+        <z-header ></z-header>
       </el-header>
       <el-container style="height: calc(100% - 70px);">
         <z-nav style="float: left;height: calc(100%)"></z-nav>
@@ -106,6 +106,25 @@
     float: left;
     //padding: 20px;
     width: calc(100% - 245px);
+    overflow: auto;
+  }
+  .z-main::-webkit-scrollbar {/*滚动条整体样式*/
+    width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+    background: #ffffff;
+  }
+  .nav-bar::-webkit-scrollbar-button{
+    background: rgba(0,0,0,0.2);
+  }
+  .z-main::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+  }
+  .z-main::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
   }
   @media screen and (max-width: 1467px){
     .z-main{

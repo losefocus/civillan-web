@@ -42,7 +42,8 @@
     padding: 20px
   }
   .a-box{
-    margin-top: 15px;
+    //margin: 15px 0 15px 0;
+    margin-bottom: 10px;
     width: 100%;
     height: 32px;
     li{

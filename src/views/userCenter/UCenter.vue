@@ -8,36 +8,47 @@
       <div class="u-box"  v-else>
         <div class="u-header" :style="{backgroundImage: 'url(' + userBg + ')'}">
           <div class="u-info">
-            <div class="b-photo">
-              <!--<img :src="avatarUrl" alt="头像">-->
-              <el-upload
-                :data="params"
-                class="avatar-uploader"
-                :headers="header"
-                name="uploadFile"
-                action="/foreground/project_file/add"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload">
-                <img v-if="avatarUrl" :src="avatarUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+            <div class="b-info">
+              <div class="b-photo">
+                <!--<img :src="avatarUrl" alt="头像">-->
+                <el-upload
+                  :data="params"
+                  class="avatar-uploader"
+                  :headers="header"
+                  name="uploadFile"
+                  action="/foreground/project_file/add"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload">
+                  <img v-if="avatarUrl" :src="avatarUrl" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </div>
+              <div class="u-name">
+                <div style="width: 120px;height: 100%;margin: 0 auto">
+                  <p class="n-text">{{userInfo.name}}</p>
+                  <!--<p class="j-title">{{ role }}</p>-->
+                  <p class="j-title">{{ role }}</p>
+                </div>
+              </div>
+              <div class="b-password">
+                <p class="n-text">{{userInfo.username}}</p>
+                <!--<p class="j-title">{{ role }}</p>-->
+                <p class="j-title">修改密码</p>
+              </div>
+              <div style="clear: both"></div>
             </div>
-            <div class=""></div>
-            <div class="u-name">
-              <p class="n-text">{{userInfo.name}}</p>
-              <!--<p class="j-title">{{ role }}</p>-->
-              <p class="j-title">{{ role }}</p>
-            </div>
+
+
             <div class="u-jurisdiction">
               <!--电话号码-->
-              <div class="i-company">
+              <!--<div class="i-company">
                 <i class="iconfont icon-yonghu"></i>
                 <div class="i-context">
                   <p>{{ userInfo.username }}</p>
                 </div>
                 <P style="float: left;cursor: pointer;">修改密码</P>
-              </div>
+              </div>-->
               <div class="i-company">
                 <span class="iconfont icon-company"></span>
                 <div class="i-context">
@@ -50,12 +61,12 @@
                   <div>{{ userInfo.phone }}</div>
                 </div>
               </div>
-              <div class="i-company">
+              <!--<div class="i-company">
                 <i class="iconfont icon-mail"></i>
                 <div class="i-context">
                   <div>{{ userInfo.phone }}</div>
                 </div>
-              </div>
+              </div>-->
             </div>
           </div>
         </div>
@@ -78,17 +89,20 @@
           <div class="i-box">
             <!--添加联系方式-->
             <div class="i-company" v-for="(list,index) in contactList" :key="index">
-              <span style="margin-right: 10px;float: left">{{list.label}}</span>
-              <input class="i-modify" type="text" v-if="list.flag" v-model="content" v-focus>
+              <span style="margin-right: 10px;float: left;display: inline-block;width: 30px;height: 30px;">{{list.label}}</span>
+              <div class="i-context" v-if="list.flag">
+                <input class="i-modify" type="text" v-model="content" v-focus>
+              </div>
               <div class="i-context"  v-else>
-                <p>{{ list.value }}</p>
+                <span v-if="list.id">{{ list.value }}</span>
+                <span v-else></span>
               </div>
               <i class="iconfont icon-wancheng" @click="addContact(list,index)" v-if="list.flag"></i>
               <i class="iconfont icon-modify" @click="editContact(list,index)" v-else></i>
               <i class="iconfont icon-delete" @click="deleteContact(list)"></i>
             </div>
           </div>
-
+          <div style="clear: both;"></div>
 
         </div>
         <div class="m-formation">
@@ -119,6 +133,7 @@ export default {
       isCompany5:true,
       contactList:[],
       content:'',
+      contactLabel:'',
       contactIndex:0,
       contactPostData:{},
       nameList:[],
@@ -136,14 +151,13 @@ export default {
     MInformation
   },
   created(){
-    this.getContactInformation();
+    //this.getContactInformation();
     this.getInformation();
-
+    this.all()
   },
   mounted(){
-    this.getContentList();
+    //this.getContentList();
     Bus.$on('msg', (e) => {
-      console.log('yes')
       this.isModify = e;
     })
   },
@@ -157,6 +171,27 @@ export default {
     }
   },
   methods:{
+    all(){
+      Promise.all([dictionary.list({'type':'contact'}),contact.list({'sort_by':'sort','direction':'ASC'})]).then(res=>{
+        //console.log(res)
+        this.contactSelect=res[0].result;
+        this.contactList=res[1].result.items;
+        console.log(res[1].result.items);
+
+        let array = [];
+        this.contactList.forEach(item=>{
+          this.contactSelect.forEach(list=>{
+            if(item.type==list.value){
+              item.label=list.label
+            }
+          });
+          item.flag=false;
+          let obj = Object.assign({},item);
+          array.push(obj)
+        });
+        this.contactList = array
+      })
+    },
     getInformation(){
       this.loading=this.$loading({
         fullscreen: true,
@@ -194,7 +229,7 @@ export default {
     },
     getContentList(){
       contact.list().then(res=>{
-        console.log(this.contactSelect);
+        //console.log(this.contactSelect);
         this.contactList=res.result.items;
       })
     },
@@ -205,6 +240,7 @@ export default {
       delete obj.id;
       this.typeFont=obj.value;
       this.contactList.push(obj);
+      console.log(this.contactList)
     },
 
     edit(x){
@@ -222,28 +258,48 @@ export default {
       }
     },
     addContact(list,index){
+      console.log(index)
       list.flag = false;
       let post_data = {};
+      let msg='';
 
       if(list.id){    //修改
         post_data=list;
         post_data.value = this.content;
-        delete post_data.flag
+        post_data.sort = index;
+        delete post_data.flag;
+        delete post_data.label;
+        msg='修改成功'
       }else{      //添加
         post_data={
           'projectId':this.$cookies.get('projectId'),
-          'userId':sessionStorage.getItem('token').substring(0,2),
           'type':list.value,
           'value':this.content,
+          'sort':index,
           'status':1,
-        }
+        };
+        msg='添加成功'
       }
-      contact.addContact(post_data).then(res=>{
-        console.log(res);
-        this.content = '';
-        this.getContentList()
+      this.loading=this.$loading({
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.2)'
       });
-      console.log(list);
+      console.log(this.content);
+      contact.addContact(post_data).then(res=>{
+
+        console.log(res);
+        if(res.success){
+          this.content = '';
+          this.all();
+          this.$message.success(msg);
+          this.loading.close()
+        }else{
+          this.loading.close()
+        }
+      }).catch(e=>{
+        this.loading.close()
+      });
+
 
       // list.flag=false;
     },
@@ -254,10 +310,21 @@ export default {
     },
     deleteContact(list){
       if(list.id){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         contact.deleteContact({'project_user_contact_id':list.id}).then(res=>{
           console.log(res.message);
-          this.getContentList();
-          this.getInformation();
+          if(res.success){
+            this.all();
+            this.$message.success('删除成功');
+            this.loading.close()
+          }else{
+            this.loading.close()
+          }
+        }).catch(e=>{
+          this.loading.close()
         })
       }else{
         this.contactList.pop()
@@ -317,7 +384,7 @@ export default {
     background-color: #ffffff;
     .u-header{
       width:100%;
-      height:50%;
+      height:40%;
       background-size: cover;
       border-radius:3px 3px 0 0;
       position: relative;
@@ -328,44 +395,71 @@ export default {
         left:50%;
         top:50%;
         margin-left:-260px;
-        margin-top:-100px;
+        margin-top:-70px;
         text-align: center;
-        .b-photo{
-          width: 80px;
-          height: 80px;
+        .b-info{
+          width: 55%;
           margin: 0 auto;
-          img{
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-
-          }
-        }
-
-        .u-name{
-          text-align: center;
-          line-height: 35px;
-          .n-text{
-            font-size:22px;
-            color:#ffffff;
-          }
-          .j-title{
-            padding:0 5px;
-            height:18px;
-            width: auto;
-            display: inline-block;
-            background:#ffffff;
-            border-radius:4px;
-            color: #F85959;
-            line-height: 18px;
+          .b-photo{
+             float: left;
+             width: 80px;
+             height: 80px;
+             margin: 0 auto;
+             img{
+               width: 80px;
+               height: 80px;
+               border-radius: 50%;
+             }
+           }
+          .u-name{
+            float: left;
             text-align: center;
-            font-size: 12px;
-            margin: 0 auto;
+            line-height: 35px;
+            margin-top: 10px;
+            .n-text{
+              font-size:22px;
+              color:#ffffff;
+            }
+            .j-title{
+              padding:0 5px;
+              height:18px;
+              width: auto;
+              display: inline-block;
+              background:#ffffff;
+              border-radius:4px;
+              color: #F85959;
+              line-height: 18px;
+              text-align: center;
+              font-size: 12px;
+            }
+          }
+          .b-password{
+            float: left;
+            text-align: center;
+            line-height: 35px;
+            margin-top: 10px;
+            .n-text{
+              font-size:22px;
+              color:#ffffff;
+            }
+            .j-title{
+              padding:0 5px;
+              height:18px;
+              width: auto;
+              display: inline-block;
+              background:#ffffff;
+              border-radius:4px;
+              color: #F85959;
+              line-height: 18px;
+              text-align: center;
+              font-size: 12px;
+            }
           }
         }
+
         .u-jurisdiction{
           width: 100%;
-          margin-top: 5px;
+          margin-top: 15px;
           height: auto;
           i{
             font-size: 18px;
@@ -373,11 +467,11 @@ export default {
           .i-company{
             color: #ffffff;
             width: 45%;
-            height: 40px;
-            line-height: 40px;
+            height: 35px;
+            line-height: 35px;
 
             float: left;
-            //border-bottom: 1px solid rgba(218,218,218,1);
+            border-bottom: 1px solid rgba(218,218,218,1);
             .i-context{
               float: left;
               width: 150px;
@@ -390,6 +484,7 @@ export default {
                 text-overflow:ellipsis;
                 white-space: nowrap;
               }
+
               div{
                 width: 210px;
                 text-align: left;
@@ -430,7 +525,7 @@ export default {
       width: 520px;
       margin: 0 auto;
       .u-information{
-        margin-top: 10%;
+        margin-top: 20px;
         border-left: 3px solid #999999;
         font-size:14px;
         padding-left: 15px;
@@ -439,25 +534,31 @@ export default {
         justify-content: space-between;
       }
       .i-box{
-        margin-top: 5%;
-        height: auto;
-        display: flex;
-        justify-content: space-between;
-        flex-flow:row  wrap;
+        margin-top: 10px;
+        height: 150px;
+        overflow: auto;
+        width: 100%;
         i{
           color: #999999;
           font-size: 18px;
         }
         .i-company{
-          width: 45%;
+          float: left;
+          margin-right: 6%;
+          width: 47%;
           height: 40px;
-          line-height: 40px;
+          line-height: 41px;
           border-bottom: 1px solid rgba(218,218,218,1);
           .i-context{
             float: left;
             width: 155px;
-            p{
-              width: 120px;
+            input{
+              font-size: 14px;
+              color: #666666;
+            }
+            span{
+              display: inline-block;
+              width: 155px;
               text-align: left;
               font-size: 14px;
               color: #666666;
@@ -484,6 +585,28 @@ export default {
             cursor: pointer;
           }
         }
+        .i-company:nth-child(even){
+          margin: 0;
+        }
+      }
+      .i-box::-webkit-scrollbar {/*滚动条整体样式*/
+        width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
+        height: 4px;
+        background: #ffffff;
+
+      }
+      .i-box::-webkit-scrollbar-button{
+        background: rgba(0,0,0,0.2);
+      }
+      .i-box::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.2);
+      }
+      .i-box::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 0;
+        background: rgba(0,0,0,0.1);
       }
       .u-submit{
         width:160px;

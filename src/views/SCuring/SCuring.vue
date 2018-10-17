@@ -127,6 +127,7 @@
             tenant:"21fe87251b01541399c7c1a8cec741c5",
             typeId:124,},
         },
+        progressNum:0,
         angelWidth:0,
         noDevice:false,
         deviceType:['1','2','3'],
@@ -176,13 +177,17 @@
     },
     created(){
       this.getConfig();
-      this.getData(this.deviceKey);
-      this.getAlarms(this.deviceKey);
-
+      let deviceKey=sessionStorage.getItem('deviceKey');
+      this.getData(deviceKey);
+      this.getAlarms(deviceKey);
     },
     mounted(){
       this.init();
+
       this.myCharts();
+      this.$nextTick(()=>{
+        this.myChart.resize()
+      });
       this.reload();
       this.getPileData();
     },
@@ -194,40 +199,11 @@
     methods:{
       init(){
         let clientWidth=document.body.clientWidth;
-        this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
       },
       deviceChange(index){
         this.deviceIndex=index;
       },
-      temp(isDialog,diameter,that,clientWidth) {
-        if(!isDialog){
-          this.classChange=2;
-          if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-          if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-          if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-          if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
-          if(clientWidth>1660){
-            diameter=110;
-          }else if(clientWidth<1660&&clientWidth>1500){
-            diameter=120;
-          }else if(clientWidth<1500&&clientWidth>1380){
-            that.$emit('dialogFullscreen','true');
-            that.$emit('zoomShow','false');
-            that.isShow=false;
-            diameter=100;
-          }else if(clientWidth<1380){
-            that.$emit('zoomShow','false');
-            that.$emit('dialogFullscreen','true')
-          }
-        }else{
-          if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()};
-          if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()};
-          if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()};
-          if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();};
 
-        }
-        this.diameter=diameter
-      },
       tabChange(x){
         if(x==0){
           this.isTab=false;

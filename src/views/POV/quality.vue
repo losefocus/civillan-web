@@ -564,8 +564,15 @@
     height: calc(100% - 100px);
     background: #f5f5f9;
   }
+  @media screen and (max-width: 1467px){
+    .n-box{
+      padding: 20px;
+      height: auto;
+      background: #f5f5f9;
+    }
+  }
   .c-box{
-    margin-top: 15px;
+    //margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;

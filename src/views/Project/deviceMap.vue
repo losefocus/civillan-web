@@ -46,6 +46,13 @@
   import foamRunning from '@/assets/device/foamRunning.png'
   import devicePolymerization from '@/assets/device/devicePolymerization.png'
   import stateMarker from '@/assets/AMap/marker.png'
+
+  import curingFault from '@/assets/curing/curingFault.png'
+  import curingOff from '@/assets/curing/curingOff.png'
+  import curingRunning from '@/assets/curing/curingRunning.png'
+
+
+
   import newRunning from '@/views/softBase/newRunning.vue'
 
 
@@ -162,25 +169,25 @@ export default {
                   let changeBackground= null;
                   let changeColor=null;
                   if(res.success){
+                    changeBackground = 'runningBackground';
+                    changeColor = 'runningColor';
                     if(lists[i].type=='FPJ'){
                       changeMarker = foamRunning;
-                      changeBackground = 'runningBackground';
-                      changeColor = 'runningColor';
-                    }else {
+                    }else if(lists[i].type=='JBZ'){
                       changeMarker = runningMarker;
-                      changeBackground = 'runningBackground';
-                      changeColor = 'runningColor';
+                    }else if(lists[i].type=='PLYH'){
+                      changeMarker = curingRunning;
                     }
                     _this.loading.close();
                   }else{
+                    changeBackground = 'noBackground';
+                    changeColor = 'noColor';
                     if(lists[i].type=='FPJ'){
                       changeMarker = foamOff;
-                      changeBackground = 'noBackground';
-                      changeColor = 'noColor';
-                    }else {
+                    }else if(lists[i].type=='JBZ'){
                       changeMarker = offLineMarker;
-                      changeBackground = 'noBackground';
-                      changeColor = 'noColor';
+                    }else if(lists[i].type=='PLYH'){
+                      changeMarker = curingOff;
                     }
                     /*changeMarker = offLineMarker;
                     changeBackground = 'noBackground';
@@ -295,6 +302,7 @@ export default {
       this.dialogVisible=true;
       this.deviceName=item.name;
       sessionStorage.setItem('deviceName',item.name);
+      sessionStorage.setItem('deviceKey',item.key);
       this.deviceKey=item.key;
     },
     changeTab(i){ //模态框tab

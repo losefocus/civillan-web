@@ -146,7 +146,7 @@ export default {
         ],
         series : [
           {
-            name:'直接访问',
+            name:'报警数量',
             type:'bar',
             barWidth: '60%',
             data:[10, 52, 200, 334, 390, 330, 220,310,230,280,180,80]
@@ -181,7 +181,7 @@ export default {
           },
           extraCssText: 'box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2)' //添加阴影
         },
-        color: ['#0580f2', '#faa732', '#e1575d'],
+        color: ['#3398DB'],
         grid: {
           left: '5%',
           right: '6%',
@@ -243,8 +243,8 @@ export default {
           }
         },
         series: [{
-          name: '设备故障',
-          type: 'line',
+          name: '数量',
+          type: 'bar',
           symbol: 'circle',
           itemStyle: {
             emphasis: {
@@ -252,20 +252,8 @@ export default {
             }
           },
           symbolSize: [8, 8],
-          data: [1, 0, 1, 4, 10, 8]
-        }, {
-          name: '下钻速度异常',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: [8, 8],
-          data: [2, 1, 3, 3, 5, 6]
-        }, {
-          name: '测量异常',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: [8, 8],
-          data: [4, 4, 4, 10, 15, 3]
-        }]
+          data: [1, 5, 1, 4, 10, 8]
+        }, ]
       },
       pickerOptions2: {
         shortcuts: [{

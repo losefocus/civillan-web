@@ -754,7 +754,7 @@
 </script>
 <style lang="scss" scoped>
   .h-box{
-    height: calc(100% - 100px);
+    //height: calc(100% - 100px);
     background: #f5f5f9;
   }
   .t-rows{
@@ -764,7 +764,7 @@
     justify-content: space-between
   }
   .c-box{
-    margin-top: 15px;
+    //margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
@@ -791,6 +791,7 @@
       width: 675px;
       margin-top: 20px;
       margin-right: 30px;
+      overflow: hidden;
       float: left;
       .c-button{
         float: left;

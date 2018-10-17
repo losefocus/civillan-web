@@ -175,7 +175,7 @@ export default {
     height: 100%;
     position: relative;
     transition: 0.4s all ease;
-    //overflow: auto;
+    overflow: auto;
     #resize{
       transition: 0.4s all ease;
       position: absolute;
@@ -190,6 +190,7 @@ export default {
     width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
     height: 4px;
     background: #ffffff;
+
   }
   .nav-bar::-webkit-scrollbar-button{
     background: rgba(0,0,0,0.2);
@@ -288,6 +289,9 @@ export default {
         }
       }
     };
+    .nav-list:last-child{
+      margin-bottom: 20px!important;
+    }
     .liActive{
       width: 50px;
       height: 50px;

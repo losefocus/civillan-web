@@ -36,9 +36,9 @@
     background: #f5f5f9;
   }
   .a-box{
-    margin-top: 15px;
+    //margin-top: 15px;
     width: 100%;
-    height: 60px;
+    height: 50px;
     li{
       font-size: 14px;
       cursor: pointer;

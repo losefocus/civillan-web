@@ -94,7 +94,7 @@
        <li class="s-progress" :class="{'s-progress1':classChange==1}">
          <div class="p-box" >
            <div class="p-echart" style="">
-             <div class="p-progress" :style="{height:'80%'}">
+             <div class="p-progress" :style="{height:'70%'}">
                <div style="height: 100%;">
                  <div class="progressContainer">
                    <div class="progress" :style="{height:progressHeight}" style="font-size: 12px">
@@ -226,8 +226,10 @@ export default {
   created(){
     this.getConfig();
     //this.getDeviceConfig(this.deviceKey);
-    this.getData(this.deviceKey);
-    this.getAlarms(this.deviceKey);
+    let deviceKey=sessionStorage.getItem('deviceKey');
+    console.log(deviceKey);
+    this.getData(deviceKey);
+    this.getAlarms(deviceKey);
     /*this.timer=setInterval(()=>{
       this.getData(this.deviceKey);
       this.getAlarms(this.deviceKey)
@@ -240,10 +242,10 @@ export default {
     const that = this;
     this.getPileData();
 
-
+    let pile=document.getElementById('pile');
+    let pileHeight,pileWidth;
     this.$nextTick(()=>{
-      let pile=document.getElementById('pile');
-      let pileHeight,pileWidth;
+
       pileHeight = pile.offsetHeight;
       pileWidth = pile.offsetWidth;
       this.$refs.pMap.canvas.width = parseFloat(pileWidth);
@@ -255,15 +257,13 @@ export default {
     });
 
     setTimeout(()=>{
-      this.$refs.pMap.width = parseFloat(pileWidth);
-      this.$refs.pMap.height = parseFloat(pileHeight);
-      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-      if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
-      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
+        this.$refs.pMap.width = parseFloat(pileWidth);
+        this.$refs.pMap.height = parseFloat(pileHeight);
+        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+        if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
+        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
     },100);
-
-
   },
   beforeDestroy(){
     clearInterval(this.timer);
@@ -279,32 +279,10 @@ export default {
       this.deviceIndex=index;
     },
     temp(isDialog,diameter,that,clientWidth) {
-      if(!isDialog){
-        this.classChange=2;
-        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
-        if(clientWidth>1660){
-          diameter=110;
-        }else if(clientWidth<1660&&clientWidth>1500){
-          diameter=120;
-        }else if(clientWidth<1500&&clientWidth>1380){
-          that.$emit('dialogFullscreen','true');
-          that.$emit('zoomShow','false');
-          that.isShow=false;
-          diameter=100;
-        }else if(clientWidth<1380){
-          that.$emit('zoomShow','false');
-          that.$emit('dialogFullscreen','true')
-        }
-      }else{
-        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()};
-        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()};
-        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()};
-        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();};
-      }
-      this.diameter=diameter
+      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
+      if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
     },
     tabChange(x){
       if(x==0){
@@ -336,6 +314,7 @@ export default {
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
+        console.log(res)
         if(res.success){
           this.RT_data=res.result;
           console.log(res);
@@ -360,9 +339,9 @@ export default {
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
         }else {
+          this.progressHeight='100%';
           this.noDevice=false;
         }
-
       }).catch(err=>{
       });
     },
@@ -392,7 +371,7 @@ export default {
     getAlarms(key){
       deviceData.alarms({'key':key}).then(res=>{
         //console.log(res.result[0].message);
-        if(res.success){
+        if(res.result){
           this.isWarming=false;
           this.warmingText=res.result[0].message
         }else{
@@ -883,7 +862,7 @@ export default {
       .s-progress{
         float: left;
         width:23%;
-        height: 100%;
+        height: calc(100% - 20px);
         padding:10px 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
@@ -930,9 +909,10 @@ export default {
           }
           .p-echart{
             width: 100%;
+            overflow: hidden;
             height: calc( 100% - 30px);
             .p-progress{
-              margin-left: 45%;
+              margin:18% 0 0 45%;
             }
           }
         }

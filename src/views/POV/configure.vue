@@ -590,7 +590,7 @@
 
 
   .j-box{
-    margin-top: 15px;
+    //margin-top: 15px;
     height: calc(100% - 15px);
     overflow: hidden;
     .j-table{

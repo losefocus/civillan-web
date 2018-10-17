@@ -16,7 +16,6 @@
   import deviceList from '@/api/project/deviceList'
   import deviceData from '@/api/device/deviceData'
 
-
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
   import AQuery from '@/views/softBase/AQuery'
@@ -112,7 +111,7 @@
       window.onresize = function(){
         let clientWidth=document.body.clientWidth;
         _this.clientWidth=clientWidth;
-        if(clientWidth<1366){
+        if(clientWidth<1266){
           _this.isShow=false;
           _this.changeIcon=true;
           _this.isFullscreen()
@@ -132,7 +131,7 @@
           this.tBody=['RState', 'HPile', 'SAnalysis', 'AQuery',];
           this.currentView='RState'
         }else if(this.deviceType=='PLYH'){
-          this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',]
+          this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='SCuring'
         }
       },
@@ -173,7 +172,7 @@
         this.$emit('changeIcon',this.changeIcon)
       },
       changeScreen(data){
-        console.log(data)
+        console.log(data);
         this.changeIcon=data;
         this.isFullscreen();
       },

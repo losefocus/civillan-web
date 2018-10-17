@@ -3,9 +3,9 @@
     <div class="m-box">
       <!--<div class="m-return" @click="getReturn">返回</div>-->
       <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="机构" prop="name">
+        <!--<el-form-item label="机构" prop="name">
           <el-input v-model="ruleForm2.name"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="电话" prop="phone">
           <el-input v-model="ruleForm2.phone"></el-input>
         </el-form-item>

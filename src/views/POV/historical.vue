@@ -114,11 +114,11 @@
         this.getList(this.post_data)
       },
       visibleChange(val){
-        /*console.log(val)
+        console.log(val)
         if(val){
-          this.post_data.key='';
-          this.getList(this.post_data)
-        }*/
+          this.device_data.name='';
+          this.getDeviceList(this.device_data)
+        }
       },
       handleCommand(command) { //
         this.$message(command);
@@ -210,10 +210,10 @@
     justify-content: space-between
   }
   .c-box{
-    margin-top: 15px;
-    padding: 0 2% 20px;
-    border:1px solid rgba(230,234,238,1);
-    background: #fff;
+    //padding: 0 2% 20px;
+    /*border:1px solid rgba(230,234,238,1);*/
+    /*background: #fff;*/
+    margin-bottom: 20px;
     overflow: hidden;
 
     .c-handle{
@@ -235,8 +235,6 @@
     }
     .c-query{
       width: 675px;
-      margin-top: 20px;
-      margin-right: 30px;
       float: left;
       .c-button{
         float: left;

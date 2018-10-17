@@ -552,7 +552,7 @@
 </script>
 <style lang="scss" scoped>
   .h-box{
-    height: auto;
+    height: 100%;
     background: #f5f5f9;
   }
   .t-rows{

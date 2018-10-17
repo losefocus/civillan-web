@@ -14,6 +14,7 @@
       </div>
     </div>
     <waterfall
+      style="margin-left: -10px;width: calc( 100% + 20px)"
       v-else="noData"
       :line-gap="320"
       :min-line-gap="280"
@@ -143,10 +144,6 @@
         this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
       }
 
-      this.loading=this.$loading({
-        fullscreen: true,
-        background: 'rgba(0, 0, 0, 0.2)'
-      });
       let id=this.$cookies.get('projectId');
       let tenant=this.$cookies.get('tenant');
       this.getGroup(id,tenant)
@@ -154,6 +151,10 @@
 
     methods: {
       getGroup(id,tenant){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
           if(res.success){
             this.navList=res.result.items;
@@ -183,6 +184,7 @@
         this.deviceType=item.type;
         this.dialogVisible=true;
         this.deviceName=item.name;
+        console.log(item.key)
         sessionStorage.setItem('deviceType',item.type);
         sessionStorage.setItem('deviceKey',item.key);
         this.deviceKey=item.key;
@@ -214,6 +216,10 @@
         //this.isFullscreen();
       },
       getList(group_id){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         deviceList.list({'group_id':group_id}).then(res=>{
           if(res.success){
             console.log(res);
@@ -260,9 +266,10 @@
     background: #f5f5f9;
   }
   .a-box{
-    width: 100%;
-    padding-top: 15px;
-    height: 60px;
+    width: calc(100% - 20px);
+    padding: 15px 0 0 20px;
+    height: 50px;
+    background: #ffffff;
     li{
       font-size: 14px;
       cursor: pointer;
@@ -320,10 +327,10 @@
   }
   .item {
     position: absolute;
-    top: 0;
-    left: 5px;
-    right: 5px;
-    bottom: 30px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
     font-size: 0.9em;
     box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
     cursor: pointer;

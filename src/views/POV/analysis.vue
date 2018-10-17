@@ -388,6 +388,13 @@
     height: calc(100% - 100px);
     background: #f5f5f9;
   }
+  @media screen and (max-width: 1467px){
+    .n-box{
+      padding: 20px;
+      height: auto;
+      background: #f5f5f9;
+    }
+  }
   .el-tabs{
     border-bottom: 1px solid red;
   }
@@ -400,7 +407,7 @@
     padding: 10px 11px;
   }
   .c-box{
-    margin-top: 15px;
+    //margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
@@ -468,7 +475,7 @@
   .e-box{
     width: 100%;
     height: 300px;
-    margin: 30px 0;
+    margin: 20px 0;
     display: flex;
     justify-content:space-between;
     li{

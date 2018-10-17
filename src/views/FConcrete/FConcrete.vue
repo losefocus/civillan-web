@@ -534,8 +534,9 @@
     created(){
       this.getConfig();
       //this.getDeviceConfig(this.deviceKey);
-      this.getData(this.deviceKey);
-      this.getAlarms(this.deviceKey);
+      let deviceKey=sessionStorage.getItem('deviceKey');
+      this.getData(deviceKey);
+      this.getAlarms(deviceKey);
       /*this.timer=setInterval(()=>{
         this.getData(this.deviceKey);
         this.getAlarms(this.deviceKey)
@@ -551,8 +552,8 @@
       /*this.energySphere();*/
 
       let _this=this;
-      window.onresize = function(){
-        /*_this.$nextTick(()=>{
+      /*window.onresize = function(){
+        /!*_this.$nextTick(()=>{
           let pile=document.getElementById('pile');
           if(!pile){
             //console.log('dom销毁')
@@ -580,8 +581,8 @@
         if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
         if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
         let clientWidth=document.body.clientWidth;
-        that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)*/
-      }
+        that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)*!/
+      }*/
     },
     beforeDestroy(){
       clearInterval(this.timer);
@@ -591,12 +592,12 @@
     methods:{
       init(){
         let clientWidth=document.body.clientWidth;
-        this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
+        /*this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)*/
       },
       deviceChange(index){
         this.deviceIndex=index;
       },
-      temp(isDialog,diameter,that,clientWidth) {
+      /*temp(isDialog,diameter,that,clientWidth) {
         if(!isDialog){
           this.classChange=2;
           if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
@@ -651,7 +652,7 @@
           }
         }
         this.diameter=diameter
-      },
+      },*/
       tabChange(x){
         if(x==0){
           this.isTab=false;
