@@ -231,6 +231,18 @@ export default {
       contact.list().then(res=>{
         //console.log(this.contactSelect);
         this.contactList=res.result.items;
+        let array = [];
+        this.contactList.forEach(item=>{
+          this.contactSelect.forEach(list=>{
+            if(item.type==list.value){
+              item.label=list.label
+            }
+          });
+          item.flag=false;
+          let obj = Object.assign({},item);
+          array.push(obj)
+        });
+        this.contactList = array
       })
     },
     handleCommand(command) {
