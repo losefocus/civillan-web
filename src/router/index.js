@@ -14,6 +14,11 @@ const vRouter = new Router({
       name: '在线一览',
       component: resolve => require(['@/views/ProjectEntrance'],resolve),
       meta: {requireAuth: true},
+    },{
+      path: '/test',
+      name: '测试',
+      component: resolve => require(['@/views/POV/project_old.vue'],resolve),
+      meta: {requireAuth: true},
     },
     {
       path: '/login',
@@ -72,12 +77,14 @@ const vRouter = new Router({
               meta:{requireAuth: true}
             }
           ]
-        },{
+        },
+        {
           path: '/configure',
           component: resolve => require(['@/views/POV/configure'],resolve),
           name:'作业配置',
           meta: { requireAuth: true }
-        },{
+        },
+        {
           path: '/analysis',
           component: resolve => require(['@/views/POV/analysis'],resolve),
           name:'统计分析',
@@ -88,7 +95,8 @@ const vRouter = new Router({
           component: resolve => require(['@/views/POV/historical'],resolve),
           name:'数据报表',
           meta: { requireAuth: true }
-        },{
+        },
+        {
           path: '/alarm',
           component: resolve => require(['@/views/POV/alarm'],resolve),
           name:'故障报警',
@@ -114,12 +122,14 @@ const vRouter = new Router({
               meta:{requireAuth: true}
             }
           ]
-        },{
+        },
+        {
           path: '/document',
           component: resolve => require(['@/views/POV/document'],resolve),
           name:'文档资料',
           meta: { requireAuth: true }
-        },{
+        },
+        {
           path: '/operational',
           component: resolve => require(['@/views/POV/operational'],resolve),
           name:'作业成效',
@@ -139,12 +149,14 @@ const vRouter = new Router({
               meta:{requireAuth: true}
             }
           ]
-        },{
+        },
+        {
           path: '/quality',
           component: resolve => require(['@/views/POV/quality'],resolve),
           name:'质量评估',
           meta: { requireAuth: true }
-        },{
+        },
+        {
           path: '/video',
           component: resolve => require(['@/views/POV/video'],resolve),
           name:'现场影像',

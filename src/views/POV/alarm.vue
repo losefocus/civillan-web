@@ -34,10 +34,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .n-box{
+    padding: 20px;
+    height: auto;
+    background: #f5f5f9;
+
+  }
   .a-box{
     margin-top: 15px;
-    width: 100%;
-    height: 60px;
+    width: calc(100% - 40px);
+    height: 40px;
+    padding: 20px 20px 0;
     li{
       font-size: 14px;
       cursor: pointer;

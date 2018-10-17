@@ -1,12 +1,12 @@
 <template>
-  <div style="width: 100%;height: 100%">
+  <div class="n-box">
     <ul class="a-box">
       <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
         {{list.name}}
       </li>
     </ul>
     <div class="noData" v-if="noData">
-      <div>
+      <div style="display: table-cell;vertical-align: middle;">
         <div class="iconfont icon-zanwushuju2"></div>
         <div class="d-title">
           暂无记录
@@ -14,6 +14,7 @@
       </div>
     </div>
     <waterfall
+      style="margin-left: -10px;width: calc( 100% + 20px)"
       v-else="noData"
       :line-gap="320"
       :min-line-gap="280"
@@ -65,14 +66,9 @@
       :fullscreen="dialogFullscreen"
       top="7vh"
       style="min-width: 1024px;"
+      @close="closeDialog"
     >
-      <ul class="t-header">
-        <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
-        <div class="t-handle" v-show="isShow">
-          <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
-        </div>
-      </ul>
-      <r-state :deviceName="deviceName" v-if="dialogVisible" :is="currentView" :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
+      <new-running @changeIcon="isFullscreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType"></new-running>
     </el-dialog>
   </div>
 </template>
@@ -86,9 +82,11 @@
 
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
+  import FConcrete from '@/views/FConcrete/FConcrete'
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
+  import newRunning from '@/views/softBase/newRunning.vue'
 
   import Bus from '@/common/eventBus'
   import Waterfall from 'vue-waterfall/lib/waterfall'
@@ -103,6 +101,8 @@
       AQuery,
       HData,
       NRecord,
+      FConcrete,
+      newRunning
     },
     data () {
       return {
@@ -124,20 +124,7 @@
         group_id:0,
         deviceKey:'',
         deviceName:'',
-        tHeader:[
-          {name:'运行状况'},
-          {name:'历史数据'},
-          {name:'统计分析'},
-          //{name:'通知记录'},
-          {name:'故障报警'},
-        ],
-        tBody:[
-          'RState',
-          'HData',
-          'SAnalysis',
-          //'NRecord',
-          'AQuery',
-        ],
+        deviceType:'',
         tIndex:0,
         currentView:'RState',
         isBusy: false,
@@ -147,7 +134,7 @@
           {id:1,name:'运行中'},
           {id:2,name:'已断线'},
           {id:3,name:'已离线'},
-        ]
+        ],
       };
     },
 
@@ -157,17 +144,17 @@
         this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
       }
 
-
-      this.loading=this.$loading({
-        fullscreen: true,
-        background: 'rgba(0, 0, 0, 0.2)'
-      });
       let id=this.$cookies.get('projectId');
       let tenant=this.$cookies.get('tenant');
       this.getGroup(id,tenant)
     },
+
     methods: {
       getGroup(id,tenant){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
           if(res.success){
             this.navList=res.result.items;
@@ -193,40 +180,49 @@
         this.dialogVisible = false;
       },
       getDetails(item,index){ //获取详情
+        //console.log(item.type);
+        this.deviceType=item.type;
         this.dialogVisible=true;
         this.deviceName=item.name;
-        sessionStorage.setItem('deviceName',item.name);
+        console.log(item.key)
+        sessionStorage.setItem('deviceType',item.type);
+        sessionStorage.setItem('deviceKey',item.key);
         this.deviceKey=item.key;
       },
       changeTab(i){ //模态框tab
         this.tIndex=i;
         this.currentView=this.tBody[i]
       },
-      isFullscreen(){ //是否打开模态框
-        if(this.changeIcon){
-
+      isFullscreen(val){ //是否打开模态框
+        //console.log(val);
+        if(!val){
           this.dialogWidth='100%';
           this.dialogHeight={
             height:'calc(100% - 65px)'
           };
-          this.dialogFullscreen=true;
           this.changeIcon=!this.changeIcon;
+          this.dialogFullscreen=true;
         }else{
           this.dialogWidth='70%';
           this.dialogHeight={
             height:'700px'
           };
-          this.dialogFullscreen=false;
           this.changeIcon=!this.changeIcon
+          this.dialogFullscreen=false;
         }
       },
       changeScreen(data){
-        this.changeIcon=data;
-        this.isFullscreen();
+        //this.changeIcon=data;
+        //this.isFullscreen();
       },
       getList(group_id){
+        this.loading=this.$loading({
+          fullscreen: true,
+          background: 'rgba(0, 0, 0, 0.2)'
+        });
         deviceList.list({'group_id':group_id}).then(res=>{
           if(res.success){
+            console.log(res);
             if(res.result.items.length>0){
               this.noData=false;
               res.result.items.forEach(item=>{
@@ -254,15 +250,26 @@
             this.loading.close();
           }
         })
+      },
+      closeDialog(){
+        //console.log('关闭弹窗');
+        this.tIndex=0
       }
     }
   }
 </script>
 <style scoped lang="scss">
+  .n-box{
+    width: calc(100% - 40px);
+    height: auto;
+    padding: 20px;
+    background: #f5f5f9;
+  }
   .a-box{
-    width: 100%;
-    padding-top: 15px;
-    height: 60px;
+    width: calc(100% - 20px);
+    padding: 15px 0 0 20px;
+    height: 50px;
+    background: #ffffff;
     li{
       font-size: 14px;
       cursor: pointer;
@@ -301,9 +308,9 @@
     height: calc(100% - 95px);
     font-size: 30px;
     font-weight: bold;
-    display: flex;
-    align-items:center;/*垂直居中*/
-    justify-content: center;/*水平居中*/
+    margin-top: 10%;
+    display: table;
+    text-align: center;
     .icon-zanwushuju2{
       font-size: 80px;
       color: #cccccc;
@@ -320,10 +327,10 @@
   }
   .item {
     position: absolute;
-    top: 0;
-    left: 5px;
-    right: 5px;
-    bottom: 30px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
     font-size: 0.9em;
     box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
     cursor: pointer;
@@ -363,9 +370,6 @@
     .r-state2{background: #24BCF7;}
     .r-state3{background: #808080;}
     .r-state4{background: #DADADA;}
-    /*.r-state1{background: url(../../assets/device/running.png) no-repeat;background-size: 100% 100%;}
-    .r-state2{background: url(../../assets/device/break.png) no-repeat;background-size: 100% 100%;}
-    .r-state3{background: url(../../assets/device/fault.png) no-repeat;background-size: 100% 100%;}*/
 
     .d-name{
       color: #333333;
@@ -412,41 +416,6 @@
     }
   }
 
-  .t-header{
-    height: 45px;
-    background: #ffffff;
-    li{
-      cursor: pointer;
-      float: left;
-      width:160px;
-      height:45px;
-      text-align: center;
-      line-height: 45px;
-      font-size:14px;
-      color:rgba(153,153,153,1);
-    }
-    .t-handle{
-      float: right;
-      width: 60px;
-      height: 45px;
-      line-height: 45px;
-      margin-right: 30px;
-      display: flex;
-      justify-content: space-around;
-      div{
-        cursor: pointer;
-      }
-    }
-    .active {
-      background-color: #F85959;
-      color: #ffffff;
-    }
-  }
-  .t-Body{
-    overflow: auto;
-    padding: 10px;
-    background: #f5f5f9;
-  }
 
   .wf-transition {
     transition: opacity .3s ease;

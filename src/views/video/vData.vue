@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 20px;width: 100%;height: 100%;">
+  <div style="width: 100%;height: 100%;">
     <div class="noData" v-if="noData">
       <div>
         <div class="iconfont icon-zanwushuju2"></div>
@@ -9,6 +9,7 @@
       </div>
     </div>
     <waterfall
+      style="margin-left: -10px;width: calc( 100% + 20px)"
       v-else="noData"
       :line-gap="400"
       :min-line-gap="350"
@@ -228,10 +229,10 @@
   .item {
     //border: 20px solid #ffffff;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 20px;
-    bottom: 20px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
     font-size: 0.9em;
     box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
     cursor: pointer;
@@ -250,7 +251,7 @@
   }
   .v-box{
     background: #ffffff;
-    padding: 20px 20px 0 20px;
+    padding: 10px;
     //border: 20px solid #ffffff;
     /*li{
       //width: 325px;
@@ -267,7 +268,7 @@
       background: #ffffff;
       width: 100%;
       height: 10%;
-      margin-top: 5%;
+      margin-top: 7%;
       text-align: center;
       overflow: hidden;
       .v-title{

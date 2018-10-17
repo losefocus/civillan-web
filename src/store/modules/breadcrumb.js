@@ -1,4 +1,4 @@
-const state = {
+/*const state = {
   breadListState:[
     {name:'在线一览',path:'/'}
   ]
@@ -22,4 +22,4 @@ export default {
   state,
   getters,
   mutations
-}
+}*/

@@ -64,9 +64,11 @@ button, input, select, textarea { font-size:100%; }
 .info-box{
   /*display: flex;
   justify-content: space-between;*/
+
   width: 100%;
 }
 .info-title{
+  float: left;
   width: 230px;
   height: 36px;
   font-size:16px;
@@ -136,17 +138,17 @@ button, input, select, textarea { font-size:100%; }
 .info-content{
   width: calc(100% - 20px);
   padding: 0 10px;
-  display: -webkit-box;
-  justify-content: space-between;
+  overflow: hidden;
 }
 .info-title1{
+  float: left;
   font-size: 12px;
   width: 80%;
   padding: 2px 0 4px;
 }
 .runningColor{
-  display: inline-block;
-  vertical-align: bottom;
+  float: right;
+  margin-top: 7px;
   background-color: #00ff00;
   width: 6px;
   height: 6px;
@@ -156,9 +158,9 @@ button, input, select, textarea { font-size:100%; }
   border-radius: 50%;
 }
 .noColor{
+  float: right;
+  margin-top: 7px;
   color:#A8A8AB;
-  display: inline-block;
-  vertical-align: bottom;
   background-color: #6f6f6f;
   width: 6px;
   height: 6px;
@@ -350,6 +352,9 @@ body .el-table th.gutter {
 /*兼容ie*/
 .el-input__inner.el-range-editor--mini{
   line-height: 20px;
+}
+.materielTable{
+  height: 80px;
 }
 
 

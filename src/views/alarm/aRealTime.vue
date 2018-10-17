@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="n-box" :style="newStyle">
   <el-table
     :data="tableData"
     style="width: 100%">
@@ -96,6 +96,7 @@ export default {
       }]
     }
   },
+  props:['newStyle'],
   methods: {
     handleExport(command){
       if(command=='1'){
@@ -264,6 +265,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .n-box{
+    padding: 20px;
+  }
   .m-pagination{
     padding: 20px;
     text-align: center;

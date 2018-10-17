@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="n-box" :style="newStyle">
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
@@ -249,10 +249,11 @@
           name: ''
         },
         deviceTotal: 0,
-        deviceName: ''
+        deviceName: '',
+        newData:null
       }
     },
-    props:['isShow'],
+    props:['isShow','newStyle'],
     created:function(){
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
@@ -261,6 +262,78 @@
       })
     },
     methods: {
+      handleExport(command){
+        if(command=='1'){
+          this.importExcel();
+        }else if(command=='2'){
+          this.importExcelAll();
+        }
+      },
+      //excel导出
+      importExcel() {
+        require.ensure([], () => {
+          if(this.multipleSelection.length!==0){
+            for(name in this.newData){
+              if(this.newData[name].checked==true){
+                this.tableHeader.push(this.newData[name].title);
+                this.tableName.push(name)
+              }
+            }
+            const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
+            let tHeader = this.tableHeader; //将对应的属性名转换成中文
+            let filterVal = this.tableName; //table表格中对应的属性名
+            let list=[];
+            let obj = {};
+            this.multipleSelection.forEach(e=>{
+              for(let i=0;i<filterVal.length;i++){
+                obj[filterVal[i]] = e[filterVal[i]]
+              }
+              list.push(obj);
+            });
+            const data = this.formatJson(filterVal, list);
+            export_json_to_excel(tHeader, data, '数据报表');
+
+            //引用赋值  用完清空
+            this.tableHeader=[];
+            this.tableName=[];
+            list=[];
+          }else{
+            this.$message.error('请先选择需要导出的项目！')
+          }
+        })
+      },
+      importExcelAll(){
+        history.list({page_index:1,page_size:100,key:''}).then(res=>{
+          if(res.success){
+            for(name in this.newData){
+              this.tableHeader.push(this.newData[name].title);
+              this.tableName.push(name)
+            }
+            const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
+            let tHeader = this.tableHeader; //将对应的属性名转换成中文
+            let filterVal = this.tableName; //table表格中对应的属性名
+            let list=[];
+            let obj = {};
+            res.result.items.forEach(e=>{
+              for(let i=0;i<filterVal.length;i++){
+                obj[filterVal[i]] = e[filterVal[i]]
+              }
+              list.push(obj);
+            });
+            const data = this.formatJson(filterVal, list);
+            //console.log(list);
+            export_json_to_excel(tHeader, data, '数据报表');
+
+            //引用赋值  用完清空
+            this.tableHeader=[];
+            this.tableName=[];
+            list=[];
+          }else {
+            _this.$message.error(res.message);
+          }
+        }).catch(err => {
+        });
+      },
       handleSizeChange: function (size) {
         this.pagesize = size;
       },
@@ -297,11 +370,31 @@
           this.loading.close();
         });
       },
+      query(){
+        this.post_data.key=this.deviceKey;
+        this.post_data.page_index=1;
+        this.getList(this.post_data)
+      },
+      Refresh(){
+        this.getList(this.post_data)
+      }
     }
   }
 </script>
 <style scoped lang="scss">
   // ele-ui部分
+  .n-box{
+    padding: 20px;
+    height: calc(100% - 100px);
+    background: #f5f5f9;
+  }
+  @media screen and (max-width: 1467px){
+    .n-box{
+      padding: 20px;
+      height: auto;
+      background: #f5f5f9;
+    }
+  }
   .el-tabs{
     border-bottom: 1px solid red;
   }
@@ -314,7 +407,7 @@
     padding: 10px 11px;
   }
   .c-box{
-    margin-top: 15px;
+    //margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
@@ -382,7 +475,7 @@
   .e-box{
     width: 100%;
     height: 300px;
-    margin: 30px 0;
+    margin: 20px 0;
     display: flex;
     justify-content:space-between;
     li{

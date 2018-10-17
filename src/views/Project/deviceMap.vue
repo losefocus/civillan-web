@@ -1,5 +1,5 @@
 <template>
-<div style="width: 100%;height:100%;">
+<div class="d-box" :style="newStyle">
   <div class="m-screen">
     <div class="s-box" :style="searchStyle">
       <input v-model="searchKey" placeholder="设备名称" id="deviceSearch" name="deviceSearch" type="text">
@@ -8,12 +8,12 @@
       </label>
     </div>
     <div class="s-box s-box1" :style="typeStyle">
-      <el-select size="small" v-model="productType" placeholder="按设备类型过滤" style="width: 150px">
+      <el-select size="small" v-model="productType" placeholder="按设备类型过滤" style="width: 150px" @change="typeSelect">
         <el-option
           v-for="item in productLists"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
           :disabled="item.disabled">
         </el-option>
       </el-select>
@@ -28,18 +28,10 @@
     :width="dialogWidth"
     :fullscreen="dialogFullscreen"
     top="7vh"
-    @open="isClose=false"
-    @close="isClose=true"
-    :isClose="isClose"
+    @close="tIndex=0"
     style="min-width: 1024px;"
   >
-    <ul class="t-header">
-      <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
-      <div class="t-handle" v-show="isShow">
-        <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
-      </div>
-    </ul>
-    <r-state :deviceName="deviceName"  v-if="dialogVisible" :is="currentView" keep-alive :device-key="deviceKey"  :dialogFullscreen="dialogFullscreen" class="t-Body" :style="dialogHeight" @dialogFullscreen="changeScreen"></r-state>
+    <new-running @changeIcon="isFullscreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType"></new-running>
   </el-dialog>
 </div>
 </template>
@@ -48,25 +40,41 @@
   import deviceList from '@/api/project/deviceList'
   import offLineMarker from '@/assets/device/m-offLine.png'
   import runningMarker from '@/assets/device/m-running.png'
+
+  import foamAlarm from '@/assets/device/foamAlarm.png'
+  import foamOff from '@/assets/device/foamOff.png'
+  import foamRunning from '@/assets/device/foamRunning.png'
   import devicePolymerization from '@/assets/device/devicePolymerization.png'
   import stateMarker from '@/assets/AMap/marker.png'
+
+  import curingFault from '@/assets/curing/curingFault.png'
+  import curingOff from '@/assets/curing/curingOff.png'
+  import curingRunning from '@/assets/curing/curingRunning.png'
+
+
+
+  import newRunning from '@/views/softBase/newRunning.vue'
 
 
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
+  import FConcrete from '@/views/FConcrete/FConcrete'
   import AQuery from '@/views/softBase/AQuery'
   import HData from '@/views/softBase/HData'
   import NRecord from '@/views/softBase/NRecord'
 
   import deviceData from '@/api/device/deviceData'
+  import categories from '@/api/configure/categories'
 export default {
   name: "deviceMap",
   components:{
     SAnalysis,
     RState,
+    FConcrete,
     AQuery,
     HData,
     NRecord,
+    newRunning,
   },
   data(){
     return{
@@ -90,6 +98,7 @@ export default {
       group_id:0,
       deviceKey:'',
       deviceName:'',
+      deviceType:'',
       tHeader:[
         {name:'运行状况'},
         {name:'历史数据'},
@@ -110,19 +119,25 @@ export default {
       post_data:{
         page_size:999,
       },
+      allListQuery:{ //类型select列表请求参数
+        page_index: 1,
+        page_size: 999
+      },
     }
   },
   props:[
     'searchStyle',
     'typeStyle',
+    'newStyle'
   ],
   mounted: function () {
     let project_id=this.$cookies.get('projectId');
     this.post_data.project_id=project_id;
-    this.init()
+    this.init(this.post_data);
+    this.getCategoryList();
   },
   methods:{
-    init(){
+    init(post_data){
       let _this=this;
       this.loading=this.$loading({
         fullscreen: true,
@@ -135,9 +150,10 @@ export default {
       //获取设备列表
       let markers = [];
       let marker;
-      deviceList.list(this.post_data).then(res=>{
+      deviceList.list(post_data).then(res=>{
         //接口成功
         if(res.success){
+          console.log(res);
           if(res.result.total==0){
             _this.$message.error('未搜索到任何设备！');
             _this.loading.close();
@@ -153,15 +169,30 @@ export default {
                   let changeBackground= null;
                   let changeColor=null;
                   if(res.success){
-                    changeMarker = runningMarker;
                     changeBackground = 'runningBackground';
                     changeColor = 'runningColor';
+                    if(lists[i].type=='FPJ'){
+                      changeMarker = foamRunning;
+                    }else if(lists[i].type=='JBZ'){
+                      changeMarker = runningMarker;
+                    }else if(lists[i].type=='PLYH'){
+                      changeMarker = curingRunning;
+                    }
                     _this.loading.close();
                   }else{
-                    changeMarker = offLineMarker;
                     changeBackground = 'noBackground';
                     changeColor = 'noColor';
-                    //_this.$message.error(res.message);
+                    if(lists[i].type=='FPJ'){
+                      changeMarker = foamOff;
+                    }else if(lists[i].type=='JBZ'){
+                      changeMarker = offLineMarker;
+                    }else if(lists[i].type=='PLYH'){
+                      changeMarker = curingOff;
+                    }
+                    /*changeMarker = offLineMarker;
+                    changeBackground = 'noBackground';
+                    changeColor = 'noColor';
+                    //_this.$message.error(res.message);*/
                     _this.loading.close();
                   }
 
@@ -181,7 +212,7 @@ export default {
                       '<div class="info-content">' +
                       '<div class="info-title1">' +items.name+
                       '</div>'+
-                      '<span class='+changeColor+'></span>'+
+                      '<div class='+changeColor+'></div>'+
                       '</div>'+
                       '</div>';
                     AMapUI.loadUI(['overlay/SimpleInfoWindow'], function(SimpleInfoWindow) {
@@ -192,6 +223,14 @@ export default {
                       });
 
                       infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
+                        _this.deviceType=lists[i].type;
+                        if(lists[i].type=='FPJ'){
+                          _this.tBody[0]='FConcrete';
+                          _this.currentView='FConcrete'
+                        }else {
+                          _this.tBody[0]='RState';
+                          _this.currentView='RState'
+                        }
                         //阻止冒泡
                         event.stopPropagation();
                         _this.dialogVisible=true;
@@ -209,7 +248,7 @@ export default {
                   });
                   // 设置label标签
                   marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-                    offset: new AMap.Pixel(-140, -25),//修改label相对于maker的位置
+                    offset: new AMap.Pixel(-135, -25),//修改label相对于maker的位置
                     content:"<div class='deviceLabelBox'>"+"<span class="+changeBackground+">"+lists[i].name+"</span>"+"</div>"
                   });
                   map.add(marker);
@@ -233,42 +272,59 @@ export default {
         _this.loading.close();
       });
     },
+    getCategoryList(){
+      this.allListQuery.tenant=this.$cookies.get('tenant');
+      categories.list(this.allListQuery).then(res => {
+        console.log(res);
+        let list = res.result.items;
+        this.productLists=res.result.items;
+        this.typeOptions = list.map(item => {
+          return { value: item.id, label: item.name };
+        });
+      })
+    },
     radioEvent(){
       this.dialogVisible = false;
     },
     search(){
       this.post_data.name=this.searchKey;
-      this.init()
+      this.init(this.post_data)
     },
     getDetails(item,index){ //获取详情
+      console.log(item);
+      if(item.type=='dzj'){
+        this.tBody[0]='FConcrete';
+        this.currentView='FConcrete'
+      }else {
+        this.tBody[0]='RState';
+        this.currentView='RState'
+      }
       this.dialogVisible=true;
       this.deviceName=item.name;
       sessionStorage.setItem('deviceName',item.name);
+      sessionStorage.setItem('deviceKey',item.key);
       this.deviceKey=item.key;
     },
     changeTab(i){ //模态框tab
       this.tIndex=i;
       this.currentView=this.tBody[i]
     },
-    isFullscreen(){ //是否打开模态框
-      let clientWidth=document.body.clientWidth;
-      if(this.changeIcon){
+    isFullscreen(val){ //是否打开模态框
+      //console.log(val);
+      if(!val){
         this.dialogWidth='100%';
         this.dialogHeight={
           height:'calc(100% - 65px)'
         };
-        this.dialogFullscreen=true;
         this.changeIcon=!this.changeIcon;
-        if(clientWidth<1500){
-          this.isShow=false
-        }
+        this.dialogFullscreen=true;
       }else{
-        this.dialogWidth='75%';
+        this.dialogWidth='70%';
         this.dialogHeight={
           height:'700px'
         };
-        this.dialogFullscreen=false;
         this.changeIcon=!this.changeIcon
+        this.dialogFullscreen=false;
       }
     },
     dialogClose(){
@@ -281,14 +337,24 @@ export default {
     close(){
 
     },
+    //类型筛选
+    typeSelect(val){
+      console.log(val);
+      this.post_data.type=val;
+      this.init(this.post_data)
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
+  .d-box{
+    width: calc(100% - 40px);
+    height:calc(100% - 20px);
+    padding: 20px;
+    background: #f5f5f9;
+  }
   .m-screen{
-    display: flex;
-    justify-content: space-around;
     top: 15px;
     left: 15px;
     position: relative;

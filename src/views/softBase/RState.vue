@@ -12,36 +12,32 @@
        <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
          <div class="i-id">
            <div class="d-model">{{deviceName[deviceIndex-1].name}}</div>
-           <div class="d-kind">
+           <!--<div class="d-kind">
              <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
-           </div>
+           </div>-->
 
          </div>
-         <div class="">
            <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
-           <div class="i-progress">
-             <div class="i-progressName" style="width: 80px">成桩进度：</div>
-             <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
-           </div>
+         <div class="i-progress">
+           <div class="i-progressName" style="width: 80px">成桩进度：</div>
+           <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
+           <div class="clear"></div>
          </div>
          <div class="i-box">
            <div class="i-body">
-             <div class="i-name">双头搅拌设备</div>
-             <div class="i-company">宏远建设记录仪一号</div>
+             <div class="i-name">喷凝系统</div>
+             <div class="i-state"><span style="vertical-align: center">在线状态</span><div class="led-green" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
            </div>
-           <div>
-             <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
-             <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
+           <div class="i-body">
+             <div class="i-company">宏远建设记录仪一号</div>
+             <div class="i-state"><span>养护状态</span><div class="led-green" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
+         <div class="clear"></div>
+         <div class="clear"></div>
          <div class="h-box">
-           <div class="i-body">
-             <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
-             <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
-           </div>
-           <div class="b-angle">
-             <div class="a-spot"></div>
-           </div>
+           <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
+           <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
          </div>
 
          <div class="i-normal" v-if="isWarming">
@@ -97,8 +93,8 @@
      <ul class="s-box2">
        <li class="s-progress" :class="{'s-progress1':classChange==1}">
          <div class="p-box" >
-           <div class="p-echart" style="display:flex;justify-content:center;align-items:center;">
-             <div class="p-progress" :style="{height:'80%'}">
+           <div class="p-echart" style="">
+             <div class="p-progress" :style="{height:'70%'}">
                <div style="height: 100%;">
                  <div class="progressContainer">
                    <div class="progress" :style="{height:progressHeight}" style="font-size: 12px">
@@ -133,13 +129,11 @@
            <!--<div id="myChart2" style="width: 100%;height: 100%"></div>-->
          </div>
        </li>
-       <li style="width: 0.4%"></li>
        <li class="s-chart1">
          <p-operation :dataInfo="RT_data"></p-operation>
        </li>
      </ul>
    </div>
-
  </div>
 </template>
 
@@ -222,7 +216,7 @@ export default {
       isTab:false,//设备型号切换
     }
   },
-  props:['dialogFullscreen','deviceKey','isClose'],
+  props:['dialogFullscreen','deviceKey','isClose','clientWidth'],
   filters: {
     formatDate(time) {
       let date = new Date(time);
@@ -232,12 +226,14 @@ export default {
   created(){
     this.getConfig();
     //this.getDeviceConfig(this.deviceKey);
-    this.getData(this.deviceKey);
-    this.getAlarms(this.deviceKey);
-    this.timer=setInterval(()=>{
+    let deviceKey=sessionStorage.getItem('deviceKey');
+    console.log(deviceKey);
+    this.getData(deviceKey);
+    this.getAlarms(deviceKey);
+    /*this.timer=setInterval(()=>{
       this.getData(this.deviceKey);
       this.getAlarms(this.deviceKey)
-    },5000);
+    },5000);*/
 
   },
   mounted(){
@@ -246,63 +242,28 @@ export default {
     const that = this;
     this.getPileData();
 
-
+    let pile=document.getElementById('pile');
+    let pileHeight,pileWidth;
     this.$nextTick(()=>{
-      let pile=document.getElementById('pile');
-      let pileHeight,pileWidth
-      if(pile.currentStyle){
-        pileHeight = pile.currentStyle.height
-        pileWidth = pile.currentStyle.width
-      }else {
-        pileHeight = window.getComputedStyle(pile).height;
-        pileWidth = window.getComputedStyle(pile).width;
-      }
+
+      pileHeight = pile.offsetHeight;
+      pileWidth = pile.offsetWidth;
       this.$refs.pMap.canvas.width = parseFloat(pileWidth);
       this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+      console.log(pileHeight,pileWidth);
 
       this.$refs.pMap.width = parseFloat(pileWidth);
       this.$refs.pMap.height = parseFloat(pileHeight);
     });
 
     setTimeout(()=>{
-      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-      if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
-      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
+        this.$refs.pMap.width = parseFloat(pileWidth);
+        this.$refs.pMap.height = parseFloat(pileHeight);
+        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+        if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
+        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
     },100);
-
-    let _this=this;
-    window.onresize = function(){
-      _this.$nextTick(()=>{
-        let pile=document.getElementById('pile');
-        if(!pile){
-          //console.log('dom销毁')
-        }else{
-          let pileHeight,pileWidth
-          if(pile.currentStyle){
-            pileHeight = pile.currentStyle.height
-            pileWidth = pile.currentStyle.width
-          }else {
-            pileHeight = window.getComputedStyle(pile).height;
-            pileWidth = window.getComputedStyle(pile).width;
-          }
-          _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-          _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-          _this.$refs.pMap.width = parseFloat(pileWidth);
-          _this.$refs.pMap.height = parseFloat(pileHeight);
-          _this.$refs.pMap.init();
-        }
-
-      });
-
-
-      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-      if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
-      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-      let clientWidth=document.body.clientWidth;
-      that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)
-    }
   },
   beforeDestroy(){
     clearInterval(this.timer);
@@ -318,60 +279,10 @@ export default {
       this.deviceIndex=index;
     },
     temp(isDialog,diameter,that,clientWidth) {
-      if(!isDialog){
-        this.classChange=2;
-        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
-        if(clientWidth>1660){
-          diameter=110;
-        }else if(clientWidth<1660&&clientWidth>1500){
-          diameter=120;
-        }else if(clientWidth<1500&&clientWidth>1380){
-          that.$emit('dialogFullscreen','true');
-          that.$emit('zoomShow','false');
-          that.isShow=false;
-          diameter=100;
-        }else if(clientWidth<1380){
-          that.$emit('zoomShow','false');
-          that.$emit('dialogFullscreen','true')
-        }
-      }else{
-        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()};
-        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()};
-        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()};
-        if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();};
-        if(clientWidth>1800){
-          this.classChange=1;
-          diameter=170;
-        }else if(clientWidth<1800&&clientWidth>1700){
-          this.classChange=1;
-          diameter=160;
-        }else if(clientWidth<1700&&clientWidth>1600){
-          this.classChange=1;
-          diameter=140;
-        }else if(clientWidth<1600&&clientWidth>1510){
-          this.classChange=1;
-          diameter=120;
-        }else if(clientWidth<1510&&clientWidth>1420){
-          this.classChange=2;
-          diameter=120;
-        }else if(clientWidth<1420&&clientWidth>1300){
-          this.classChange=2;
-          diameter=110;
-        }else if(clientWidth<1300&&clientWidth>1200){
-          this.classChange=2;
-          diameter=110;
-        }else if(clientWidth<1200&&clientWidth>1100){
-          this.classChange=2;
-          diameter=120;
-        }else if(clientWidth<1100&&clientWidth>1000){
-          this.classChange=2;
-          diameter=120;
-        }
-      }
-      this.diameter=diameter
+      if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
+      if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
+      if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
+      if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
     },
     tabChange(x){
       if(x==0){
@@ -403,6 +314,7 @@ export default {
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
+        console.log(res)
         if(res.success){
           this.RT_data=res.result;
           console.log(res);
@@ -427,9 +339,9 @@ export default {
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
         }else {
-          this.noDevice=true;
+          this.progressHeight='100%';
+          this.noDevice=false;
         }
-
       }).catch(err=>{
       });
     },
@@ -459,13 +371,12 @@ export default {
     getAlarms(key){
       deviceData.alarms({'key':key}).then(res=>{
         //console.log(res.result[0].message);
-        if(res.success){
+        if(res.result){
           this.isWarming=false;
           this.warmingText=res.result[0].message
         }else{
           this.isWarming=true
         }
-
       }).catch(e=>{
         console.log(e)
       })
@@ -491,6 +402,34 @@ export default {
     },
     isClose(val,oldVal){
       console.log(val,oldVal)
+    },
+    clientWidth(val,oldVal){
+      this.$nextTick(()=>{
+        let pile=document.getElementById('pile');
+        if(!pile){
+          //console.log('dom销毁')
+        }else{
+          let pileHeight,pileWidth;
+          if(pile.currentStyle){
+            pileHeight = pile.currentStyle.height;
+            pileWidth = pile.currentStyle.width
+          }else {
+            pileHeight = window.getComputedStyle(pile).height;
+            pileWidth = window.getComputedStyle(pile).width;
+          }
+          this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+          this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+          this.$refs.pMap.width = parseFloat(pileWidth);
+          this.$refs.pMap.height = parseFloat(pileHeight);
+          this.$refs.pMap.init();
+        }
+      });
+
+      if( this.$refs.sCurrent!==undefined){this.$refs.sCurrent.resize()}
+      if( this.$refs.aSp!==undefined){this.$refs.aSp.resize();}
+      if( this.$refs.sSpeed!==undefined){this.$refs.sSpeed.resize()}
+      if( this.$refs.sFlow!==undefined){this.$refs.sFlow.resize()}
+      this.temp(this.dialogFullscreen,this.diameter,this,val)
     }
   }
 }
@@ -529,16 +468,17 @@ export default {
   .b-device{
     position: absolute;
     top:0;
-    left:-10px;
-    width: calc(100% + 10px);
+    left:0;
+    width: 100%;
     height: 100%;
     background: rgba(255,255,255,0.7);
     z-index: 10;
-    display:flex;
-    align-items:center;/*垂直居中*/
-    justify-content: center;/*水平居中*/
     overflow: hidden;
+    text-align: center;
+    display: table;
     .t-device{
+      display: table-cell;
+      vertical-align: middle;
       color: #666666;
       font-size: 30px;
     }
@@ -574,82 +514,96 @@ export default {
         border: 1px solid #828282;
       }
     }
-    .t-box1{
-      .r-stateTab{
-        font-size: 14px;
-      }
-      .p-designTab{
-        font-size: 14px;
-      }
-    }
 
+    .clear{
+      clear: both;
+    }
     .s-box1,.s-box2{
       height: 49%;
-      display: flex;
       background-color: #F5F5F9;
-      justify-content:space-between;
-
+      overflow: hidden;
       .s-info{
+        float: left;
         width:23%;
         height: 100%;
         padding:0 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-        display: flex;
-        flex-direction: column;
-        justify-content:space-around;
-        .i-id{
-          font-size: 20px;
-          color: rgba(218,218,218,1);
-          margin-top: 20px;
-          width:100%;
-          display: flex;
-          justify-content: space-between;
-          //line-height:42px;
-          .d-model{
-            width: 150px;
-            font-size: 30px;
-            font-weight: bold;
-            color: #333333;
-          }
-          .d-kind{
-            height: 40px;
-            padding-top: 5px;
-            display: flex;
-            justify-content: space-between;
-            div{
-              cursor: pointer;
-              width: 24px;
-              height: 24px;
-              line-height: 26px;
-              border-radius: 50%;
-              border: 1px solid rgba(218,218,218,1);
-              text-align: center;
-              margin-left:20px;
-            }
-          }
-        }
         .deviceActive{
           font-size:20px;
           background: #24BCF7;
           color:#ffffff;
         }
+        .i-id{
+          font-size: 20px;
+          color: rgba(218,218,218,1);
+          width:100%;
+          height: 10%;
+          margin-top: 10%;
+          overflow: hidden;
+          .d-model{
+            float: left;
+            width: 50%;
+            font-size: 30px;
+            font-weight: bold;
+            color: #333333;
+          }
+        }
         .i-box{
-          display: flex;
-          justify-content:space-between;
-            height: 15%;
+          height: 20%;
           .i-body{
-            width: 60%;
-            height: 45px;
-            line-height: 30px;
+            width: 100%;
+            height: 40%;
             font-weight: bold;
             .i-name{
-              font-size:16px;
+              float: left;
+              font-size:15px;
               color:rgba(51,51,51,1);
             }
             .i-company{
+              float: left;
+              font-size:10px;
+              color:rgba(51,51,51,1);
+            }
+            .i-state{
+              float: right;
               font-size:10px;
               color:rgba(153,153,153,1);
+              .led-green{
+                vertical-align: middle;
+                display: inline-block;
+                background-color: #00ff00;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #26c702;
+                -moz-box-shadow: 0px 0px 2px 4px #26c702;
+                -webkit-box-shadow: 0px 0px 2px 4px #26c702;
+                border-radius: 50%;
+              }
+              .led-gray{
+                display: inline-block;
+                background-color: #FFAB35;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #FFAB35;
+                -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
+                -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
+                border-radius: 50%;
+              }
+              .led-blue{
+                display: inline-block;
+                background-color: #403BFF;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #403BFF;
+                -moz-box-shadow: 0px 0px 2px 4px #403BFF;
+                -webkit-box-shadow: 0px 0px 2px 4px #403BFF;
+                border-radius: 50%;
+              }
+              span{
+                vertical-align: middle;
+                margin-right: 20px;
+              }
             }
             .icon-portrait{
               color: #787F87;
@@ -658,58 +612,18 @@ export default {
               color: #787F87;
             }
           }
-          .i-state{
-            line-height: 30px;
-            font-size:12px;
-            color:rgba(153,153,153,1);
-            .led-green{
-              vertical-align: center;
-              display: inline-block;
-              background-color: #00ff00;
-              width: 6px;
-              height: 6px;
-              box-shadow: 0px 0px 2px 4px #26c702;
-              -moz-box-shadow: 0px 0px 2px 4px #26c702;
-              -webkit-box-shadow: 0px 0px 2px 4px #26c702;
-              border-radius: 50%;
-            }
-            .led-gray{
-              display: inline-block;
-              background-color: #FFAB35;
-              width: 6px;
-              height: 6px;
-              box-shadow: 0px 0px 2px 4px #FFAB35;
-              -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
-              -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
-              border-radius: 50%;
-            }
-            .led-blue{
-              display: inline-block;
-              background-color: #403BFF;
-              width: 6px;
-              height: 6px;
-              box-shadow: 0px 0px 2px 4px #403BFF;
-              -moz-box-shadow: 0px 0px 2px 4px #403BFF;
-              -webkit-box-shadow: 0px 0px 2px 4px #403BFF;
-              border-radius: 50%;
-            }
-            span{
-              margin-right: 20px;
-            }
-          }
           .icon-state{
             font-size: 12px;
             color: #24BCF7;
           }
         }
         .h-box{
-          display: flex;
-          justify-content:space-between;
-          height: 15%;
-          .i-body{
+          width: 100%;
+          height: 20%;
+          overflow: hidden;
+          .b-info{
             width: 60%;
-            height: 45px;
-            line-height: 30px;
+            height: 40%;
             font-weight: bold;
             .i-info{
               margin-left: 10px;
@@ -720,51 +634,27 @@ export default {
             .icon-phonenew{
               color: #787F87;
             }
-
           }
-          .b-angle{
-            width: 60px;
-            height: 60px;
-            background: url("../../assets/RState/angle.png") no-repeat;
-            background-size: 100% 100%;
-            position: relative;
-            .a-spot{
-              position: absolute;
-              width: 5px;
-              height: 5px;
-              border-radius: 50%;
-              left: 27px;
-              top: 26px;
-              background: red;
-            }
-          }
-        }
-
-        .i-start{
-          width:100%;
-          height:17px;
-          font-size:12px;
-          color:rgba(102,102,102,1);
-          line-height:17px;
         }
         .i-progress{
-          margin-top: 10px;
           width: 100%;
-          height: 15px;
-          line-height: 15px;
-          display: flex;
-          justify-content:space-between;
+          margin-top: 5%;
+          height: 10%;
+          overflow: hidden;
+          div{
+            float: left;
+          }
         }
         .i-normal{
           width:100%;
-          line-height: 57px;
           text-align: center;
-          height:57px;
+          height:15%;
           background:rgba(141,232,240,0.06);
+          padding-top: 13%;
         }
         .i-warning{
           width:100%;
-          height:47px;
+          height:25%;
           line-height: 45px;
           background:rgba(248,89,89,0.06);
           text-align: center;
@@ -783,6 +673,7 @@ export default {
         }
 
         .d-name{
+          margin-top: 20px;
           span{
             margin-left: 5%;
             font-size: 16px;
@@ -791,11 +682,10 @@ export default {
         }
         .d-box{
           height: 60%;
-          display: flex;
-          flex-direction: row;/*决定主轴的方向*/
-          flex-wrap:wrap;
-          justify-content:space-around;
+
           div{
+            margin-top: 50px;
+            float: left;
             text-align: center;
             width: 33%;
           }
@@ -819,7 +709,7 @@ export default {
           }
         }
       }
-      .s-info1{
+      /*.s-info1{
         .i-id{
           //font-size:30px;
           color:#DADADA;
@@ -943,7 +833,7 @@ export default {
         .d-box{
           height: 60%;
           display: flex;
-          flex-direction: row;/*决定主轴的方向*/
+          flex-direction: row;!*决定主轴的方向*!
           flex-wrap:wrap;
           justify-content:space-around;
           div{
@@ -967,21 +857,19 @@ export default {
             color: #333333;
           }
         }
-      }
+      }*/
 
       .s-progress{
+        float: left;
         width:23%;
+        height: calc(100% - 20px);
         padding:10px 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-        display: flex;
-        display: -webkit-flex;
-        flex-direction: row;/*决定主轴的方向*/
-        justify-content:space-around;
-        flex-wrap:wrap;
         .p-box{
           width: 50%;
           height: 50%;
+          float: left;
           .p-progress{
             .p-title{
               width: 50%;
@@ -1021,13 +909,17 @@ export default {
           }
           .p-echart{
             width: 100%;
+            overflow: hidden;
             height: calc( 100% - 30px);
+            .p-progress{
+              margin:18% 0 0 45%;
+            }
           }
         }
       }
-      .s-progress1{
+      /*.s-progress1{
         .p-box{
-          /*margin-bottom: 6%;
+          !*margin-bottom: 6%;
           .p-progress{
             .p-title{
               font-size: 18px;
@@ -1048,15 +940,19 @@ export default {
           .p-title{
             font-size:18px;
           }
-        }*/}
-      }
+        }*!}
+      }*/
       .s-chart{
+        float: left;
+        height: 100%;
         margin-left: 10px;
         width:calc( 38.5% - 30px );
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
       }
       .s-chart1{
+        float: right;
+        height: 100%;
         width:calc(77% - 50px);
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);

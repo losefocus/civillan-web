@@ -295,9 +295,9 @@
 
     width: 27%;
     height: 79%;
-    min-height: 645px;
+    //min-height: 645px;
     float: left;
-    padding: 5% 4% 3%;
+    padding: 5% 4% 0;
     .user-title{
       height: 6%;
       font-size: 32px;
@@ -372,8 +372,9 @@
 
   @media screen and (min-width: 1200px) and (max-width: 1600px)  {
     .l-side{
-      height: 75%;
+      height: 90%;
       padding: 5% 4% 0;
+      position: relative;
       .user-title{
         font-size: 28px;
       }
@@ -386,7 +387,10 @@
         -webkit-box-shadow: 0 0 0 1000px white inset;
       }
       .cp-code{
-        margin-top: 22%;
+        width: 82%;
+        margin-top: 0;
+        position: absolute;
+        bottom:10px;
         font-size: 12px;
         color: #8A96A0;
         text-align: center;

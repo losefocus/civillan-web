@@ -2,11 +2,11 @@
   <div style="height: 100%">
     <el-container style="height: 100%">
       <el-header height="70px" style="border-bottom: 1px solid rgba(230,234,238,1);">
-        <z-header></z-header>
+        <z-header ></z-header>
       </el-header>
-      <el-container style="height: 100%">
-        <z-nav style="float: left"></z-nav>
-        <div class="z-main" style="height: calc(100% - 35px);">
+      <el-container style="height: calc(100% - 70px);">
+        <z-nav style="float: left;height: calc(100%)"></z-nav>
+        <div class="z-main" style="height: 100%;">
           <div v-show="isActive" class="breadcrumb-box">
             <div :class="{'b-title':isActive}">{{ title }}</div>
             <div class="el-breadcrumb">
@@ -81,8 +81,10 @@
 
 
   .breadcrumb-box{
-    width: calc(100% - 20px);
-    height: 35px;
+    width: calc(100% - 40px);
+    padding:20px 20px 0;
+    height: 25px;
+    background: #f5f5f9;
     text-align: right;
     .el-breadcrumb{
       float: right;
@@ -102,15 +104,32 @@
   .z-main{
     background: #f5f5f9;
     float: left;
-    padding: 20px;
-    width: calc(100% - 285px);
+    //padding: 20px;
+    width: calc(100% - 245px);
+    overflow: auto;
   }
-  @media screen and (min-width: 1000px) and (max-width: 1467px){
+  .z-main::-webkit-scrollbar {/*滚动条整体样式*/
+    width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+    background: #ffffff;
+  }
+  .nav-bar::-webkit-scrollbar-button{
+    background: rgba(0,0,0,0.2);
+  }
+  .z-main::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+  }
+  .z-main::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+  }
+  @media screen and (max-width: 1467px){
     .z-main{
       background: #f5f5f9;
-      float: left;
-      padding: 20px;
-      width: calc(100% - 130px);
+      width: calc(100% - 90px);
     }
   }
 </style>

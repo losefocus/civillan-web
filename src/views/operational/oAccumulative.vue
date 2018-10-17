@@ -4,8 +4,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-        <el-select  v-else="!isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
+        <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
@@ -58,7 +57,7 @@
         </div>
       </div>
       <div class="c-handle">
-        <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
+        <el-dropdown placement="bottom-end" trigger="click">
           <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
           <el-dropdown-menu slot="dropdown" >
             <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
@@ -335,6 +334,12 @@
         },
         device: '', //设备选定值
         deviceSelect: [], //设备select列表
+        deviceSelect1:[],
+        deviceSelect2:[],
+        pickerOptions2:[],
+        value2:'',
+        value7:'',
+        newData:'',
         device_data: {//全部设备select列表
           page_index: 1,
           page_size: 5,

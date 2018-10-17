@@ -98,7 +98,6 @@
             type: 'value',
             max:120,
             position:'top',
-
             name: '',
             axisTick: {
               show: false

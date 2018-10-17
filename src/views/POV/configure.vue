@@ -1,18 +1,29 @@
 <template>
-  <div style="height: 94%">
+  <div class="n-box">
     <div class="j-box">
       <div class="j-table">
         <div class="i-box">
-
-          <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
-            <div class="j-Import">导出</div>
-            <el-dropdown-menu slot="dropdown" >
-              <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
-              <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
-              <!--<el-dropdown-item>Word</el-dropdown-item>
-              <el-dropdown-item>PDF</el-dropdown-item>-->
-            </el-dropdown-menu>
-          </el-dropdown>
+          <div style="float: left">
+            <el-dropdown split-button size="small" type="info" placement="bottom-end" trigger="click" @command="handleExport">
+              导出
+              <el-dropdown-menu slot="dropdown" >
+                <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
+                <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
+                <!--<el-dropdown-item>Word</el-dropdown-item>
+                <el-dropdown-item>PDF</el-dropdown-item>-->
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <div style="float: right">
+            <el-select size="small" v-model="value" placeholder="请选择" @change="typeScreen">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </div>
         </div>
         <template>
           <el-table
@@ -81,8 +92,8 @@
         <div class="a-title"><h3>{{(flag == 'add')?'添加':'修改'}}作业配置</h3></div>
         <div class="a-body">
           <el-form class="a-info" :inline="true" :rules="rules" :model="form" ref="form">
-            <el-form-item class="i-content" style="width: 220px" prop="typeId" label="设备类型">
-              <el-select v-model="form.typeId" size="mini" placeholder="设备类型" @change="changeType" style="width: 40%;">
+            <el-form-item class="i-content" prop="typeId" label="设备类型" style="width: 25%">
+              <el-select v-model="form.typeId" size="mini" placeholder="设备类型" @change="changeType">
                 <el-option
                   v-for="item in typeOptions"
                   :key="item.value"
@@ -91,21 +102,21 @@
                 </el-option>
               </el-select>
              </el-form-item>
-            <el-form-item class="i-content" prop="name" label="作业名称">
-              <el-input v-model="form.name" placeholder="请输入名称" size="mini" style="width: 20%;"></el-input>
+            <el-form-item class="i-content" prop="name" label="作业名称" style="width: 25%">
+              <el-input v-model="form.name" placeholder="请输入名称" size="mini"></el-input>
             </el-form-item>
-            <el-form-item class="i-content" prop="key" label="作业标识">
+            <el-form-item class="i-content" prop="key" label="作业标识" style="width: 25%">
               <el-input v-model="form.key" placeholder="请输入英文字符" size="mini"></el-input>
             </el-form-item>
-            <el-form-item class="i-content" style="width: 100px" label="排序">
+            <el-form-item class="i-content" label="排序" style="width: 15%">
               <el-input v-model="form.sort" size="mini"></el-input>
             </el-form-item>
           </el-form>
           <div class="c-content">设计参数</div>
           <div class="c-body">
-            <el-form class="c-add" ref="content_form" :rules="rules1" :model="content_form">
-              <el-form-item style="width: 41%" prop="name">
-                <el-select v-model="content_form.name"  size="mini" placeholder="项目" style="width: 100%">
+            <el-form class="c-add" :inline="true" ref="content_form" :rules="rules1" :model="content_form">
+              <el-form-item style="width: 39%" prop="name">
+                <el-select v-model="content_form.name"  size="mini" placeholder="项目">
                   <el-option
                     v-for="item in paramsOption"
                     :key="item.value"
@@ -115,11 +126,11 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item style="width: 41%" prop="value">
-                <el-input v-model="content_form.value" style="width: 100%" placeholder="设计值" size="mini"></el-input>
+              <el-form-item style="width: 39%" prop="value">
+                <el-input v-model="content_form.value"  placeholder="设计值" size="mini"></el-input>
               </el-form-item >
               <el-form-item style="width: 15%">
-                <el-button size="mini" style="width: 100%;" @click="addContent">添加</el-button>
+                <el-button size="mini" style="width: 100%; " @click="addContent">添加</el-button>
               </el-form-item >
 
             </el-form>
@@ -256,7 +267,9 @@
         post_data:{ //主列表请求参数
           page_index:1,
           page_size:10
-        }
+        },
+        options: [],
+        value: ''
       }
     },
     created(){
@@ -324,12 +337,18 @@
         this.post_data.sort_by = 'sort';
         this.post_data.direction = 'asc';
         config.list(post_data).then(res=>{
+          console.log(res);
           this.lists=res.result.items;
           this.total = res.result.total;
           this.listLoading = false
         }).catch(err => {
           this.listLoading=false;
         })
+      },
+      typeScreen(val){
+        console.log(val);
+        this.post_data.type_id=val;
+        this.getList(this.post_data)``
       },
       handleFilter(){
         if(this.post_data.name == '') delete this.post_data.name;
@@ -346,8 +365,11 @@
       },
       //获取类型列表数据
       getCategoryList(){
+        this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
+          console.log(res);
           let list = res.result.items;
+          this.options=res.result.items
           this.typeOptions = list.map(item => {
             return { value: item.id, label: item.name };
           });
@@ -469,7 +491,6 @@
             return false;
           }
         })
-
       },
       editContent(index,rows){
         if(this.lastIndex!=null)rows[this.lastIndex].flag = false;
@@ -530,6 +551,18 @@
   }
 </script>
 <style scoped lang="scss">
+  .n-box{
+    padding: 20px;
+    height: calc(100% - 95px);
+    background: #f5f5f9;
+  }
+  @media screen and (max-width: 1467px){
+    .n-box{
+      padding: 20px;
+      height: auto;
+      background: #f5f5f9;
+    }
+  }
   .vfl-label {
     text-transform: uppercase;
   }
@@ -557,8 +590,8 @@
 
 
   .j-box{
-    margin-top: 15px;
-    height: 100%;
+    //margin-top: 15px;
+    height: calc(100% - 15px);
     overflow: hidden;
     .j-table{
       float: left;
@@ -567,7 +600,7 @@
       padding: 20px;
       background: #ffffff;
       .i-box{
-        display: flex;
+        width: 100%;
         .j-Import{
           width:80px;
           height:24px;

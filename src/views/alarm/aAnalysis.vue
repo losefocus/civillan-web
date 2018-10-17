@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="n-box" :style="newStyle">
   <div class="e-box">
     <!-- 标题和控制栏 -->
     <div class="t-analysis" v-if="!isShow">
@@ -66,6 +66,10 @@ export default {
   data(){
     return{
       devicePolar:{
+        title : {
+          text: '占比分析',
+          x:'left',
+        },
         aria: {
           show: true
         },
@@ -77,16 +81,16 @@ export default {
           type: 'scroll',
           orient: 'vertical',
           x: 'left',
-          top:'30',
+          top:'50',
           itemGap: 15,
           data:['设备故障','下钻速度异常','电流异常','掺量异常','电压异常','流量异常','压力异常','喷浆异常','测量异常']
         },
         series: [
           {
-            name:'报警来源',
+            name:'报警类型',
             type:'pie',
             radius: '60%',
-            center: ['55%', '50%'],
+            center: ['60%', '60%'],
             avoidLabelOverlap: true,
             labelLine: {
               normal: {
@@ -142,7 +146,7 @@ export default {
         ],
         series : [
           {
-            name:'直接访问',
+            name:'报警数量',
             type:'bar',
             barWidth: '60%',
             data:[10, 52, 200, 334, 390, 330, 220,310,230,280,180,80]
@@ -177,7 +181,7 @@ export default {
           },
           extraCssText: 'box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2)' //添加阴影
         },
-        color: ['#0580f2', '#faa732', '#e1575d'],
+        color: ['#3398DB'],
         grid: {
           left: '5%',
           right: '6%',
@@ -239,8 +243,8 @@ export default {
           }
         },
         series: [{
-          name: '设备故障',
-          type: 'line',
+          name: '数量',
+          type: 'bar',
           symbol: 'circle',
           itemStyle: {
             emphasis: {
@@ -248,20 +252,8 @@ export default {
             }
           },
           symbolSize: [8, 8],
-          data: [1, 0, 1, 4, 10, 8]
-        }, {
-          name: '下钻速度异常',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: [8, 8],
-          data: [2, 1, 3, 3, 5, 6]
-        }, {
-          name: '测量异常',
-          type: 'line',
-          symbol: 'circle',
-          symbolSize: [8, 8],
-          data: [4, 4, 4, 10, 15, 3]
-        }]
+          data: [1, 5, 1, 4, 10, 8]
+        }, ]
       },
       pickerOptions2: {
         shortcuts: [{
@@ -303,7 +295,7 @@ export default {
       deviceName:'',
     }
   },
-  props:['isShow'],
+  props:['isShow','newStyle'],
   created(){
     this.deviceName=sessionStorage.getItem('deviceName');
     this.getDeviceList(this.device_data);
@@ -334,6 +326,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .n-box{
+    padding: 20px;
+    height: calc(100% - 60px);
+    background: #f5f5f9;
+  }
   .echarts {
     width: 100%;
     height: 100%;
@@ -341,20 +338,20 @@ export default {
   .a-chart{
     width: 100%;
     height: 350px;
-    margin: 15px 0 20px;
+    margin: 20px 0 0;
     overflow: hidden;
     .e-body{
       float: left;
       background: #ffffff;
       width: calc(50% - 50px);
-      height: 100%;
+      height: calc(100% - 40px);
       padding: 20px;
-      margin-left: 10px;
     }
-
+    .e-body:last-child{
+      margin-left: 20px;
+    }
   }
   .c-box{
-
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
@@ -392,6 +389,7 @@ export default {
     padding: 20px;
     margin-bottom: 20px;
   }
+
   .control-box{
     padding: 20px 30px;
     //background: #fff;

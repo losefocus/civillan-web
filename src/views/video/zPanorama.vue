@@ -9,6 +9,7 @@
       </div>
     </div>
     <waterfall
+      style="margin-left: -10px;width: calc( 100% + 20px)"
       v-else="noData"
       :line-gap="350"
       :min-line-gap="350"
@@ -143,10 +144,10 @@
   }
   .item {
     position: absolute;
-    top: 25px;
-    left: 0;
-    right: 50px;
-    bottom: 25px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
     font-size: 0.9em;
     box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
     .equipment{
@@ -163,15 +164,13 @@
     }
   }
   .p-box{
-    display: flex;
-    flex-flow:row wrap;
     .p-body{
-      width: 100%;
-      height: 100%;
+      width: calc(100% - 20px);
+      height: calc(100% - 20px);
       position: relative;
       cursor: pointer;
       background: #ffffff;
-      border: 20px solid #ffffff;
+      border: 10px solid #ffffff;
       .viewer{
         top:0;
         right: -10px;
