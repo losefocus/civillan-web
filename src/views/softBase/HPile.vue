@@ -3,7 +3,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
+        <!--<el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
         <el-select v-model="device"  filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini"  style="margin: 0 5px 0 0;width: 25%;float: left;" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
@@ -22,14 +22,14 @@
           </el-pagination>
         </el-select>
 
-        <!--<el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+        &lt;!&ndash;<el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect1"
             :key="item.value1"
             :label="item.name"
             :value="item.value1">
           </el-option>
-        </el-select>-->
+        </el-select>&ndash;&gt;-->
         <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect2"

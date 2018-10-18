@@ -151,10 +151,7 @@
 
     methods: {
       getGroup(id,tenant){
-        this.loading=this.$loading({
-          fullscreen: true,
-          background: 'rgba(0, 0, 0, 0.2)'
-        });
+
         deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
           if(res.success){
             this.navList=res.result.items;
@@ -163,13 +160,10 @@
             this.$nextTick(()=>{
               this.isShow=true
             });
-            this.loading.close()
           }else{
             this.$message.error(res.message);
-            this.loading.close()
           }
         }).catch(e=>{
-          this.loading.close()
         });
       },
       changeTab1(list,index){ //切换tab
@@ -238,7 +232,6 @@
                     this.items[i].status=3
                   }
                 }).catch(e=>{
-                  _this.loading.close();
                 })
               }
               this.loading.close();
@@ -249,6 +242,9 @@
           }else{
             this.loading.close();
           }
+          this.loading.close();
+        }).catch(e=>{
+          this.loading.close();
         })
       },
       closeDialog(){

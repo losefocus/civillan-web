@@ -16,7 +16,7 @@
                   class="avatar-uploader"
                   :headers="header"
                   name="uploadFile"
-                  action="/foreground/project_file/add"
+                  action="/foreground/project_file/upload_avatar"
                   :show-file-list="false"
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload">
@@ -311,8 +311,6 @@ export default {
       }).catch(e=>{
         this.loading.close()
       });
-
-
       // list.flag=false;
     },
     editContact(list,index){
@@ -341,22 +339,22 @@ export default {
       }else{
         this.contactList.pop()
       }
-
     },
 
     handleAvatarSuccess(res, file) {
       console.log(res);
+
       this.avatarUrl = URL.createObjectURL(file.raw);
 
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
+     // const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     },
 
     modifyInformation(){

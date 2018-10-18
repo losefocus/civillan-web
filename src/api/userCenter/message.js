@@ -1,5 +1,6 @@
 import { post } from '../../axiosconfig/axiosConfig'
 import { get } from '../../axiosconfig/axiosConfig'
+import qs from 'qs'
 export default {
   emptyMessage(params) {  //清空消息
     return post('/foreground/notification/emptyMessage', params)
@@ -9,6 +10,9 @@ export default {
   },
   signRead(params) { //标记已读
     return post('/foreground/notification/signRead', params)
+  },
+  signAllRead(params) { //标记全部已读
+    return post('/foreground/notification/sign_all_read', params)
   },
   delete(params) {  //删除消息
     return post('/foreground/notification/delete', params)
