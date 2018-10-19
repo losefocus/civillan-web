@@ -9,5 +9,8 @@ export default {
   },
   list(params) {
     return get('/foreground/project_user/list',params)
-  }
+  },
+  edit(params) {
+    return post('/foreground/project_user/edit',params)
+  },
 }

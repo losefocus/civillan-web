@@ -74,6 +74,8 @@
   import no_photo from '@/assets/header/no_photo.png'
   import logo from '@/assets/login/logo.png'
 
+  import Bus from '@/common/eventBus.js'
+
   export default {
     name: "zHeader",
     components:{
@@ -143,6 +145,10 @@
     },
     mounted(){
       this.getInfo()
+      Bus.$on('msg', (e) => {
+        this.isModify = e;
+        this.getInfo();
+      })
     },
     destroyed() {
       //页面销毁时关闭长连接

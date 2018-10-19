@@ -2,7 +2,7 @@
   <div>
     <div style="height: 100%">
       <div v-if="isModify" style="width: 100%;height: 100%;">
-        <m-information></m-information>
+        <m-information :userInfo="userInfo"></m-information>
       </div>
 
       <div class="u-box"  v-else>
@@ -10,8 +10,8 @@
           <div class="u-info">
             <div class="b-info">
               <div class="b-photo">
-                <!--<img :src="avatarUrl" alt="头像">-->
-                <el-upload
+                <img :src="avatarUrl" alt="头像">
+                <!--<el-upload
                   :data="params"
                   class="avatar-uploader"
                   :headers="header"
@@ -22,7 +22,7 @@
                   :before-upload="beforeAvatarUpload">
                   <img v-if="avatarUrl" :src="avatarUrl" class="avatar">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
+                </el-upload>-->
               </div>
               <div class="u-name">
                 <div style="width: 120px;height: 100%;margin: 0 auto">
@@ -34,7 +34,7 @@
               <div class="b-password">
                 <p class="n-text">{{userInfo.username}}</p>
                 <!--<p class="j-title">{{ role }}</p>-->
-                <p class="j-title">修改密码</p>
+                <p class="j-title" @click="modifyInformation">修改密码</p>
               </div>
               <div style="clear: both"></div>
             </div>
@@ -142,8 +142,6 @@ export default {
       projectOrgan:'',
       avatarUrl:'', //头像路径
       typeFont:'',
-      header:{token:this.$cookies.get('token')},
-      params:{component :'project',project_id:0},
       isModify:false
     }
   },
@@ -159,6 +157,7 @@ export default {
     //this.getContentList();
     Bus.$on('msg', (e) => {
       this.isModify = e;
+      this.getInformation();
     })
   },
   directives: {
@@ -204,7 +203,7 @@ export default {
           this.userInfo = res.result;
           this.role=res.result.userRole[0].projectRole.name;
           this.projectOrgan=res.result.projectOrgan.name;
-          if(res.result.avatarBaseUr&&res.result.avatarPath){
+          if(res.result.avatarBaseUrl&&res.result.avatarPath){
             this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
           }else{
             this.avatarUrl=no_photo
@@ -341,22 +340,6 @@ export default {
       }
     },
 
-    handleAvatarSuccess(res, file) {
-      console.log(res);
-
-      this.avatarUrl = URL.createObjectURL(file.raw);
-
-    },
-    beforeAvatarUpload(file) {
-     // const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isLt2M;
-    },
-
     modifyInformation(){
       this.isModify=true
     }
@@ -365,29 +348,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 80px;
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
   .u-box{
     width: 100%;
     height: 100%;
@@ -453,6 +413,7 @@ export default {
               color:#ffffff;
             }
             .j-title{
+              cursor: pointer;
               padding:0 5px;
               height:18px;
               width: auto;

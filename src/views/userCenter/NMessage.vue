@@ -125,10 +125,11 @@
     },
     readChoice(){
       //console.log(this.selectData)
+      let ids = this.selectData.join(',');
       if(this.selectData.length==0){
         this.$message.warning('未选中任何消息')
       }else{
-        message.signRead({'ids':this.selectData}).then(res=>{
+        message.signRead({'ids':ids}).then(res=>{
           if(res.success){
             this.getList(this.currentPage,this.pageSize)
           }else{
@@ -164,11 +165,9 @@
       if(this.selectData.length==0){
         this.$message.warning('未选中任何消息')
       }else{
-        var ids = [];
-        ids.push(1);
-        ids.push(2);
-        ids.push(3);
-        message.delete({'ids': "1,2,3,4"}).then(res=>{
+        let ids = this.selectData.join(',');
+
+        message.delete({'ids': ids}).then(res=>{
           console.log(res);
           if(res.success){
             this.getList(1,7)
