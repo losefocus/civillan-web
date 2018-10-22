@@ -3,10 +3,10 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-show="!isShow" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备类型" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
+        <el-select v-show="!isShow" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
           <el-option
             v-for="(item,index) in deviceSelect"
-            :key="index"
+            :key="item.key+item.id"
             :label="item.name"
             :value="item.key">
           </el-option>
@@ -650,12 +650,12 @@
       },
       //类型改变
       deviceChange(val){
-        /*console.log(val);*/
-        //this.post_data.key=val;
-        //this.getList(this.post_data)
-      },
-      deviceChange1(val){
         console.log(val);
+        this.post_data.key=val;
+        this.getList(this.post_data);
+        this.getRecords(val)
+      },
+      deviceChange1(){
         this.deviceKey=val;
       },
       handleCommand(command) { //
@@ -704,8 +704,8 @@
       },
 
       //统计总数
-      getRecords(){
-        history.records().then(res=>{
+      getRecords(key){
+        history.records({key:key}).then(res=>{
           this.recordSum=res.result[0]
         })
       },
@@ -732,7 +732,7 @@
         });
       },
       visibleChange(val){
-        console.log(val);
+        console.log(this.device)
         if(val){
           this.device_data={
             page_index:1,
@@ -835,7 +835,7 @@
     border-bottom: 2px solid #ebeef5;
     .s-body{
       float: left;
-      margin-left: 15%;
+      margin-left: 10%;
       margin-right: 10px;
       .s-total{
         font-size: 12px;
