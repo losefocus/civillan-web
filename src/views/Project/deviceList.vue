@@ -60,7 +60,7 @@
         </div>
       </waterfall-slot>
     </waterfall>
-    <div class="m-pagination">
+    <div class="m-pagination" v-if="!noData">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="listCurrentChange"

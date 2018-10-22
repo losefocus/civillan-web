@@ -564,7 +564,7 @@
 <style scoped lang="scss">
   .n-box{
     padding: 20px;
-    height: calc(100% - 70px);
+    height: calc(100% - 90px);
     background: #f5f5f9;
   }
   @media screen and (max-width: 1467px){

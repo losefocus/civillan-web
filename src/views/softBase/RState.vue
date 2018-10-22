@@ -26,18 +26,23 @@
          <div class="i-box">
            <div class="i-body">
              <div class="i-name">双头搅拌桩设备</div>
-             <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-green" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
+             <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
            </div>
            <div class="i-body">
              <div class="i-company">宏远建设记录仪一号</div>
-             <div class="i-state"><span>记录状态</span><div class="led-green" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
+             <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
          <div class="clear"></div>
          <div class="clear"></div>
          <div class="h-box">
-           <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
-           <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
+           <div class="b-info">
+             <div class="b-infoName"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
+             <div class="b-infoCall"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
+           </div>
+           <div class="b-angle">
+             <div class="a-spot"></div>
+           </div>
          </div>
 
          <div class="i-normal" v-if="isWarming">
@@ -582,12 +587,12 @@ export default {
               }
               .led-gray{
                 display: inline-block;
-                background-color: #FFAB35;
+                background-color: #666666;
                 width: 6px;
                 height: 6px;
-                box-shadow: 0px 0px 2px 4px #FFAB35;
-                -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
-                -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
+                box-shadow: 0px 0px 2px 4px #666666;
+                -moz-box-shadow: 0px 0px 2px 4px #666666;
+                -webkit-box-shadow: 0px 0px 2px 4px #666666;
                 border-radius: 50%;
               }
               .led-blue{
@@ -622,17 +627,42 @@ export default {
           height: 20%;
           overflow: hidden;
           .b-info{
+            float: left;
             width: 60%;
-            height: 40%;
+            height: 80%;
             font-weight: bold;
-            .i-info{
+
+            .i-infoName{
               margin-left: 10px;
             }
-            .icon-portrait{
+            .b-infoName{
+              height: 50%;
+            }
+            .b-infoCall{
+              height: 50%;
+            }
+            /*.icon-portrait{
               color: #787F87;
             }
             .icon-phonenew{
               color: #787F87;
+            }*/
+          }
+          .b-angle{
+            float: right;
+            width: 60px;
+            height: 60px;
+            background: url("../../assets/RState/angle.png") no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+            .a-spot{
+              position: absolute;
+              width: 5px;
+              height: 5px;
+              border-radius: 50%;
+              left: 27px;
+              top: 26px;
+              background: red;
             }
           }
         }
