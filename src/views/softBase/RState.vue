@@ -345,7 +345,7 @@ export default {
           this.rpressureData.push(rpressure);
         }else {
           this.progressHeight='100%';
-          this.noDevice=false;
+          this.noDevice=true;
         }
       }).catch(err=>{
       });

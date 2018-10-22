@@ -61,7 +61,8 @@
         allListQuery:{ //类型select列表请求参数
           page_index: 1,
           page_size: 999,
-          direction:'asc'
+          direction:'asc',
+          sort_by:'sort'
         },
         isActive:'',
       }
@@ -137,14 +138,13 @@
         }else if(list.code=='YYLYJ'){
           this.currentView='HFoam'
         }
-        this.post_data={
+        /*this.post_data={
           group_id:list.id,
           page_index:1,
           page_size:10,
-        };
+        };*/
         //this.getList(this.post_data)
       },
-
       visibleChange(val){
         console.log(val);
         if(val){

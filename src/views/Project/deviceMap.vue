@@ -171,7 +171,7 @@ export default {
                   if(res.success){
                     changeBackground = 'runningBackground';
                     changeColor = 'runningColor';
-                    if(lists[i].type=='FPJ'){
+                    if(lists[i].type=='PMHNT'){
                       changeMarker = foamRunning;
                     }else if(lists[i].type=='JBZ'){
                       changeMarker = runningMarker;
@@ -182,7 +182,7 @@ export default {
                   }else{
                     changeBackground = 'noBackground';
                     changeColor = 'noColor';
-                    if(lists[i].type=='FPJ'){
+                    if(lists[i].type=='PMHNT'){
                       changeMarker = foamOff;
                     }else if(lists[i].type=='JBZ'){
                       changeMarker = offLineMarker;
