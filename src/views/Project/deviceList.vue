@@ -17,8 +17,8 @@
       style="margin-left: -10px;width: calc( 100% + 20px)"
       v-else="noData"
       :line-gap="320"
-      :min-line-gap="280"
-      :max-line-gap="320"
+      :min-line-gap="250"
+      :max-line-gap="350"
       :single-max-width="350"
       :watch="items">
       <waterfall-slot
@@ -301,6 +301,7 @@
     padding: 15px 0 0 20px;
     height: 50px;
     background: #ffffff;
+    margin-bottom: 10px;
     li{
       font-size: 14px;
       cursor: pointer;

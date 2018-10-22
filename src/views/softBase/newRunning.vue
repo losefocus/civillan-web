@@ -6,7 +6,7 @@
         <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
       </div>
     </ul>
-    <r-state :deviceName="deviceName" :is="currentView" :clientWidth="clientWidth" :dialogFullscreen="dialogFullscreen" class="t-Body" @dialogFullscreen="changeScreen"></r-state>
+    <r-state :deviceName="deviceName" :is="currentView" :isShow="isShow" :clientWidth="clientWidth" :dialogFullscreen="dialogFullscreen" class="t-Body" @dialogFullscreen="changeScreen"></r-state>
   </div>
 </template>
 
@@ -86,7 +86,7 @@
       this.changeType();
       let clientWidth1=document.body.clientWidth;
       if(clientWidth1<1366){
-        this.isShow=false;
+        //this.isShow=false;
         this.changeIcon=true;
         this.isFullscreen()
       }else{
@@ -124,13 +124,19 @@
       changeType(){
         //let type=sessionStorage.getItem('deviceType');
         console.log(this.deviceType);
-        if(this.deviceType=='PMHLT'){
+        if(this.deviceType=='PMHNT'){
           this.tBody=['FConcrete', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='FConcrete'
         }else if(this.deviceType=='JBZ'){
           this.tBody=['RState', 'HPile', 'SAnalysis', 'AQuery',];
           this.currentView='RState'
         }else if(this.deviceType=='PLYH'){
+          this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
+          this.currentView='SCuring'
+        }else if(this.deviceType=='YYLZL'){
+          this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
+          this.currentView='SCuring'
+        }else if(this.deviceType=='YYLYJ'){
           this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='SCuring'
         }

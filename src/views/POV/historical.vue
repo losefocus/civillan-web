@@ -2,26 +2,11 @@
   <div class="n-box" :style="newStyle">
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
-      <div class="c-query">
-      <el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-      <el-select v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备类型" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
-        <el-option
-          v-for="(item,index) in deviceSelect"
-          :key="index"
-          :label="item.name"
-          :value="item.key+','+item.type">
-        </el-option>
-        <el-pagination
-          @current-change="deviceCurrentChange"
-          small
-          :pager-count="5"
-          :current-page="device_data.page_index"
-          :page-size="device_data.page_size"
-          layout="prev, pager, next"
-          :total="deviceTotal">
-        </el-pagination>
-      </el-select>
-    </div>
+      <ul class="a-box">
+        <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
+          {{list.name}}
+        </li>
+      </ul>
     </div>
     <h-pile :is="currentView" :deviceKey="deviceKey"></h-pile>
   </div>
@@ -37,6 +22,7 @@
   import HPile from '@/views/softBase/HPile'
   import HFoam from '@/views/FConcrete/HFoam'
 
+  import categories from '@/api/configure/categories'
   import RthyinfoFormat from '@/common/RthyinfoFormat.js'
   export default {
     data() {
@@ -70,7 +56,14 @@
           name:''
         },
         deviceTotal:0,
-        deviceName:''
+        deviceName:'',
+        navList:[],
+        allListQuery:{ //类型select列表请求参数
+          page_index: 1,
+          page_size: 999,
+          direction:'asc'
+        },
+        isActive:'',
       }
     },
     components:{
@@ -94,11 +87,11 @@
       })*/
     },
     mounted(){
-
+      this.getCategoryList()
     },
     methods: {
       //类型改变
-      deviceChange(val){
+      /*deviceChange(val){
         console.log(val.split(','));
         let deviceType=val.split(',')[1];
         this.deviceKey=val.split(',')[0];
@@ -112,9 +105,48 @@
         }
         this.post_data.key=val;
         this.getList(this.post_data)
+      },*/
+
+      //获取类型列表数据
+      getCategoryList(){
+        this.allListQuery.tenant=this.$cookies.get('tenant');
+        categories.list(this.allListQuery).then(res => {
+          console.log(res);
+          let list = res.result.items;
+          this.navList=res.result.items;
+          /*this.typeOptions = list.map(item => {
+            return { value: item.id, label: item.name };
+          });
+          this.typeMap = new Map();
+          for (let i=0; i<list.length; i++) {
+            this.typeMap.set(list[i].id,list[i].name)
+          }*/
+        })
       },
+      changeTab(list,index){ //切换tab
+        this.isActive=index;
+        console.log(list)
+        if(list.code=='JBZ'){
+          this.currentView='HPile'
+        }else if(list.code=='PMHNT'){
+          this.currentView='HFoam'
+        }else if(list.code=='PLYH'){
+          this.currentView='HFoam'
+        }else if(list.code=='YYLZL'){
+          this.currentView='HFoam'
+        }else if(list.code=='YYLYJ'){
+          this.currentView='HFoam'
+        }
+        this.post_data={
+          group_id:list.id,
+          page_index:1,
+          page_size:10,
+        };
+        //this.getList(this.post_data)
+      },
+
       visibleChange(val){
-        console.log(val)
+        console.log(val);
         if(val){
           this.device_data.name='';
           this.getDeviceList(this.device_data)
@@ -208,6 +240,40 @@
     display: flex;
     flex-wrap:wrap;
     justify-content: space-between
+  }
+  .a-box{
+    width: calc(100% - 20px);
+    padding: 15px 0 0 20px;
+    height: 50px;
+    background: #ffffff;
+    margin-bottom: 10px;
+    li{
+      font-size: 14px;
+      cursor: pointer;
+      float: left;
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background: #FFFFFF;
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
+    }
+    li:first-child{
+      border-radius: 5px 0 0 5px;
+    }
+    li:last-child{
+      border-radius: 0 5px 5px 0;
+    }
+    .active{
+      background: #F76A6A;
+      color: #ffffff;
+      border:1px solid #F76A6A;
+    }
+    .active+li{
+      border-left: none;
+    }
   }
   .c-box{
     //padding: 0 2% 20px;

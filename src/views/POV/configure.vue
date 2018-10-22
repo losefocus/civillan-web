@@ -4,6 +4,13 @@
       <div class="j-table">
         <div class="i-box">
           <div style="float: left">
+            <ul class="a-box">
+              <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
+                {{list.name}}
+              </li>
+            </ul>
+          </div>
+          <div style="float: right">
             <el-dropdown split-button size="small" type="info" placement="bottom-end" trigger="click" @command="handleExport">
               导出
               <el-dropdown-menu slot="dropdown" >
@@ -14,16 +21,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div style="float: right">
-            <el-select size="small" v-model="value" placeholder="请选择" @change="typeScreen">
-              <el-option
-                v-for="item in options"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </div>
+
         </div>
         <template>
           <el-table
@@ -245,7 +243,8 @@
         typeOptions:[],//类型select列表
         allListQuery:{ //类型select列表请求参数
           page_index: 1,
-          page_size: 999
+          page_size: 999,
+          direction:'asc'
         },
         content_form:{ //设计参数
           label:'',
@@ -269,7 +268,9 @@
           page_size:10
         },
         options: [],
-        value: ''
+        value: '',
+        navList:[],
+        isActive:'',
       }
     },
     created(){
@@ -348,7 +349,7 @@
       typeScreen(val){
         console.log(val);
         this.post_data.type_id=val;
-        this.getList(this.post_data)``
+        this.getList(this.post_data)
       },
       handleFilter(){
         if(this.post_data.name == '') delete this.post_data.name;
@@ -369,7 +370,7 @@
         categories.list(this.allListQuery).then(res => {
           console.log(res);
           let list = res.result.items;
-          this.options=res.result.items
+          this.navList=res.result.items
           this.typeOptions = list.map(item => {
             return { value: item.id, label: item.name };
           });
@@ -378,6 +379,16 @@
             this.typeMap.set(list[i].id,list[i].name)
           }
         })
+      },
+      changeTab(list,index){ //切换tab
+        this.isActive=index;
+        console.log(list);
+        this.post_data={
+          type_id:list.id,
+          page_index:1,
+          page_size:10,
+        };
+        this.getList(this.post_data)
       },
       //设计参数项目列表数据
       getParamsList(){
@@ -553,7 +564,7 @@
 <style scoped lang="scss">
   .n-box{
     padding: 20px;
-    height: calc(100% - 95px);
+    height: calc(100% - 70px);
     background: #f5f5f9;
   }
   @media screen and (max-width: 1467px){
@@ -561,6 +572,14 @@
       padding: 20px;
       height: auto;
       background: #f5f5f9;
+      .j-box{
+        .j-table{
+          height: 620px;
+        }
+        .j-add{
+          height: 620px;
+        }
+      }
     }
   }
   .vfl-label {
@@ -588,7 +607,38 @@
   }
 
 
-
+  .a-box{
+    width: 100%;
+    height: 50px;
+    background: #ffffff;
+    li{
+      font-size: 14px;
+      cursor: pointer;
+      float: left;
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background: #FFFFFF;
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
+    }
+    li:first-child{
+      border-radius: 5px 0 0 5px;
+    }
+    li:last-child{
+      border-radius: 0 5px 5px 0;
+    }
+    .active{
+      background: #F76A6A;
+      color: #ffffff;
+      border:1px solid #F76A6A;
+    }
+    .active+li{
+      border-left: none;
+    }
+  }
   .j-box{
     //margin-top: 15px;
     height: calc(100% - 15px);

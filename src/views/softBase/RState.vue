@@ -25,12 +25,12 @@
          </div>
          <div class="i-box">
            <div class="i-body">
-             <div class="i-name">喷凝系统</div>
-             <div class="i-state"><span style="vertical-align: center">在线状态</span><div class="led-green" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
+             <div class="i-name">双头搅拌桩设备</div>
+             <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-green" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
            </div>
            <div class="i-body">
              <div class="i-company">宏远建设记录仪一号</div>
-             <div class="i-state"><span>养护状态</span><div class="led-green" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
+             <div class="i-state"><span>记录状态</span><div class="led-green" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
          <div class="clear"></div>
