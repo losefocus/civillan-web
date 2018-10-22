@@ -570,12 +570,12 @@
               }
               .led-gray{
                 display: inline-block;
-                background-color: #FFAB35;
+                background-color: #666666;
                 width: 6px;
                 height: 6px;
-                box-shadow: 0px 0px 2px 4px #FFAB35;
-                -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
-                -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
+                box-shadow: 0px 0px 2px 4px #666666;
+                -moz-box-shadow: 0px 0px 2px 4px #666666;
+                -webkit-box-shadow: 0px 0px 2px 4px #666666;
                 border-radius: 50%;
               }
               .led-blue{

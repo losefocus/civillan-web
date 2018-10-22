@@ -24,12 +24,12 @@
           </div>
           <div class="i-box">
             <div class="i-body">
-              <div class="i-name">喷凝系统</div>
-              <div class="i-state"><span style="vertical-align: center">在线状态</span><div class="led-green" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
+              <div class="i-name">泡沫混凝土</div>
+              <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
             </div>
             <div class="i-body">
               <div class="i-company">宏远建设记录仪一号</div>
-              <div class="i-state"><span>养护状态</span><div class="led-green" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
+              <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
             </div>
           </div>
           <div class="clear"></div>
@@ -55,7 +55,7 @@
           </div>
           <div class="d-box">
             <div>
-              <p class="d-key">桩间距</p>
+              <p class="d-key">设计强度</p>
               <p class="d-value">30</p>
             </div>
             <div>
@@ -938,12 +938,12 @@
               }
               .led-gray{
                 display: inline-block;
-                background-color: #FFAB35;
+                background-color: #666666;
                 width: 6px;
                 height: 6px;
-                box-shadow: 0px 0px 2px 4px #FFAB35;
-                -moz-box-shadow: 0px 0px 2px 4px #FFAB35;
-                -webkit-box-shadow: 0px 0px 2px 4px #FFAB35;
+                box-shadow: 0px 0px 2px 4px #666666;
+                -moz-box-shadow: 0px 0px 2px 4px #666666;
+                -webkit-box-shadow: 0px 0px 2px 4px #666666;
                 border-radius: 50%;
               }
               .led-blue{

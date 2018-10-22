@@ -23,6 +23,8 @@ maven-build:
     - ssh test@192.168.0.232 -tt docker stop civillan-front-web
     - ssh test@192.168.0.232 -tt docker rm civillan-front-web
     - ssh test@192.168.0.232 -tt docker run -p 9990:80 -v /var/data/civillan-front-web/default.conf:/etc/nginx/conf.d/default.conf --name civillan-front-web -d civillan-front-web
+    - ssh test@192.168.0.232 -tt docker tag civillan-front-web 115.238.236.78:5000/civillan-front-web
+    - ssh test@192.168.0.232 -tt docker push 115.238.236.78:5000/civillan-front-web
 
     #清除临时文件
     - ssh test@192.168.0.232 -tt docker rm $(docker ps -q -f status=exited -f name=runner)

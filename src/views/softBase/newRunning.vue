@@ -124,7 +124,7 @@
       changeType(){
         //let type=sessionStorage.getItem('deviceType');
         console.log(this.deviceType);
-        if(this.deviceType=='PMHNT'){
+        if(this.deviceType=='FPJ'){
           this.tBody=['FConcrete', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='FConcrete'
         }else if(this.deviceType=='JBZ'){
