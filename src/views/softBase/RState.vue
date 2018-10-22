@@ -314,7 +314,7 @@ export default {
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
-        console.log(res)
+        console.log(res);
         if(res.success){
           this.RT_data=res.result;
           console.log(res);

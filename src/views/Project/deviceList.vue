@@ -1,7 +1,7 @@
 <template>
   <div class="n-box">
     <ul class="a-box">
-      <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
+      <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
         {{list.name}}
       </li>
     </ul>
@@ -60,6 +60,18 @@
         </div>
       </waterfall-slot>
     </waterfall>
+    <div class="m-pagination">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="listCurrentChange"
+        :current-page="post_data.page_index"
+        layout="total,sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="10"
+        :total='total'>
+      </el-pagination>
+    </div>
+
     <el-dialog
       :visible.sync="dialogVisible"
       :width="dialogWidth"
@@ -135,6 +147,12 @@
           {id:2,name:'已断线'},
           {id:3,name:'已离线'},
         ],
+        post_data:{
+          group_id:'',
+          page_index:1,
+          page_size:10,
+        },
+        total:0,
       };
     },
 
@@ -151,30 +169,36 @@
 
     methods: {
       getGroup(id,tenant){
-        this.loading=this.$loading({
-          fullscreen: true,
-          background: 'rgba(0, 0, 0, 0.2)'
-        });
         deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
           if(res.success){
             this.navList=res.result.items;
-            this.getList(this.navList[0].id);
+            let allDevice={
+              name:'全部设备',
+              id:'',
+            };
+            this.navList.unshift(allDevice);
+            this.post_data.group_id=this.navList[0].id;
+            console.log( this.navList);
+            this.getList();
 
             this.$nextTick(()=>{
               this.isShow=true
             });
-            this.loading.close()
           }else{
             this.$message.error(res.message);
-            this.loading.close()
           }
         }).catch(e=>{
-          this.loading.close()
+
         });
       },
-      changeTab1(list,index){ //切换tab
+      changeTab(list,index){ //切换tab
         this.isActive=index;
-        this.getList(list.id)
+        this.post_data={
+          group_id:list.id,
+          page_index:1,
+          page_size:10,
+        };
+        this.getList()
       },
       radioEvent(){
         this.dialogVisible = false;
@@ -184,14 +208,10 @@
         this.deviceType=item.type;
         this.dialogVisible=true;
         this.deviceName=item.name;
-        console.log(item.key)
+        console.log(item.key);
         sessionStorage.setItem('deviceType',item.type);
         sessionStorage.setItem('deviceKey',item.key);
         this.deviceKey=item.key;
-      },
-      changeTab(i){ //模态框tab
-        this.tIndex=i;
-        this.currentView=this.tBody[i]
       },
       isFullscreen(val){ //是否打开模态框
         //console.log(val);
@@ -215,12 +235,12 @@
         //this.changeIcon=data;
         //this.isFullscreen();
       },
-      getList(group_id){
+      getList(){
         this.loading=this.$loading({
           fullscreen: true,
           background: 'rgba(0, 0, 0, 0.2)'
         });
-        deviceList.list({'group_id':group_id}).then(res=>{
+        deviceList.list(this.post_data).then(res=>{
           if(res.success){
             console.log(res);
             if(res.result.items.length>0){
@@ -229,6 +249,7 @@
                 item.status=3;
               });
               this.items=res.result.items;
+              this.total=res.result.total;
               console.log(res.result.items);
               for(let i=0;i<this.items.length;i++){
                 deviceData.list({key:this.items[i].key}).then(res =>{
@@ -238,7 +259,6 @@
                     this.items[i].status=3
                   }
                 }).catch(e=>{
-                  _this.loading.close();
                 })
               }
               this.loading.close();
@@ -249,7 +269,18 @@
           }else{
             this.loading.close();
           }
+          this.loading.close();
+        }).catch(e=>{
+          this.loading.close();
         })
+      },
+      handleSizeChange(size){
+        this.post_data.page_size=size;
+        this.getList();
+      },
+      listCurrentChange(currentPage){
+        this.post_data.page_index = currentPage;
+        this.getList();
       },
       closeDialog(){
         //console.log('关闭弹窗');
@@ -423,6 +454,11 @@
   }
   .wf-enter {
     opacity: 0;
+  }
+  .m-pagination{
+    padding: 20px;
+    text-align: center;
+    //background: #ffffff;
   }
 </style>
 

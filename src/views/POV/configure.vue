@@ -92,8 +92,8 @@
         <div class="a-title"><h3>{{(flag == 'add')?'添加':'修改'}}作业配置</h3></div>
         <div class="a-body">
           <el-form class="a-info" :inline="true" :rules="rules" :model="form" ref="form">
-            <el-form-item class="i-content" prop="typeId" label="设备类型" style="width: 25%">
-              <el-select v-model="form.typeId" size="mini" placeholder="设备类型" @change="changeType">
+            <el-form-item class="i-content" prop="typeId" label="作业类型" style="width: 25%">
+              <el-select v-model="form.typeId" size="mini" placeholder="作业类型" @change="changeType">
                 <el-option
                   v-for="item in typeOptions"
                   :key="item.value"

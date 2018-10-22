@@ -292,16 +292,9 @@ export default {
     },
     getDetails(item,index){ //获取详情
       console.log(item);
-      if(item.type=='dzj'){
-        this.tBody[0]='FConcrete';
-        this.currentView='FConcrete'
-      }else {
-        this.tBody[0]='RState';
-        this.currentView='RState'
-      }
       this.dialogVisible=true;
       this.deviceName=item.name;
-      sessionStorage.setItem('deviceName',item.name);
+      //sessionStorage.setItem('deviceName',item.name);
       sessionStorage.setItem('deviceKey',item.key);
       this.deviceKey=item.key;
     },

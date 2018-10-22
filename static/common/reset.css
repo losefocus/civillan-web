@@ -279,7 +279,7 @@ button, input, select, textarea { font-size:100%; }
 }
 /*表单重置样式*/
 .el-form-item__label{
-  line-height: 20px !important;
+  /*line-height: 20px !important;*/
 }
 #closeBtn{
   background: #F85959 !important;
@@ -305,6 +305,9 @@ body .el-table th.gutter {
 .el-table__expanded-cell:hover{
   background-color: #E1E1E3 !important;
 
+}
+.el-table__expanded-cell:hover {
+   background-color: #E1E1E3!important;
 }
 /*.el-table__expanded-cell tr td{
   background: rgba(79,80,89,0.2);
@@ -357,5 +360,37 @@ body .el-table th.gutter {
   height: 80px;
 }
 
+
+
+.avatar-uploader{
+  margin-bottom: 20px;
+  text-align: center;
+}
+.el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  /*overflow: hidden;*/
+
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px !important;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+  /*overflow: hidden;*/
+  /*border-radius: 50%;*/
+}
 
 
