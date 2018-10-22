@@ -3,13 +3,12 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <!--<el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-        <el-select v-model="device"  filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini"  style="margin: 0 5px 0 0;width: 25%;float: left;" clearable >
+        <el-select v-show="!isShow" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备类型" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
             :label="item.name"
-            :value="index">
+            :value="item.key">
           </el-option>
           <el-pagination
             @current-change="deviceCurrentChange"
@@ -22,14 +21,14 @@
           </el-pagination>
         </el-select>
 
-        &lt;!&ndash;<el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+        <!--<el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect1"
             :key="item.value1"
             :label="item.name"
             :value="item.value1">
           </el-option>
-        </el-select>&ndash;&gt;-->
+        </el-select>-->
         <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect2"
@@ -651,7 +650,7 @@
       },
       //类型改变
       deviceChange(val){
-        console.log(val);
+        /*console.log(val);*/
         //this.post_data.key=val;
         //this.getList(this.post_data)
       },
@@ -719,6 +718,7 @@
       //全部设备select搜索框
       deviceSearch(query){
         console.log(query);
+        this.device=query
         this.device_data.name=query;
         this.getDeviceList(this.device_data);
       },
@@ -726,10 +726,21 @@
       getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
-          //console.log(res.result.items);
+          console.log(res.result.items);
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
         });
+      },
+      visibleChange(val){
+        console.log(val);
+        if(val){
+          this.device_data={
+            page_index:1,
+            page_size:5,
+            name:''
+          };
+          this.getDeviceList(this.device_data)
+        }
       },
 
       query(){
