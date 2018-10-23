@@ -429,7 +429,7 @@
         })
       },
       getCategoryList(){
-        this.allListQuery.tenant=this.$cookies.get('tenant');
+        //this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
           console.log(res);
           this.navList=res.result.items;
