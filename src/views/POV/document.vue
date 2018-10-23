@@ -23,7 +23,7 @@
       </div>
       <div class="c-handle">
         <el-button type="primary" icon="el-icon-refresh" size="mini" @click="Refresh()">刷新</el-button>
-        <el-button type="primary" icon="el-icon-upload2" size="mini" @click="importDocument()">导出</el-button>
+        <el-button type="primary" icon="el-icon-upload2" size="mini" @click="upload()">上传</el-button>
       </div>
     </div>
     <el-table
@@ -76,6 +76,30 @@
         :total='total'>
       </el-pagination>
     </div>
+
+
+    <el-dialog :visible.sync="configTemplateVisible" width='300px'>
+      <div class="clearfix" v-loading="uploading">
+        <div style="font-size: 16px;padding: 14px 20px;font-weight: bold;">
+          上传
+        </div>
+        <el-upload
+          class="upload-demo"
+          ref="upload"
+          :headers="headers"
+          action="/project/project_work_config/importWorkConfig"
+          :limit="999"
+          :data="params"
+          name="files"
+          multiple
+          :show-file-list ="false"
+          :before-upload='beforeUpload'
+          :on-success="uploadSuccess"
+          :auto-upload="true">
+          <el-button slot="trigger" size="small" type="primary" style="width:260px;margin-top:10px;">选择文件</el-button>
+        </el-upload>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
@@ -125,7 +149,10 @@
         value7: '',
         value:'',
         searchName:'',
-
+        configTemplateVisible:false,
+        headers:{token:this.$cookies.get('token')},
+        params:{component :'project',project_id:0},
+        uploading:false,
       }
     },
     filters: {
@@ -167,33 +194,14 @@
       },
       //导出文件
       //导出excel
-      formatDate(time) {
-        let date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss'); //yyyy-MM-dd hh:mm
+      upload(){
+        this.configTemplateVisible=true
       },
-      importDocument() {
-        if(this.multipleSelection.length!==0){
-          require.ensure([], () => {
-            const { export_json_to_excel } = require('@/vendor/Export2Excel');　　//引入文件　　　　
-            const tHeader = ['标题', '上传时间', '上传用户']; //将对应的属性名转换成中文
-            const filterVal = ['name', 'time', 'type'];//table表格中对应的属性名
-            if(this.multipleSelection){
-              let list = this.multipleSelection.map(item => {
-                return { name: item.name, time: this.formatDate(item.createdAt*1000) , type: '管理员'  };
-              });
-              const data = this.formatJson(filterVal, list);
-              export_json_to_excel(tHeader, data, 'excel文件');
-            }else{
-              this.$message.error('请先选择配置项！')
-            }
-          })
-        }else{
-          this.$message.error('请选择你要下载的文件')
-        }
+      beforeUpload(){
 
       },
-      formatJson(filterVal, jsonData) {
-        return jsonData.map(v => filterVal.map(j => v[j]));
+      uploadSuccess(){
+
       },
       getList(postData){
         this.loading=true;
@@ -275,5 +283,9 @@
   };
   .c-box1{
     flex-wrap:wrap;
+  }
+  .upload-demo{
+    width: 100%;
+    text-align: center;
   }
 </style>

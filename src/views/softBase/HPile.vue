@@ -732,7 +732,7 @@
         });
       },
       visibleChange(val){
-        console.log(this.device)
+        console.log(this.device);
         if(val){
           this.device_data={
             page_index:1,

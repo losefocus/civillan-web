@@ -13,7 +13,7 @@
           v-for="item in productLists"
           :key="item.id"
           :label="item.name"
-          :value="item.id"
+          :value="item.code"
           :disabled="item.disabled">
         </el-option>
       </el-select>
@@ -150,6 +150,7 @@ export default {
       //获取设备列表
       let markers = [];
       let marker;
+      console.log(post_data);
       deviceList.list(post_data).then(res=>{
         //接口成功
         if(res.success){

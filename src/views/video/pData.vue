@@ -26,7 +26,7 @@
       >
         <div class="item p-box" :style="item.style" :index="item.id">
           <div class="p-body" @click="getBig(item)">
-            <div class="b-box" :style="{'background':'url('+ item.thumbnailFileBaseUrl+item.thumbnailFilePath+')'}"></div>
+            <div class="b-box" :style="{'backgroundImage':'url('+ item.thumbnailFileBaseUrl+item.thumbnailFilePath+')'}"></div>
             <div class="v-name">
               <div class="v-title">{{ item.name }}</div>
               <div class="v-time">{{ item.createdAt*1000 |  formatDate}}</div>
@@ -40,7 +40,7 @@
       :visible.sync="dialogVisible"
       width="70%"
     >
-      <div class="b-picture" :style="{'background':'url('+ bigPictureUrl+')'}"></div>
+      <div class="b-picture" :style="{'backgroundImage':'url('+ bigPictureUrl+')'}"></div>
     </el-dialog>
   </div>
 </template>
@@ -93,6 +93,7 @@ export default {
         background: 'rgba(0, 0, 0, 0.2)'
       });
       media.list(post_data).then(res=>{
+        console.log(res);
         if(res.success){
           if(res.result.items.length>0){
             this.noData=false;
@@ -170,7 +171,7 @@ export default {
       .b-box{
         height: 85%;
         //background: url("../../assets/project/pData.png") no-repeat;
-        background-size: cover;
+        background-size: 100% 100%;
       }
       .v-name{
         background: #ffffff;
@@ -193,5 +194,6 @@ export default {
   .b-picture{
     width: 100%;
     height: 600px;
+    background-size: 100% 100%;
   }
 </style>

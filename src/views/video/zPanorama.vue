@@ -27,7 +27,7 @@
         <div class="item p-box" :style="item.style" :index="item.id">
           <div class="p-body" @click="photoViewer">
             <div class="viewer"></div>
-            <div class="b-box"  :style="{'background':'url('+ item.thumbnailFileBaseUrl+item.thumbnailFilePath+')'}"></div>
+            <div class="b-box"  :style="{'backgroundImage':'url('+ item.thumbnailFileBaseUrl+item.thumbnailFilePath+')'}"></div>
             <div class="v-name">
               <div class="v-title">{{ item.name }}</div>
               <div class="v-time">{{ item.createdAt*1000 |  formatDate}}</div>
@@ -183,7 +183,7 @@
         width: 100%;
         height: 85%;
         //background: url("../../assets/project/pData.png") no-repeat;
-        background-size: cover;
+        background-size: 100% 100%;
       }
       .v-name{
         background: #ffffff;

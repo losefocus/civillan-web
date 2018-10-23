@@ -91,23 +91,6 @@
       this.getCategoryList()
     },
     methods: {
-      //类型改变
-      /*deviceChange(val){
-        console.log(val.split(','));
-        let deviceType=val.split(',')[1];
-        this.deviceKey=val.split(',')[0];
-
-        if(deviceType=='JBZ'){
-          this.currentView='HPile'
-        }else if(deviceType=='FPJ'){
-          this.currentView='HFoam'
-        }else{
-          this.currentView='HFoam'
-        }
-        this.post_data.key=val;
-        this.getList(this.post_data)
-      },*/
-
       //获取类型列表数据
       getCategoryList(){
         this.allListQuery.tenant=this.$cookies.get('tenant');
@@ -115,13 +98,6 @@
           console.log(res);
           let list = res.result.items;
           this.navList=res.result.items;
-          /*this.typeOptions = list.map(item => {
-            return { value: item.id, label: item.name };
-          });
-          this.typeMap = new Map();
-          for (let i=0; i<list.length; i++) {
-            this.typeMap.set(list[i].id,list[i].name)
-          }*/
         })
       },
       changeTab(list,index){ //切换tab
@@ -138,12 +114,6 @@
         }else if(list.code=='YYLYJ'){
           this.currentView='HFoam'
         }
-        /*this.post_data={
-          group_id:list.id,
-          page_index:1,
-          page_size:10,
-        };*/
-        //this.getList(this.post_data)
       },
       visibleChange(val){
         console.log(val);

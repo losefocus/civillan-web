@@ -44,7 +44,11 @@
             <span v-if="item.device_type=='高压旋桩'">高压旋桩</span>-->
           </div>
           <ul class="d-info">
-            <li class="d-img"><img :src="item.thumbnailBaseUrl+item.thumbnailPath"></li>
+            <li class="d-img">
+              <img v-if="item.type=='JBZ'" :src="jbzImg">
+              <img v-if="item.type=='PLYH'" :src="pnyhImg">
+              <img v-if="item.type=='PMHNT'" :src="pmhntImg">
+            </li>
             <li class="d-statistics">
               <div class="d-date">段浆量：10L</div>
               <div class="d-progress">
@@ -100,6 +104,10 @@
   import NRecord from '@/views/softBase/NRecord'
   import newRunning from '@/views/softBase/newRunning.vue'
 
+  import jbzImg from '@/assets/device/JBZ.png'
+  import pmhntImg from '@/assets/device/PMHNT.png'
+  import pnyhImg from '@/assets/device/PNYH.png'
+
   import Bus from '@/common/eventBus'
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
@@ -118,6 +126,9 @@
     },
     data () {
       return {
+        jbzImg:jbzImg,
+        pmhntImg:pmhntImg,
+        pnyhImg:pnyhImg,
         isActive:'',
         noData:false,
         navList:[],
@@ -173,7 +184,7 @@
           if(res.success){
             this.navList=res.result.items;
             let allDevice={
-              name:'全部设备',
+              name:'全部',
               id:'',
             };
             this.navList.unshift(allDevice);
