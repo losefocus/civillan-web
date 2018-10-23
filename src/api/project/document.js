@@ -7,5 +7,9 @@ export default {
   },
   delete(params) {
     return post('/foreground/project_file/delete',qs.stringify(params))
+  },
+  add(params) {
+    return post('/foreground/project_file/add',params)
   }
+
 }

@@ -229,7 +229,7 @@
         }else{
           this.isFail2=true;
           this.isSuccess2=false;
-          this.$message.error('域名错误');
+          this.$message.error('公司代号错误');
           loading.close();
         }
         //this.$cookie.set('user.info',JSON.stringify(this.userInfo),{ expires: '60s'});

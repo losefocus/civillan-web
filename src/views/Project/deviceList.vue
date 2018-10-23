@@ -50,14 +50,14 @@
               <img v-if="item.type=='PMHNT'" :src="pmhntImg">
             </li>
             <li class="d-statistics">
-              <div class="d-date">段浆量：10L</div>
+              <div class="d-date">当前作业</div>
               <div class="d-progress">
-                <el-progress :percentage="30" color="#999999" :show-text='false'></el-progress>
+                k2358-805
               </div>
 
-              <div class="d-date">段灰量：20KG</div>
+              <div class="d-date">作业进度</div>
               <div>
-                <el-progress  :percentage="80" color="#999999" :show-text='false'></el-progress>
+                <el-progress  :percentage="80" color="rgb(36, 188, 247)" :show-text='false'></el-progress>
               </div>
             </li>
           </ul>
@@ -90,6 +90,7 @@
 </template>
 
 <script>
+  import { mapActions , mapState} from 'vuex'
   import dictionary from '@/api/common/dictionary'
   import deviceGrouping from '@/api/project/deviceGrouping'
   import deviceList from '@/api/project/deviceList'
@@ -159,6 +160,7 @@
           {id:3,name:'已离线'},
         ],
         post_data:{
+          project_id:this.$cookies.get('projectId'),
           group_id:'',
           page_index:1,
           page_size:10,
@@ -178,19 +180,24 @@
       this.getGroup(id,tenant)
     },
 
+    computed: {
+      ...mapState({token:state=>state.login.token})
+    },
     methods: {
+      ...mapActions('deviceKey',['incrementKey']),
       getGroup(id,tenant){
         deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
           if(res.success){
             this.navList=res.result.items;
             let allDevice={
+              project_id:this.$cookies.get('projectId'),
               name:'全部',
               id:'',
             };
             this.navList.unshift(allDevice);
             this.post_data.group_id=this.navList[0].id;
             console.log( this.navList);
-            this.getList();
+            this.getList(this.post_data);
 
             this.$nextTick(()=>{
               this.isShow=true
@@ -205,11 +212,12 @@
       changeTab(list,index){ //切换tab
         this.isActive=index;
         this.post_data={
+          project_id:this.$cookies.get('projectId'),
           group_id:list.id,
           page_index:1,
           page_size:10,
         };
-        this.getList()
+        this.getList(this.post_data)
       },
       radioEvent(){
         this.dialogVisible = false;
@@ -219,9 +227,12 @@
         this.deviceType=item.type;
         this.dialogVisible=true;
         this.deviceName=item.name;
-        console.log(item.key);
-        sessionStorage.setItem('deviceType',item.type);
-        sessionStorage.setItem('deviceKey',item.key);
+        console.log(item);
+        let deviceInfo=JSON.stringify(item);
+        //Bus.$emit('deviceInfo',deviceInfo);
+        this.$store.dispatch('incrementKey',item.key);
+        //sessionStorage.setItem('deviceType',item.type);
+        sessionStorage.setItem('deviceInfo',deviceInfo);
         this.deviceKey=item.key;
       },
       isFullscreen(val){ //是否打开模态框
@@ -431,7 +442,7 @@
       height: 50%;
       .d-img{
         float: left;
-        width: 25%;
+        width: 40%;
         height: 90%;
         img{
           width: 100%;
@@ -441,11 +452,11 @@
       .d-statistics{
         float: left;
         width: 50%;
-        padding-top: 12%;
+        padding-top: 5%;
         height: 85%;
-        margin-left: 18%;
+        margin-left: 3%;
         .d-date{
-          font-size: 10px;
+          font-size: 14px;
           margin-bottom: 6%;
         }
         .d-progress{
