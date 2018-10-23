@@ -130,6 +130,7 @@ export default {
     'typeStyle',
     'newStyle'
   ],
+
   mounted: function () {
     let project_id=this.$cookies.get('projectId');
     this.post_data.project_id=project_id;
@@ -156,7 +157,7 @@ export default {
         if(res.success){
           console.log(res);
           if(res.result.total==0){
-            _this.$message.error('未搜索到任何设备！');
+            //_this.$message.error('未搜索到任何设备！');
             _this.loading.close();
           }else{
             let lists=res.result.items;

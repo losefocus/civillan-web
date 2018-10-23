@@ -25,11 +25,11 @@
          </div>
          <div class="i-box">
            <div class="i-body">
-             <div class="i-name">双头搅拌桩设备</div>
+             <div class="i-name">{{deviceInfo.name}}</div>
              <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
            </div>
            <div class="i-body">
-             <div class="i-company">宏远建设记录仪一号</div>
+             <div class="i-company">{{deviceInfo.product.name}}</div>
              <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
@@ -157,6 +157,7 @@
   import aSp from '@/views/RState/AshPressureCurrent.vue'
   import pOperation from '@/views/RState/pileOperation.vue'
   import pMap from '@/views/RState/pileMap.vue'
+  import Bus from '@/common/eventBus'
 export default {
   name: "runningState",
   components:{
@@ -218,7 +219,9 @@ export default {
       isWarming:true,//未发现问题显示
       warmingText:'',
 
-      isTab:false,//设备型号切换
+      isTab:false,//设备型号切换,
+
+      deviceInfo:{},
     }
   },
   props:['dialogFullscreen','deviceKey','isClose','clientWidth'],
@@ -231,7 +234,8 @@ export default {
   created(){
     this.getConfig();
     //this.getDeviceConfig(this.deviceKey);
-    let deviceKey=sessionStorage.getItem('deviceKey');
+
+    let deviceKey=this.$store.state.project.deviceKey;
     console.log(deviceKey);
     this.getData(deviceKey);
     this.getAlarms(deviceKey);
@@ -242,6 +246,8 @@ export default {
 
   },
   mounted(){
+    this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+    console.log(this.deviceInfo);
     this.init();
     this.reload();
     const that = this;
@@ -305,7 +311,9 @@ export default {
       config.list({page_index:1, page_size:10000}).then(res=>{
         if(res.success){
           let aa = res.result.items;
-          aa.forEach(item=>{
+          console.log(aa);
+          res.result.items.forEach(item=>{
+            //console.log(item.content);
             let arr = JSON.parse(item.content);
             item.content=arr
           });
@@ -319,7 +327,7 @@ export default {
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
-        console.log(res);
+        //console.log(res);
         if(res.success){
           this.RT_data=res.result;
           console.log(res);
@@ -637,9 +645,15 @@ export default {
             }
             .b-infoName{
               height: 50%;
+              .i-info{
+                margin-left: 10px;
+              }
             }
             .b-infoCall{
               height: 50%;
+              .i-info{
+                margin-left: 10px;
+              }
             }
             /*.icon-portrait{
               color: #787F87;

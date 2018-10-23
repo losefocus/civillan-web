@@ -6,12 +6,13 @@
         <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
       </div>
     </ul>
-    <r-state :deviceName="deviceName" :is="currentView" :isShow="isShow" :clientWidth="clientWidth" :dialogFullscreen="dialogFullscreen" class="t-Body" @dialogFullscreen="changeScreen"></r-state>
+    <r-state :deviceKey="deviceKey" :is="currentView" :isShow="isShow" :clientWidth="clientWidth" :dialogFullscreen="dialogFullscreen" class="t-Body" @dialogFullscreen="changeScreen"></r-state>
   </div>
 </template>
 
 
 <script>
+
   import deviceGrouping from '@/api/project/deviceGrouping'
   import deviceList from '@/api/project/deviceList'
   import deviceData from '@/api/device/deviceData'
@@ -26,6 +27,7 @@
   import HFoam from '@/views/FConcrete/HFoam'
 
   import SCuring from '@/views/SCuring/SCuring'
+
 
 
   export default {
@@ -82,6 +84,7 @@
     },
 
     props:['deviceType'],
+
     created(){
       this.changeType();
       let clientWidth1=document.body.clientWidth;
@@ -121,9 +124,9 @@
       }
     },
     methods: {
+
       changeType(){
         //let type=sessionStorage.getItem('deviceType');
-        console.log(this.deviceType);
         if(this.deviceType=='PMHNT'){
           this.tBody=['FConcrete', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='FConcrete'

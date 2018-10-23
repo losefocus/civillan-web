@@ -78,25 +78,29 @@
     </div>
 
 
-    <el-dialog :visible.sync="configTemplateVisible" width='300px'>
-      <div class="clearfix" v-loading="uploading">
+    <el-dialog :visible.sync="configTemplateVisible" width='400px'>
+      <div class="clearfix">
         <div style="font-size: 16px;padding: 14px 20px;font-weight: bold;">
           上传
+        </div>
+        <div style="width: 100%;text-align: center">
+          <el-input v-model="title" placeholder="请输入文档标题" size="small" style="width: 90%;"></el-input>
         </div>
         <el-upload
           class="upload-demo"
           ref="upload"
           :headers="headers"
-          action="/project/project_work_config/importWorkConfig"
+          action="/foreground/project_file/upload"
           :limit="999"
           :data="params"
-          name="files"
+          name="uploadFile"
           multiple
           :show-file-list ="false"
           :before-upload='beforeUpload'
           :on-success="uploadSuccess"
           :auto-upload="true">
-          <el-button slot="trigger" size="small" type="primary" style="width:260px;margin-top:10px;">选择文件</el-button>
+          <el-button slot="trigger" size="small" :loading="uploading" type="primary" style="width:360px;margin:10px 20px;">选择文件</el-button>
+          <el-button size="small" type="success" style="width:360px;margin:0 0 20px 20px;" @click="confirmUpload">确认上传</el-button>
         </el-upload>
       </div>
     </el-dialog>
@@ -113,7 +117,7 @@
         total:0,
         loading:false,
         post_data:{
-          project_id:"",
+          project_id:this.$cookies.get('projectId'),
           page_index:1,
           page_size:10,
         },
@@ -151,8 +155,12 @@
         searchName:'',
         configTemplateVisible:false,
         headers:{token:this.$cookies.get('token')},
-        params:{component :'project',project_id:0},
+        params:{component :'project',project_id:this.$cookies.get('projectId')},
         uploading:false,
+        documentUrl:'',
+        title:'',
+        filePath:'',
+        fileBaseUrl:'',
       }
     },
     filters: {
@@ -195,14 +203,52 @@
       //导出文件
       //导出excel
       upload(){
-        //this.configTemplateVisible=true
+        this.configTemplateVisible=true
       },
-      beforeUpload(){
+      confirmUpload(){
+        let post_data={
+          name:this.title,
+          filePath:this.filePath,
+          fileBaseUrl:this.fileBaseUrl,
+          projectId:Number(this.$cookies.get('projectId')),
+          status:1,
+          comment:'',
+        };
+        if(this.title){
+          document.add(post_data).then(res=>{
+            if(res.success){
+              this.$message.success('上传成功');
+              this.configTemplateVisible=false;
+              this.getList(this.post_data);
+            }
+          })
+        }else{
+          this.$message.error('请输入文档标题')
+        }
 
       },
-      uploadSuccess(){
+      beforeUpload(file){
+        console.log(file);
+        this.uploading=true
+        const isJPG = file.type === 'application/vnd.ms-excel';
+        const isLt2M = file.size / 1024 / 1024 < 5;
 
+        if (!isJPG) {
+          this.$message.error('上传文件只能是 CSV 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传文件大小不能超过 5MB!');
+        }
+        return isJPG && isLt2M;
       },
+      uploadSuccess(res, file) {
+        this.uploading=false;
+        console.log(res);
+        //this.documentUrl = res.result.baseUrl+res.result.path;
+        this.filePath =res.result.path;
+        this.fileBaseUrl =res.result.baseUrl;
+      },
+
       getList(postData){
         this.loading=true;
         document.list(postData).then(res=>{
@@ -286,6 +332,6 @@
   }
   .upload-demo{
     width: 100%;
-    text-align: center;
+    //text-align: center;
   }
 </style>

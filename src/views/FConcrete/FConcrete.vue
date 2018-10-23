@@ -300,11 +300,11 @@
             outline: {
               show: false
             },
-            /*backgroundStyle: {
-              //borderColor: '#32a3cf',
-              color: '#8fcccf',
+            backgroundStyle: {
+              borderColor: '#EEEEEE',
+              color: '#ffffff',
               borderWidth: 1,
-            },*/
+            },
             data: [{
               name: '溶液',
               value: 0.6
@@ -315,7 +315,7 @@
             amplitude: '4%',
             waveLength: '90%',
             radius: '80%',
-            color: ['#50CEF5'],
+            color: ['#DF9A9A'],
 
             label: {
               normal: {
@@ -338,11 +338,11 @@
             outline: {
               show: false
             },
-            /*backgroundStyle: {
-              //borderColor: '#32a3cf',
-              color: '#8fcccf',
+            backgroundStyle: {
+              borderColor: '#EEEEEE',
+              color: '#ffffff',
               borderWidth: 1,
-            },*/
+            },
             data: [{
               name: '泥浆',
               value: 0.6
@@ -353,7 +353,7 @@
             amplitude: '4%',
             waveLength: '90%',
             radius: '80%',
-            color: ['#50CEF5'],
+            color: ['#885018'],
 
             label: {
               normal: {
@@ -376,11 +376,11 @@
             outline: {
               show: false
             },
-            /*backgroundStyle: {
-              //borderColor: '#32a3cf',
-              color: '#8fcccf',
+            backgroundStyle: {
+              borderColor: '#EEEEEE',
+              color: '#ffffff',
               borderWidth: 1,
-            },*/
+            },
             data: [{
               name: '空气',
               value: 0.6
@@ -414,11 +414,11 @@
             outline: {
               show: false
             },
-            /*backgroundStyle: {
-              //borderColor: '#32a3cf',
-              color: '#8fcccf',
+            backgroundStyle: {
+              borderColor: '#EEEEEE',
+              color: '#ffffff',
               borderWidth: 1,
-            },*/
+            },
             data: [{
               name: '轻质土流量',
               value: 0.6
@@ -429,7 +429,7 @@
             amplitude: '4%',
             waveLength: '90%',
             radius: '80%',
-            color: ['#50CEF5'],
+            color: ['#90A5A7'],
 
             label: {
               normal: {
@@ -452,22 +452,23 @@
             outline: {
               show: false
             },
-            /*backgroundStyle: {
-              //borderColor: '#32a3cf',
-              color: '#8fcccf',
+            backgroundStyle: {
+              borderColor: '#EEEEEE',
+              color: '#ffffff',
               borderWidth: 1,
-            },*/
+            },
             data: [{
               name: '气泡密度',
-              value: 0.6
+              value: 0.7
             }],
             itemStyle: {
-              shadowBlur: 0
+              shadowBlur: 0,
+              opacity: 1
             },
             amplitude: '4%',
             waveLength: '90%',
             radius: '80%',
-            color: ['#50CEF5'],
+            color: ['rgba(255, 0, 0, 1)'],
 
             label: {
               normal: {
@@ -552,37 +553,7 @@
       /*this.energySphere();*/
 
       let _this=this;
-      /*window.onresize = function(){
-        /!*_this.$nextTick(()=>{
-          let pile=document.getElementById('pile');
-          if(!pile){
-            //console.log('dom销毁')
-          }else{
-            let pileHeight,pileWidth
-            if(pile.currentStyle){
-              pileHeight = pile.currentStyle.height
-              pileWidth = pile.currentStyle.width
-            }else {
-              pileHeight = window.getComputedStyle(pile).height;
-              pileWidth = window.getComputedStyle(pile).width;
-            }
-            _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-            _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-            _this.$refs.pMap.width = parseFloat(pileWidth);
-            _this.$refs.pMap.height = parseFloat(pileHeight);
-            _this.$refs.pMap.init();
-          }
 
-        });
-
-
-        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-        if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
-        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-        let clientWidth=document.body.clientWidth;
-        that.temp(that.dialogFullscreen,that.diameter,that,clientWidth)*!/
-      }*/
     },
     beforeDestroy(){
       clearInterval(this.timer);
@@ -597,62 +568,7 @@
       deviceChange(index){
         this.deviceIndex=index;
       },
-      /*temp(isDialog,diameter,that,clientWidth) {
-        if(!isDialog){
-          this.classChange=2;
-          if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-          if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-          if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-          if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
-          if(clientWidth>1660){
-            diameter=110;
-          }else if(clientWidth<1660&&clientWidth>1500){
-            diameter=120;
-          }else if(clientWidth<1500&&clientWidth>1380){
-            that.$emit('dialogFullscreen','true');
-            that.$emit('zoomShow','false');
-            that.isShow=false;
-            diameter=100;
-          }else if(clientWidth<1380){
-            that.$emit('zoomShow','false');
-            that.$emit('dialogFullscreen','true')
-          }
-        }else{
-          if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()};
-          if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()};
-          if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()};
-          if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();};
-          if(clientWidth>1800){
-            this.classChange=1;
-            diameter=170;
-          }else if(clientWidth<1800&&clientWidth>1700){
-            this.classChange=1;
-            diameter=160;
-          }else if(clientWidth<1700&&clientWidth>1600){
-            this.classChange=1;
-            diameter=140;
-          }else if(clientWidth<1600&&clientWidth>1510){
-            this.classChange=1;
-            diameter=120;
-          }else if(clientWidth<1510&&clientWidth>1420){
-            this.classChange=2;
-            diameter=120;
-          }else if(clientWidth<1420&&clientWidth>1300){
-            this.classChange=2;
-            diameter=110;
-          }else if(clientWidth<1300&&clientWidth>1200){
-            this.classChange=2;
-            diameter=110;
-          }else if(clientWidth<1200&&clientWidth>1100){
-            this.classChange=2;
-            diameter=120;
-          }else if(clientWidth<1100&&clientWidth>1000){
-            this.classChange=2;
-            diameter=120;
-          }
-        }
-        this.diameter=diameter
-      },*/
+
       tabChange(x){
         if(x==0){
           this.isTab=false;
@@ -728,12 +644,6 @@
           //console.log(res.result.items[0].message);
         })
       },
-      //设备配置参数
-      /*getDeviceConfig(post_data){
-        deviceConfig.list({'device_id':post_data}).then(res=>{
-          console.log(res)
-        })
-      },*/
 
       //报警信息
       getAlarms(key){
