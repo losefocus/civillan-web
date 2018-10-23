@@ -53,30 +53,40 @@
             <i class="iconfont icon-pie"></i>
             <span>桩设计参考值</span>
           </div>
+          <div class="d-level">
+            <span>当前等级</span>
+            <span> CF0.5</span>
+          </div>
           <div class="d-box">
             <div>
+              <p class="d-value">0.5</p>
               <p class="d-key">设计强度</p>
-              <p class="d-value">30</p>
+              <p class="d-unit">Mpa</p>
             </div>
             <div>
-              <p class="d-key">桩长</p>
-              <p class="d-value">30</p>
+              <p class="d-value">276</p>
+              <p class="d-key">水泥用量</p>
+              <p class="d-unit">kg</p>
             </div>
             <div>
-              <p class="d-key">桩径</p>
-              <p class="d-value">30</p>
+              <p class="d-value">10</p>
+              <p class="d-key">材料用量</p>
+              <p class="d-unit">kg</p>
             </div>
             <div>
-              <p class="d-key">水灰比</p>
-              <p class="d-value">30</p>
+              <p class="d-value">190</p>
+              <p class="d-key">水用量</p>
+              <p class="d-unit">kg</p>
             </div>
             <div>
-              <p class="d-key">灰量</p>
-              <p class="d-value">30</p>
+              <p class="d-value">720</p>
+              <p class="d-key">气泡群</p>
+              <p class="d-unit">L</p>
             </div>
             <div>
-              <p class="d-key">工艺</p>
-              <p class="d-value1">{{RT_data.process_type}}</p>
+              <p class="d-value">5.01</p>
+              <p class="d-key">湿容重</p>
+              <p class="d-unit">KN/m3</p>
             </div>
           </div>
         </li>
@@ -463,12 +473,11 @@
             }],
             itemStyle: {
               shadowBlur: 0,
-              opacity: 1
             },
             amplitude: '4%',
             waveLength: '90%',
             radius: '80%',
-            color: ['rgba(255, 0, 0, 1)'],
+            color: ['#50C9F9'],
 
             label: {
               normal: {
@@ -491,11 +500,11 @@
             outline: {
               show: false
             },
-            /*backgroundStyle: {
-              //borderColor: '#32a3cf',
-              color: '#8fcccf',
+            backgroundStyle: {
+              borderColor: '#EEEEEE',
+              color: '#ffffff',
               borderWidth: 1,
-            },*/
+            },
             data: [{
               name: '湿容重',
               value: 0.6
@@ -946,6 +955,10 @@
             font-weight: bold;
           }
         }
+        .d-level{
+          margin-top: 30px;
+          color: #F85959;
+        }
         .d-box{
           height: 60%;
 
@@ -955,12 +968,20 @@
             text-align: center;
             width: 33%;
           }
+
+          .d-unit{
+            margin-top: 5px;
+            font-size: 18px;
+            color: #666666;
+          }
           .d-key{
+            margin-top: 10px;
             font-size: 14px;
+            font-weight: bold;
             color: #666666;
           }
           .d-value{
-            margin-top: 10px;
+
             font-weight: bold;
             height: 30px;
             font-size: 25px;
