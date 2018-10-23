@@ -195,7 +195,7 @@
       //导出文件
       //导出excel
       upload(){
-        this.configTemplateVisible=true
+        //this.configTemplateVisible=true
       },
       beforeUpload(){
 
