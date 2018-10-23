@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative;height: calc(100% - 75px);" >
+    <div style="position: relative;height: calc(100% - 75px);" >
     <ul class="a-box">
         <router-link :to="{path:list.path}" tag="li" v-for="(list,index) in navList" :key="index">
           {{list.name}}
@@ -12,7 +12,6 @@
 <script>
   import deviceList from '@/views/Project/deviceList'
   import deviceMap from '@/views/Project/deviceMap'
-  import Bus from '@/common/eventBus'
   export default {
     name: "project_old",
     components: {
@@ -55,9 +54,7 @@
     position: absolute;
     z-index: 99;
     top: 35px;
-    right: 20px;
-    width: 214px;
-    height: 60px;
+    right: 40px;
     li{
       font-size: 14px;
       cursor: pointer;

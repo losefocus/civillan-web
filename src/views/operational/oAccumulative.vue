@@ -2,9 +2,14 @@
 <template>
   <div>
     <!-- 标题和控制栏 -->
+    <ul class="a-box">
+      <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
+        {{list.name}}
+      </li>
+    </ul>
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
+        <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
@@ -22,14 +27,14 @@
           </el-pagination>
         </el-select>
 
-        <el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+        <!--<el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect1"
             :key="item.value1"
             :label="item.name"
             :value="item.value1">
           </el-option>
-        </el-select>
+        </el-select>-->
         <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect2"
@@ -168,6 +173,7 @@
 
 <script>
   import deviceList from '@/api/project/deviceList'
+  import categories from '@/api/configure/categories'
   import Bus from '@/common/eventBus'
   export default {
     name: "oOperational",
@@ -348,9 +354,18 @@
         deviceTotal: 0,
         deviceName: '',
         total:0,
+        navList:[],
+        isActive:'',
+        allListQuery:{ //类型select列表请求参数
+          page_index: 1,
+          page_size: 999,
+          direction:'asc',
+          sort_by:'sort'
+        },
       }
     },
     created(){
+      this.getCategoryList()
       this.getDeviceList(this.device_data);
       Bus.$on('isCollapse',res=>{
         console.log(res);
@@ -358,8 +373,27 @@
       })
     },
     methods: {
-      displayScreening(){
-
+      changeTab(list,index){ //切换tab
+        this.isActive=index;
+        /*console.log(list)
+        if(list.code=='JBZ'){
+          this.currentView='HPile'
+        }else if(list.code=='PMHNT'){
+          this.currentView='HFoam'
+        }else if(list.code=='PLYH'){
+          this.currentView='HFoam'
+        }else if(list.code=='YYLZL'){
+          this.currentView='HFoam'
+        }else if(list.code=='YYLYJ'){
+          this.currentView='HFoam'
+        }*/
+      },
+      getCategoryList(){
+        this.allListQuery.tenant=this.$cookies.get('tenant');
+        categories.list(this.allListQuery).then(res => {
+          console.log(res);
+          this.navList=res.result.items;
+        })
       },
       //列表改变当前页
       listCurrentChange: function(currentPage){
@@ -432,6 +466,40 @@
 </script>
 
 <style scoped lang="scss">
+  .a-box{
+    width: calc(100% - 20px);
+    padding: 15px 0 0 20px;
+    height: 50px;
+    background: #ffffff;
+    margin-bottom: 10px;
+    li{
+      font-size: 14px;
+      cursor: pointer;
+      float: left;
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background: #FFFFFF;
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
+    }
+    li:first-child{
+      border-radius: 5px 0 0 5px;
+    }
+    li:last-child{
+      border-radius: 0 5px 5px 0;
+    }
+    .active{
+      background: #F76A6A;
+      color: #ffffff;
+      border:1px solid #F76A6A;
+    }
+    .active+li{
+      border-left: none;
+    }
+  }
   .c-box{
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);

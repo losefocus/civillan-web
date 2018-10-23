@@ -21,7 +21,7 @@
           },
           {
             path:'/operational/oAccumulative',
-            name:'累积成效',
+            name:'累计成效',
           }
         ]
       }
@@ -34,11 +34,14 @@
     padding: 20px;
     //height: calc(100% - 100px);
     background: #f5f5f9;
+    position: relative;
   }
   .a-box{
     //margin-top: 15px;
-    width: 100%;
-    height: 50px;
+    position: absolute;
+    width: auto;
+    top: 35px;
+    right: 40px;
     li{
       font-size: 14px;
       cursor: pointer;
