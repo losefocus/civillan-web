@@ -241,7 +241,11 @@ export default {
                         //阻止冒泡
                         event.stopPropagation();
                         _this.dialogVisible=true;
+                        _this.deviceName=items.name;
+                        sessionStorage.setItem('deviceName',items.name);
+                        _this.deviceKey=items.key;
                         _this.$store.dispatch('incrementKey',items.key);
+                        console.log(_this.deviceKey)
                       });
                       infoWindow.open(map, e.target.getPosition());
                     });
