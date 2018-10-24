@@ -51,10 +51,7 @@
   import curingOff from '@/assets/curing/curingOff.png'
   import curingRunning from '@/assets/curing/curingRunning.png'
 
-
-
   import newRunning from '@/views/softBase/newRunning.vue'
-
 
   import SAnalysis from '@/views/softBase/SAnalysis'
   import RState from '@/views/softBase/RState'
@@ -242,7 +239,8 @@ export default {
                         event.stopPropagation();
                         _this.dialogVisible=true;
                         _this.deviceName=items.name;
-                        sessionStorage.setItem('deviceName',items.name);
+                        let deviceInfo=JSON.stringify(items);
+                        sessionStorage.setItem('deviceInfo',deviceInfo);
                         _this.deviceKey=items.key;
                         _this.$store.dispatch('incrementKey',items.key);
                         console.log(_this.deviceKey)

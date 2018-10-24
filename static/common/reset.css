@@ -393,4 +393,8 @@ body .el-table th.gutter {
   /*border-radius: 50%;*/
 }
 
+/*走马灯高度自适应*/
+.el-carousel__container{
+  height: 100% !important;
+}
 

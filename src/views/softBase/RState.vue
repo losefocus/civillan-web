@@ -25,11 +25,11 @@
          </div>
          <div class="i-box">
            <div class="i-body">
-             <div class="i-name">双头搅拌桩</div>
+             <div class="i-name">{{deviceName1}}</div>
              <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
            </div>
            <div class="i-body">
-             <div class="i-company">宏远建设记录仪一号</div>
+             <div class="i-company">{{productName}}</div>
              <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
@@ -37,8 +37,8 @@
          <div class="clear"></div>
          <div class="h-box">
            <div class="b-info">
-             <div class="b-infoName"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
-             <div class="b-infoCall"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
+             <div class="b-infoName"><span class="iconfont icon-portrait"></span><span class="i-info">{{deviceUserName}}</span></div>
+             <div class="b-infoCall"><span class="iconfont icon-phonenew"></span><span class="i-info">{{deviceUserPhone}}</span></div>
            </div>
            <div class="b-angle">
              <div class="a-spot"></div>
@@ -152,6 +152,7 @@
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
+  import deviceUser from '@/api/device/deviceUser.js'
   import deviceConfig from '@/api/device/deviceConfig.js'
 
   import aSp from '@/views/RState/AshPressureCurrent.vue'
@@ -222,6 +223,11 @@ export default {
       isTab:false,//设备型号切换,
 
       deviceInfo:{},
+
+      productName:'',
+      deviceName1:'',
+      deviceUserName:'',
+      deviceUserPhone:'',
     }
   },
   props:['dialogFullscreen','deviceKey','isClose','clientWidth'],
@@ -233,10 +239,9 @@ export default {
   },
   created(){
     this.getConfig();
+    this.getDeviceInfo();
     //this.getDeviceConfig(this.deviceKey);
-
     let deviceKey=this.$store.state.project.deviceKey;
-    console.log(deviceKey);
     this.getData(deviceKey);
     this.getAlarms(deviceKey);
     /*this.timer=setInterval(()=>{
@@ -246,47 +251,51 @@ export default {
 
   },
   mounted(){
-    this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-    console.log(this.deviceInfo);
     this.init();
     this.reload();
-    const that = this;
+
     this.getPileData();
-
-    let pile=document.getElementById('pile');
-    let pileHeight,pileWidth;
-    this.$nextTick(()=>{
-      if(pile){
-        pileHeight = pile.offsetHeight;
-        pileWidth = pile.offsetWidth;
-        this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-        this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-        console.log(pileHeight,pileWidth);
-
-        this.$refs.pMap.width = parseFloat(pileWidth);
-        this.$refs.pMap.height = parseFloat(pileHeight);
-      }
-
-    });
-
-    setTimeout(()=>{
-        this.$refs.pMap.width = parseFloat(pileWidth);
-        this.$refs.pMap.height = parseFloat(pileHeight);
-        if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
-        if( that.$refs.aSp!==undefined){that.$refs.aSp.resize();}
-        if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
-        if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
-    },100);
   },
   beforeDestroy(){
     clearInterval(this.timer);
-    console.log('已销毁');
   },
 
   methods:{
     init(){
       let clientWidth=document.body.clientWidth;
-      this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)
+      this.temp(this.dialogFullscreen,this.diameter,this,clientWidth);
+      let pile=document.getElementById('pile');
+      let pileHeight,pileWidth;
+      this.$nextTick(()=>{
+        if(pile){
+          pileHeight = pile.offsetHeight;
+          pileWidth = pile.offsetWidth;
+          this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+          this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+          this.$refs.pMap.width = parseFloat(pileWidth);
+          this.$refs.pMap.height = parseFloat(pileHeight);
+        }
+      });
+      setTimeout(()=>{
+        this.$refs.pMap.width = parseFloat(pileWidth);
+        this.$refs.pMap.height = parseFloat(pileHeight);
+        if( this.$refs.sCurrent!==undefined){this.$refs.sCurrent.resize()}
+        if( this.$refs.aSp!==undefined){this.$refs.aSp.resize();}
+        if( this.$refs.sSpeed!==undefined){this.$refs.sSpeed.resize()}
+        if( this.$refs.sFlow!==undefined){this.$refs.sFlow.resize()}
+      },100);
+    },
+    //设备信息
+    getDeviceInfo(){
+      this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+      this.productName=this.deviceInfo.product.name;
+      this.deviceName1=this.deviceInfo.name;
+      deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
+        if(res.success){
+          this.deviceUserName=res.result.items[0].projectUser.name;
+          this.deviceUserPhone=res.result.items[0].projectUser.phone;
+        }
+      })
     },
     deviceChange(index){
       this.deviceIndex=index;
@@ -313,9 +322,9 @@ export default {
       config.list({page_index:1, page_size:10000}).then(res=>{
         if(res.success){
           let aa = res.result.items;
-          console.log(aa);
-          res.result.items.forEach((item,index)=>{
-            console.log(index);
+          //console.log(aa);
+          aa.forEach((item,index)=>{
+            //console.log(item.content);
             let arr = JSON.parse(item.content);
             item.content=arr
           });

@@ -24,18 +24,18 @@
           </div>
           <div class="i-box">
             <div class="i-body">
-              <div class="i-name">泡沫混凝土</div>
+              <div class="i-name">{{deviceName1}}</div>
               <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
             </div>
             <div class="i-body">
-              <div class="i-company">宏远建设记录仪一号</div>
+              <div class="i-company">{{productName}}</div>
               <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
             </div>
           </div>
           <div class="clear"></div>
           <div class="h-box">
-              <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
-              <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
+              <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">{{deviceUserName}}</span></div>
+              <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">{{deviceUserPhone}}</span></div>
           </div>
 
           <div class="i-normal" v-if="isWarming">
@@ -173,6 +173,7 @@
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
+  import deviceUser from '@/api/device/deviceUser.js'
   import deviceConfig from '@/api/device/deviceConfig.js'
 
   import aSp from '@/views/RState/AshPressureCurrent.vue'
@@ -458,7 +459,7 @@
         polar5:{
           series: [{
             type: 'liquidFill',
-            name: 'kg/m3',
+            name: '70%',
             outline: {
               show: false
             },
@@ -469,7 +470,7 @@
             },
             data: [{
               name: '气泡密度',
-              value: 0.7
+              value: 'kg/m3'
             }],
             itemStyle: {
               shadowBlur: 0,
@@ -482,9 +483,9 @@
             label: {
               normal: {
                 formatter: function(param) {
-                  return param.value*100+'%' + '\n'
+                  return param.seriesName + '\n'
                     + param.name + '\n'
-                    + param.seriesName;
+                    + param.value;
                 },
                 textStyle: {
                   fontSize: 14
@@ -496,7 +497,7 @@
         polar6:{
           series: [{
             type: 'liquidFill',
-            name: 'kn/h',
+            name: '60%',
             outline: {
               show: false
             },
@@ -507,22 +508,22 @@
             },
             data: [{
               name: '湿容重',
-              value: 0.6
+              value: 'kn/h'
             }],
             itemStyle: {
-              shadowBlur: 0
+              shadowBlur: 0,
             },
             amplitude: '4%',
             waveLength: '90%',
             radius: '80%',
-            color: ['#50CEF5'],
+            color: ['#50C9F9'],
 
             label: {
               normal: {
                 formatter: function(param) {
-                  return param.value*100+'%' + '\n'
+                  return param.seriesName + '\n'
                     + param.name + '\n'
-                    + param.seriesName;
+                    + param.value;
                 },
                 textStyle: {
                   fontSize: 14
@@ -532,6 +533,11 @@
           }]
         },
         ctx:null,
+
+        productName:'',
+        deviceName1:'',
+        deviceUserName:'',
+        deviceUserPhone:'',
       }
     },
     props:['dialogFullscreen','deviceKey','isClose'],
@@ -543,8 +549,9 @@
     },
     created(){
       this.getConfig();
+      this.getDeviceInfo();
       //this.getDeviceConfig(this.deviceKey);
-      let deviceKey=sessionStorage.getItem('deviceKey');
+      let deviceKey=this.$store.state.project.deviceKey;
       this.getData(deviceKey);
       this.getAlarms(deviceKey);
       /*this.timer=setInterval(()=>{
@@ -566,6 +573,18 @@
       init(){
         let clientWidth=document.body.clientWidth;
         /*this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)*/
+      },
+      //设备信息
+      getDeviceInfo(){
+        this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+        this.productName=this.deviceInfo.product.name;
+        this.deviceName1=this.deviceInfo.name;
+        deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
+          if(res.success){
+            this.deviceUserName=res.result.items[0].projectUser.name;
+            this.deviceUserPhone=res.result.items[0].projectUser.phone;
+          }
+        })
       },
       deviceChange(index){
         this.deviceIndex=index;
