@@ -556,13 +556,6 @@
     mounted(){
       this.init();
       this.reload();
-      const that = this;
-      this.getPileData();
-
-      /*this.energySphere();*/
-
-      let _this=this;
-
     },
     beforeDestroy(){
       clearInterval(this.timer);
@@ -590,21 +583,7 @@
         this.$nextTick(() => (this.isRouterAlive = true))
       },
 
-      getPileData(){
-        config.list({page_index:1, page_size:10000}).then(res=>{
-          if(res.success){
-            let aa = res.result.items;
-            aa.forEach(item=>{
-              let arr = JSON.parse(item.content);
-              item.content=arr
-            });
-            this.pileData.ps=aa;
-            if(this.$refs.pMap){this.$refs.pMap.init()}
-          }else{
-            console.log('CAD数据获取失败')
-          }
-        })
-      },
+
       //实时数据
       getData(key){
         deviceData.list({'key':key}).then(res=>{

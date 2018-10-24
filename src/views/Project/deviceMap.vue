@@ -65,6 +65,7 @@
 
   import deviceData from '@/api/device/deviceData'
   import categories from '@/api/configure/categories'
+  import { mapActions , mapState} from 'vuex'
 export default {
   name: "deviceMap",
   components:{
@@ -137,7 +138,11 @@ export default {
     this.init(this.post_data);
     this.getCategoryList();
   },
+  computed: {
+    ...mapState({token:state=>state.login.token})
+  },
   methods:{
+    ...mapActions('deviceKey',['incrementKey']),
     init(post_data){
       let _this=this;
       this.loading=this.$loading({
@@ -236,10 +241,7 @@ export default {
                         //阻止冒泡
                         event.stopPropagation();
                         _this.dialogVisible=true;
-                        _this.deviceName=items.name;
-                        sessionStorage.setItem('deviceName',items.name);
-                        _this.deviceKey=items.key;
-                        console.log(_this.deviceKey)
+                        _this.$store.dispatch('incrementKey',items.key);
                       });
                       infoWindow.open(map, e.target.getPosition());
                     });

@@ -215,13 +215,18 @@
           comment:'',
         };
         if(this.title){
-          document.add(post_data).then(res=>{
-            if(res.success){
-              this.$message.success('上传成功');
-              this.configTemplateVisible=false;
-              this.getList(this.post_data);
-            }
-          })
+          if(this.filePath||this.fileBaseUrl){
+            document.add(post_data).then(res=>{
+              if(res.success){
+                this.$message.success('上传成功');
+                this.configTemplateVisible=false;
+                this.getList(this.post_data);
+              }
+            })
+          }else {
+            this.$message.error('请选择上传文件')
+          }
+
         }else{
           this.$message.error('请输入文档标题')
         }
