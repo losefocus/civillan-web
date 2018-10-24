@@ -84,7 +84,7 @@
         <div class="t-workSchedule">
           作业进度
         </div>
-        <el-carousel :autoplay="false" trigger="click" style="height: calc(100% - 40px);">
+        <el-carousel  indicator-position="outside" :autoplay="false" trigger="click" style="height: calc(100% - 40px);">
           <el-carousel-item v-for="(items,index) in deviceList" :key="index">
             <ul style="width: 100%;height: 100%">
               <li class="b-device" v-for="(item,i) in items" :key="i">
