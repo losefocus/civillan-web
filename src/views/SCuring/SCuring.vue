@@ -16,18 +16,18 @@
           </div>
           <div class="i-box">
             <div class="i-body">
-              <div class="i-name">喷凝系统</div>
+              <div class="i-name">{{deviceName1}}</div>
               <div class="i-state"><span style="vertical-align: center">在线状态</span><div class="led-green" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
             </div>
             <div class="i-body">
-              <div class="i-company">宏远建设记录仪一号</div>
+              <div class="i-company">{{productName}}</div>
               <div class="i-state"><span>养护状态</span><div class="led-green" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
             </div>
           </div>
           <div class="clear"></div>
           <div class="h-box">
-            <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">张三三</span></div>
-            <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">186-1396-1168</span></div>
+            <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">{{deviceUserName}}</span></div>
+            <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">{{deviceUserPhone}}</span></div>
           </div>
 
           <div class="i-normal" v-if="isWarming">
@@ -42,8 +42,6 @@
         </li>
         <li class="s-liquidFill">
           <div id="THCharts" style="width: 100%;height: 100%;"></div>
-          <!--<canvas id="c"></canvas>
-          <input type="range" id="r" min="0" max="100" step="1">-->
         </li>
       </ul>
       <ul class="s-box2">
@@ -75,7 +73,6 @@
 
 <script>
   import echarts from 'echarts'
-  import liquidFill from 'echarts-liquidfill'
   import RadialProgressBar from 'vue-radial-progress'
   import sCurrent from '@/views/RState/sCurrent'
   import sSpeed from '@/views/RState/sSpeed'
@@ -84,6 +81,7 @@
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
+  import deviceUser from '@/api/device/deviceUser.js'
   import deviceConfig from '@/api/device/deviceConfig.js'
 
   import aSp from '@/views/RState/AshPressureCurrent.vue'
@@ -165,7 +163,10 @@
 
         ctx:null,
 
-
+        productName:'',
+        deviceName1:'',
+        deviceUserName:'',
+        deviceUserPhone:'',
       }
     },
     props:['dialogFullscreen','deviceKey','isClose','clientWidth'],
@@ -177,28 +178,38 @@
     },
     created(){
       this.getConfig();
-      let deviceKey=sessionStorage.getItem('deviceKey');
+      this.getDeviceInfo();
+      let deviceKey=this.$store.state.project.deviceKey;
       this.getData(deviceKey);
       this.getAlarms(deviceKey);
     },
     mounted(){
       this.init();
-
       this.myCharts();
       this.$nextTick(()=>{
         this.myChart.resize()
       });
       this.reload();
-      this.getPileData();
     },
     beforeDestroy(){
       clearInterval(this.timer);
-      //console.log('已销毁');
     },
 
     methods:{
       init(){
         let clientWidth=document.body.clientWidth;
+      },
+      //设备信息
+      getDeviceInfo(){
+        this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+        this.productName=this.deviceInfo.product.name;
+        this.deviceName1=this.deviceInfo.name;
+        deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
+          if(res.success){
+            this.deviceUserName=res.result.items[0].projectUser.name;
+            this.deviceUserPhone=res.result.items[0].projectUser.phone;
+          }
+        })
       },
       deviceChange(index){
         this.deviceIndex=index;
@@ -358,21 +369,6 @@
         });
       },
 
-      getPileData(){
-        config.list({page_index:1, page_size:10000}).then(res=>{
-          if(res.success){
-            let aa = res.result.items;
-            aa.forEach(item=>{
-              let arr = JSON.parse(item.content);
-              item.content=arr
-            });
-            this.pileData.ps=aa;
-            if(this.$refs.pMap){this.$refs.pMap.init()}
-          }else{
-            console.log('CAD数据获取失败')
-          }
-        })
-      },
       //实时数据
       getData(key){
         deviceData.list({'key':key}).then(res=>{

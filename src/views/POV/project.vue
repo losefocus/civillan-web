@@ -81,7 +81,43 @@
         <chart :options="polar1" :auto-resize=true></chart>
       </li>
       <li class="d-map">
-        <chart :options="polar2" :auto-resize=true></chart>
+        <div class="t-workSchedule">
+          作业进度
+        </div>
+        <el-carousel :autoplay="false" trigger="click" style="height: calc(100% - 40px);">
+          <el-carousel-item v-for="(items,index) in deviceList" :key="index">
+            <ul style="width: 100%;height: 100%">
+              <li class="b-device" v-for="(item,i) in items" :key="i">
+                <div class="d-name">{{item.name}}</div>
+                <ul class="d-progress">
+                  <li class="p-title"><span>进度</span></li>
+                  <li class="p-progress">
+                    <el-progress :percentage="70" :show-text="false"></el-progress>
+                  </li>
+                  <div style="clear: both"></div>
+                </ul>
+                <ul class="d-Statistics">
+                  <li class="s-body">
+                    <div class="s-title">作业总数</div>
+                    <div class="s-num">300</div>
+                  </li>
+                  <li class="s-body">
+                    <div class="s-title">已完成</div>
+                    <div class="s-num">200</div>
+                  </li>
+                  <li class="s-body">
+                    <div class="s-title">剩余</div>
+                    <div class="s-num">100</div>
+                  </li>
+                  <li class="s-body">
+                    <div class="s-title">合格率</div>
+                    <div class="s-num">60</div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </el-carousel-item>
+        </el-carousel>
       </li>
     </ul>
   </div>
@@ -92,14 +128,10 @@
   import header from '@/api/userCenter/header'
   import document from '@/api/project/document'
   import media from '@/api/video/media'
-  import marker from '@/assets/AMap/marker.png'
-  import stateMarker from '@/assets/AMap/marker.png'
-
   import dMap from '@/views/Project/deviceMap.vue'
-
-  import deviceGrouping from '@/api/project/deviceGrouping'
   import project from '@/api/userCenter/project'
   import {formatDate} from '@/common/formatDate.js';
+  import categories from '@/api/configure/categories'
 
   import Bus from '@/common/eventBus'
   export default {
@@ -266,6 +298,13 @@
         deviceTotal:"", //设备总数，
         videoTotal:'', //影像总数，
         documentTotal:'', // 文档总数
+        allListQuery:{ //类型select列表请求参数
+          page_index: 1,
+          page_size: 999,
+          direction:'asc',
+          sort_by:'sort'
+        },
+        deviceList:[],
       }
     },
     filters: {
@@ -290,6 +329,7 @@
       this.getDocumentTotal(id);
       this.getInfo(id,tenant);
       this.getPersonnel(id);
+      this.getDeviceType();
     },
     methods:{
       enlarge(){
@@ -357,6 +397,27 @@
             this.loading.close();
           }
         })
+      },
+      getDeviceType(){
+        categories.list(this.allListQuery).then(res => {
+          console.log(res);
+          let items = res.result.items;
+          let allData = []; //用来装处理完的数组
+          let currData = []; //子数组用来存分割完的数据
+          //循环需要处理的数组
+          for(var i = 0; i < items.length; i++) {
+            //将chartArr[i]添加到子数组
+            currData.push(items[i]);
+            //在这里求4的余数,如果i不等于0,且可以整除 或者考虑到不满4个或等于4个的情况就要加上  i等于当前数组长度-1的时候
+            if((i != 0 && (i + 1) % 4 == 0) || i == items.length - 1) {
+              //把currData加到allData里
+              allData.push(currData);
+              //在这里清空currData
+              currData = [];
+            }
+          }
+          this.deviceList=allData
+        })
       }
     }
   }
@@ -378,6 +439,21 @@
     padding: 20px;
     background: #f5f5f9;
   }
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+
+  /*.el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }*/
   .p-box{
     height: calc(50% - 10px);
     .p-info{
@@ -388,6 +464,7 @@
       min-height: 335px;
       background: #ffffff;
       margin-right: 20px;
+      box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
       .i-name{
         font-size:18px;
         color:rgba(51,51,51,1);
@@ -487,6 +564,7 @@
         right: 15px;
         cursor: pointer;
       }
+      box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
     }
   }
   .a-box{
@@ -499,13 +577,75 @@
       height:calc(100% - 40px);
       background: #ffffff;
       margin-right: 20px;
+      box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
     }
     .d-map{
+      box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
       float: left;
       padding: 20px;
       width: calc( 100% - 510px ) ;
       height:calc(100% - 40px);
       background: #ffffff;
+      .t-workSchedule{
+        width:100%;
+        height: 40px;
+        font-weight: bold;
+        font-size: 18px;
+      }
+      .b-device{
+        margin-top: 10px;
+        width: 22%;
+        height: calc(98% - 60px);
+        background: #6fdde8;
+        float: left;
+        margin-right: 1%;
+        background:rgba(255,255,255,1);
+        box-shadow:0px 3px 8px 0px rgba(144,164,183,0.5);
+        padding:20px 1%;
+        .d-name{
+          font-size: 18px;
+          font-weight: bold;
+          margin-left: 10%;
+        }
+        .d-progress{
+          margin-top: 10%;
+          margin-left: 10%;
+          .p-title{
+            width: 20%;
+            font-size: 12px;
+            float: left;
+          }
+          .p-progress{
+            padding-top: 4%;
+            width: 70%;
+            float: left;
+          }
+        }
+        .d-Statistics{
+          text-align: center;
+          .s-body{
+            width: 50%;
+            float: left;
+            margin-top: 15%;
+            .s-title{
+              font-size: 14px;
+              color:#666666;
+            }
+            .s-num{
+              margin-top: 8%;
+              font-weight: bold;
+              font-size: 20px;
+              color: #333333;
+            }
+          }
+        }
+      }
+      .b-device:first-child{
+        margin-left: 0.5%;
+      }
+      .b-device:last-child{
+        margin-right: 0;
+      }
     }
   }
 </style>
