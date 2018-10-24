@@ -8,25 +8,6 @@
     <div class="a-screen">
       <div class="c-box">
         <div class="c-query">
-          <el-select v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-          <el-select v-else="isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 34%;float: left;" clearable >
-            <el-option
-              v-for="(item,index) in deviceSelect"
-              :key="index"
-              :label="item.name"
-              :value="index">
-            </el-option>
-            <el-pagination
-              @current-change="deviceCurrentChange"
-              small
-              :pager-count="5"
-              :current-page="device_data.page_index"
-              :page-size="device_data.page_size"
-              layout="prev, pager, next"
-              :total="deviceTotal">
-            </el-pagination>
-          </el-select>
-
           <el-date-picker
             size="mini"
             v-model="value7"
