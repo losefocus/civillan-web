@@ -25,11 +25,11 @@
          </div>
          <div class="i-box">
            <div class="i-body">
-             <div class="i-name">{{deviceInfo.name}}</div>
+             <div class="i-name">双头搅拌桩</div>
              <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
            </div>
            <div class="i-body">
-             <div class="i-company">{{deviceInfo.product.name}}</div>
+             <div class="i-company">宏远建设记录仪一号</div>
              <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
@@ -256,15 +256,17 @@ export default {
     let pile=document.getElementById('pile');
     let pileHeight,pileWidth;
     this.$nextTick(()=>{
+      if(pile){
+        pileHeight = pile.offsetHeight;
+        pileWidth = pile.offsetWidth;
+        this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+        this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+        console.log(pileHeight,pileWidth);
 
-      pileHeight = pile.offsetHeight;
-      pileWidth = pile.offsetWidth;
-      this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-      this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-      console.log(pileHeight,pileWidth);
+        this.$refs.pMap.width = parseFloat(pileWidth);
+        this.$refs.pMap.height = parseFloat(pileHeight);
+      }
 
-      this.$refs.pMap.width = parseFloat(pileWidth);
-      this.$refs.pMap.height = parseFloat(pileHeight);
     });
 
     setTimeout(()=>{
@@ -312,8 +314,8 @@ export default {
         if(res.success){
           let aa = res.result.items;
           console.log(aa);
-          res.result.items.forEach(item=>{
-            //console.log(item.content);
+          res.result.items.forEach((item,index)=>{
+            console.log(index);
             let arr = JSON.parse(item.content);
             item.content=arr
           });
