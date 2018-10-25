@@ -51,6 +51,10 @@
   import curingOff from '@/assets/curing/curingOff.png'
   import curingRunning from '@/assets/curing/curingRunning.png'
 
+  import tensileRunning from '@/assets/tensile/tensileRunning.png'
+  import tensileOff from '@/assets/tensile/tensileOff.png'
+  import tensileAlarm from '@/assets/tensile/tensileAlarm.png'
+
   import newRunning from '@/views/softBase/newRunning.vue'
 
   import SAnalysis from '@/views/softBase/SAnalysis'
@@ -181,6 +185,8 @@ export default {
                       changeMarker = runningMarker;
                     }else if(lists[i].type=='PLYH'){
                       changeMarker = curingRunning;
+                    }else if(lists[i].type=='YYLZL'){
+                      changeMarker = tensileRunning;
                     }
                     _this.loading.close();
                   }else{
@@ -192,11 +198,9 @@ export default {
                       changeMarker = offLineMarker;
                     }else if(lists[i].type=='PLYH'){
                       changeMarker = curingOff;
+                    }else if(lists[i].type=='YYLZL'){
+                      changeMarker = tensileOff;
                     }
-                    /*changeMarker = offLineMarker;
-                    changeBackground = 'noBackground';
-                    changeColor = 'noColor';
-                    //_this.$message.error(res.message);*/
                     _this.loading.close();
                   }
 

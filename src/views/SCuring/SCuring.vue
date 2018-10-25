@@ -41,6 +41,22 @@
           </div>
         </li>
         <li class="s-liquidFill">
+          <div style="width: 100%;height: 20%;position: absolute;top:8%;">
+            <ul class="l-current">
+              <li class="c-temperature">
+                <span class="t-title">1号顶张拉力</span>
+                <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                <span class="t-num">25.0</span>
+                <span class="t-unit">℃</span>
+              </li>
+              <li class="c-temperature">
+                <span class="t-title">2号顶张拉力</span>
+                <i class="el-icon-caret-right"  style="color: #D8D8D8"></i>
+                <span class="t-num">66</span>
+                <span class="t-unit">%</span>
+              </li>
+            </ul>
+          </div>
           <div id="THCharts" style="width: 100%;height: 100%;"></div>
         </li>
       </ul>
@@ -663,6 +679,31 @@
         width:calc( 77% - 50px );
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+        position: relative;
+        .l-current{
+          width: 380px;
+          margin: 0 auto;
+          .c-temperature{
+            float: left;
+            margin-right: 10%;
+            .t-title{
+              color: #666666;
+              font-weight: bold;
+            }
+            .t-num{
+              color: #F85959;
+              font-size: 20px;
+              font-weight: bold;
+            }
+            .t-unit{
+              color: #F85959;
+              font-size: 12px;
+            }
+          }
+          .c-temperature:last-child{
+            float: right;
+          }
+        }
       }
     }
     .s-box1{

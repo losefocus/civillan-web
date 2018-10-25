@@ -4,18 +4,10 @@
       <div class="b-device" v-if="noDevice"><div class="t-device">设备已离线！</div></div>
     </transition>
     <div class="r-box">
-      <div class="t-box">
-        <div class="r-stateTab" :class="{'tabActive':!isTab}" @click="tabChange(0)">运行状况</div>
-        <div class="p-designTab" :class="{'tabActive':isTab}" @click="tabChange(1)">设计参数</div>
-      </div>
       <ul class="s-box1">
         <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
           <div class="i-id">
             <div class="d-model">{{deviceName[deviceIndex-1].name}}</div>
-            <!--<div class="d-kind">
-              <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
-            </div>-->
-
           </div>
           <div class="i-progress">
             <div class="i-progressName" style="width: 80px">成桩进度：</div>
@@ -34,8 +26,8 @@
           </div>
           <div class="clear"></div>
           <div class="h-box">
-              <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">{{deviceUserName}}</span></div>
-              <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">{{deviceUserPhone}}</span></div>
+            <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">{{deviceUserName}}</span></div>
+            <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">{{deviceUserPhone}}</span></div>
           </div>
 
           <div class="i-normal" v-if="isWarming">
@@ -48,113 +40,210 @@
             </div>
           </div>
         </li>
-        <li class="s-info" :class="{'s-info1':classChange==1}" v-else="!isTab">
-          <div class="d-name">
-            <i class="iconfont icon-pie"></i>
-            <span>桩设计参考值</span>
-          </div>
-          <div class="d-level">
-            <span>当前等级</span>
-            <span> CF0.5</span>
-          </div>
-          <div class="d-box">
-            <div>
-              <p class="d-value">0.5</p>
-              <p class="d-key">设计强度</p>
-              <p class="d-unit">Mpa</p>
-            </div>
-            <div>
-              <p class="d-value">276</p>
-              <p class="d-key">水泥用量</p>
-              <p class="d-unit">kg</p>
-            </div>
-            <div>
-              <p class="d-value">10</p>
-              <p class="d-key">材料用量</p>
-              <p class="d-unit">kg</p>
-            </div>
-            <div>
-              <p class="d-value">190</p>
-              <p class="d-key">水用量</p>
-              <p class="d-unit">kg</p>
-            </div>
-            <div>
-              <p class="d-value">720</p>
-              <p class="d-key">气泡群</p>
-              <p class="d-unit">L</p>
-            </div>
-            <div>
-              <p class="d-value">5.01</p>
-              <p class="d-key">湿容重</p>
-              <p class="d-unit">KN/m3</p>
-            </div>
-          </div>
+        <li class="b-statistics">
+          <ul class="b-dashboard">
+            <li class="c-dashboard">
+              <chart :options="polar1" :auto-resize=true></chart>
+            </li>
+            <li class="c-dashboard">
+              <div class="d-data">
+                <div class="d-title">Ⅰ号张拉断面</div>
+                <ul class="d-state">
+                  <li class="c-state">
+                    <span class="t-title">顶行程</span>
+                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                    <span class="t-num">100.0 mm</span>
+                  </li>
+                  <li class="c-state">
+                    <span class="t-title">张拉次数</span>
+                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                    <span class="t-num">25.0</span>
+                  </li>
+                  <li class="c-state">
+                    <span class="t-title">工作状态</span>
+                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                    <span class="t-num" style="color:#1FBDEE;">准备中</span>
+                  </li>
+                </ul>
+              </div>
+
+            </li>
+          </ul>
+          <ul class="t-statistics">
+            <li class="s-body">
+              <div class="s-content">
+                <span>千斤顶:</span>
+                <span>0003</span>
+              </div >
+              <div class="s-content">
+                <span>油压泵:</span>
+                <span>0002</span>
+              </div>
+            </li>
+            <li class="s-body">
+              <div class="s-content">
+                <span>伸长量:</span>
+                <span>100.0mm</span>
+              </div>
+              <div class="s-content">
+                <span>回缩量:</span>
+                <span>1000mm</span>
+              </div>
+            </li>
+            <li class="s-body">
+              <div class="s-content">
+                <span>系数a:</span>
+                <span>0.00183</span>
+              </div>
+              <div class="s-content">
+                <span>系数b:</span>
+                <span>0.00183</span>
+              </div>
+            </li>
+          </ul>
         </li>
-        <li class="s-liquidFill">
-          <div class="c-body"><chart :options="polar1" :auto-resize=true></chart></div>
-          <div class="c-body"><chart :options="polar2" :auto-resize=true></chart></div>
-          <div class="c-body"><chart :options="polar3" :auto-resize=true></chart></div>
-          <div class="c-body" style="margin-top: -6%"><chart :options="polar4" :auto-resize=true></chart></div>
-          <div class="c-body" style="margin-top: -6%"><chart :options="polar5" :auto-resize=true></chart></div>
-          <div class="c-body" style="margin-top: -6%"><chart :options="polar6" :auto-resize=true></chart></div>
+        <li class="b-statistics">
+          <ul class="b-dashboard">
+            <li class="c-dashboard">
+              <chart :options="polar1" :auto-resize=true></chart>
+            </li>
+            <li class="c-dashboard">
+              <div class="d-data">
+                <div class="d-title">Ⅱ号张拉断面</div>
+                <ul class="d-state">
+                  <li class="c-state">
+                    <span class="t-title">顶行程</span>
+                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                    <span class="t-num">100.0 mm</span>
+                  </li>
+                  <li class="c-state">
+                    <span class="t-title">张拉次数</span>
+                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                    <span class="t-num">25.0</span>
+                  </li>
+                  <li class="c-state">
+                    <span class="t-title">工作状态</span>
+                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                    <span class="t-num" style="color:#1FBDEE;">准备中</span>
+                  </li>
+                </ul>
+              </div>
 
-          <!--<canvas id="c"></canvas>
-          <input type="range" id="r" min="0" max="100" step="1">-->
-        </li>
-        <li class="s-chart" id="pile">
-          <!-- <chart :options="ElectricCurrent" :auto-resize=true></chart>-->
-          <div class="t-materiel">物料用量分析</div>
-          <template>
-            <el-table
-              :data="tableData"
-
-              border
-              style="width: 100%;height:80%;margin-top: 30px">
-              <el-table-column
-                class-name="materielTable"
-                prop="date"
-                label="物料"
-                style="height: 20%">
-                <!--<template scope="props">
-                  <div style="height: ">
-                    {{props.row.date}}
-                  </div>
-
-                </template>-->
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="设计用量">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="当前用量">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="剩余">
-              </el-table-column>
-            </el-table>
-          </template>
+            </li>
+          </ul>
+          <ul class="t-statistics">
+            <li class="s-body">
+              <div class="s-content">
+                <span>千斤顶:</span>
+                <span>0003</span>
+              </div >
+              <div class="s-content">
+                <span>油压泵:</span>
+                <span>0002</span>
+              </div>
+            </li>
+            <li class="s-body">
+              <div class="s-content">
+                <span>伸长量:</span>
+                <span>100.0mm</span>
+              </div>
+              <div class="s-content">
+                <span>回缩量:</span>
+                <span>1000mm</span>
+              </div>
+            </li>
+            <li class="s-body">
+              <div class="s-content">
+                <span>系数a:</span>
+                <span>0.00183</span>
+              </div>
+              <div class="s-content">
+                <span>系数b:</span>
+                <span>0.00183</span>
+              </div>
+            </li>
+          </ul>
         </li>
       </ul>
       <ul class="s-box2">
         <li class="s-progress" :class="{'s-progress1':classChange==1}">
-          <div class="t-light">轻质土产出量</div>
+          <div class="t-light">设计参数</div>
           <div class="l-today">
-            <span class="t-title">当日m3</span>
-            <span class="el-icon-caret-right t-icon"></span>
-            <span class="t-num">1000</span>
+            <ul class="t-tensileData">
+              <li class="d-tensile">
+                <span class="t-title">张拉次数</span>
+                <span class="el-icon-caret-right t-icon" style="color: #D8D8D8"></span>
+                <span class="t-num">10</span>
+              </li>
+              <li class="d-tensile" style="margin-right: 0">
+                <span class="t-title">张拉顺序</span>
+                <span class="el-icon-caret-right t-icon"  style="color: #D8D8D8"></span>
+                <span class="t-num">9</span>
+              </li>
+              <div style="clear: both"></div>
+            </ul>
           </div>
+          <div class="b-line"></div>
+          <ul class="b-detailed">
+            <li class="c-detailed">
+              <span>最大张力：</span>
+              <span>10000.0</span>
+              <span>KN</span>
+            </li>
+            <li class="c-detailed">
+              <span>分级张拉：</span>
+              <span>0~3</span>
+            </li>
+            <li class="c-detailed">
+              <span>超张拉力百分比：</span>
+              <span>50%</span>
+            </li>
+          </ul>
+          <ul class="b-detailed">
+            <li class="c-detailed">
+              <span>理论伸长量：</span>
+              <span>1000.0</span>
+              <span>mm</span>
+            </li>
+            <li class="c-detailed">
+              <span>钢绞线长度：</span>
+              <span>100.0</span>
+              <span>m</span>
+            </li>
+            <li class="c-detailed">
+              <span>砼设计强度：</span>
+              <span>50.00</span>
+              <span>Mpa</span>
+            </li>
+            <li class="c-detailed">
+              <span>砼强度：</span>
+              <span>50.00</span>
+              <span>Mpa</span>
+            </li>
+          </ul>
           <div class="l-Accumulative">
-            <span class="t-title">累计m3</span>
-            <span class="el-icon-caret-right t-icon"></span>
-            <span class="t-num">1000</span>
+
           </div>
         </li>
         <li class="s-chart1">
-          <div style="font-size: 18px;font-weight: bold;margin: 20px 0 0 20px;">轻质土流量曲线</div>
-          <chart :options="polar7" :auto-resize=true></chart>
+          <div style="width: 100%;height: 20%;position: absolute;top:8%;">
+            <ul class="l-current">
+              <li class="c-temperature">
+                <span class="t-title">1号顶张拉力</span>
+                <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
+                <span class="t-num">25.0</span>
+                <span class="t-unit">℃</span>
+              </li>
+              <li class="c-temperature">
+                <span class="t-title">2号顶张拉力</span>
+                <i class="el-icon-caret-right"  style="color: #D8D8D8"></i>
+                <span class="t-num">66</span>
+                <span class="t-unit">%</span>
+              </li>
+            </ul>
+          </div>
+
+          <div id="THCharts" style="width: 100%;height: 100%;"></div>
         </li>
       </ul>
     </div>
@@ -244,18 +333,18 @@
 
         tableData: [
           {
-          date: '水泥',
-          name: '300KG',
-          address: '2500KG'
-        }, {
-          date: '发泡剂',
-          name: '300KG',
-          address: '2500KG'
-        }, {
-          date: '水',
-          name: '300KG',
-          address: '2500KG'
-        }],
+            date: '水泥',
+            name: '300KG',
+            address: '2500KG'
+          }, {
+            date: '发泡剂',
+            name: '300KG',
+            address: '2500KG'
+          }, {
+            date: '水',
+            name: '300KG',
+            address: '2500KG'
+          }],
         polar7:{
           tooltip: {
             trigger: 'axis',
@@ -305,41 +394,71 @@
           }]
         },
         polar1:{
+          title: {
+            text: '',
+            subtext: '',
+            left: 'center'
+          },
           series: [{
-            type: 'liquidFill',
-            name: 'm3/h',
-            outline: {
+            title : {
+              // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+              fontWeight: 'bolder',
+              fontSize: 12,
+              offsetCenter: [0, '64%'],
+              textStyle:{
+                color:'#999999',
+              }
+            },
+            type: "gauge",
+            startAngle: 190,
+            endAngle: -10,
+            min: 0,
+            max: 1000,
+            radius: "100%",
+            center: ["50%", "65%"],
+            axisLine: {
+              show: true,
+              lineStyle: {
+                width: 30,
+                shadowBlur: 0,
+                color: [
+                  [0, '#1FBDEE'],
+                  [0.6, '#1FBDEE'],
+                  [0.8, '#DFDFDF'],
+                  [1, '#DFDFDF']
+                ]
+              }
+            },
+            axisTick: {
               show: false
             },
-            backgroundStyle: {
-              borderColor: '#EEEEEE',
-              color: '#ffffff',
-              borderWidth: 1,
+            axisLabel: {
+              show: false
             },
-            data: [{
-              name: '溶液',
-              value: 0.6
-            }],
+            splitLine: {
+              show: false
+            },
+            pointer: {
+              width: "3%",
+              length: '90%',
+              color: "black"
+            },
             itemStyle: {
-              shadowBlur: 0
-            },
-            amplitude: '4%',
-            waveLength: '90%',
-            radius: '80%',
-            color: ['#DF9A9A'],
-
-            label: {
               normal: {
-                formatter: function(param) {
-                  return param.value*100+'%' + '\n'
-                    + param.name + '\n'
-                    + param.seriesName;
-                },
-                textStyle: {
-                  fontSize: 14
-                }
+                color: "#4A4A4A",
+                shadowBlur: 1
               }
-            }
+            },
+
+            /*title: {
+              show: true
+            },
+            detail: {
+              show: true
+            },*/
+            data: [{
+              value:300, name:'主油压(MPa）'
+            }]
           }]
         },
         polar2:{
@@ -380,167 +499,16 @@
             }
           }]
         },
-        polar3:{
-          series: [{
-            type: 'liquidFill',
-            name: 'm3/h',
-            outline: {
-              show: false
-            },
-            backgroundStyle: {
-              borderColor: '#EEEEEE',
-              color: '#ffffff',
-              borderWidth: 1,
-            },
-            data: [{
-              name: '空气',
-              value: 0.6
-            }],
-            itemStyle: {
-              shadowBlur: 0
-            },
-            amplitude: '4%',
-            waveLength: '90%',
-            radius: '80%',
-            color: ['#50CEF5'],
-
-            label: {
-              normal: {
-                formatter: function(param) {
-                  return param.value*100+'%' + '\n'
-                    + param.name + '\n'
-                    + param.seriesName;
-                },
-                textStyle: {
-                  fontSize: 14
-                }
-              }
-            }
-          }]
-        },
-        polar4:{
-          series: [{
-            type: 'liquidFill',
-            name: 'm3/h',
-            outline: {
-              show: false
-            },
-            backgroundStyle: {
-              borderColor: '#EEEEEE',
-              color: '#ffffff',
-              borderWidth: 1,
-            },
-            data: [{
-              name: '轻质土流量',
-              value: 0.6
-            }],
-            itemStyle: {
-              shadowBlur: 0
-            },
-            amplitude: '4%',
-            waveLength: '90%',
-            radius: '80%',
-            color: ['#90A5A7'],
-
-            label: {
-              normal: {
-                formatter: function(param) {
-                  return param.value*100+'%' + '\n'
-                    + param.name + '\n'
-                    + param.seriesName;
-                },
-                textStyle: {
-                  fontSize: 14
-                }
-              }
-            }
-          }]
-        },
-        polar5:{
-          series: [{
-            type: 'liquidFill',
-            name: '70%',
-            outline: {
-              show: false
-            },
-            backgroundStyle: {
-              borderColor: '#EEEEEE',
-              color: '#ffffff',
-              borderWidth: 1,
-            },
-            data: [{
-              name: '气泡密度',
-              value: 'kg/m3'
-            }],
-            itemStyle: {
-              shadowBlur: 0,
-            },
-            amplitude: '4%',
-            waveLength: '90%',
-            radius: '80%',
-            color: ['#50C9F9'],
-
-            label: {
-              normal: {
-                formatter: function(param) {
-                  return param.seriesName + '\n'
-                    + param.name + '\n'
-                    + param.value;
-                },
-                textStyle: {
-                  fontSize: 14
-                }
-              }
-            }
-          }]
-        },
-        polar6:{
-          series: [{
-            type: 'liquidFill',
-            name: '60%',
-            outline: {
-              show: false
-            },
-            backgroundStyle: {
-              borderColor: '#EEEEEE',
-              color: '#ffffff',
-              borderWidth: 1,
-            },
-            data: [{
-              name: '湿容重',
-              value: 'kn/h'
-            }],
-            itemStyle: {
-              shadowBlur: 0,
-            },
-            amplitude: '4%',
-            waveLength: '90%',
-            radius: '80%',
-            color: ['#50C9F9'],
-
-            label: {
-              normal: {
-                formatter: function(param) {
-                  return param.seriesName + '\n'
-                    + param.name + '\n'
-                    + param.value;
-                },
-                textStyle: {
-                  fontSize: 14
-                }
-              }
-            }
-          }]
-        },
         ctx:null,
 
         productName:'',
         deviceName1:'',
         deviceUserName:'',
         deviceUserPhone:'',
+
       }
     },
-    props:['dialogFullscreen','deviceKey','isClose'],
+    props:['dialogFullscreen','deviceKey','isClose','clientWidth'],
     filters: {
       formatDate(time) {
         let date = new Date(time);
@@ -563,6 +531,10 @@
     mounted(){
       this.init();
       this.reload();
+      this.myCharts();
+      this.$nextTick(()=>{
+        this.myChart.resize()
+      });
     },
     beforeDestroy(){
       clearInterval(this.timer);
@@ -630,7 +602,7 @@
             this.ashData.push(par_ash);
             this.rpressureData.push(rpressure);
           }else {
-            this.noDevice=true;
+            this.noDevice=false;
           }
 
         }).catch(err=>{
@@ -667,12 +639,136 @@
           //console.log(e)
         })
       },
+      //ECharts
+      myCharts(){
+        let colors = ['#24BCF7', '#F85959'];
+        let data=[ "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00" ];
+        let data1= [ 699, 656, 0, 0, 78, 435, 1014, 1129, 747, 1183, 648, 1006, 737, 880, 777, 685, 469, 731, 319, 873, 824, 545, 0, 0 ];
+        let data2=[ 0, 0, 0, 1, 1, 0, 4, 31, 21, 18, 23, 22, 18, 19, 19, 16, 15, 22, 17, 18, 19, 16, 12, 9 ];
+
+        function yAxisMax(arr) {
+          var max = Math.max.apply(null, arr);//取数组中的最大值
+          var maxint = Math.ceil(max / 10);//去除个位数
+          var maxval = maxint * 10;//补上各位十位加1
+          return maxval;
+        }
+        //y轴间隔刻度数
+        let splitNumber=5;
+
+        let maxdata1 = yAxisMax(data1);
+        let maxdata2 = yAxisMax(data2);
+        let interval_left=maxdata1/splitNumber;//刻度间隔距离
+        let interval_right=maxdata2/splitNumber;//刻度间隔距离
+
+        this.myChart = this.$echarts.init(document.getElementById('THCharts'));
+        this.myChart.setOption({
+          title: {
+            text: '张拉力变化曲线',
+            show: true,
+            textStyle: {
+              fontWeight: 'bold',
+              fontSize: 18,
+              color: '#333'
+            },
+            top:'4%',
+            left: '3%'
+          },
+          color: colors,
+
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            top:'25%',
+            bottom:'10%',
+          },
+          legend: {
+            itemWidth: 12,
+            itemHeight: 5,
+            itemGap: 13,
+            textStyle: {
+              fontSize: 12,
+              color: '#333'
+            },
+            top:'8%',
+            right:'2%',
+          },
+          xAxis: [
+
+            {
+              axisTick: {
+                show: false
+              },
+              type: 'category',
+              axisTick: {
+                alignWithLabel: true
+              },
+              data: data
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              name: '2号顶张拉力',
+              min: 0,
+              position: 'right',
+              max:maxdata2,
+              splitNumber:splitNumber,
+              interval:interval_right,
+              axisLabel: {
+                formatter: '{value} %'
+              }
+            },
+            {
+              type: 'value',
+              name: '1号顶张拉力',
+              min: 0,
+              position: 'left',
+              max:maxdata1,
+              splitNumber:splitNumber,
+              interval:interval_left,
+              /*axisLine: {
+                lineStyle: {
+                  color: colors[1]
+                }
+              },*/
+              axisLabel: {
+                formatter: '{value} °C'
+              }
+            }
+          ],
+          series: [
+            {
+              name:'1号顶张拉力',
+              type:'line',
+              yAxisIndex: 0,
+              data:data2,
+            },
+            {
+              name:'2号顶张拉力',
+              type:'line',
+              yAxisIndex: 1,
+              data:data1,
+            }
+          ]
+        });
+      },
     },
+
 
 
     watch:{
       isClose(val,oldVal){
         console.log(val,oldVal)
+      },
+      dialogFullscreen:function (val,oldVal) {
+        this.myChart.resize()
+      },
+      clientWidth(val,oldVal){
+        this.myChart.resize()
       }
     }
   }
@@ -749,7 +845,6 @@
     }
   }
   .r-box{
-    padding-left: 2%;
     height: 100%;
     position: relative;
     .t-box{
@@ -994,156 +1089,6 @@
           }
         }
       }
-      /*.s-info1{
-        .i-id{
-          //font-size:30px;
-          color:#DADADA;
-          line-height:42px;
-          .d-model{
-            font-weight: bold;
-            width: 250px;
-            font-size: 35px;
-            color: #333333;
-          }
-          .d-kind{
-            height: 40px;
-            div{
-              width: 30px;
-              height: 30px;
-              line-height: 30px;
-              border-radius: 50%;
-              border: 1px solid rgba(218,218,218,1);
-              text-align: center;
-              margin:0 10px;
-            }
-          }
-        }
-        .deviceActive{
-          font-size:20px;
-          background: #24BCF7;
-          color:#ffffff;
-        }
-        .i-box{
-          display: flex;
-          justify-content:space-between;
-          height: 20%;
-          .i-body{
-            width: 60%;
-            height: 45px;
-            line-height: 45px;
-            font-weight: bold;
-            .i-name{
-              font-size:18px;
-              color:rgba(51,51,51,1);
-            }
-            .b-info{
-              .i-info{
-                display: inline-block;
-                margin-left: 10px;
-                color: #999999;
-                font-size: 12px;
-              }
-            }
-
-            .i-company{
-              font-size:14px;
-              color:rgba(153,153,153,1);
-            }
-          }
-          .i-state{
-            line-height: 45px;
-            font-size:14px;
-            color:rgba(153,153,153,1);
-          }
-          .icon-state{
-            font-size: 14px;
-            color: #24BCF7;
-            margin-right: 20px;
-          }
-        }
-
-        .i-start{
-          width:100%;
-          height:17px;
-          font-size:16px;
-          color:rgba(102,102,102,1);
-          line-height:17px;
-        }
-        .i-progress{
-          margin-top: 20px;
-          width: 100%;
-          height: 15px;
-          line-height: 15px;
-          display: flex;
-          justify-content:space-between;
-          .i-progressName{
-            font-size: 14px;
-          }
-        }
-        .i-normal{
-          width:100%;
-          //line-height: 57px;
-          text-align: center;
-          height:120px;
-          background:rgba(141,232,240,0.06);
-        }
-        .i-warning{
-          width:100%;
-          height:80px;
-          line-height: 40px;
-          background:rgba(248,89,89,0.06);
-          text-align: center;
-          .icon-warming{
-            vertical-align: top;
-            color: #DF2A2A;
-          }
-          .w-text{
-            max-width: 80%;
-            margin-left: 10px;
-            vertical-align: top;
-            display: inline-block;
-          }
-        }
-
-        .d-name{
-          i{
-            font-size: 20px;
-          }
-          span{
-            margin-left: 5%;
-            font-size: 20px;
-            font-weight: bold;
-          }
-        }
-        .d-box{
-          height: 60%;
-          display: flex;
-          flex-direction: row;!*决定主轴的方向*!
-          flex-wrap:wrap;
-          justify-content:space-around;
-          div{
-            width: 33.3%;
-          }
-          .d-key{
-            font-size: 16px;
-            margin-top: 30px;
-            color: #666666;
-          }
-          .d-value{
-            font-weight: bold;
-            height: 30px;
-            font-size: 25px;
-            color: #333333;
-          }
-          .d-value1{
-            font-weight: bold;
-            height: 30px;
-            font-size: 26px;
-            color: #333333;
-          }
-        }
-      }*/
-
       .s-progress{
         float: left;
         width:23%;
@@ -1151,69 +1096,105 @@
         padding:10px 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+        color:#000000;
         .t-light{
           font-weight: bold;
           font-size: 18px;
           margin-top: 10px;
         }
-        .l-today,.l-Accumulative{
-          margin-top: 20%;
-          .t-title{
-            display: inline-block;
-            width: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            vertical-align: middle;
+        .l-today{
+          width: 100%;
+          .t-tensileData{
+            .d-tensile{
+              float: left;
+              margin-right: 7%;
+              margin-top: 10%;
+              .t-title{
+                font-size: 16px;
+                color: #666666;
+              }
+              .t-num{
+                font-size: 20px;
+                font-weight: bold;
+                color: #1FBDEE;
+              }
+            }
           }
-          .t-icon{
-            font-size: 25px;
-            color: #D8D8D8;
-            vertical-align: middle;
-          }
-          .t-num{
-            font-weight: bold;
-            font-size: 50px;
-            vertical-align: middle;
-            color: #24BCF7;
+        }
+        .b-line{
+          margin-top: 6%;
+          border-bottom:2px solid rgba(151,151,151,0.3);
+        }
+        .b-detailed{
+          margin-top: 6%;
+          .c-detailed{
+            color: #999999;
+            font-size: 14px;
+            margin-top: 2%;
           }
         }
       }
-      /*.s-progress1{
-        .p-box{
-          !*margin-bottom: 6%;
-          .p-progress{
-            .p-title{
-              font-size: 18px;
-            }
-          }
-          .p-name{
-            font-size:18px;
-          }
-          .p-completedSteps{
-            font-size: 40px;
-          }
-          .p-totalSteps{
-            font-size: 18px;
-          }
-          .p-unit{
-            font-size: 18px;
-          }
-          .p-title{
-            font-size:18px;
-          }
-        }*!}
-      }*/
-      .s-liquidFill{
+      .b-statistics{
         float: left;
-        height: 100%;
+        height: calc(100% - 40px);
         margin-left: 10px;
-        width:calc( 38.5% - 30px );
+        width:calc( 38.5% - 70px );
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
-        .c-body{
-          width: 33.33%;
-          height: 60%;
-          float: left;
+        padding: 20px;
+        .b-dashboard{
+          width: 100%;
+          height: 80%;
+          border-bottom: 2px solid rgba(151,151,151,0.3);
+          .c-dashboard{
+            float: left;
+            width: 50%;
+            height: 100%;
+
+            .d-data{
+              width: 100%;
+              margin-left: 20%;
+              .d-title{
+                color: #333333;
+                font-size: 18px;
+                font-weight: bold;
+                margin-top: 30%;
+              }
+              .d-state{
+                margin-top: 15%;
+                .c-state{
+                  margin-top: 10%;
+                  .t-title{
+                    display: inline-block;
+                    width: 56px;
+                  }
+                  .t-num{
+                    margin-left: 2%;
+                  }
+                }
+              }
+            }
+
+          }
+        }
+        .t-statistics{
+          .s-body{
+            width: 33.33%;
+            height: 20%;
+            float: left;
+            font-size: 13px;
+            color: #666666;
+            .s-content{
+              margin-top: 10%;
+            }
+          }
+          .s-body:nth-child(2){
+            text-align: center;
+          }
+          .s-body:last-child{
+            text-align: right;
+            margin-right: 0;
+          }
         }
       }
       .s-chart{
@@ -1231,16 +1212,43 @@
 
       }
       .s-chart1{
-        float: right;
+        float: left;
         height: 100%;
-        width:calc(77% - 50px);
+        margin-left: 10px;
+        width:calc( 77% - 50px );
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+        position: relative;
+        .l-current{
+          width: 320px;
+          height: 20%;
+          margin: 0 auto;
+          .c-temperature{
+            float: left;
+            margin-right: 10px;
+            .t-title{
+              color: #666666;
+              font-weight: bold;
+            }
+            .t-num{
+              color: #F85959;
+              font-size: 20px;
+              font-weight: bold;
+            }
+            .t-unit{
+              color: #F85959;
+              font-size: 12px;
+            }
+          }
+          .c-temperature:last-child{
+            float: right;
+            margin-right: 0;
+          }
+        }
       }
     }
     .s-box1{
       padding: 0 0 10px 0;
     }
   }
-
 </style>

@@ -4,7 +4,7 @@
      <div class="b-device" v-if="noDevice"><div class="t-device">设备已离线！</div></div>
    </transition>
    <div class="r-box">
-     <div class="t-box" :class="{'t-box1':classChange==1}">
+     <div class="t-box">
        <div class="r-stateTab" :class="{'tabActive':!isTab}" @click="tabChange(0)">运行状况</div>
        <div class="p-designTab" :class="{'tabActive':isTab}" @click="tabChange(1)">设计参数</div>
      </div>
