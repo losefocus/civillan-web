@@ -95,14 +95,12 @@
       getCategoryList(){
         //this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
-          console.log(res);
           let list = res.result.items;
           this.navList=res.result.items;
         })
       },
       changeTab(list,index){ //切换tab
         this.isActive=index;
-        console.log(list)
         if(list.code=='JBZ'){
           this.currentView='HPile'
         }else if(list.code=='PMHNT'){
@@ -116,7 +114,6 @@
         }
       },
       visibleChange(val){
-        console.log(val);
         if(val){
           this.device_data.name='';
           this.getDeviceList(this.device_data)
@@ -150,7 +147,6 @@
         let tableList=[];
         history.list(post_data).then(res=>{
           if(res.success){
-            console.log(res);
             _this.total=res.result.total;
             /*res.result.items.forEach(function (item) {
               tableList.push(item);
@@ -181,7 +177,6 @@
       },
       //全部设备select搜索框
       deviceSearch(query){
-        console.log(this.device);
         this.device=query
         this.device_data.name=query;
         this.getDeviceList(this.device_data);
@@ -190,7 +185,6 @@
       getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
-          console.log(res.result.items);
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
         });

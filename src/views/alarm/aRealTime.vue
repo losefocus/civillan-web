@@ -122,12 +122,10 @@ export default {
           let list=[];
           let obj = {};
           this.multipleSelection.forEach(e=>{
-            //console.log(e);
             for(let i=0;i<filterVal.length;i++){
               obj[filterVal[i]] = e[filterVal[i]]
             }
             list.push(obj);
-            //console.log(list);
           });
           const data = this.formatJson(filterVal, list);
           export_json_to_excel(tHeader, data, '数据报表');
@@ -170,11 +168,9 @@ export default {
 
     },
     handleExpandChange(row,expandedRows){
-      console.log(expandedRows)
     },
     //类型改变
     deviceChange(val){
-      console.log(val);
       this.deviceKey=val;
     },
     handleCommand(command) { //
@@ -182,7 +178,6 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection);
     },
     //列表改变每页显示的条数
     handleSizeChange: function (size) {
@@ -205,9 +200,7 @@ export default {
       let _this=this;
       let tableList=[];
       history.list(post_data).then(res=>{
-        console.log(res);
         if(res.success){
-          //console.log(res.result);
           _this.total=res.result.total;
           res.result.items.forEach(function (item) {
             tableList.push(item);

@@ -199,7 +199,6 @@
             };
             this.navList.unshift(allDevice);
             this.post_data.group_id=this.navList[0].id;
-            console.log( this.navList);
             this.getList(this.post_data);
 
             this.$nextTick(()=>{
@@ -226,11 +225,9 @@
         this.dialogVisible = false;
       },
       getDetails(item,index){ //获取详情
-        //console.log(item.type);
         this.deviceType=item.type;
         this.dialogVisible=true;
         this.deviceName=item.name;
-        console.log(item);
         let deviceInfo=JSON.stringify(item);
         //Bus.$emit('deviceInfo',deviceInfo);
         this.$store.dispatch('incrementKey',item.key);
@@ -239,7 +236,6 @@
         this.deviceKey=item.key;
       },
       isFullscreen(val){ //是否打开模态框
-        //console.log(val);
         if(!val){
           this.dialogWidth='100%';
           this.dialogHeight={
@@ -267,7 +263,6 @@
         });
         deviceList.list(this.post_data).then(res=>{
           if(res.success){
-            console.log(res);
             if(res.result.items.length>0){
               this.noData=false;
               res.result.items.forEach(item=>{
@@ -275,7 +270,6 @@
               });
               this.items=res.result.items;
               this.total=res.result.total;
-              console.log(res.result.items);
               for(let i=0;i<this.items.length;i++){
                 deviceData.list({key:this.items[i].key}).then(res =>{
                   if(res.success){
@@ -308,7 +302,6 @@
         this.getList();
       },
       closeDialog(){
-        //console.log('关闭弹窗');
         this.tIndex=0
       }
     }

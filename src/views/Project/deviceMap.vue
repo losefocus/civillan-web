@@ -157,11 +157,9 @@ export default {
       //获取设备列表
       let markers = [];
       let marker;
-      console.log(post_data);
       deviceList.list(post_data).then(res=>{
         //接口成功
         if(res.success){
-          console.log(res);
           if(res.result.total==0){
             //_this.$message.error('未搜索到任何设备！');
             _this.loading.close();
@@ -247,7 +245,6 @@ export default {
                         sessionStorage.setItem('deviceInfo',deviceInfo);
                         _this.deviceKey=items.key;
                         _this.$store.dispatch('incrementKey',items.key);
-                        console.log(_this.deviceKey)
                       });
                       infoWindow.open(map, e.target.getPosition());
                     });
@@ -285,7 +282,6 @@ export default {
     getCategoryList(){
       //this.allListQuery.tenant=this.$cookies.get('tenant');
       categories.list(this.allListQuery).then(res => {
-        console.log(res);
         let list = res.result.items;
         this.productLists=res.result.items;
         this.typeOptions = list.map(item => {
@@ -301,7 +297,6 @@ export default {
       this.init(this.post_data)
     },
     getDetails(item,index){ //获取详情
-      console.log(item);
       this.dialogVisible=true;
       this.deviceName=item.name;
       //sessionStorage.setItem('deviceName',item.name);
@@ -313,7 +308,6 @@ export default {
       this.currentView=this.tBody[i]
     },
     isFullscreen(val){ //是否打开模态框
-      //console.log(val);
       if(!val){
         this.dialogWidth='100%';
         this.dialogHeight={
@@ -331,7 +325,6 @@ export default {
       }
     },
     dialogClose(){
-      console.log('关闭对话框')
     },
     changeScreen(data){
       this.changeIcon=data;
@@ -342,7 +335,6 @@ export default {
     },
     //类型筛选
     typeSelect(val){
-      console.log(val);
       this.post_data.type=val;
       this.init(this.post_data)
     }

@@ -428,7 +428,6 @@
               list.push(obj);
             });
             const data = this.formatJson(filterVal, list);
-            //console.log(list);
             export_json_to_excel(tHeader, data, '数据报表');
 
             //引用赋值  用完清空
@@ -474,7 +473,6 @@
       },
       //类型改变
       deviceChange1(val){
-        console.log(val);
         this.deviceKey=val;
       },
       handleCommand(command) { //
@@ -505,12 +503,10 @@
         let tableList=[];
         history.list(post_data).then(res=>{
           if(res.success){
-            console.log(res);
             _this.total=res.result.total;
             /*res.result.items.forEach(function (item) {
               tableList.push(item);
             });*/
-            //console.log(res.result.items);
             _this.tableData=res.result.items;
             _this.loading=false
           }else {
@@ -542,7 +538,6 @@
     watch:{
       deviceKey:{
         handler(val, oldVal){
-          console.log(val);
           this.post_data.key=val;
           this.getList(this.post_data)
         },

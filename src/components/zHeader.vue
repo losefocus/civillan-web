@@ -157,7 +157,6 @@
     methods:{
       initWebSocket(){ //初始化webSocket
         if(this.$cookies.get('wsUrl')){
-          console.log(this.$cookies.get('wsUrl'));
           let wsUrl='ws:'+this.$cookies.get('wsUrl');//ws地址
           //let wsUrl='ws://192.168.0.33:4050/ws/message/token=nT6yz42brkB7C02I+IYBeA==';//ws地址
           this.webSocket = new WebSocket(wsUrl);
@@ -166,7 +165,7 @@
           this.webSocket.onmessage = this.websocketonmessage;
           this.webSocket.onclose = this.websocketclose;
         }else{
-          console.log('未登录')
+          //console.log('未登录')
         }
       },
 
@@ -177,7 +176,6 @@
         //console.log("WebSocket连接发生错误");
       },
       websocketonmessage(res){ //数据接收
-        console.log(res);
         this.unReadCount+=1;
         if(this.$refs.child){
           this.$refs.child.getList()
@@ -191,7 +189,6 @@
       getInfo(){
         //let userId=sessionStorage.getItem('token').substring(0,2);
         userInfo.userInfo().then(res=>{
-          //console.log(res);
           if(res.result.avatarBaseUrl&&res.result.avatarPath){
             this.avatarUrl=res.result.avatarBaseUrl+res.result.avatarPath;
           }else {

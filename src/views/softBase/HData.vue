@@ -26,7 +26,6 @@ export default {
     }
   },
   created(){
-    console.log(this.deviceKey);
     if(this.deviceType=='JBZ'){
       this.currentView='HPile'
     }else if(this.deviceType=='FPJ'){
@@ -38,7 +37,6 @@ export default {
   watch:{
     deviceType:{
       handler(val, oldVal){
-        console.log(val);
         if(val=='JBZ'){
           this.currentView='HPile'
         }else if(val=='FPJ'){

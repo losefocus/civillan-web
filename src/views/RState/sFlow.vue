@@ -99,7 +99,6 @@
     watch:{
       realTime:{
         handler(oldData,newData){
-          //console.log(oldData,newData);
           this.init(newData.rflow)
         }
       }

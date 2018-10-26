@@ -121,7 +121,6 @@ export default {
           delete this.userInfo.checkPass;
           this.userInfo.avatarPath=this.avatarPath;
           this.userInfo.avatarBaseUrl=this.avatarBaseUrl;
-          console.log(this.userInfo);
           user.edit(this.userInfo).then(res=>{
             if(res.success){
               Bus.$emit('msg',false);
@@ -133,7 +132,6 @@ export default {
 
           })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -142,7 +140,6 @@ export default {
       Bus.$emit('msg',false)
     },
     handleAvatarSuccess(res, file) {
-      console.log(res);
       this.avatarUrl = URL.createObjectURL(file.raw);
       this.avatarPath =res.result.path;
       this.avatarBaseUrl =res.result.baseUrl;

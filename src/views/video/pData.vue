@@ -93,7 +93,6 @@ export default {
         background: 'rgba(0, 0, 0, 0.2)'
       });
       media.list(post_data).then(res=>{
-        console.log(res);
         if(res.success){
           if(res.result.items.length>0){
             this.noData=false;

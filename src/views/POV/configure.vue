@@ -338,7 +338,6 @@
         this.post_data.sort_by = 'sort';
         this.post_data.direction = 'asc';
         config.list(post_data).then(res=>{
-          console.log(res);
           this.lists=res.result.items;
           this.total = res.result.total;
           this.listLoading = false
@@ -347,7 +346,6 @@
         })
       },
       typeScreen(val){
-        console.log(val);
         this.post_data.type_id=val;
         this.getList(this.post_data)
       },
@@ -368,7 +366,6 @@
       getCategoryList(){
         this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
-          console.log(res);
           let list = res.result.items;
           this.navList=res.result.items
           this.typeOptions = list.map(item => {
@@ -382,7 +379,6 @@
       },
       changeTab(list,index){ //切换tab
         this.isActive=index;
-        console.log(list);
         this.post_data={
           type_id:list.id,
           page_index:1,

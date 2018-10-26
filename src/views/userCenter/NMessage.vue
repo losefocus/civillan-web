@@ -103,28 +103,24 @@
   },
   methods: {
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.getList(val,this.pageSize)
     },
     handleSelectionChange(data) {
-      //console.log(data);
       this.selectData=[];
       for(let i=0;i<data.length;i++){
         this.selectData.push(data[i].id)
       }
-      console.log(this.selectData)
     },
     readAll(){ //标记全部
       message.signAllRead().then(res=>{
         if(res.success){
           this.getList(this.currentPage,this.pageSize)
         }else{
-          console.log('标记失败')
+          //console.log('标记失败')
         }
       });
     },
     readChoice(){
-      //console.log(this.selectData)
       let ids = this.selectData.join(',');
       if(this.selectData.length==0){
         this.$message.warning('未选中任何消息')
@@ -133,46 +129,38 @@
           if(res.success){
             this.getList(this.currentPage,this.pageSize)
           }else{
-            console.log('标记失败')
+            //console.log('标记失败')
           }
         });
       }
 
     },
     deleteOne(id){ //删除单个消息
-      console.log(id);
       message.delete({"id":id}).then(res=>{
         if(res.success){
           this.getList(this.currentPage,this.pageSize)
         }else{
-          console.log('删除失败')
         }
       });
     },
     deleteAll(){ //清空
       message.emptyMessage({}).then(res=>{
-        console.log(res);
         if(res.success){
           this.getList(1,7)
         }else{
-          console.log('清空失败')
         }
       });
-      console.log('delete')
     },
     deleteChoice(){
-      console.log(this.selectData);
       if(this.selectData.length==0){
         this.$message.warning('未选中任何消息')
       }else{
         let ids = this.selectData.join(',');
 
         message.delete({'ids': ids}).then(res=>{
-          console.log(res);
           if(res.success){
             this.getList(1,7)
           }else{
-            console.log('删除失败')
           }
         });
       }
@@ -181,13 +169,11 @@
     getList(currentPage,pageSize){  //获取消息列表
       this.loading=true;
       message.list({'page_index':currentPage,'page_size':pageSize}).then(res=>{
-        console.log(res);
         this.tableData=res.result.items;
         this.total=res.result.total;
         this.loading=false;
       }).catch(err => {
         this.loading=false;
-        console.log(err)
       })
     }
   },

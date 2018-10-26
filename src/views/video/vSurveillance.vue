@@ -113,7 +113,6 @@
     },
     mounted() {
       setTimeout(() => {
-        console.log('dynamic change options', this.player);
         if(this.player){
           this.player.muted(false)
         }
@@ -137,7 +136,6 @@
                 this.noData=false;
                 this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
                 this.playerOptions.sources[0].src=item.url;
-                console.log(this.playerOptions.sources[0].src);
                 this.playerOptions.createdAt=item.createdAt;
                 this.playerOptions.name=item.name;
                 this.playerList.push(this.playerOptions);

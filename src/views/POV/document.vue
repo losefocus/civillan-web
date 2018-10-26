@@ -254,7 +254,6 @@
       getList(postData){
         this.loading=true;
         document.list(postData).then(res=>{
-          console.log(res);
           if(res.success){
             this.total=res.result.total;
             this.tableData=res.result.items;

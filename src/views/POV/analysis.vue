@@ -321,7 +321,6 @@
               list.push(obj);
             });
             const data = this.formatJson(filterVal, list);
-            //console.log(list);
             export_json_to_excel(tHeader, data, '数据报表');
 
             //引用赋值  用完清空

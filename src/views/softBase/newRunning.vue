@@ -179,16 +179,13 @@
           this.dialogFullscreen=false;
         }
         this.changeIcon=!this.changeIcon;
-        //console.log(this.changeIcon)
         this.$emit('changeIcon',this.changeIcon)
       },
       changeScreen(data){
-        console.log(data);
         this.changeIcon=data;
         this.isFullscreen();
       },
       closeDialog(){
-        //console.log('关闭弹窗');
         this.tIndex=0
       }
     }
