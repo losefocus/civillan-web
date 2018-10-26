@@ -40,6 +40,7 @@
   import deviceList from '@/api/project/deviceList'
   import offLineMarker from '@/assets/device/m-offLine.png'
   import runningMarker from '@/assets/device/m-running.png'
+  import alarmMarker from '@/assets/device/m-alarm.png'
 
   import foamAlarm from '@/assets/device/foamAlarm.png'
   import foamOff from '@/assets/device/foamOff.png'
@@ -169,102 +170,109 @@ export default {
             for(let i=0;i<lists.length;i++){
               //判断设备是否有经纬度
               if(lists[i].position){
+                console.log(lists[i].status);
                 //设备的运行状态
-                deviceData.list({key:lists[i].key}).then(res =>{
-                  let changeMarker = null;
-                  let changeBackground= null;
-                  let changeColor=null;
-                  if(res.success){
-                    changeBackground = 'runningBackground';
-                    changeColor = 'runningColor';
-                    if(lists[i].type=='PMHNT'){
-                      changeMarker = foamRunning;
-                    }else if(lists[i].type=='JBZ'){
-                      changeMarker = runningMarker;
-                    }else if(lists[i].type=='PLYH'){
-                      changeMarker = curingRunning;
-                    }else if(lists[i].type=='YYLZL'){
-                      changeMarker = tensileRunning;
-                    }
-                    _this.loading.close();
-                  }else{
-                    changeBackground = 'noBackground';
-                    changeColor = 'noColor';
-                    if(lists[i].type=='PMHNT'){
-                      changeMarker = foamOff;
-                    }else if(lists[i].type=='JBZ'){
-                      changeMarker = offLineMarker;
-                    }else if(lists[i].type=='PLYH'){
-                      changeMarker = curingOff;
-                    }else if(lists[i].type=='YYLZL'){
-                      changeMarker = tensileOff;
-                    }
-                    _this.loading.close();
+                let changeMarker = null;
+                let changeBackground= null;
+                let changeColor=null;
+                if(lists[i].status=='11'){
+                  changeBackground = 'runningBackground';
+                  changeColor = 'runningColor';
+                  if(lists[i].type=='PMHNT'){
+                    changeMarker = foamRunning;
+                  }else if(lists[i].type=='JBZ'){
+                    changeMarker = runningMarker;
+                  }else if(lists[i].type=='PLYH'){
+                    changeMarker = curingRunning;
+                  }else if(lists[i].type=='YYLZL'){
+                    changeMarker = tensileRunning;
                   }
+                }else if(lists[i].status=='21'){
+                  changeBackground = 'alarmBackground';
+                  changeColor = 'alarmColor';
+                  if(lists[i].type=='PMHNT'){
+                    changeMarker = foamAlarm;
+                  }else if(lists[i].type=='JBZ'){
+                    changeMarker = alarmMarker;
+                  }else if(lists[i].type=='PLYH'){
+                    changeMarker = curingFault;
+                  }else if(lists[i].type=='YYLZL'){
+                    changeMarker = tensileAlarm;
+                  }
+                }else{
+                  changeBackground = 'noBackground';
+                  changeColor = 'noColor';
+                  if(lists[i].type=='PMHNT'){
+                    changeMarker = foamOff;
+                  }else if(lists[i].type=='JBZ'){
+                    changeMarker = offLineMarker;
+                  }else if(lists[i].type=='PLYH'){
+                    changeMarker = curingOff;
+                  }else if(lists[i].type=='YYLZL'){
+                    changeMarker = tensileOff;
+                  }
+                }
 
-                  marker=new AMap.Marker({
-                    position:lists[i].position.split(','),
-                    content: '<div style="background:url('+changeMarker+') no-repeat; height: 43px; width: 32px; border-radius: 12px; "></div>',
-                    offset: new AMap.Pixel(-15,-15),
-                    lists:lists[i]
-                  });
-                  marker.on('click',function (e) {
-                    let items=e.target.G.lists;
+                marker=new AMap.Marker({
+                  position:lists[i].position.split(','),
+                  content: '<div style="background:url('+changeMarker+') no-repeat; height: 43px; width: 32px; border-radius: 12px; "></div>',
+                  offset: new AMap.Pixel(-15,-15),
+                  lists:lists[i]
+                });
+                marker.on('click',function (e) {
+                  let items=e.target.G.lists;
 
-                    let content='<div class="info-container device_details">' +
-                      '<div style=" position: relative; width: 200px;height: 150px;background: url(' +items.thumbnailBaseUrl+items.thumbnailPath+
-                      ');background-size:100% 100%">' +
-                      '</div>'+
-                      '<div class="info-content">' +
-                      '<div class="info-title1">' +items.name+
-                      '</div>'+
-                      '<div class='+changeColor+'></div>'+
-                      '</div>'+
-                      '</div>';
-                    AMapUI.loadUI(['overlay/SimpleInfoWindow'], function(SimpleInfoWindow) {
-                      infoWindow = new SimpleInfoWindow({
-                        infoBody: content,
-                        //基点指向marker的头部位置
-                        offset: new AMap.Pixel(-1, -10)
-                      });
-
-                      infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
-                        _this.deviceType=lists[i].type;
-                        if(lists[i].type=='FPJ'){
-                          _this.tBody[0]='FConcrete';
-                          _this.currentView='FConcrete'
-                        }else {
-                          _this.tBody[0]='RState';
-                          _this.currentView='RState'
-                        }
-                        //阻止冒泡
-                        event.stopPropagation();
-                        _this.dialogVisible=true;
-                        _this.deviceName=items.name;
-                        let deviceInfo=JSON.stringify(items);
-                        sessionStorage.setItem('deviceInfo',deviceInfo);
-                        _this.deviceKey=items.key;
-                        _this.$store.dispatch('incrementKey',items.key);
-                      });
-                      infoWindow.open(map, e.target.getPosition());
+                  let content='<div class="info-container device_details">' +
+                    '<div style=" position: relative; width: 200px;height: 150px;background: url(' +items.thumbnailBaseUrl+items.thumbnailPath+
+                    ');background-size:100% 100%">' +
+                    '</div>'+
+                    '<div class="info-content">' +
+                    '<div class="info-title1">' +items.name+
+                    '</div>'+
+                    '<div class='+changeColor+'></div>'+
+                    '</div>'+
+                    '</div>';
+                  AMapUI.loadUI(['overlay/SimpleInfoWindow'], function(SimpleInfoWindow) {
+                    infoWindow = new SimpleInfoWindow({
+                      infoBody: content,
+                      //基点指向marker的头部位置
+                      offset: new AMap.Pixel(-1, -10)
                     });
 
-                    //infoWindow.setContent(content);
+                    infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
+                      _this.deviceType=lists[i].type;
+                      if(lists[i].type=='FPJ'){
+                        _this.tBody[0]='FConcrete';
+                        _this.currentView='FConcrete'
+                      }else {
+                        _this.tBody[0]='RState';
+                        _this.currentView='RState'
+                      }
+                      //阻止冒泡
+                      event.stopPropagation();
+                      _this.dialogVisible=true;
+                      _this.deviceName=items.name;
+                      let deviceInfo=JSON.stringify(items);
+                      sessionStorage.setItem('deviceInfo',deviceInfo);
+                      _this.deviceKey=items.key;
+                      _this.$store.dispatch('incrementKey',items.key);
+                    });
                     infoWindow.open(map, e.target.getPosition());
-                    map.setCenter(e.target.getPosition());
                   });
-                  // 设置label标签
-                  marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
-                    offset: new AMap.Pixel(-135, -25),//修改label相对于maker的位置
-                    content:"<div class='deviceLabelBox'>"+"<span class="+changeBackground+">"+lists[i].name+"</span>"+"</div>"
-                  });
-                  map.add(marker);
-                  map.setFitView();
-                  markers.push(marker);
-                  _this.loading.close();
-                }).catch(e=>{
-                  _this.loading.close();
+
+                  //infoWindow.setContent(content);
+                  infoWindow.open(map, e.target.getPosition());
+                  map.setCenter(e.target.getPosition());
                 });
+                // 设置label标签
+                marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+                  offset: new AMap.Pixel(-135, -25),//修改label相对于maker的位置
+                  content:"<div class='deviceLabelBox'>"+"<span class="+changeBackground+">"+lists[i].name+"</span>"+"</div>"
+                });
+                map.add(marker);
+                map.setFitView();
+                markers.push(marker);
+                _this.loading.close();
               }else{
                 _this.loading.close();
               }

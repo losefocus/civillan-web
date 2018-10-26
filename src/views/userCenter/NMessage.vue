@@ -20,6 +20,7 @@
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
+        @expand-change="expanded"
         >
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -175,9 +176,27 @@
       }).catch(err => {
         this.loading=false;
       })
+    },
+    expanded(row, expandedRows){
+      console.log(expandedRows);
+      if(expandedRows.length>0){
+        if(expandedRows[0].status==1){
+          let ids=expandedRows[0].id;
+          message.signRead({'ids':ids}).then(res=>{
+            if(res.success){
+              row.status=2
+            }else{
+
+            }
+          });
+        }else{
+
+        }
+      }
     }
   },
   props: ['dialogTop'],
+
 
 }
 </script>

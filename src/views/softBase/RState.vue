@@ -178,12 +178,12 @@ export default {
       timer:null,//定时器,
       pileData:{
         ps:[],
-        pile_id:{content:[{"label":"pile_position","name":"桩位置","value":"120.049345774,30.850305056"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}],
+        pile_id:{content:[{"label":"pile_position","name":"桩位置","value":"120.044018147,30.858786963"},{"label":"pile_depth","name":"桩长","value":"11"},{"label":"pile_diameter","name":"桩径","value":"0.25"}],
           createdAt:1535618538,
           createdBy:70,
           id:7533,
-          key:"k2230_940_E17",
-          name:"k2230_940_E17",
+          key:"k2230_940_D7",
+          name:"k2230_940_D7",
           projectId:21,
           sort:0,
           status:2,
@@ -325,12 +325,16 @@ export default {
       config.list({page_index:1, page_size:10000}).then(res=>{
         if(res.success){
           let aa = res.result.items;
+          //console.log(aa);
           aa.forEach((item,index)=>{
             let arr = JSON.parse(item.content);
             item.content=arr
           });
           this.pileData.ps=aa;
-          if(this.$refs.pMap){this.$refs.pMap.init()}
+
+          if(this.$refs.pMap){
+            console.log('aaa')
+            this.$refs.pMap.init()}
         }else{
           //console.log('CAD数据获取失败')
         }

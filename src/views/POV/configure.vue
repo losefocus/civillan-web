@@ -113,7 +113,7 @@
           <div class="c-content">设计参数</div>
           <div class="c-body">
             <el-form class="c-add" :inline="true" ref="content_form" :rules="rules1" :model="content_form">
-              <el-form-item style="width: 39%" prop="name">
+              <el-form-item style="width: 45%" prop="name">
                 <el-select v-model="content_form.name"  size="mini" placeholder="项目">
                   <el-option
                     v-for="item in paramsOption"
@@ -124,11 +124,11 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item style="width: 39%" prop="value">
+              <el-form-item style="width: 45%" prop="value">
                 <el-input v-model="content_form.value"  placeholder="设计值" size="mini"></el-input>
               </el-form-item >
-              <el-form-item style="width: 15%">
-                <el-button size="mini" style="width: 100%; " @click="addContent">添加</el-button>
+              <el-form-item>
+                <el-button size="mini" @click="addContent">添加</el-button>
               </el-form-item >
 
             </el-form>

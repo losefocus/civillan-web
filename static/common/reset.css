@@ -157,6 +157,17 @@ button, input, select, textarea { font-size:100%; }
   -webkit-box-shadow: 0px 0px 2px 4px #26c702;
   border-radius: 50%;
 }
+.alarmColor{
+  float: right;
+  margin-top: 7px;
+  background-color: #F31A1A;
+  width: 6px;
+  height: 6px;
+  box-shadow: 0px 0px 2px 4px #CD4646;
+  -moz-box-shadow: 0px 0px 2px 4px #CD4646;
+  -webkit-box-shadow: 0px 0px 2px 4px #CD4646;
+  border-radius: 50%;
+}
 .noColor{
   float: right;
   margin-top: 7px;
@@ -230,6 +241,14 @@ button, input, select, textarea { font-size:100%; }
 }
 .runningBackground{
   background: #24BCF7;
+  padding:2px 10px;
+  height: 20px;
+  line-height: 20px;
+  color:#ffffff;
+  border-radius: 4px;
+}
+.alarmBackground{
+  background: #D65858;
   padding:2px 10px;
   height: 20px;
   line-height: 20px;
