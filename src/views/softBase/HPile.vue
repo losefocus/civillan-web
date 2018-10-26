@@ -604,7 +604,6 @@
               list.push(obj);
             });
             const data = this.formatJson(filterVal, list);
-            //console.log(list);
             export_json_to_excel(tHeader, data, '数据报表');
 
             //引用赋值  用完清空
@@ -650,7 +649,6 @@
       },
       //类型改变
       deviceChange(val){
-        console.log(val);
         this.post_data.key=val;
         this.getList(this.post_data);
         this.getRecords(val)
@@ -686,12 +684,10 @@
         let tableList=[];
         history.list(post_data).then(res=>{
           if(res.success){
-            //console.log(res);
             _this.total=res.result.total;
             /*res.result.items.forEach(function (item) {
               tableList.push(item);
             });*/
-            //console.log(res.result.items);
             _this.tableData=res.result.items;
             _this.loading=false
           }else {
@@ -717,7 +713,6 @@
       },
       //全部设备select搜索框
       deviceSearch(query){
-        console.log(query);
         this.device=query
         this.device_data.name=query;
         this.getDeviceList(this.device_data);
@@ -726,13 +721,11 @@
       getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
-          console.log(res.result.items);
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
         });
       },
       visibleChange(val){
-        console.log(this.device);
         if(val){
           this.device_data={
             page_index:1,
@@ -755,7 +748,6 @@
     watch:{
       deviceKey:{
         handler(val, oldVal){
-          console.log(val);
           this.post_data.key=val;
           this.getList(this.post_data)
         },

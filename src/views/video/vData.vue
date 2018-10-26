@@ -114,7 +114,6 @@
     },
     mounted() {
       setTimeout(() => {
-        console.log('dynamic change options', this.player);
         if(this.player){
           this.player.muted(false)
         }
@@ -140,7 +139,6 @@
                 this.playerOptions.sources[0].src=item.url;
                 this.playerOptions.createdAt=item.createdAt;
                 this.playerOptions.name=item.name;
-                console.log(this.playerOptions.sources[0].src);
                 this.playerList.push(this.playerOptions);
               });
               this.loading.close()

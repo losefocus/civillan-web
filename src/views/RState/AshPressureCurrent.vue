@@ -35,7 +35,6 @@
         this.ashData.push(this.dataInfo.par_ash);
         this.rpressureData.push(this.dataInfo.rpressure);
         this.rcurrentData.push(this.dataInfo.rcurrent);
-        //console.log(this.dataInfo);
         let Data=[10,20,30,40,50,60,70,80,90,100,120,140];
         this.myChart = this.$echarts.init(document.getElementById('myCharts'));
         this.myChart.setOption({

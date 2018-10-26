@@ -368,14 +368,12 @@
       this.getCategoryList()
       this.getDeviceList(this.device_data);
       Bus.$on('isCollapse',res=>{
-        console.log(res);
         this.isCollapse=res
       })
     },
     methods: {
       changeTab(list,index){ //切换tab
         this.isActive=index;
-        /*console.log(list)
         if(list.code=='JBZ'){
           this.currentView='HPile'
         }else if(list.code=='PMHNT'){
@@ -391,7 +389,6 @@
       getCategoryList(){
         //this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
-          console.log(res);
           this.navList=res.result.items;
         })
       },
@@ -401,10 +398,8 @@
         this.getList(this.post_data);
       },
       handleExpandChange(row,expandedRows){
-        console.log(expandedRows)
       },
       deviceChange(val){ //类型改变
-        console.log(val);
         this.deviceKey=val;
       },
       handleCommand(command) { //
@@ -433,7 +428,7 @@
             });
             _this.tableData=tableList;
           }else {
-            console.log('请求不成功')
+
           }
         })
       },

@@ -365,7 +365,6 @@
       this.getCategoryList()
       this.getDeviceList(this.device_data);
       Bus.$on('isCollapse',res=>{
-        console.log(res);
         this.isCollapse=res
       })
     },
@@ -394,7 +393,6 @@
         console.log(expandedRows)
       },
       deviceChange(val){ //类型改变
-        console.log(val);
         this.deviceKey=val;
       },
       handleCommand(command) { //
@@ -417,21 +415,18 @@
         let tableList=[];
         history.list(post_data).then(res=>{
           if(res.result.items){
-            //console.log(res.result);
             _this.total=res.result.total;
             res.result.items.forEach(function (item) {
               tableList.push(item._v);
             });
             _this.tableData=tableList;
           }else {
-            console.log('请求不成功')
           }
         })
       },
       getCategoryList(){
         //this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
-          console.log(res);
           this.navList=res.result.items;
         })
       },

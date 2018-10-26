@@ -194,12 +194,10 @@
             let list=[];
             let obj = {};
             this.multipleSelection.forEach(e=>{
-              //console.log(e);
               for(let i=0;i<filterVal.length;i++){
                 obj[filterVal[i]] = e[filterVal[i]]
               }
               list.push(obj);
-              //console.log(list);
             });
             const data = this.formatJson(filterVal, list);
             export_json_to_excel(tHeader, data, '数据报表');
@@ -242,11 +240,9 @@
 
       },
       handleExpandChange(row,expandedRows){
-        console.log(expandedRows)
       },
       //类型改变
       deviceChange(val){
-        console.log(val);
         this.device=val;
       },
       handleCommand(command) { //
@@ -254,7 +250,6 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(this.multipleSelection);
       },
       //列表改变每页显示的条数
       handleSizeChange: function (size) {
@@ -277,16 +272,12 @@
         let _this=this;
         let tableList=[];
         history.list(post_data).then(res=>{
-          console.log(res);
           if(res.success){
-            //console.log(res.result);
             _this.total=res.result.total;
             res.result.items.forEach(function (item) {
               tableList.push(item);
             });
             _this.tableData=tableList;
-            //_this.tableData.tableRows=_this.tableRows
-            console.log(_this.tableData);
             _this.loading=false
           }else {
             _this.$message.error(res.message);
@@ -298,7 +289,6 @@
       //统计总数
       getRecords(){
         history.records().then(res=>{
-          console.log(res);
           this.recordSum=res.result[0]
         })
       },
@@ -317,10 +307,8 @@
       /*getDeviceList(post_data){
         let _this=this;
         deviceList.list(post_data).then(res=>{
-          console.log(res);
           _this.deviceSelect=res.result.items;
           _this.deviceTotal=res.result.total;
-          console.log(_this.deviceTotal)
         });
       },*/
 

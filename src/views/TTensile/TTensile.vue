@@ -538,7 +538,6 @@
     },
     beforeDestroy(){
       clearInterval(this.timer);
-      //console.log('已销毁');
     },
 
     methods:{
@@ -580,7 +579,6 @@
         deviceData.list({'key':key}).then(res=>{
           if(res.success){
             this.RT_data=res.result;
-            console.log(res);
             this.RT_data.status=1;
             this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
             this.RT_data.depth_design=30;
@@ -620,14 +618,12 @@
       getConfig(){
         let projectId=this.$cookies.get('projectId');
         config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
-          //console.log(res.result.items[0].message);
         })
       },
 
       //报警信息
       getAlarms(key){
         deviceData.alarms({'key':key}).then(res=>{
-          //console.log(res.result[0].message);
           if(res.success){
             this.isWarming=false;
             this.warmingText=res.result[0].message
@@ -636,7 +632,6 @@
           }
 
         }).catch(e=>{
-          //console.log(e)
         })
       },
       //ECharts
@@ -762,7 +757,6 @@
 
     watch:{
       isClose(val,oldVal){
-        console.log(val,oldVal)
       },
       dialogFullscreen:function (val,oldVal) {
         this.myChart.resize()

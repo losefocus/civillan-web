@@ -292,8 +292,10 @@ export default {
       this.deviceName1=this.deviceInfo.name;
       deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
         if(res.success){
-          this.deviceUserName=res.result.items[0].projectUser.name;
-          this.deviceUserPhone=res.result.items[0].projectUser.phone;
+          if(this.deviceUserName=res.result.items[0].projectUser){
+            this.deviceUserName=res.result.items[0].projectUser.name;
+            this.deviceUserPhone=res.result.items[0].projectUser.phone;
+          }
         }
       })
     },
@@ -322,26 +324,22 @@ export default {
       config.list({page_index:1, page_size:10000}).then(res=>{
         if(res.success){
           let aa = res.result.items;
-          //console.log(aa);
           aa.forEach((item,index)=>{
-            //console.log(item.content);
             let arr = JSON.parse(item.content);
             item.content=arr
           });
           this.pileData.ps=aa;
           if(this.$refs.pMap){this.$refs.pMap.init()}
         }else{
-          console.log('CAD数据获取失败')
+          //console.log('CAD数据获取失败')
         }
       })
     },
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
-        //console.log(res);
         if(res.success){
           this.RT_data=res.result;
-          console.log(res);
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
           this.RT_data.depth_design=30;
@@ -381,20 +379,17 @@ export default {
     getConfig(){
       let projectId=this.$cookies.get('projectId');
       config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
-        //console.log(res.result.items[0].message);
       })
     },
     //设备配置参数
     /*getDeviceConfig(post_data){
       deviceConfig.list({'device_id':post_data}).then(res=>{
-        console.log(res)
       })
     },*/
 
     //报警信息
     getAlarms(key){
       deviceData.alarms({'key':key}).then(res=>{
-        //console.log(res.result[0].message);
         if(res.result){
           this.isWarming=false;
           this.warmingText=res.result[0].message
@@ -402,7 +397,6 @@ export default {
           this.isWarming=true
         }
       }).catch(e=>{
-        console.log(e)
       })
     }
   },
@@ -425,13 +419,11 @@ export default {
       });
     },
     isClose(val,oldVal){
-      console.log(val,oldVal)
     },
     clientWidth(val,oldVal){
       this.$nextTick(()=>{
         let pile=document.getElementById('pile');
         if(!pile){
-          //console.log('dom销毁')
         }else{
           let pileHeight,pileWidth;
           if(pile.currentStyle){

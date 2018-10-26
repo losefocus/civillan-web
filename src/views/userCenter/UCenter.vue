@@ -172,10 +172,8 @@ export default {
   methods:{
     all(){
       Promise.all([dictionary.list({'type':'contact'}),contact.list({'sort_by':'sort','direction':'ASC'})]).then(res=>{
-        //console.log(res)
         this.contactSelect=res[0].result;
         this.contactList=res[1].result.items;
-        console.log(res[1].result.items);
 
         let array = [];
         this.contactList.forEach(item=>{
@@ -198,7 +196,6 @@ export default {
       });
       let userId=sessionStorage.getItem('token').substring(0,2);
       user.userInfo({project_user_id:userId}).then(res=>{
-        console.log(res);
         if(res.success){
           this.userInfo = res.result;
           this.role=res.result.userRole[0].projectRole.name;
@@ -218,17 +215,13 @@ export default {
     },
     getContactInformation(){
       dictionary.list({'type':'contact'}).then(res=>{
-        console.log(res);
         if(res.success){
           this.contactSelect=res.result;
-          //let lists=res.result;
-          //this.contactSelect=this.array_diff(lists,this.contactList)
         }
       })
     },
     getContentList(){
       contact.list().then(res=>{
-        //console.log(this.contactSelect);
         this.contactList=res.result.items;
         let array = [];
         this.contactList.forEach(item=>{
@@ -245,13 +238,11 @@ export default {
       })
     },
     handleCommand(command) {
-      console.log(command);
       let obj = Object.assign({},command);
       obj.flag = true;
       delete obj.id;
       this.typeFont=obj.value;
       this.contactList.push(obj);
-      console.log(this.contactList)
     },
 
     edit(x){
@@ -269,7 +260,6 @@ export default {
       }
     },
     addContact(list,index){
-      console.log(index)
       list.flag = false;
       let post_data = {};
       let msg='';
@@ -295,10 +285,7 @@ export default {
         fullscreen: true,
         background: 'rgba(0, 0, 0, 0.2)'
       });
-      console.log(this.content);
       contact.addContact(post_data).then(res=>{
-
-        console.log(res);
         if(res.success){
           this.content = '';
           this.all();
@@ -313,7 +300,6 @@ export default {
       // list.flag=false;
     },
     editContact(list,index){
-      console.log(index);
       this.content = list.value;
       list.flag=true;
     },
@@ -324,7 +310,6 @@ export default {
           background: 'rgba(0, 0, 0, 0.2)'
         });
         contact.deleteContact({'project_user_contact_id':list.id}).then(res=>{
-          console.log(res.message);
           if(res.success){
             this.all();
             this.$message.success('删除成功');

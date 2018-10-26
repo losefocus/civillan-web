@@ -400,7 +400,6 @@
       },
       getDeviceType(){
         categories.list(this.allListQuery).then(res => {
-          console.log(res);
           let items = res.result.items;
           let allData = []; //用来装处理完的数组
           let currData = []; //子数组用来存分割完的数据
