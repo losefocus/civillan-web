@@ -12,7 +12,7 @@ module.exports = {
     // Paths
     env:require('./dev.env'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
     proxyTable: {
       '/foreground':{//此处并非一定和url一致。
         target:baseUrl,
