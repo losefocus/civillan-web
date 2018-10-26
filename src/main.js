@@ -13,6 +13,9 @@ Vue.config.productionTip = false;
 import api from './api/'
 Vue.prototype.$api = api;
 
+import promise from 'es6-promise'; //axios兼容IE
+promise.polyfill();
+
 import axios from 'axios'
 Vue.prototype.$http= axios;
 

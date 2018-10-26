@@ -19,7 +19,7 @@
          </div>
            <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
          <div class="i-progress">
-           <div class="i-progressName" style="width: 80px">成桩进度：</div>
+           <div class="i-progressName" style="width: 80px">作业进度：</div>
            <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
            <div class="clear"></div>
          </div>
@@ -292,7 +292,7 @@ export default {
       this.deviceName1=this.deviceInfo.name;
       deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
         if(res.success){
-          if(this.deviceUserName=res.result.items[0].projectUser){
+          if(res.result.total){
             this.deviceUserName=res.result.items[0].projectUser.name;
             this.deviceUserPhone=res.result.items[0].projectUser.phone;
           }
@@ -570,21 +570,21 @@ export default {
           .i-body{
             width: 100%;
             height: 40%;
-            font-weight: bold;
             .i-name{
               float: left;
               font-size:15px;
               color:rgba(51,51,51,1);
+              font-weight: bold;
             }
             .i-company{
               float: left;
               font-size:10px;
-              color:rgba(51,51,51,1);
+                color:#999999;
             }
             .i-state{
               float: right;
               font-size:10px;
-              color:rgba(153,153,153,1);
+              color:#999999;
               .led-green{
                 vertical-align: middle;
                 display: inline-block;
@@ -641,7 +641,6 @@ export default {
             float: left;
             width: 60%;
             height: 80%;
-            font-weight: bold;
 
             .i-infoName{
               margin-left: 10px;
@@ -650,12 +649,14 @@ export default {
               height: 50%;
               .i-info{
                 margin-left: 10px;
+                color: #999999;
               }
             }
             .b-infoCall{
               height: 50%;
               .i-info{
                 margin-left: 10px;
+                color: #999999;
               }
             }
             /*.icon-portrait{
@@ -690,6 +691,9 @@ export default {
           overflow: hidden;
           div{
             float: left;
+          }
+          .i-progressName{
+            color: #999999
           }
         }
         .i-normal{
