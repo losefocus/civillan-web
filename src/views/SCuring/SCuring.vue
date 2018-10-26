@@ -222,8 +222,10 @@
         this.deviceName1=this.deviceInfo.name;
         deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
           if(res.success){
-            this.deviceUserName=res.result.items[0].projectUser.name;
-            this.deviceUserPhone=res.result.items[0].projectUser.phone;
+            if(res.result.total){
+              this.deviceUserName=res.result.items[0].projectUser.name;
+              this.deviceUserPhone=res.result.items[0].projectUser.phone;
+            }
           }
         })
       },
@@ -550,16 +552,16 @@
           .i-body{
             width: 100%;
             height: 40%;
-            font-weight: bold;
             .i-name{
               float: left;
+              font-weight: bold;
               font-size:15px;
               color:rgba(51,51,51,1);
             }
             .i-company{
               float: left;
               font-size:10px;
-              color:rgba(51,51,51,1);
+              color:#999999;
             }
             .i-state{
               float: right;
@@ -620,9 +622,9 @@
           .b-info{
             width: 60%;
             height: 40%;
-            font-weight: bold;
             .i-info{
               margin-left: 10px;
+              color: #999999;
             }
             .icon-portrait{
               color: #787F87;
@@ -639,6 +641,7 @@
           overflow: hidden;
           div{
             float: left;
+            color: #999999;
           }
         }
         .i-normal{

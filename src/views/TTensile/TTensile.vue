@@ -10,7 +10,7 @@
             <div class="d-model">{{deviceName[deviceIndex-1].name}}</div>
           </div>
           <div class="i-progress">
-            <div class="i-progressName" style="width: 80px">成桩进度：</div>
+            <div class="i-progressName" style="width: 80px">作业进度：</div>
             <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
             <div class="clear"></div>
           </div>
@@ -552,8 +552,10 @@
         this.deviceName1=this.deviceInfo.name;
         deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
           if(res.success){
-            this.deviceUserName=res.result.items[0].projectUser.name;
-            this.deviceUserPhone=res.result.items[0].projectUser.phone;
+            if(res.result.total){
+              this.deviceUserName=res.result.items[0].projectUser.name;
+              this.deviceUserPhone=res.result.items[0].projectUser.phone;
+            }
           }
         })
       },
@@ -600,7 +602,7 @@
             this.ashData.push(par_ash);
             this.rpressureData.push(rpressure);
           }else {
-            this.noDevice=false;
+            this.noDevice=true;
           }
 
         }).catch(err=>{
@@ -916,16 +918,16 @@
           .i-body{
             width: 100%;
             height: 40%;
-            font-weight: bold;
             .i-name{
               float: left;
               font-size:15px;
               color:rgba(51,51,51,1);
+              font-weight: bold;
             }
             .i-company{
               float: left;
               font-size:10px;
-              color:rgba(51,51,51,1);
+              color:#999999;
             }
             .i-state{
               float: right;
@@ -986,9 +988,9 @@
           .b-info{
             width: 60%;
             height: 40%;
-            font-weight: bold;
             .i-info{
               margin-left: 10px;
+              color: #999999;
             }
             .icon-portrait{
               color: #787F87;
@@ -1005,6 +1007,9 @@
           overflow: hidden;
           div{
             float: left;
+          }
+          .i-progressName{
+            color: #999999;
           }
         }
         .i-normal{
