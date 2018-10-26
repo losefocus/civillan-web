@@ -244,10 +244,11 @@ export default {
     let deviceKey=this.$store.state.project.deviceKey;
     this.getData(deviceKey);
     this.getAlarms(deviceKey);
-    /*this.timer=setInterval(()=>{
-      this.getData(this.deviceKey);
-      this.getAlarms(this.deviceKey)
-    },5000);*/
+
+    this.timer=setInterval(()=>{
+      this.getData(deviceKey);
+      this.getAlarms(deviceKey)
+    },5000);
 
   },
   mounted(){
