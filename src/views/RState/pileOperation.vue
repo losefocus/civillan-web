@@ -236,7 +236,7 @@
     position: absolute;
     top: 25%;
     left: 50%;
-    width: 70%;
+    width: 110px;
     height: 110px;
     background: url(../../assets/RState/stake-03.png)no-repeat center bottom;
     background-size: contain;
