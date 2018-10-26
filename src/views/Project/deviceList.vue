@@ -48,6 +48,7 @@
               <img v-if="item.type=='JBZ'" :src="jbzImg">
               <img v-if="item.type=='PLYH'" :src="pnyhImg">
               <img v-if="item.type=='PMHNT'" :src="pmhntImg">
+              <img v-if="item.type=='YYLZL'" :src="yylzlImg">
             </li>
             <li class="d-statistics">
               <div class="d-date">当前作业</div>
@@ -108,6 +109,7 @@
   import jbzImg from '@/assets/device/JBZ.png'
   import pmhntImg from '@/assets/device/PMHNT.png'
   import pnyhImg from '@/assets/device/PNYH.png'
+  import yylzlImg from '@/assets/tensile/YYLZL.png'
 
   import Bus from '@/common/eventBus'
   import Waterfall from 'vue-waterfall/lib/waterfall'
@@ -130,6 +132,7 @@
         jbzImg:jbzImg,
         pmhntImg:pmhntImg,
         pnyhImg:pnyhImg,
+        yylzlImg:yylzlImg,
         isActive:'',
         noData:false,
         navList:[],

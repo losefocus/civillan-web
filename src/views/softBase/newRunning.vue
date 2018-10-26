@@ -28,6 +28,7 @@
 
   import SCuring from '@/views/SCuring/SCuring'
 
+  import TTensile from '@/views/TTensile/TTensile'
 
 
   export default {
@@ -40,7 +41,8 @@
       NRecord,
       FConcrete,
       HFoam,
-      SCuring
+      SCuring,
+      TTensile,
     },
     data () {
       return {
@@ -49,7 +51,7 @@
         loading:null,
         isShow:true,
         dialogVisible: false,
-        dialogWidth:'70%',
+        dialogWidth:'75%',
         dialogHeight:{
           height:'700px'
         },
@@ -88,7 +90,7 @@
     created(){
       this.changeType();
       let clientWidth1=document.body.clientWidth;
-      if(clientWidth1<1366){
+      if(clientWidth1<1400){
         //this.isShow=false;
         this.changeIcon=true;
         this.isFullscreen()
@@ -114,7 +116,7 @@
       window.onresize = function(){
         let clientWidth=document.body.clientWidth;
         _this.clientWidth=clientWidth;
-        if(clientWidth<1266){
+        if(clientWidth<1400){
           _this.isShow=false;
           _this.changeIcon=true;
           _this.isFullscreen()
@@ -137,8 +139,8 @@
           this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='SCuring'
         }else if(this.deviceType=='YYLZL'){
-          this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
-          this.currentView='SCuring'
+          this.tBody=['TTensile', 'HFoam', 'SAnalysis', 'AQuery',];
+          this.currentView='TTensile'
         }else if(this.deviceType=='YYLYJ'){
           this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='SCuring'

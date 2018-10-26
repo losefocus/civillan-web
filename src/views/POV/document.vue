@@ -78,7 +78,7 @@
     </div>
 
 
-    <el-dialog :visible.sync="configTemplateVisible" width='400px'>
+    <el-dialog :visible.sync="configTemplateVisible" @close="close" width='400px'>
       <div class="clearfix">
         <div style="font-size: 16px;padding: 14px 20px;font-weight: bold;">
           上传
@@ -226,7 +226,6 @@
           }else {
             this.$message.error('请选择上传文件')
           }
-
         }else{
           this.$message.error('请输入文档标题')
         }
@@ -234,7 +233,7 @@
       },
       beforeUpload(file){
         console.log(file);
-        this.uploading=true
+        this.uploading=true;
         const isJPG = file.type === 'application/vnd.ms-excel';
         const isLt2M = file.size / 1024 / 1024 < 5;
 
@@ -248,8 +247,6 @@
       },
       uploadSuccess(res, file) {
         this.uploading=false;
-        console.log(res);
-        //this.documentUrl = res.result.baseUrl+res.result.path;
         this.filePath =res.result.path;
         this.fileBaseUrl =res.result.baseUrl;
       },
@@ -269,6 +266,11 @@
         }).catch(err => {
           this.loading=false;
         })
+      },
+      close(){
+        this.title='';
+        this.filePath='';
+        this.fileBaseUrl='';
       }
     }
   }
