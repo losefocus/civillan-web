@@ -374,6 +374,7 @@
     methods: {
       changeTab(list,index){ //切换tab
         this.isActive=index;
+        /*console.log(list)
         if(list.code=='JBZ'){
           this.currentView='HPile'
         }else if(list.code=='PMHNT'){
