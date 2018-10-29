@@ -45,8 +45,6 @@
   import foamAlarm from '@/assets/device/foamAlarm.png'
   import foamOff from '@/assets/device/foamOff.png'
   import foamRunning from '@/assets/device/foamRunning.png'
-  import devicePolymerization from '@/assets/device/devicePolymerization.png'
-  import stateMarker from '@/assets/AMap/marker.png'
 
   import curingFault from '@/assets/curing/curingFault.png'
   import curingOff from '@/assets/curing/curingOff.png'
