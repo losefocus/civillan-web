@@ -239,13 +239,6 @@ export default {
 
                     infoWindow.get$InfoBody().on('click', '.device_details', function(event) {
                       _this.deviceType=lists[i].type;
-                      if(lists[i].type=='FPJ'){
-                        _this.tBody[0]='FConcrete';
-                        _this.currentView='FConcrete'
-                      }else {
-                        _this.tBody[0]='RState';
-                        _this.currentView='RState'
-                      }
                       //阻止冒泡
                       event.stopPropagation();
                       _this.dialogVisible=true;

@@ -21,6 +21,7 @@
 
   import HPile from '@/views/softBase/HPile'
   import HFoam from '@/views/FConcrete/HFoam'
+  import HTensile from '@/views/TTensile/HTensile'
 
   import categories from '@/api/configure/categories'
   import RthyinfoFormat from '@/common/RthyinfoFormat.js'
@@ -69,7 +70,8 @@
     },
     components:{
       HPile,
-      HFoam
+      HFoam,
+      HTensile
     },
     filters: {
       formatDate(time) {
@@ -108,7 +110,7 @@
         }else if(list.code=='PLYH'){
           this.currentView='HFoam'
         }else if(list.code=='YYLZL'){
-          this.currentView='HFoam'
+          this.currentView='HTensile'
         }else if(list.code=='YYLYJ'){
           this.currentView='HFoam'
         }

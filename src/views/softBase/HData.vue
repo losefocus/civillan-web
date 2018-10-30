@@ -8,11 +8,13 @@
 <script>
   import HPile from '@/views/softBase/HPile'
   import HFoam from '@/views/FConcrete/HFoam'
+  import HTensile from '@/views/TTensile/HTensile'
 export default {
   name: "SHistory",
   components:{
     HPile,
-    HFoam
+    HFoam,
+    HTensile
   },
   props:['deviceType','deviceKey'],
   data(){
@@ -28,10 +30,10 @@ export default {
   created(){
     if(this.deviceType=='JBZ'){
       this.currentView='HPile'
-    }else if(this.deviceType=='FPJ'){
-      this.currentView='HFoam'
+    }else if(this.deviceType=='YYLZL'){
+      this.currentView='HTensile'
     }else{
-      this.currentView='HFoam'
+      this.currentView='HTensile'
     }
   }/*,
   watch:{

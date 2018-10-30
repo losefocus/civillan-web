@@ -31,7 +31,7 @@
       >
         <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)">
           <!--:class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}"-->
-          <div class="r-state" :class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2,'r-state4':item.status==3}">
+          <div class="r-state" :class="{'r-state1':item.status==21,'r-state2':item.status==11,'r-state3':item.status==0,'r-state4':item.status==1}">
             {{ deviceStatus.get(item.status) }}
           </div>
           <div class="d-name">
@@ -157,10 +157,10 @@
         isBusy: false,
         deviceStatus:null,
         deviceStatusLists:[
-          {id:0,name:'故障中'},
-          {id:1,name:'运行中'},
-          {id:2,name:'已断线'},
-          {id:3,name:'已离线'},
+          {id:21,name:'故障中'},
+          {id:11,name:'运行中'},
+          {id:0,name:'未激活'},
+          {id:1,name:'已离线'},
         ],
         post_data:{
           project_id:this.$cookies.get('projectId'),
@@ -265,12 +265,12 @@
           if(res.success){
             if(res.result.items.length>0){
               this.noData=false;
-              res.result.items.forEach(item=>{
+              /*res.result.items.forEach(item=>{
                 item.status=3;
-              });
+              });*/
               this.items=res.result.items;
               this.total=res.result.total;
-              for(let i=0;i<this.items.length;i++){
+              /*for(let i=0;i<this.items.length;i++){
                 deviceData.list({key:this.items[i].key}).then(res =>{
                   if(res.success){
                     this.items[i].status=1
@@ -279,7 +279,7 @@
                   }
                 }).catch(e=>{
                 })
-              }
+              }*/
               this.loading.close();
             }else{
               this.noData=true;

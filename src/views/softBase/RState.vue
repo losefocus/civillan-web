@@ -289,6 +289,12 @@ export default {
     //设备信息
     getDeviceInfo(){
       this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+      console.log(this.deviceInfo);
+      if(this.deviceInfo.id==11){
+        this.noDevice=false;
+      }else{
+        this.noDevice=true;
+      }
       this.productName=this.deviceInfo.product.name;
       this.deviceName1=this.deviceInfo.name;
       deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
@@ -367,7 +373,7 @@ export default {
           this.rpressureData.push(rpressure);
         }else {
           this.progressHeight='100%';
-          this.noDevice=true;
+
         }
       }).catch(err=>{
       });
