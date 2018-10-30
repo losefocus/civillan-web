@@ -23,7 +23,10 @@
     methods:{
       init(post_data){
         let _this=this;
-        let tips=Math.abs(post_data) || 0;
+        let tips=Number(post_data).toFixed(2);
+        if(isNaN(tips)){
+          tips=0
+        }
 
         this.myChart = this.$echarts.init(document.getElementById('speed'));
         function loading() {
@@ -47,7 +50,7 @@
             top: '42%',
             textStyle: {
               color: '#333333',
-              fontSize:'18'
+              fontSize:'16'
             }
           }, {
             text: 'cm/Min',
@@ -56,7 +59,7 @@
             //textAlign: 'center',
             textStyle: {
               color: '#999999',
-              fontSize:'14'
+              fontSize:'12'
             }
           }],
           color:'rgba(31,189,238,0.2)',
