@@ -218,7 +218,7 @@
       //设备信息
       getDeviceInfo(){
         this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-        if(this.deviceInfo.id==11){
+        if(this.deviceInfo.status==11){
           this.noDevice=false;
         }else{
           this.noDevice=true;

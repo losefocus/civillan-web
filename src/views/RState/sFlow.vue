@@ -49,7 +49,7 @@
             top: '42%',
             textStyle: {
               color: '#333333',
-              fontSize:'18'
+              fontSize:'16'
             }
           }, {
             text: 'L/Min',
@@ -58,7 +58,7 @@
             //textAlign: 'center',
             textStyle: {
               color: '#999999',
-              fontSize:'14'
+              fontSize:'12'
             }
           }],
           color:'rgba(31,189,238,0.2)',

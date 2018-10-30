@@ -290,7 +290,7 @@ export default {
     getDeviceInfo(){
       this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
       console.log(this.deviceInfo);
-      if(this.deviceInfo.id==11){
+      if(this.deviceInfo.status==11){
         this.noDevice=false;
       }else{
         this.noDevice=true;
