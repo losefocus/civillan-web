@@ -27,17 +27,6 @@
         <p class="cp-code">Copyright 2018 智握领程 版权所有.</p>
       </el-aside>
     </el-container>
-    <el-dialog
-      :visible.sync="isBrowser"
-      :show-close=false
-      width="70%"
-      center>
-      <div class="b-tips">为了获得更好体验，平台不支持ie8及以下版本浏览器，推荐使用下列浏览器</div>
-      <div class="b-IconBox">
-        <img class="b-Icon" :src="chromeImg">
-        <img class="b-Icon" style="margin-left: 50px" :src="firefoxImg">
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -46,8 +35,6 @@
   import login from '@/api/userCenter/login'
   import group from '@/assets/login/group.png'
   import logo from '@/assets/login/logo.png'
-  import chromeImg from '@/assets/login/chrome.png'
-  import firefoxImg from '@/assets/login/firefox.png'
   export default {
     data() {
       let checkAge = (rule, value, callback) => {
@@ -92,8 +79,6 @@
 
         groupImg:group,
         logoImg:logo,
-        chromeImg:chromeImg,
-        firefoxImg:firefoxImg,
         isBrowser:false,
 
         ruleForm2: {

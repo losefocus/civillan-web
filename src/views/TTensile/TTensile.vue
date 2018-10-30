@@ -548,6 +548,11 @@
       //设备信息
       getDeviceInfo(){
         this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+        if(this.deviceInfo.id==11){
+          this.noDevice=false;
+        }else{
+          this.noDevice=true;
+        }
         this.productName=this.deviceInfo.product.name;
         this.deviceName1=this.deviceInfo.name;
         deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
@@ -602,7 +607,7 @@
             this.ashData.push(par_ash);
             this.rpressureData.push(rpressure);
           }else {
-            this.noDevice=true;
+
           }
 
         }).catch(err=>{

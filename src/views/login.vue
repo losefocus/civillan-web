@@ -6,7 +6,7 @@
       </div>
       <div class="l-side" @keyup.enter.native="keyDown">
         <p class="user-title">用户登录</p>
-        <p class="cp-system">工程施工实时监控系统</p>
+        <p class="cp-system">工程信息化智慧云平台管理系统</p>
 
         <form action="" @submit.prevent="submit">
           <div class="log-spacing l-label">
@@ -35,17 +35,6 @@
         <p class="cp-code">Copyright 2018 智握领程 版权所有.</p>
       </div>
     </el-container>
-    <el-dialog
-      :visible.sync="isBrowser"
-      :show-close=false
-      width="70%"
-      center>
-      <div class="b-tips">为了获得更好体验，平台不支持ie8及以下版本浏览器，推荐使用下列浏览器</div>
-       <div class="b-IconBox">
-         <img class="b-Icon" :src="chromeImg">
-         <img class="b-Icon" style="margin-left: 50px" :src="firefoxImg">
-       </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -54,8 +43,6 @@
   import login from '@/api/userCenter/login'
   import group from '@/assets/login/group.png'
   import logo from '@/assets/login/logo.png'
-  import chromeImg from '@/assets/login/chrome.png'
-  import firefoxImg from '@/assets/login/firefox.png'
   export default {
     data() {
       return {
@@ -65,8 +52,6 @@
 
         groupImg:group,
         logoImg:logo,
-        chromeImg:chromeImg,
-        firefoxImg:firefoxImg,
         validateRules:'',
         validateRules1:'',
         validateRules2:'',
@@ -306,7 +291,7 @@
     .cp-system{
       height: 4%;
       font-size: 20px;
-      margin: 5% 0 20%;
+      margin: 5% 0 15%;
       color: #535353;
     }
     .log-spacing{
@@ -372,11 +357,12 @@
 
   @media screen and (min-width: 1200px) and (max-width: 1600px)  {
     .l-side{
-      height: 90%;
-      padding: 5% 4% 0;
-      position: relative;
+      height: calc(100% - 80px);
+      padding: 40px 4%;
+      overflow: auto;
+      //position: relative;
       .user-title{
-        font-size: 28px;
+        font-size: 25px;
       }
       .cp-system{
         font-size: 18px;
@@ -387,10 +373,8 @@
         -webkit-box-shadow: 0 0 0 1000px white inset;
       }
       .cp-code{
-        width: 82%;
-        margin-top: 0;
-        position: absolute;
-        bottom:10px;
+        width: 100%;
+        margin-top: 10%;
         font-size: 12px;
         color: #8A96A0;
         text-align: center;

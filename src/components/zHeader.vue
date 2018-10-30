@@ -134,7 +134,6 @@
         }
       };*/
 
-
       this.$route.path=='/'?this.isMap=false:this.isMap=true;
       message.unReadCount().then(res=>{
         this.unReadCount=res.result;
@@ -144,7 +143,7 @@
       this.initWebSocket();
     },
     mounted(){
-      this.getInfo()
+      this.getInfo();
       Bus.$on('msg', (e) => {
         this.isModify = e;
         this.getInfo();
@@ -229,7 +228,6 @@
       },*/
       close(){
         this.isOut=true
-
       },
       out(){
         let isLogin=this.$cookies.get('checked');
