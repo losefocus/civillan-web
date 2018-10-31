@@ -8,7 +8,7 @@
   export default {
     name: "sSpeed",
     props:[
-      'realTime'
+      'dataInfo'
     ],
     data(){
       return{
@@ -18,12 +18,11 @@
       }
     },
     mounted(){
-      this.init(this.tips)
+      this.init(this.dataInfo)
     },
     methods:{
       init(post_data){
-        let _this=this;
-        let tips=Number(post_data).toFixed(2);
+        let tips=Number(post_data.rspeed).toFixed(2);
         if(isNaN(tips)){
           tips=0
         }
@@ -53,7 +52,7 @@
               fontSize:'16'
             }
           }, {
-            text: 'cm/Min',
+            text: 'cm/min',
             left: 'center',
             top: '58%',
             //textAlign: 'center',
@@ -98,9 +97,9 @@
       }
     },
     watch:{
-      realTime:{
-        handler(oldData,newData){
-          this.init(newData.rspeed)
+      dataInfo:{
+        handler(newData,oldData){
+          this.init(newData)
         }
       }
     }

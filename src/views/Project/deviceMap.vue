@@ -168,7 +168,6 @@ export default {
             for(let i=0;i<lists.length;i++){
               //判断设备是否有经纬度
               if(lists[i].position){
-                console.log(lists[i].status);
                 //设备的运行状态
                 let changeMarker = null;
                 let changeBackground= null;

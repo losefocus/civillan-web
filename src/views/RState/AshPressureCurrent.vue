@@ -27,14 +27,14 @@
 
     },
     mounted(){
-      this.myCharts()
+      this.myCharts(this.dataInfo)
     },
     methods:{
-      myCharts(){
+      myCharts(dataInfo){
         let _this=this;
-        this.ashData.push(this.dataInfo.par_ash);
-        this.rpressureData.push(this.dataInfo.rpressure);
-        this.rcurrentData.push(this.dataInfo.rcurrent);
+        this.ashData.push(parseFloat(dataInfo.par_ash).toFixed(2));
+        this.rpressureData.push(parseFloat(dataInfo.rpressure).toFixed(2));
+        this.rcurrentData.push(parseFloat(dataInfo.rcurrent).toFixed(2));
         let Data=[10,20,30,40,50,60,70,80,90,100,120,140];
         this.myChart = this.$echarts.init(document.getElementById('myCharts'));
         this.myChart.setOption({
@@ -55,6 +55,13 @@
               lineStyle: {
                 color: '#333'
               }
+            },
+            formatter:function (params) {
+              var res='<div><p>深度：'+params[0].name+'</p></div>'
+              for(var i=0;i<params.length;i++){
+                res+='<div>'+'<div style="width: 10px;height: 10px;border-radius: 50%;display: inline-block;background: '+params[i].color+';"></div>'+'<p style="display: inline-block;margin-left: 10px;font-size: 12px;">'+params[i].seriesName+':'+params[i].data+'</p>'+'</div>'
+              }
+              return res;
             }
           },
           legend: {
@@ -95,7 +102,7 @@
           }],
           xAxis: [{
             type: 'value',
-            max:120,
+            max:100,
             position:'top',
             name: '',
             axisTick: {
@@ -168,7 +175,7 @@
     watch:{
       dataInfo:{//深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
-          this.myCharts()
+          this.myCharts(val)
         },
       }
     }

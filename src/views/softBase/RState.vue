@@ -15,7 +15,6 @@
            <!--<div class="d-kind">
              <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
            </div>-->
-
          </div>
            <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
          <div class="i-progress">
@@ -26,11 +25,11 @@
          <div class="i-box">
            <div class="i-body">
              <div class="i-name">{{deviceName1}}</div>
-             <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
+             <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div :class="{'led-green':RT_data.nozzle_sta=='1','led-gray':RT_data.nozzle_sta==0}"></div></div>
            </div>
            <div class="i-body">
              <div class="i-company">{{productName}}</div>
-             <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
+             <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
            </div>
          </div>
          <div class="clear"></div>
@@ -99,15 +98,15 @@
        <li class="s-progress" :class="{'s-progress1':classChange==1}">
          <div class="p-box" >
            <div class="p-echart" style="">
-             <div class="p-progress" :style="{height:'70%'}">
+             <div class="p-progress" :style="{height:'75%'}">
                <div style="height: 100%;">
                  <div class="progressContainer">
                    <div class="progress" :style="{height:progressHeight}" style="font-size: 12px">
-                     <div style="border-bottom: 3px solid #24BCF7;width: 32px;"></div>
-                     <div style="margin-left: 35px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 20px;font-weight: bold;">{{progress}}</span>米</div>
+                     <div style="border-bottom: 3px solid #24BCF7;width: 23px;"></div>
+                     <div style="margin-left: 25px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 16px;font-weight: bold;">{{progress}}</span></div>
                    </div>
-                   <span style="margin-left: -32px">0米</span>
-                   <span style="position: absolute;bottom: 0;left:-45px;">100米</span>
+                   <span style="margin-left: -25px">0米</span>
+                   <span style="position: absolute;bottom: 0;left:-40px;">100米</span>
                  </div>
                </div>
              </div>
@@ -116,19 +115,19 @@
          </div>
          <div class="p-box">
            <div class="p-echart">
-             <s-speed ref="sSpeed" :realTime="RT_data"></s-speed>
+             <s-speed ref="sSpeed" :dataInfo="RT_data"></s-speed>
            </div>
            <div class="p-title">钻速</div>
          </div>
          <div class="p-box">
            <div class="p-echart">
-             <s-flow ref="sFlow" :realTime="RT_data"></s-flow>
+             <s-flow ref="sFlow" :dataInfo="RT_data"></s-flow>
            </div>
            <div class="p-title">流量</div>
          </div>
          <div class="p-box">
            <div class="p-echart">
-             <s-current ref="sCurrent" :realTime="RT_data"></s-current>
+             <s-current ref="sCurrent" :dataInfo="RT_data"></s-current>
            </div>
            <div class="p-title">电流</div>
            <!--<div id="myChart2" style="width: 100%;height: 100%"></div>-->
@@ -215,7 +214,7 @@ export default {
       progressNum:40,//深度进度
       progress:0,
       progressHeight:'',
-      DesignDeep:30,
+      DesignDeep:100,
 
       isWarming:true,//未发现问题显示
       warmingText:'',
@@ -289,7 +288,7 @@ export default {
     //设备信息
     getDeviceInfo(){
       this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      console.log(this.deviceInfo);
+      //console.log(this.deviceInfo);
       if(this.deviceInfo.status==11){
         this.noDevice=false;
       }else{
@@ -331,18 +330,15 @@ export default {
       config.list({page_index:1, page_size:10000}).then(res=>{
         if(res.success){
           let aa = res.result.items;
-          //console.log(aa);
           aa.forEach((item,index)=>{
             let arr = JSON.parse(item.content);
             item.content=arr
           });
           this.pileData.ps=aa;
-
           if(this.$refs.pMap){
-            console.log('aaa')
             this.$refs.pMap.init()}
-        }else{
-          //console.log('CAD数据获取失败')
+          }else{
+        //console.log('CAD数据获取失败')
         }
       })
     },
@@ -350,6 +346,7 @@ export default {
     getData(key){
       deviceData.list({'key':key}).then(res=>{
         if(res.success){
+          res.result.rdeep=parseFloat(res.result.rdeep);
           this.RT_data=res.result;
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
@@ -373,9 +370,10 @@ export default {
           this.rpressureData.push(rpressure);
         }else {
           this.progressHeight='100%';
-
         }
       }).catch(err=>{
+        console.log(err);
+        this.progressHeight='100%';
       });
     },
     getStyle(obj,attr) {
@@ -609,7 +607,7 @@ export default {
               }
               .led-gray{
                 display: inline-block;
-                background-color: #666666;
+                background-color: #393939;
                 width: 6px;
                 height: 6px;
                 box-shadow: 0px 0px 2px 4px #666666;
@@ -966,7 +964,7 @@ export default {
             text-align: center;
             width: 100%;
             height: 30px;
-            font-size:16px;
+            font-size:14px;
             color:#000000;
           }
           .p-echart{
@@ -974,7 +972,7 @@ export default {
             overflow: hidden;
             height: calc( 100% - 30px);
             .p-progress{
-              margin:18% 0 0 45%;
+              margin:15% 0 0 40%;
             }
           }
         }

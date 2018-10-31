@@ -106,48 +106,6 @@
           this.isFail2=false;
         }
       },
-      checkBrowser(){
-        if (this.myBrowser() == "FF") {
-          console.log("我是 Firefox");
-        }
-        if (this.myBrowser() == "Opera") {
-          console.log("我是 Opera");
-        }
-        if (this.myBrowser() == "Safari") {
-          console.log("我是 Safari");
-        }
-        if (this.myBrowser() == "Chrome") {
-          console.log("我是 Chrome");
-        }
-      },
-      myBrowser(){
-        let userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
-        let isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器
-        let isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
-        let isChrome = userAgent.indexOf("Chrome") > -1; //判断是否IE浏览器
-        let isFF = userAgent.indexOf("Firefox") > -1; //判断是否Firefox浏览器
-        let isSafari = userAgent.indexOf("Safari") > -1; //判断是否Safari浏览器
-
-        if (isIE) {
-          return "IE";
-        }
-        if (isFF) {
-          return "FF";
-        }
-        if (isOpera) {
-          return "Opera";
-        }
-        if (isChrome) {
-          return "Chrome";
-        }
-        if (isSafari) {
-          return "Safari";
-        }
-
-        if(!(isFF||isChrome||isSafari||isIE)){
-          this.isBrowser=false
-        }
-      },
       getPassword:function(p){
         let reg = /^\s*$/g;
         if(reg.test(p)||p==""||p==undefined){

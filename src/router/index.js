@@ -5,7 +5,6 @@ import Router from 'vue-router'
 import softBase from '@/views/Project/softBase'
 
 Vue.use(Router);
-console.log(Router)
 
 const vRouter = new Router({
   routes: [

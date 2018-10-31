@@ -14,17 +14,14 @@ export default {
       tips:0
     }
   },
-  props:[
-    'realTime'
-  ],
+  props:['dataInfo'],
   mounted(){
-    this.init(this.tips)
+    this.init(this.dataInfo)
   },
   methods:{
     init(post_data){
-      let _this=this;
       this.myChart = this.$echarts.init(document.getElementById('current'));
-      let tips=Number(post_data).toFixed(2);
+      let tips=Number(post_data.rcurrent).toFixed(2);
       if(isNaN(tips)){
         tips=0
       }
@@ -98,9 +95,9 @@ export default {
     }
   },
   watch:{
-    realTime:{
-      handler(oldData,newData){
-        this.init(newData.rcurrent)
+    dataInfo:{
+      handler(newData,oldData){
+        this.init(newData)
       }
     }
   }
