@@ -8,7 +8,7 @@
   export default {
     name: "sFlow",
     props:[
-      'realTime'
+      'dataInfo'
     ],
     data(){
       return{
@@ -18,13 +18,12 @@
       }
     },
     mounted(){
-      this.init(this.tips)
+      this.init(this.dataInfo)
     },
     methods:{
       init(post_data){
-        let _this=this;
         this.myChart = this.$echarts.init(document.getElementById('flow'));
-        let tips=Number(post_data).toFixed(2);
+        let tips=Number(post_data.rflow).toFixed(2);
         if(isNaN(tips)){
           tips=0
         }
@@ -52,7 +51,7 @@
               fontSize:'16'
             }
           }, {
-            text: 'L/Min',
+            text: 'L/min',
             left: 'center',
             top: '58%',
             //textAlign: 'center',
@@ -97,9 +96,9 @@
       }
     },
     watch:{
-      realTime:{
-        handler(oldData,newData){
-          this.init(newData.rflow)
+      dataInfo:{
+        handler(newData,oldData){
+          this.init(newData)
         }
       }
     }

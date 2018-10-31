@@ -87,7 +87,8 @@ module.exports = {
     ]
   },
   externals: {
-    'AMap': 'AMap',
+    'AMap': 'window.AMap',
+    'AMapUI':'AMapUI',
     'vue-router': 'VueRouter',
     'axios': 'axios',
     'store':'store',

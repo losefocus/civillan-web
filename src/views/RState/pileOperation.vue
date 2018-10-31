@@ -20,10 +20,10 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 1"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 1">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
-          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
         </div>
         <i v-show="dataInfo.rpipe_sta == 1 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-down icon_down" style="color:#4dbce6;font-size:20px;"></i>
         <div class="img_down"></div>
@@ -38,10 +38,10 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 2"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 2">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
-          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
         </div>
         <i v-show="dataInfo.rpipe_sta == 2 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
       </div>
@@ -57,10 +57,10 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 3"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 3">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
-          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
         </div>
         <i v-show="dataInfo.rpipe_sta == 3 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-down icon_down" style="color:#4dbce6;font-size:20px;"></i>
       </div>
@@ -76,10 +76,10 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 4 && parseInt(tiem_4.style_stake.bottom)>=12"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 4||dataInfo.rpipe_sta == 5">
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep | formatZ}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/Min</p>
+          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
+          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
-          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/Min</p>
+          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
           <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:red">complete</p>
         </div>
         <i v-show="dataInfo.rpipe_sta == 4 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
@@ -129,6 +129,7 @@
     methods:{
       init(dataInfo){
         let data = dataInfo;
+        dataInfo.rdeep=parseFloat(dataInfo.rdeep).toFixed(2);
         if( !('rpipe_sta' in data) || data.rpipe_sta == 0 ){
         }else if(data.rpipe_sta == 1){
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
@@ -236,7 +237,7 @@
     position: absolute;
     top: 25%;
     left: 50%;
-    width: 110px;
+    width: 115px;
     height: 110px;
     background: url(../../assets/RState/stake-03.png)no-repeat center bottom;
     background-size: contain;
