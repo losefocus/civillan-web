@@ -350,7 +350,7 @@ export default {
           this.RT_data=res.result;
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
-          this.RT_data.depth_design=30;
+          this.RT_data.depth_design=100;
 
           this.rflow=res.result.rflow;
           this.rspeed=Math.abs(res.result.rspeed);
