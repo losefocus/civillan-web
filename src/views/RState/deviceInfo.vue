@@ -67,7 +67,6 @@
     mounted(){
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
       this.RT_data=this.realData;
-      console.log(this.RT_data);
 
       this.getDeviceInfo(deviceInfo);
       this.getAlarms(deviceInfo.key)
@@ -114,7 +113,6 @@
       realData:{//深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
           this.RT_data=val;
-          console.log(this.RT_data)
         },
       }
     }

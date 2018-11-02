@@ -142,8 +142,6 @@
         this.myChart3 = this.$echarts.init(document.getElementById('myCharts3'));
         this.myChart4 = this.$echarts.init(document.getElementById('myCharts4'));
 
-        console.log(this.data2);
-
         function getOption(data){
           let option={
             title:{
@@ -190,6 +188,8 @@
                   color: '#999'
                 }
               },
+              max:30,
+              min:0,
             }],
             xAxis: [{
               type: 'value',
@@ -215,7 +215,9 @@
                   type: 'solid',
                   color: '#ccc'
                 }
-              }
+              },
+              max:100,
+              min:0,
             }],
             series: [
               {

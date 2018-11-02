@@ -96,7 +96,6 @@ export default {
     this.$bus.on('isCollapse', (data)=>{
       //console.log(data);
       _this.isCollapse=data;
-      console.log( _this.isCollapse);
     });
 
     let id=this.$cookies.get('projectId');
