@@ -80,12 +80,13 @@
           tooltip: {
             trigger: 'axis',
             axisPointer: {
-              lineStyle: {
-                color: '#333'
+              axisPointer:{
+                type: 'line',
+                axis: 'y'
               }
             },
             formatter:function (params) {
-              var res='<div><p>深度：'+params[0].name+'</p></div>'
+              var res='<div><p>深度(米)：'+params[0].data[1]+'</p></div>';
               for(var i=0;i<params.length;i++){
                 res+='<div>'+'<div style="width: 10px;height: 10px;border-radius: 50%;display: inline-block;background: '+params[i].color+';"></div>'+'<p style="display: inline-block;margin-left: 10px;font-size: 12px;">'+params[i].seriesName+'：'+params[i].data[0]+'</p>'+'</div>'
               }
@@ -110,7 +111,7 @@
             bottom: '8%',
           },
           yAxis: [{
-            type: 'category',
+            type: 'value',
             inverse:true,
             boundaryGap: false,
             axisLine: {

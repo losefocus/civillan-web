@@ -240,7 +240,7 @@ export default {
       if(this.deviceInfo1.status==11){
         this.noDevice=false;
       }else{
-        this.noDevice=true;
+        this.noDevice=false;
       }
     },
     deviceChange(index){

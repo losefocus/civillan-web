@@ -116,15 +116,16 @@
         let _this=this;
         window.onresize = function(){
           let clientWidth=document.body.clientWidth;
+          // _this.$bus.emit('isCollapse','bus传值');
           _this.clientWidth=clientWidth;
           if(clientWidth<1400){
             _this.isShow=false;
             _this.changeIcon=true;
             _this.changeFullScreen();
-            Bus.$emit('isCollapse',true)
+             // _this.$bus.emit('isCollapse',false)
           }else{
             _this.isShow=true;
-            Bus.$emit('isCollapse',false)
+            // _this.$bus.emit('isCollapse',true)
           }
         }
       },
