@@ -93,11 +93,11 @@ export default {
   },
   created(){
     let _this=this;
-    /*this.$bus.on('isCollapse', (data)=>{
+    this.$bus.on('isCollapse', (data)=>{
       //console.log(data);
       _this.isCollapse=data;
       console.log( _this.isCollapse);
-    });*/
+    });
 
     let id=this.$cookies.get('projectId');
     let tenant=this.$cookies.get('tenant');

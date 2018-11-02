@@ -1,7 +1,7 @@
 <template>
   <div class="s-infoBody">
     <div class="i-id">
-      <div class="d-model">{{realData.pile_describe}}</div>
+      <div class="d-model">{{RT_data.pile_describe}}</div>
       <!--<div class="d-kind">
         <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
       </div>-->
@@ -67,6 +67,8 @@
     mounted(){
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
       this.RT_data=this.realData;
+      console.log(this.RT_data);
+
       this.getDeviceInfo(deviceInfo);
       this.getAlarms(deviceInfo.key)
     },
@@ -112,6 +114,7 @@
       realData:{//深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
           this.RT_data=val;
+          console.log(this.RT_data)
         },
       }
     }
@@ -185,12 +188,12 @@
           }
           .led-blue{
             display: inline-block;
-            background-color: #403BFF;
+            background-color: #29E0F7;
             width: 6px;
             height: 6px;
-            box-shadow: 0px 0px 2px 4px #403BFF;
-            -moz-box-shadow: 0px 0px 2px 4px #403BFF;
-            -webkit-box-shadow: 0px 0px 2px 4px #403BFF;
+            box-shadow: 0px 0px 2px 4px #24BCF7;
+            -moz-box-shadow: 0px 0px 2px 4px #24BCF7;
+            -webkit-box-shadow: 0px 0px 2px 4px #24BCF7;
             border-radius: 50%;
           }
           span{
