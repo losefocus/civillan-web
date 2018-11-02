@@ -92,6 +92,13 @@ export default {
    }
   },
   created(){
+    let _this=this;
+    /*this.$bus.on('isCollapse', (data)=>{
+      //console.log(data);
+      _this.isCollapse=data;
+      console.log( _this.isCollapse);
+    });*/
+
     let id=this.$cookies.get('projectId');
     let tenant=this.$cookies.get('tenant');
     project.info({'project_id':id,'tenant':tenant}).then(res=>{
@@ -99,7 +106,7 @@ export default {
     });
     this.isActive=0;
     this.projectLogo=this.$cookies.get('projectLogo');
-    let _this=this;
+
     let cWidth=document.body.clientWidth;
     if(cWidth<1450){
       _this.isCollapse=false;
@@ -110,7 +117,7 @@ export default {
       _this.changeWidth();
       _this.isShow=false;
     }
-    window.onresize = function (){
+    /*window.onresize = function (){
       let clientWidth=document.body.clientWidth;
       if(clientWidth<=1450){
         _this.isCollapse=false;
@@ -121,7 +128,7 @@ export default {
         _this.changeWidth();
         _this.isShow=false;
       }
-    };
+    };*/
   },
   mounted(){
     this.isActive=sessionStorage.getItem('isActive') || 0;

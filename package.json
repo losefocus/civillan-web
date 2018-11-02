@@ -23,6 +23,7 @@
     "jquery": "^3.3.1",
     "qs": "^6.5.2",
     "vue": "^2.5.2",
+    "vue-bus": "^1.1.0",
     "vue-cookies": "^1.5.6",
     "vue-echarts": "^3.0.7",
     "vue-float-label": "^1.6.1",
