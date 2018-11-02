@@ -310,7 +310,6 @@ export default {
           this.progressHeight='100%';
         }
       }).catch(err=>{
-        console.log(err);
         this.progressHeight='100%';
       });
     },
