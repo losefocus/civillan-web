@@ -23,10 +23,8 @@
 </template>
 
 <script>
-  import { mapActions , mapState} from 'vuex'
   import project from '@/api/userCenter/project'
   import zHeader from '@/components/zHeader'
-  import zImg from '@/assets/AMap/info.png'
   import state from '@/assets/AMap/marker.png'
   import toTree from '@/common/toTree'
   import timeStamp from '@/common/timeStamp'
@@ -44,9 +42,6 @@
     },
     mounted: function () {
       this.init()
-    },
-    created:function(){
-
     },
     methods: {
       init: function () {

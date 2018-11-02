@@ -225,7 +225,6 @@ export default {
     position: relative;
     display: block;
     width: 100%;
-    //background: url(../assets/Nav/projectLogo.png);
     background-size: cover;
     text-align: center;
     color: #ffffff;
@@ -305,12 +304,6 @@ export default {
     background: #F31A1A;
     color: #ffffff !important;
     transition: 0.6s all ease;
-  }
-  .navOpen{
-    background: url("../assets/Nav/navOpen.png");
-  }
-  .navClose{
-    background: url("../assets/Nav/navClose.png");
   }
 
   @media screen and (max-width: 1467px){

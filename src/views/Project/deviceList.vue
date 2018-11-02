@@ -80,12 +80,12 @@
     <el-dialog
       :visible.sync="dialogVisible"
       :width="dialogWidth"
-      :fullscreen="dialogFullscreen"
+      :fullscreen="dialogFullScreen"
       top="7vh"
       style="min-width: 1024px;"
       @close="closeDialog"
     >
-      <new-running @changeIcon="isFullscreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType"></new-running>
+      <new-running @changeIcon="isFullScreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType" :dialogFullScreen="dialogFullScreen"></new-running>
     </el-dialog>
   </div>
 </template>
@@ -98,12 +98,7 @@
   import deviceData from '@/api/device/deviceData'
 
 
-  import SAnalysis from '@/views/softBase/SAnalysis'
-  import RState from '@/views/softBase/RState'
-  import FConcrete from '@/views/FConcrete/FConcrete'
-  import AQuery from '@/views/softBase/AQuery'
-  import HData from '@/views/softBase/HData'
-  import NRecord from '@/views/softBase/NRecord'
+
   import newRunning from '@/views/softBase/newRunning.vue'
 
   import jbzImg from '@/assets/device/JBZ.png'
@@ -111,7 +106,7 @@
   import pnyhImg from '@/assets/device/PNYH.png'
   import yylzlImg from '@/assets/tensile/YYLZL.png'
 
-  import Bus from '@/common/eventBus'
+
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   export default {
@@ -119,12 +114,6 @@
     components: {
       Waterfall,
       WaterfallSlot,
-      SAnalysis,
-      RState,
-      AQuery,
-      HData,
-      NRecord,
-      FConcrete,
       newRunning
     },
     data () {
@@ -143,7 +132,7 @@
         dialogHeight:{
           height:'700px'
         },
-        dialogFullscreen:false,
+        dialogFullScreen:false,
         changeIcon:true,
         radio:"",
         line: 'v',
@@ -235,26 +224,22 @@
         sessionStorage.setItem('deviceInfo',deviceInfo);
         this.deviceKey=item.key;
       },
-      isFullscreen(val){ //是否打开模态框
+      isFullScreen(val){ //是否打开模态框
         if(!val){
           this.dialogWidth='100%';
           this.dialogHeight={
             height:'calc(100% - 65px)'
           };
           this.changeIcon=!this.changeIcon;
-          this.dialogFullscreen=true;
+          this.dialogFullScreen=true;
         }else{
           this.dialogWidth='70%';
           this.dialogHeight={
             height:'700px'
           };
-          this.changeIcon=!this.changeIcon
-          this.dialogFullscreen=false;
+          this.changeIcon=!this.changeIcon;
+          this.dialogFullScreen=false;
         }
-      },
-      changeScreen(data){
-        //this.changeIcon=data;
-        //this.isFullscreen();
       },
       getList(){
         this.loading=this.$loading({
@@ -265,21 +250,8 @@
           if(res.success){
             if(res.result.items.length>0){
               this.noData=false;
-              /*res.result.items.forEach(item=>{
-                item.status=3;
-              });*/
               this.items=res.result.items;
               this.total=res.result.total;
-              /*for(let i=0;i<this.items.length;i++){
-                deviceData.list({key:this.items[i].key}).then(res =>{
-                  if(res.success){
-                    this.items[i].status=1
-                  }else{
-                    this.items[i].status=3
-                  }
-                }).catch(e=>{
-                })
-              }*/
               this.loading.close();
             }else{
               this.noData=true;

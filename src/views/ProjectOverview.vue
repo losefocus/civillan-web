@@ -38,9 +38,6 @@
         isActive:true,
       }
     },
-    created(){
-
-    },
     mounted(){
       this.title=this.$route.name;
       if(this.$route.path=='/project'){
@@ -78,7 +75,6 @@
   .el-aside{
     height: 100%;
   }
-
 
   .breadcrumb-box{
     width: calc(100% - 40px);

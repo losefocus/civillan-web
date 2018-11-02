@@ -19,9 +19,9 @@
   import {formatDate} from '@/common/formatDate.js';
   import Bus from '@/common/eventBus'
 
-  import HPile from '@/views/softBase/HPile'
+  import HPile from '@/views/MPile/HPile'
   import HFoam from '@/views/FConcrete/HFoam'
-  import HTensile from '@/views/TTensile/HTensile'
+  import HTensile from '@/views/TTensile/HTensile.vue'
 
   import categories from '@/api/configure/categories'
   import RthyinfoFormat from '@/common/RthyinfoFormat.js'
@@ -71,7 +71,7 @@
     components:{
       HPile,
       HFoam,
-      HTensile
+      HTensile,
     },
     filters: {
       formatDate(time) {

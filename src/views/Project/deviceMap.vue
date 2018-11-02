@@ -26,12 +26,12 @@
   <el-dialog
     :visible.sync="dialogVisible"
     :width="dialogWidth"
-    :fullscreen="dialogFullscreen"
+    :fullscreen="dialogFullScreen"
     top="7vh"
     @close="tIndex=0"
     style="min-width: 1024px;"
   >
-    <new-running @changeIcon="isFullscreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType"></new-running>
+    <new-running @changeIcon="isFullscreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType" :dialogFullScreen="dialogFullScreen"></new-running>
   </el-dialog>
 </div>
 </template>
@@ -56,25 +56,12 @@
 
   import newRunning from '@/views/softBase/newRunning.vue'
 
-  import SAnalysis from '@/views/softBase/SAnalysis'
-  import RState from '@/views/softBase/RState'
-  import FConcrete from '@/views/FConcrete/FConcrete'
-  import AQuery from '@/views/softBase/AQuery'
-  import HData from '@/views/softBase/HData'
-  import NRecord from '@/views/softBase/NRecord'
-
   import deviceData from '@/api/device/deviceData'
   import categories from '@/api/configure/categories'
   import { mapActions , mapState} from 'vuex'
 export default {
   name: "deviceMap",
   components:{
-    SAnalysis,
-    RState,
-    FConcrete,
-    AQuery,
-    HData,
-    NRecord,
     newRunning,
   },
   data(){
@@ -91,7 +78,7 @@ export default {
         height:'700px'
       },
       searchKey:'',
-      dialogFullscreen:false,
+      dialogFullScreen:false,
       changeIcon:true,
       radio:"",
       line: 'v',
@@ -312,14 +299,14 @@ export default {
           height:'calc(100% - 65px)'
         };
         this.changeIcon=!this.changeIcon;
-        this.dialogFullscreen=true;
+        this.dialogFullScreen=true;
       }else{
         this.dialogWidth='70%';
         this.dialogHeight={
           height:'700px'
         };
         this.changeIcon=!this.changeIcon
-        this.dialogFullscreen=false;
+        this.dialogFullScreen=false;
       }
     },
     dialogClose(){

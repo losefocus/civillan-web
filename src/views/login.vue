@@ -49,7 +49,6 @@
         userInfo:{
           checked:false
         },
-
         groupImg:group,
         logoImg:logo,
         validateRules:'',
@@ -67,8 +66,6 @@
     created(){
     },
     mounted() {
-      //document.body.onkeydown = this.keyDown;
-      this.checkBrowser()
     },
     computed: {
       ...mapState({token:state=>state.login.token})
@@ -78,7 +75,6 @@
 
       keyDown() {
           this.submit();
-          //this.$options.methods.submitForm('loginForm')
       },
       getUser(u){
         if(/^\s*$/g.test(u)||u==""||u==undefined){
@@ -204,8 +200,6 @@
       height: 100px;
     }
   }
-
-
   .initColor{
     border-top:2px solid rgba(220,224,230,1);
   }
