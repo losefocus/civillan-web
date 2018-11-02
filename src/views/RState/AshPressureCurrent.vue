@@ -30,12 +30,40 @@
       this.myCharts(this.dataInfo)
     },
     methods:{
-      myCharts(dataInfo){
+      myCharts(dataInfo,oldVal){
         let _this=this;
-        this.ashData.push(parseFloat(dataInfo.par_ash).toFixed(2));
-        this.rpressureData.push(parseFloat(dataInfo.rpressure).toFixed(2));
-        this.rcurrentData.push(parseFloat(dataInfo.rcurrent).toFixed(2));
-        let Data=[10,20,30,40,50,60,70,80,90,100,120,140];
+        //console.log(dataInfo.rdeep);
+        if(isNaN(dataInfo.rdeep)){
+          dataInfo.rdeep=0
+        }
+        if(isNaN(dataInfo.par_ash)){
+          dataInfo.par_ash=0
+        }
+        if(isNaN(dataInfo.rpressure)){
+          dataInfo.rpressure=0
+        }
+        if(isNaN(dataInfo.rcurrent)){
+          dataInfo.rcurrent=0
+        }
+        if(oldVal!=undefined){
+          if(dataInfo.par_ash!=oldVal.par_ash){
+            this.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+          }
+          if(dataInfo.rpressure!=oldVal.rpressure){
+            this.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+          }
+          if(dataInfo.rcurrent!=oldVal.rcurrent){
+            this.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+          }
+        }else{
+          this.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+          this.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+          this.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+        }
+
+
+
+        //let Data=[0,10,20,30,40,50];
         this.myChart = this.$echarts.init(document.getElementById('myCharts'));
         this.myChart.setOption({
           title: {
@@ -59,7 +87,7 @@
             formatter:function (params) {
               var res='<div><p>深度：'+params[0].name+'</p></div>'
               for(var i=0;i<params.length;i++){
-                res+='<div>'+'<div style="width: 10px;height: 10px;border-radius: 50%;display: inline-block;background: '+params[i].color+';"></div>'+'<p style="display: inline-block;margin-left: 10px;font-size: 12px;">'+params[i].seriesName+':'+params[i].data+'</p>'+'</div>'
+                res+='<div>'+'<div style="width: 10px;height: 10px;border-radius: 50%;display: inline-block;background: '+params[i].color+';"></div>'+'<p style="display: inline-block;margin-left: 10px;font-size: 12px;">'+params[i].seriesName+'：'+params[i].data[0]+'</p>'+'</div>'
               }
               return res;
             }
@@ -76,11 +104,10 @@
             right:'2%'
           },
           grid: {
-            top:'20%',
-            left: '8%',
+            top:'25%',
+            left: '15%',
             right: '8%',
             bottom: '8%',
-            containLabel: true
           },
           yAxis: [{
             type: 'category',
@@ -98,7 +125,7 @@
                 color: '#999'
               }
             },
-            data: Data
+            max:30,
           }],
           xAxis: [{
             type: 'value',
@@ -129,10 +156,9 @@
           }],
           series: [
             {
-              name: '段灰量',
+              name: '段灰量(Kg)',
               type: 'line',
-              showSymbol: false
-              ,
+              showSymbol: true,
               itemStyle: {
                 normal: {
                   color: '#F86969',
@@ -142,9 +168,9 @@
               data: _this.ashData
             },
             {
-              name: '压力',
+              name: '压力(MPa)',
               type: 'line',
-              showSymbol: false,
+              showSymbol: true,
               itemStyle: {
                 normal: {
                   color: '#50C9F9',
@@ -154,9 +180,9 @@
               data: _this.rpressureData
             },
             {
-              name: '电流',
+              name: '电流(A)',
               type: 'line',
-              showSymbol: false,
+              showSymbol: true,
               itemStyle: {
                 normal: {
                   color: '#FF9933',
@@ -175,7 +201,7 @@
     watch:{
       dataInfo:{//深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
-          this.myCharts(val)
+          this.myCharts(val,oldVal)
         },
       }
     }

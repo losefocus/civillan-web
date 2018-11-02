@@ -2,7 +2,6 @@ import Vue from 'vue'
 import store from '@/store/store'
 
 import Router from 'vue-router'
-import softBase from '@/views/Project/softBase'
 
 Vue.use(Router);
 
@@ -23,10 +22,6 @@ const vRouter = new Router({
       path: '/login',
       name: '登录',
       component: resolve => require(['@/views/login'],resolve),
-    },{
-      path: '/login_new',
-      name: '登录',
-      component: resolve => require(['@/views/login_new'],resolve),
     },
     {
       path: '/ProjectOverview',
@@ -41,20 +36,6 @@ const vRouter = new Router({
           component: resolve => require(['@/views/POV/project'],resolve),
           //redirect:"/project/deviceMap",
           meta: { requireAuth: true},
-          children:[
-            {
-              path:'/project/classification',
-              name:'',
-              component:resolve => require(['@/views/Project/classification'],resolve),
-              meta: { requireAuth: true}
-            },
-            {
-              path:'/project/softBase',
-              component:softBase,
-              name:'设备',
-              meta:{requireAuth: true}
-            }
-          ]
         },
         {
           path: '/device',

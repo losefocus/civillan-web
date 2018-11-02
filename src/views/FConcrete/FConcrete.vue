@@ -10,45 +10,9 @@
       </div>
       <ul class="s-box1">
         <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
-          <div class="i-id">
-            <div class="d-model">{{deviceName[deviceIndex-1].name}}</div>
-            <!--<div class="d-kind">
-              <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
-            </div>-->
-
-          </div>
-          <div class="i-progress">
-            <div class="i-progressName" style="width: 80px">作业进度：</div>
-            <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
-            <div class="clear"></div>
-          </div>
-          <div class="i-box">
-            <div class="i-body">
-              <div class="i-name">{{deviceName1}}</div>
-              <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div class="led-gray" :class="{'led-green':RT_data.nozzle_sta==1,'led-gray':RT_data.nozzle_sta==0}"></div></div>
-            </div>
-            <div class="i-body">
-              <div class="i-company">{{productName}}</div>
-              <div class="i-state"><span>记录状态</span><div class="led-gray" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
-            </div>
-          </div>
-          <div class="clear"></div>
-          <div class="h-box">
-              <div class="b-info"><span class="iconfont icon-portrait"></span><span class="i-info">{{deviceUserName}}</span></div>
-              <div class="b-info"><span class="iconfont icon-phonenew"></span><span class="i-info">{{deviceUserPhone}}</span></div>
-          </div>
-
-          <div class="i-normal" v-if="isWarming">
-            <p>设备正常运行中</p>
-          </div>
-          <div class="i-warning" v-else>
-            <i class="iconfont icon-warming"></i>
-            <div class="w-text">
-              <p>{{warmingText}}</p>
-            </div>
-          </div>
+          <device-info :realData="RT_data" ></device-info>
         </li>
-        <li class="s-info" :class="{'s-info1':classChange==1}" v-else="!isTab">
+        <li class="s-info" :class="{'s-info1':classChange==1}" v-else>
           <div class="d-name">
             <i class="iconfont icon-pie"></i>
             <span>桩设计参考值</span>
@@ -179,6 +143,7 @@
   import aSp from '@/views/RState/AshPressureCurrent.vue'
   import pOperation from '@/views/RState/pileOperation.vue'
   import pMap from '@/views/RState/pileMap.vue'
+  import deviceInfo from '@/views/RState/deviceInfo.vue'
   export default {
     name: "runningState",
     components:{
@@ -189,6 +154,7 @@
       aSp,
       pOperation,
       pMap,
+      deviceInfo,
     },
     data(){
       let data = [0,10,20,30,40,50,60,70,80,90,100];
@@ -540,7 +506,7 @@
         deviceUserPhone:'',
       }
     },
-    props:['dialogFullscreen','deviceKey','isClose'],
+    props:['dialogFullScreen','deviceKey','isClose'],
     filters: {
       formatDate(time) {
         let date = new Date(time);
@@ -553,7 +519,6 @@
       //this.getDeviceConfig(this.deviceKey);
       let deviceKey=this.$store.state.project.deviceKey;
       this.getData(deviceKey);
-      this.getAlarms(deviceKey);
       /*this.timer=setInterval(()=>{
         this.getData(this.deviceKey);
         this.getAlarms(this.deviceKey)
@@ -561,7 +526,6 @@
 
     },
     mounted(){
-      this.init();
       this.reload();
     },
     beforeDestroy(){
@@ -569,10 +533,6 @@
     },
 
     methods:{
-      init(){
-        let clientWidth=document.body.clientWidth;
-        /*this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)*/
-      },
       //设备信息
       getDeviceInfo(){
         this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
@@ -581,16 +541,6 @@
         }else{
           this.noDevice=true;
         }
-        this.productName=this.deviceInfo.product.name;
-        this.deviceName1=this.deviceInfo.name;
-        deviceUser.list({device_id:this.deviceInfo.id}).then(res=>{
-          if(res.success){
-            if(res.result.total){
-              this.deviceUserName=res.result.items[0].projectUser.name;
-              this.deviceUserPhone=res.result.items[0].projectUser.phone;
-            }
-          }
-        })
       },
       deviceChange(index){
         this.deviceIndex=index;
@@ -607,7 +557,6 @@
         this.isRouterAlive = false;
         this.$nextTick(() => (this.isRouterAlive = true))
       },
-
 
       //实时数据
       getData(key){
@@ -653,20 +602,6 @@
       getConfig(){
         let projectId=this.$cookies.get('projectId');
         config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
-        })
-      },
-
-      //报警信息
-      getAlarms(key){
-        deviceData.alarms({'key':key}).then(res=>{
-          if(res.success){
-            this.isWarming=false;
-            this.warmingText=res.result[0].message
-          }else{
-            this.isWarming=true
-          }
-
-        }).catch(e=>{
         })
       },
     },
@@ -808,147 +743,6 @@
           background: #24BCF7;
           color:#ffffff;
         }
-        .i-id{
-          font-size: 20px;
-          color: rgba(218,218,218,1);
-          width:100%;
-          height: 10%;
-          margin-top: 10%;
-          overflow: hidden;
-          .d-model{
-            float: left;
-            width: 50%;
-            font-size: 30px;
-            font-weight: bold;
-            color: #333333;
-          }
-        }
-        .i-box{
-          height: 20%;
-          .i-body{
-            width: 100%;
-            height: 40%;
-            .i-name{
-              float: left;
-              font-size:15px;
-              color:rgba(51,51,51,1);
-              font-weight: bold;
-            }
-            .i-company{
-              float: left;
-              font-size:10px;
-              color:#999999;
-            }
-            .i-state{
-              float: right;
-              font-size:10px;
-              color:rgba(153,153,153,1);
-              .led-green{
-                vertical-align: middle;
-                display: inline-block;
-                background-color: #00ff00;
-                width: 6px;
-                height: 6px;
-                box-shadow: 0px 0px 2px 4px #26c702;
-                -moz-box-shadow: 0px 0px 2px 4px #26c702;
-                -webkit-box-shadow: 0px 0px 2px 4px #26c702;
-                border-radius: 50%;
-              }
-              .led-gray{
-                display: inline-block;
-                background-color: #666666;
-                width: 6px;
-                height: 6px;
-                box-shadow: 0px 0px 2px 4px #666666;
-                -moz-box-shadow: 0px 0px 2px 4px #666666;
-                -webkit-box-shadow: 0px 0px 2px 4px #666666;
-                border-radius: 50%;
-              }
-              .led-blue{
-                display: inline-block;
-                background-color: #403BFF;
-                width: 6px;
-                height: 6px;
-                box-shadow: 0px 0px 2px 4px #403BFF;
-                -moz-box-shadow: 0px 0px 2px 4px #403BFF;
-                -webkit-box-shadow: 0px 0px 2px 4px #403BFF;
-                border-radius: 50%;
-              }
-              span{
-                vertical-align: middle;
-                margin-right: 20px;
-              }
-            }
-            .icon-portrait{
-              color: #787F87;
-            }
-            .icon-phonenew{
-              color: #787F87;
-            }
-          }
-          .icon-state{
-            font-size: 12px;
-            color: #24BCF7;
-          }
-        }
-        .h-box{
-          width: 100%;
-          height: 20%;
-          overflow: hidden;
-          .b-info{
-            width: 60%;
-            height: 40%;
-            .i-info{
-              margin-left: 10px;
-              color: #999999;
-            }
-            .icon-portrait{
-              color: #787F87;
-            }
-            .icon-phonenew{
-              color: #787F87;
-            }
-          }
-        }
-        .i-progress{
-          width: 100%;
-          margin-top: 5%;
-          height: 10%;
-          overflow: hidden;
-          div{
-            float: left;
-          }
-          .i-progressName{
-            color: #999999;
-          }
-        }
-        .i-normal{
-          width:100%;
-          text-align: center;
-          height:15%;
-          background:rgba(141,232,240,0.06);
-          padding-top: 13%;
-        }
-        .i-warning{
-          width:100%;
-          height:25%;
-          line-height: 45px;
-          background:rgba(248,89,89,0.06);
-          text-align: center;
-          overflow: auto;
-          .icon-warming{
-            vertical-align: top;
-            color: #DF2A2A;
-          }
-          .w-text{
-            margin-left: 10px;
-            max-width: 80%;
-            vertical-align: top;
-            display: inline-block;
-            text-align: left;
-          }
-        }
-
         .d-name{
           margin-top: 20px;
           span{
@@ -998,155 +792,6 @@
           }
         }
       }
-      /*.s-info1{
-        .i-id{
-          //font-size:30px;
-          color:#DADADA;
-          line-height:42px;
-          .d-model{
-            font-weight: bold;
-            width: 250px;
-            font-size: 35px;
-            color: #333333;
-          }
-          .d-kind{
-            height: 40px;
-            div{
-              width: 30px;
-              height: 30px;
-              line-height: 30px;
-              border-radius: 50%;
-              border: 1px solid rgba(218,218,218,1);
-              text-align: center;
-              margin:0 10px;
-            }
-          }
-        }
-        .deviceActive{
-          font-size:20px;
-          background: #24BCF7;
-          color:#ffffff;
-        }
-        .i-box{
-          display: flex;
-          justify-content:space-between;
-          height: 20%;
-          .i-body{
-            width: 60%;
-            height: 45px;
-            line-height: 45px;
-            font-weight: bold;
-            .i-name{
-              font-size:18px;
-              color:rgba(51,51,51,1);
-            }
-            .b-info{
-              .i-info{
-                display: inline-block;
-                margin-left: 10px;
-                color: #999999;
-                font-size: 12px;
-              }
-            }
-
-            .i-company{
-              font-size:14px;
-              color:rgba(153,153,153,1);
-            }
-          }
-          .i-state{
-            line-height: 45px;
-            font-size:14px;
-            color:rgba(153,153,153,1);
-          }
-          .icon-state{
-            font-size: 14px;
-            color: #24BCF7;
-            margin-right: 20px;
-          }
-        }
-
-        .i-start{
-          width:100%;
-          height:17px;
-          font-size:16px;
-          color:rgba(102,102,102,1);
-          line-height:17px;
-        }
-        .i-progress{
-          margin-top: 20px;
-          width: 100%;
-          height: 15px;
-          line-height: 15px;
-          display: flex;
-          justify-content:space-between;
-          .i-progressName{
-            font-size: 14px;
-          }
-        }
-        .i-normal{
-          width:100%;
-          //line-height: 57px;
-          text-align: center;
-          height:120px;
-          background:rgba(141,232,240,0.06);
-        }
-        .i-warning{
-          width:100%;
-          height:80px;
-          line-height: 40px;
-          background:rgba(248,89,89,0.06);
-          text-align: center;
-          .icon-warming{
-            vertical-align: top;
-            color: #DF2A2A;
-          }
-          .w-text{
-            max-width: 80%;
-            margin-left: 10px;
-            vertical-align: top;
-            display: inline-block;
-          }
-        }
-
-        .d-name{
-          i{
-            font-size: 20px;
-          }
-          span{
-            margin-left: 5%;
-            font-size: 20px;
-            font-weight: bold;
-          }
-        }
-        .d-box{
-          height: 60%;
-          display: flex;
-          flex-direction: row;!*决定主轴的方向*!
-          flex-wrap:wrap;
-          justify-content:space-around;
-          div{
-            width: 33.3%;
-          }
-          .d-key{
-            font-size: 16px;
-            margin-top: 30px;
-            color: #666666;
-          }
-          .d-value{
-            font-weight: bold;
-            height: 30px;
-            font-size: 25px;
-            color: #333333;
-          }
-          .d-value1{
-            font-weight: bold;
-            height: 30px;
-            font-size: 26px;
-            color: #333333;
-          }
-        }
-      }*/
 
       .s-progress{
         float: left;
@@ -1182,31 +827,6 @@
           }
         }
       }
-      /*.s-progress1{
-        .p-box{
-          !*margin-bottom: 6%;
-          .p-progress{
-            .p-title{
-              font-size: 18px;
-            }
-          }
-          .p-name{
-            font-size:18px;
-          }
-          .p-completedSteps{
-            font-size: 40px;
-          }
-          .p-totalSteps{
-            font-size: 18px;
-          }
-          .p-unit{
-            font-size: 18px;
-          }
-          .p-title{
-            font-size:18px;
-          }
-        }*!}
-      }*/
       .s-liquidFill{
         float: left;
         height: 100%;

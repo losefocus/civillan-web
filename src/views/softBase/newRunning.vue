@@ -3,25 +3,21 @@
     <ul class="t-header">
       <li v-for="(tab,index) in tHeader" :key="index" @click="changeTab(index)" :class="{active:index==tIndex}"> {{tab.name}}</li>
       <div class="t-handle" v-if="isShow">
-        <div @click="isFullscreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
+        <div @click="changeFullScreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
       </div>
     </ul>
-    <r-state :deviceKey="deviceKey" :is="currentView" :isShow="isShow" :clientWidth="clientWidth" :dialogFullscreen="dialogFullscreen" class="t-Body" @dialogFullscreen="changeScreen"></r-state>
+    <r-state :deviceKey="deviceKey" :is="currentView" :isShow="isShow" :clientWidth="clientWidth" :dialogFullScreen="dialogFullScreen" class="t-Body"></r-state>
   </div>
 </template>
 
-
 <script>
-
   import deviceGrouping from '@/api/project/deviceGrouping'
-  import deviceList from '@/api/project/deviceList'
-  import deviceData from '@/api/device/deviceData'
 
-  import SAnalysis from '@/views/softBase/SAnalysis'
-  import RState from '@/views/softBase/RState'
-  import AQuery from '@/views/softBase/AQuery'
-  import HPile from '@/views/softBase/HPile'
-  import NRecord from '@/views/softBase/NRecord'
+  import SAnalysis from '@/views/MPile/SAnalysis'
+  import RState from '@/views/MPile/RState'
+  import AQuery from '@/views/MPile/AQuery'
+  import HPile from '@/views/MPile/HPile'
+  import NRecord from '@/views/MPile/NRecord'
 
   import FConcrete from '@/views/FConcrete/FConcrete'
   import HFoam from '@/views/FConcrete/HFoam'
@@ -30,7 +26,7 @@
 
   import TTensile from '@/views/TTensile/TTensile'
 
-
+  import Bus from '@/common/eventBus'
   export default {
     name: "newRunning",
     components: {
@@ -55,7 +51,7 @@
         dialogHeight:{
           height:'700px'
         },
-        dialogFullscreen:false,
+        dialogFullscreen:true,
         changeIcon:true,
         radio:"",
         line: 'v',
@@ -63,7 +59,6 @@
         group_id:0,
         deviceKey:'',
         deviceName:'',
-        //deviceType:'',
         tHeader:[
           {name:'运行状况'},
           {name:'历史数据'},
@@ -85,50 +80,55 @@
       };
     },
 
-    props:['deviceType'],
+    props:['deviceType','dialogFullScreen'],
 
     created(){
+      let id=this.$cookies.get('projectId');
+      let tenant=this.$cookies.get('tenant');
+      this.getGroup(id,tenant);
       this.changeType();
-      let clientWidth1=document.body.clientWidth;
-      if(clientWidth1<1400){
-        //this.isShow=false;
-        this.changeIcon=true;
-        this.isFullscreen()
-      }else{
-        this.isShow=true
-      }
       this.deviceStatus = new Map();
       for (let i=0; i<this.deviceStatusLists.length; i++) {
         this.deviceStatus.set(this.deviceStatusLists[i].id,this.deviceStatusLists[i].name)
       }
-
-      this.loading=this.$loading({
-        fullscreen: true,
-        background: 'rgba(0, 0, 0, 0.2)'
-      });
-      let id=this.$cookies.get('projectId');
-      let tenant=this.$cookies.get('tenant');
-      this.getGroup(id,tenant)
     },
     mounted(){
-
-      let _this=this;
-      window.onresize = function(){
-        let clientWidth=document.body.clientWidth;
-        _this.clientWidth=clientWidth;
-        if(clientWidth<1400){
-          _this.isShow=false;
-          _this.changeIcon=true;
-          _this.isFullscreen()
-        }else{
-          _this.isShow=true
-        }
-      }
+      this.getFullScreen(this.dialogFullScreen);
+      this.selfAdaption()
     },
     methods: {
-
+      getFullScreen(data){
+        if(data){
+          this.changeIcon=false
+        }else{
+          this.changeIcon=true
+        }
+      },
+      selfAdaption(){
+        let clientWidth1=document.body.clientWidth;
+        if(clientWidth1<1400){
+          this.isShow=false;
+          this.changeIcon=true;
+          this.changeFullScreen()
+        }else{
+          this.isShow=true
+        }
+        let _this=this;
+        window.onresize = function(){
+          let clientWidth=document.body.clientWidth;
+          _this.clientWidth=clientWidth;
+          if(clientWidth<1400){
+            _this.isShow=false;
+            _this.changeIcon=true;
+            _this.changeFullScreen();
+            Bus.$emit('isCollapse',true)
+          }else{
+            _this.isShow=true;
+            Bus.$emit('isCollapse',false)
+          }
+        }
+      },
       changeType(){
-        //let type=sessionStorage.getItem('deviceType');
         if(this.deviceType=='PMHNT'){
           this.tBody=['FConcrete', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='FConcrete'
@@ -151,14 +151,11 @@
           if(res.success){
             this.navList=res.result.items;
             this.getList(this.navList[0].id);
-
-            this.loading.close()
           }else{
             this.$message.error(res.message);
-            this.loading.close()
           }
         }).catch(e=>{
-          this.loading.close()
+
         });
       },
       changeTab1(list,index){ //切换tab
@@ -172,23 +169,14 @@
         this.tIndex=i;
         this.currentView=this.tBody[i]
       },
-      isFullscreen(){ //是否打开模态框
-        if(this.changeIcon){
-          this.dialogFullscreen=true;
-        }else{
-          this.dialogFullscreen=false;
-        }
+      changeFullScreen(){ //是否打开模态
         this.changeIcon=!this.changeIcon;
         this.$emit('changeIcon',this.changeIcon)
-      },
-      changeScreen(data){
-        this.changeIcon=data;
-        this.isFullscreen();
       },
       closeDialog(){
         this.tIndex=0
       }
-    }
+    },
   }
 </script>
 <style scoped lang="scss">

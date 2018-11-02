@@ -20,6 +20,7 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 1"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 1">
+          <p class="status-title">下钻</p>
           <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
           <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
@@ -38,6 +39,7 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 2"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 2">
+          <p class="status-title">提钻</p>
           <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
           <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
@@ -57,6 +59,7 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 3"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 3">
+          <p class="status-title">复下</p>
           <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
           <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
@@ -76,11 +79,12 @@
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 4 && parseInt(tiem_4.style_stake.bottom)>=12"></div>
         </div>
         <div class="info" v-show="dataInfo.rpipe_sta == 4||dataInfo.rpipe_sta == 5">
+          <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:red">已完成</p>
+          <p v-else class="status-title">复提</p>
           <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
           <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
           <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
-          <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:red">complete</p>
         </div>
         <i v-show="dataInfo.rpipe_sta == 4 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
       </div>
@@ -238,13 +242,19 @@
     top: 25%;
     left: 50%;
     width: 115px;
-    height: 110px;
+    height: 120px;
     background: url(../../assets/RState/stake-03.png)no-repeat center bottom;
     background-size: contain;
     font-size: 12px;
     padding-left: 15px;
     line-height: 16px;
     text-align: left
+  }
+  .item .top .info .status-title{
+    color:#4dbce6;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
   }
   .item .top .info p{
     margin: 0;
