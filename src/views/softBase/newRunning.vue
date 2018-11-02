@@ -122,10 +122,10 @@
             _this.isShow=false;
             _this.changeIcon=true;
             _this.changeFullScreen();
-             // _this.$bus.emit('isCollapse',false)
+            _this.$bus.emit('isCollapse',false)
           }else{
             _this.isShow=true;
-            // _this.$bus.emit('isCollapse',true)
+            _this.$bus.emit('isCollapse',true)
           }
         }
       },
