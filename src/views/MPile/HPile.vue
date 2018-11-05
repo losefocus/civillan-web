@@ -143,19 +143,19 @@
             </el-table-column>
             <el-table-column
               align="center"
-              label="段钻速（pa）">
+              label="钻速（cm/min）">
               <template slot-scope="props">
                 {{ props.row.p_down_speed | formatZ}}
               </template>
             </el-table-column>
             <el-table-column
               align="center"
-              label="段提速（pa）">
+              label="状态">
               <template slot-scope="props">
-                {{ props.row.p_up_speed | formatZ}}
+                <span v-if="props.row.p_down_speed >= 0">下钻</span>
+                <span v-else>提钻</span>
               </template>
             </el-table-column>
-
           </el-table>
         </template>
       </el-table-column>
@@ -164,9 +164,20 @@
         width="55">
       </el-table-column>
       <el-table-column
-        v-if="newData.pile_id.checked"
+        v-if="newData.pile_describe.checked"
         label="桩号"
-        prop="pile_id">
+        width="130">
+        <template slot-scope="props">
+          <a href="#">{{props.row.pile_describe}}</a>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="newData.machine_key.checked"
+        label="桩机号"
+        width="130">
+        <template slot-scope="props">
+          {{props.row.machine_key}}
+        </template>
       </el-table-column>
       <el-table-column
         v-if="newData.begin_time.checked"
@@ -482,8 +493,9 @@
 
         //选择列
         newData:{
-          pile_id:{title:'桩号',checked:true},
+          //pile_id:{title:'桩号',checked:true},
           pile_describe:{title:'桩号',checked:true},
+          machine_key:{title:'桩机号',checked:false},
           begin_time:{title:'开始时间',checked:true},
           end_time:{title:'结束时间',checked:true},
           depth:{title:'实际桩长',checked:true},
@@ -688,9 +700,10 @@
         history.list(post_data).then(res=>{
           if(res.success){
             _this.total=res.result.total;
-            /*res.result.items.forEach(function (item) {
-              tableList.push(item);
-            });*/
+            console.log(res.result);
+            res.result.items.forEach(function (item) {
+              item.pile_describe=item.pile_describe.replace(/(^\s*)|(\s*$)/g, "")
+            });
             _this.tableData=res.result.items;
             _this.loading=false
           }else {
