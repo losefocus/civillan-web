@@ -153,7 +153,7 @@
       .d-model{
         float: left;
         width: 50%;
-        font-size: 30px;
+        font-size: 25px;
         font-weight: bold;
         color: #333333;
       }

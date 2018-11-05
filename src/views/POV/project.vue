@@ -144,7 +144,7 @@
         loading:null,
         polar1:{
           title : {
-            text: '报警统计',
+            text: '报警分布',
             x:'left'
           },
           toolbox: {
@@ -176,7 +176,7 @@
             {
               name:'报警类型',
               type:'pie',
-              radius : '65%',
+              radius : '45%',
               center: ['50%', '55%'],
               avoidLabelOverlap: true,
               labelLine: {
@@ -185,12 +185,11 @@
                 }
               },
               data:[
-                {value:1563, name:'设备故障'},
-                {value:310, name:'下钻速度异常'},
-                {value:234, name:'电流异常'},
-                {value:1244, name:'掺量异常'},
-                {value:548, name:'电压异常'},
-                {value:982, name:'流量异常'},
+                {value:1563, name:'搅拌桩故障'},
+                {value:310, name:'泡沫混凝土故障'},
+                {value:234, name:'喷淋故障'},
+                {value:1244, name:'预应力张拉故障'},
+                {value:548, name:'预应力压浆故障'},
               ]
             }
           ]

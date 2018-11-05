@@ -145,7 +145,7 @@
               align="center"
               label="钻速（cm/min）">
               <template slot-scope="props">
-                {{ props.row.p_down_speed | formatZ}}
+                {{ Math.abs(props.row.p_down_speed) | formatZ}}
               </template>
             </el-table-column>
             <el-table-column

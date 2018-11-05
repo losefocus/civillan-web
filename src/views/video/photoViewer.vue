@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import THREE from '@/common/three.min.js'
+  //import THREE from '@/common/three.min.js'
   import PhotoSphereViewer from '@/common/photo-sphere-viewer.min.js'
   import snow from '@/views/video/viewer.jpg'
   export default {
@@ -14,7 +14,7 @@
       this.loadPredefinedPanorama();
     },
     created(){
-      window.THREE=THREE;
+      //window.THREE=THREE;
     },
     methods:{
       loadPredefinedPanorama() {

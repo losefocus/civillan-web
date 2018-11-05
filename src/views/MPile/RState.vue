@@ -10,7 +10,7 @@
      </div>
      <ul class="s-box1">
        <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
-         <device-info :realData="RT_data" ></device-info>
+         <device-info :realData="RT_data"></device-info>
        </li>
        <li class="s-info" :class="{'s-info1':classChange==1}" v-else>
          <div class="d-name">
@@ -24,11 +24,11 @@
            </div>
            <div>
              <p class="d-key">桩长</p>
-             <p class="d-value">30</p>
+             <p class="d-value">{{config_data.depth}}</p>
            </div>
            <div>
              <p class="d-key">桩径</p>
-             <p class="d-value">30</p>
+             <p class="d-value">{{config_data.diameter}}</p>
            </div>
            <div>
              <p class="d-key">水灰比</p>
@@ -40,7 +40,7 @@
            </div>
            <div>
              <p class="d-key">工艺</p>
-             <p class="d-value1">{{RT_data.process_type}}</p>
+             <p class="d-value1">30</p>
            </div>
          </div>
        </li>
@@ -178,6 +178,8 @@ export default {
 
       isTab:false,//设备型号切换,
 
+      config_post_data:{},
+      config_data:{},
     }
   },
   props:['dialogFullScreen','deviceKey','isClose','clientWidth'],
@@ -236,7 +238,6 @@ export default {
     //设备信息
     getDeviceInfo(){
       this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      console.log(this.deviceInfo1.status);
       if(this.deviceInfo1.status==11){
         this.noDevice=false;
       }else{
@@ -282,6 +283,8 @@ export default {
         }
       })
     },
+
+
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
@@ -309,7 +312,7 @@ export default {
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
 
-
+          this.config_post_data=res.result.pile_describe;
           //this.getDeviceConfig(res.result.pile_describe)
         }else {
           this.progressHeight='100%';
@@ -333,11 +336,25 @@ export default {
       })
     },
     //设备配置参数
-    /*getDeviceConfig(post_data){
+    getDeviceConfig(post_data){
       deviceConfig.list({'key':post_data}).then(res=>{
-        console.log(res)
+        console.log(res);
+        //this.pileData.pile_id=res.result;
+        //this.config_data=JSON.parse(res.result.content);
+        /*JSON.parse(res.result.content).forEach(item=>{
+          console.log(item);
+          if(item.label=='pile_position'){
+            this.config_data.position=item.value
+          }
+          if(item.label=='pile_depth'){
+            this.config_data.depth=item.value
+          }
+          if(item.label=='pile_diameter'){
+            this.config_data.diameter=item.value
+          }
+        })*/
       })
-    },*/
+    },
   },
 
 
@@ -385,6 +402,10 @@ export default {
       if( this.$refs.sSpeed!==undefined){this.$refs.sSpeed.resize()}
       if( this.$refs.sFlow!==undefined){this.$refs.sFlow.resize()}
       this.temp(this.dialogFullscreen,this.diameter,this,val)
+    },
+    config_post_data(val,oldVal){
+      console.log(val)
+      this.getDeviceConfig(val)
     }
   }
 }
