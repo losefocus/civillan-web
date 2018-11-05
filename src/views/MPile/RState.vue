@@ -308,6 +308,9 @@ export default {
           this.slurryData.push(par_slurry);
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
+
+
+          //this.getDeviceConfig(res.result.pile_describe)
         }else {
           this.progressHeight='100%';
         }
@@ -331,7 +334,8 @@ export default {
     },
     //设备配置参数
     /*getDeviceConfig(post_data){
-      deviceConfig.list({'device_id':post_data}).then(res=>{
+      deviceConfig.list({'key':post_data}).then(res=>{
+        console.log(res)
       })
     },*/
   },
