@@ -2,7 +2,7 @@
   <div style="width: 100%;height: 100%;">
     <!--<chart :options="PulpingQuantity" :auto-resize=true></chart>-->
     <div style="height: 40px;line-height: 40px;padding-left: 10px;font-size: 16px;font-weight: bold;">
-      段灰量、压力、电流随桩机里程变化曲线
+      段灰量、电流随桩机里程变化曲线
     </div>
     <div style="height: calc(100% - 40px)">
       <div id="myCharts1" style="width: 50%;height: 50%;float: left;"></div>
@@ -54,7 +54,7 @@
     },
     methods:{
       myCharts(dataInfo,oldVal){
-        let _this=this;
+        console.log(dataInfo);
         if(isNaN(dataInfo.rdeep)){
           dataInfo.rdeep=0
         }
@@ -223,7 +223,7 @@
               {
                 name: '段灰量(Kg)',
                 type: 'line',
-                showSymbol: true,
+                showSymbol: false,
                 itemStyle: {
                   normal: {
                     color: '#F86969',
@@ -235,7 +235,7 @@
               {
                 name: '压力(MPa)',
                 type: 'line',
-                showSymbol: true,
+                showSymbol: false,
                 itemStyle: {
                   normal: {
                     color: '#50C9F9',
@@ -247,7 +247,7 @@
               {
                 name: '电流(A)',
                 type: 'line',
-                showSymbol: true,
+                showSymbol: false,
                 itemStyle: {
                   normal: {
                     color: '#FF9933',
