@@ -68,8 +68,6 @@
           dataInfo.rcurrent=0
         }
 
-
-
         if(dataInfo.rpipe_sta==1){
           if(oldVal!=undefined){
             if(dataInfo.par_ash!=oldVal.par_ash){
@@ -135,7 +133,6 @@
             this.data4.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
           }
         }
-
 
         this.myChart1 = this.$echarts.init(document.getElementById('myCharts1'));
         this.myChart2 = this.$echarts.init(document.getElementById('myCharts2'));
