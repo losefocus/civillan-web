@@ -18,7 +18,8 @@
     components:{
 
     },
-    created(){},
+    created(){
+    },
     mounted(){
       this.init();
     },
@@ -35,8 +36,10 @@
 
         //当前桩
         var current = this.dataInfo.pile_id//{lon:120.042071817, lat:30.862442958,title:"A8"};
+        console.log(this.dataInfo);
         //画布坐标显示范围
         let laglgn = current.content;
+
         let lng_,lat_,title;
         laglgn.every(res=>{
           if(res.label == "pile_position"){

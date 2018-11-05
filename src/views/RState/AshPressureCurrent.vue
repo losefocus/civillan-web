@@ -54,7 +54,6 @@
     },
     methods:{
       myCharts(dataInfo,oldVal){
-        console.log(dataInfo);
         if(isNaN(dataInfo.rdeep)){
           dataInfo.rdeep=0
         }

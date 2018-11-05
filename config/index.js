@@ -3,7 +3,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 // let baseUrl="http://192.168.0.232/";
-//let baseUrl="http://192.168.0.232/";
+// let baseUrl="http://192.168.0.232/";
 let baseUrl="http://api.gcycloud.com";
 const path = require('path');
 
