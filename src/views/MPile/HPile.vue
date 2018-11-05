@@ -483,6 +483,7 @@
         //选择列
         newData:{
           pile_id:{title:'桩号',checked:true},
+          pile_describe:{title:'桩号',checked:true},
           begin_time:{title:'开始时间',checked:true},
           end_time:{title:'结束时间',checked:true},
           depth:{title:'实际桩长',checked:true},
@@ -515,6 +516,8 @@
           key:'',
           page_index:1,
           page_size:10,
+          sort_by:'begin_time',
+          direction:'asc',
         },
         device_data:{//全部设备select列表
           page_index:1,
@@ -527,7 +530,7 @@
     },
     filters: {
       formatDate(time) {
-        let date = new Date(time);
+        let date = new Date(time*1000);
         return formatDate(date, 'MM-dd hh:mm'); //yyyy-MM-dd hh:mm
       }
     },
@@ -827,8 +830,8 @@
     border-bottom: 2px solid #ebeef5;
     .s-body{
       float: left;
-      margin-left: 10%;
-      margin-right: 10px;
+      width: 25%;
+      text-align: center;
       .s-total{
         font-size: 12px;
         color:rgba(102,102,102,1);

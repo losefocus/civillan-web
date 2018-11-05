@@ -1,7 +1,8 @@
 <template>
   <div class="s-infoBody">
     <div class="i-id">
-      <div class="d-model">{{RT_data.pile_describe}}</div>
+      <div v-if="RT_data.pile_describe" class="d-model">{{RT_data.pile_describe}}</div>
+      <div v-else class="d-model">暂无作业</div>
       <!--<div class="d-kind">
         <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
       </div>-->
@@ -15,19 +16,33 @@
     <div class="i-box">
       <div class="i-body">
         <div class="i-name">{{deviceName1}}</div>
-        <div class="i-state"><span style="vertical-align: center">喷浆状态</span><div :class="{'led-green':RT_data.nozzle_sta=='1','led-gray':RT_data.nozzle_sta==0}"></div></div>
+        <div class="i-state">
+          <span style="vertical-align: center">喷浆状态</span>
+          <div v-if="RT_data.nozzle_sta" :class="{'led-green':RT_data.nozzle_sta=='1','led-gray':RT_data.nozzle_sta==0}"></div>
+          <div v-else class="led-gray"></div>
+        </div>
       </div>
       <div class="i-body">
         <div class="i-company">{{productName}}</div>
-        <div class="i-state"><span>记录状态</span><div :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div></div>
+        <div class="i-state">
+          <span>记录状态</span>
+          <div v-if="RT_data.record_sta" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div>
+          <div v-else class="led-gray"></div>
+        </div>
       </div>
     </div>
     <div class="clear"></div>
     <div class="clear"></div>
     <div class="h-box">
       <div class="b-info">
-        <div class="b-infoName"><span class="iconfont icon-portrait"></span><span class="i-info">{{deviceUserName}}</span></div>
-        <div class="b-infoCall"><span class="iconfont icon-phonenew"></span><span class="i-info">{{deviceUserPhone}}</span></div>
+        <div class="b-infoName"><span class="iconfont icon-portrait"></span>
+          <span v-if="deviceUserName" class="i-info">{{deviceUserName}}</span>
+          <span v-else class="i-info">未绑定</span>
+        </div>
+        <div class="b-infoCall"><span class="iconfont icon-phonenew"></span>
+          <span v-if="deviceUserPhone" class="i-info">{{deviceUserPhone}}</span>
+          <span v-else class="i-info">暂无联系方式</span>
+        </div>
       </div>
       <div class="b-angle" v-if="isAngle">
         <div class="a-spot"></div>

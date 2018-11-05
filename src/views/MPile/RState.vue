@@ -189,11 +189,9 @@ export default {
   },
   created(){
     this.getConfig();
-    this.getDeviceInfo();
     //this.getDeviceConfig(this.deviceKey);
     let deviceKey=this.$store.state.project.deviceKey;
     this.getData(deviceKey);
-
 
     this.timer=setInterval(()=>{
       this.getData(deviceKey);
@@ -204,6 +202,7 @@ export default {
     this.init();
     this.reload();
     this.getPileData();
+    this.getDeviceInfo();
   },
   beforeDestroy(){
     clearInterval(this.timer);
@@ -237,10 +236,13 @@ export default {
     //设备信息
     getDeviceInfo(){
       this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
+      console.log(this.deviceInfo1.status);
       if(this.deviceInfo1.status==11){
         this.noDevice=false;
       }else{
-        this.noDevice=false;
+        this.noDevice=true;
+        this.RT_data=[];
+        clearInterval(this.timer);
       }
     },
     deviceChange(index){
