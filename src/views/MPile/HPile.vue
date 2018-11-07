@@ -3,7 +3,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-show="!isShow" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
+        <el-select v-show="isShow==undefined" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="item.key+item.id"
@@ -20,15 +20,6 @@
             :total="deviceTotal">
           </el-pagination>
         </el-select>
-
-        <!--<el-select  v-model="value1" placeholder="全部桩" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
-          <el-option
-            v-for="item in deviceSelect1"
-            :key="item.value1"
-            :label="item.name"
-            :value="item.value1">
-          </el-option>
-        </el-select>-->
         <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect2"
@@ -88,7 +79,16 @@
     >
       <el-table-column type="expand">
         <template slot-scope="props">
+          <div  class="expand_head">
+            <ul class="expand_tab">
+              <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">列表</li>
+              <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="isActive=2">概览</li>
+            </ul>
+            <div class="exportExcel">导出</div>
+          </div>
+
           <el-table
+            v-if="isActive==1"
             header-cell-class-name="history-header"
             header-row-class-name="h-header"
             header-align="center"
@@ -157,6 +157,14 @@
               </template>
             </el-table-column>
           </el-table>
+          <div v-else>
+            <ul class="expand_charts">
+              <li><chart :options="option1" :auto-resize=true></chart></li>
+              <li style="margin-left: 20px"><chart :options="option2" :auto-resize=true></chart></li>
+              <li style="margin-top: 20px"><chart :options="option3" :auto-resize=true></chart></li>
+              <li style="margin: 20px 0 0 20px"><chart :options="option4" :auto-resize=true></chart></li>
+            </ul>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -314,7 +322,7 @@
         align="center"
         label="最大提速">
         <template slot-scope="props">
-          {{ props.row.max_up_speed | formatZ}}
+          {{  Math.abs(props.row.max_up_speed) | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
@@ -435,6 +443,7 @@
     data() {
       return {
         loading: true,
+        isActive:1,
         isCollapse:true, //是否展开nav
         currentPage:1, //当前页
         pagesize:20, //条数
@@ -537,7 +546,234 @@
           name:''
         },
         deviceTotal:0,
-        deviceName:''
+        deviceName:'',
+
+        option1:{
+          title: {
+            text: '流量、速度变化曲线',
+            top:'3%',
+            left:'3%',
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {type: 'cross'}
+          },
+          legend: {
+            data:['流量','速度'],
+            align:'right',
+            right:'3%',
+            top:'5%',
+          },
+          grid:{
+            top:'25%',
+            bottom:'10%',
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00']
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              name: '流量（L/min）',
+              min: 0,
+              max: 250,
+              interval: 50,
+              axisLabel: {
+                formatter: '{value}'
+              }
+            },
+            {
+              type: 'value',
+              name: '速度（cm/min）',
+              min: 0,
+              max: 25,
+              interval: 5,
+              axisLabel: {
+                formatter: '{value}'
+              }
+            }
+          ],
+          series: [
+            {
+              name:'流量',
+              type:'line',
+              yAxisIndex: 1,
+              data:[2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+            },
+            {
+              name:'速度',
+              type:'line',
+              yAxisIndex: 1,
+              data:[1.0, 4.2, 2.3, 7.5, 8.3, 11.2, 15.3, 2.4, 6.0, 16.5, 12.0, 6.2]
+            }
+          ]
+        },
+        option2:{
+          title: {
+            text: '深度曲线',
+            top:'3%',
+            left:'3%',
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            align:'right',
+            right:'3%',
+            top:'5%',
+          },
+          grid: {
+            left: '4%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00']
+          },
+          yAxis: {
+            type: 'value',
+          },
+          series: [
+            {
+              name:'深度',
+              type:'line',
+              stack: '总量',
+              data:[-5, -10, -15, -20, -25, -50, -3]
+            },
+          ]
+        },
+        option3:{
+          title: {
+            text: '外、内钻杆电流曲线'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一','周二','周三','周四','周五','周六','周日']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name:'邮件营销',
+              type:'line',
+              stack: '总量',
+              data:[120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+              name:'联盟广告',
+              type:'line',
+              stack: '总量',
+              data:[220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+              name:'视频广告',
+              type:'line',
+              stack: '总量',
+              data:[150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+              name:'直接访问',
+              type:'line',
+              stack: '总量',
+              data:[320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+              name:'搜索引擎',
+              type:'line',
+              stack: '总量',
+              data:[820, 932, 901, 934, 1290, 1330, 1320]
+            }
+          ]
+        },
+        option4:{
+          title: {
+            text: '浆量分布曲线'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一','周二','周三','周四','周五','周六','周日']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name:'邮件营销',
+              type:'line',
+              stack: '总量',
+              data:[120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+              name:'联盟广告',
+              type:'line',
+              stack: '总量',
+              data:[220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+              name:'视频广告',
+              type:'line',
+              stack: '总量',
+              data:[150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+              name:'直接访问',
+              type:'line',
+              stack: '总量',
+              data:[320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+              name:'搜索引擎',
+              type:'line',
+              stack: '总量',
+              data:[820, 932, 901, 934, 1290, 1330, 1320]
+            }
+          ]
+        },
+
+
       }
     },
     filters: {
@@ -548,6 +784,10 @@
     },
     props:['isShow','newStyle','deviceKey'],
     created(){
+      console.log(this.isShow);
+      let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+      this.post_data.key=deviceInfo.key;
+      console.log(deviceInfo.key);
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
       this.getList(this.post_data);
@@ -694,9 +934,8 @@
         this.getList(this.post_data);
       },
       //获取列表
-      getList:function (post_data) {
+      getList(post_data) {
         let _this=this;
-        let tableList=[];
         history.list(post_data).then(res=>{
           if(res.success){
             _this.total=res.result.total;
@@ -729,7 +968,7 @@
       },
       //全部设备select搜索框
       deviceSearch(query){
-        this.device=query
+        this.device=query;
         this.device_data.name=query;
         this.getDeviceList(this.device_data);
       },
@@ -861,5 +1100,51 @@
     padding: 20px;
     text-align: center;
     background: #ffffff;
+  };
+  .expand_head{
+    width: 100%;
+    height: 36px;
+    margin-bottom: 20px;
+    .expand_tab{
+      float: left;
+      li{
+        float: left;
+        width:97px;
+        height:36px;
+        line-height: 36px;
+        text-align: center;
+        cursor: pointer;
+        border:1px solid rgba(225,225,227,0.8);
+        background:rgba(255,255,255,1);
+        border-radius:2px;
+      }
+      .Action{
+        color: #F76A6A;
+      }
+    }
+    .exportExcel{
+      float: right;
+      width:97px;
+      height:36px;
+      line-height: 36px;
+      text-align: center;
+      cursor: pointer;
+      background:rgba(255,255,255,1);
+      border-radius:2px;
+    }
+  }
+  .expand_charts{
+    width: 100%;
+    height: 700px;
+    li{
+      float: left;
+      width: calc(50% - 10px);
+      height: calc(50% - 10px);
+      background: #ffffff;
+    }
+  }
+  .echarts {
+    width: 100%;
+    height: 100%;
   }
 </style>

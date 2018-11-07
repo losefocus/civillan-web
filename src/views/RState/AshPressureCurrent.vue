@@ -269,9 +269,9 @@
 
       },
       resize(){
-        this.myChart1.resize()
-        this.myChart2.resize()
-        this.myChart3.resize()
+        this.myChart1.resize();
+        this.myChart2.resize();
+        this.myChart3.resize();
         this.myChart4.resize()
       }
     },

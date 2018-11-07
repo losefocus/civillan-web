@@ -17,10 +17,11 @@
            <i class="iconfont icon-pie"></i>
            <span>桩设计参考值</span>
          </div>
-         <div class="d-box">
+         <div class="noConfig" v-if="noConfig">未找到当前作业的配置参数</div>
+         <div v-else class="d-box">
            <div>
              <p class="d-key">桩间距</p>
-             <p class="d-value">30</p>
+             <p class="d-value">{{config_data.spacing}}</p>
            </div>
            <div>
              <p class="d-key">桩长</p>
@@ -32,16 +33,16 @@
            </div>
            <div>
              <p class="d-key">水灰比</p>
-             <p class="d-value">30</p>
+             <p class="d-value">{{config_data.ratio}}</p>
            </div>
            <div>
              <p class="d-key">灰量</p>
-             <p class="d-value">30</p>
+             <p class="d-value">{{config_data.ash}}</p>
            </div>
-           <div>
+           <!--<div>
              <p class="d-key">工艺</p>
-             <p class="d-value1">30</p>
-           </div>
+             <p class="d-value1">{{config_data.process}}</p>
+           </div>-->
          </div>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
@@ -64,7 +65,7 @@
                      <div style="margin-left: 25px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 16px;font-weight: bold;">{{progress}}</span></div>
                    </div>
                    <span style="margin-left: -25px">0米</span>
-                   <span style="position: absolute;bottom: 0;left:-40px;">100米</span>
+                   <span style="position: absolute;bottom: 0;left:-40px;">{{DesignDeep}} 米</span>
                  </div>
                </div>
              </div>
@@ -135,9 +136,10 @@ export default {
 
     return {
       timer:null,//定时器,
+      noConfig:true,
       pileData:{
         ps:[],
-        pile_id:{content:[{"label":"pile_position","name":"桩位置","value":"120.044018147,30.858786963"},{"label":"pile_depth","name":"桩长","value":"11"},{"label":"pile_diameter","name":"桩径","value":"0.25"}],
+        pile_id:/*{content:[{"label":"pile_position","name":"桩位置","value":"120.044018147,30.858786963"},{"label":"pile_depth","name":"桩长","value":"11"},{"label":"pile_diameter","name":"桩径","value":"0.25"}],
           createdAt:1535618538,
           createdBy:70,
           id:7533,
@@ -147,7 +149,7 @@ export default {
           sort:0,
           status:2,
           tenant:"21fe87251b01541399c7c1a8cec741c5",
-          typeId:124,},
+          typeId:124,}*/{},
       },
       angelWidth:0,
       noDevice:false,
@@ -166,7 +168,9 @@ export default {
       rspeed:3,//速度实时数据
       rcurrent:3,//电流实时数据
 
-      RT_data:{}, //实时数据
+      RT_data:{
+        depth_design:30,
+      }, //实时数据
 
       slurryData:[], //段浆量
       ashData:[], //段灰量
@@ -174,7 +178,7 @@ export default {
       progressNum:40,//深度进度
       progress:0,
       progressHeight:'',
-      DesignDeep:100,
+      DesignDeep:30,
 
       isTab:false,//设备型号切换,
 
@@ -190,7 +194,7 @@ export default {
     }
   },
   created(){
-    this.getConfig();
+
     //this.getDeviceConfig(this.deviceKey);
     let deviceKey=this.$store.state.project.deviceKey;
     this.getData(deviceKey);
@@ -203,7 +207,6 @@ export default {
   mounted(){
     this.init();
     this.reload();
-    this.getPileData();
     this.getDeviceInfo();
   },
   beforeDestroy(){
@@ -242,7 +245,8 @@ export default {
         this.noDevice=false;
       }else{
         this.noDevice=true;
-        this.RT_data=[];
+        this.RT_data={};
+        this.RT_data.depth_design=30;
         clearInterval(this.timer);
       }
     },
@@ -267,7 +271,62 @@ export default {
       this.$nextTick(() => (this.isRouterAlive = true))
     },
 
-    getPileData(){
+    //根据桩号获取相应的配置参数
+
+    config_all(post_data){
+      Promise.all([deviceConfig.list({'key':post_data}),config.list({page_index:1, page_size:10000})]).then(res=>{
+        this.pileData.pile_id=res[0].result;
+        //this.config_data=JSON.parse(res[0].result.content);
+        console.log(res[0].result);
+        if(res[0].result!=undefined){
+          JSON.parse(res[0].result.content).forEach(item=>{
+            console.log(item);
+            if(item.label=='pile_position'){
+              this.config_data.position=item.value
+            }
+            if(item.label=='pile_depth'){
+              this.config_data.depth=item.value;
+              this.DesignDeep=item.value;
+            }
+            if(item.label=='pile_diameter'){
+              this.config_data.diameter=item.value
+            }
+            if(item.label=='pile_spacing'){
+              this.config_data.spacing=item.value
+            }
+            if(item.label=='water_cement_ratio'){
+              this.config_data.ratio=item.value
+            }
+            if(item.label=='ash_quantity'){
+              this.config_data.ash=item.value
+            }
+            if(item.label=='process_type'){
+              this.config_data.process=item.value
+            }
+          });
+          this.noConfig=false
+        }else{
+          this.noConfig=true;
+          this.DesignDeep=30;
+          console.log('30000')
+        }
+
+
+        let aa = res[1].result.items;
+        aa.forEach((item,index)=>{
+          let arr = JSON.parse(item.content);
+          item.content=arr
+        });
+        this.pileData.ps=aa;
+        if(this.$refs.pMap){
+          this.$refs.pMap.init()
+        }else{
+        //console.log('CAD数据获取失败')
+        }
+      })
+    },
+
+    /*getPileData(){
       config.list({page_index:1, page_size:10000}).then(res=>{
         if(res.success){
           let aa = res.result.items;
@@ -280,20 +339,22 @@ export default {
             this.$refs.pMap.init()}
           }else{
         //console.log('CAD数据获取失败')
-        }
+          }
       })
-    },
+    },*/
 
 
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
+        console.log(res.result);
         if(res.success){
           res.result.rdeep=parseFloat(res.result.rdeep);
           this.RT_data=res.result;
+          this.RT_data.depth_design=this.DesignDeep;
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
-          this.RT_data.depth_design=100;
+
 
           this.rflow=res.result.rflow;
           this.rspeed=Math.abs(res.result.rspeed);
@@ -336,25 +397,6 @@ export default {
       })
     },
     //设备配置参数
-    getDeviceConfig(post_data){
-      deviceConfig.list({'key':post_data}).then(res=>{
-        console.log(res);
-        //this.pileData.pile_id=res.result;
-        //this.config_data=JSON.parse(res.result.content);
-        /*JSON.parse(res.result.content).forEach(item=>{
-          console.log(item);
-          if(item.label=='pile_position'){
-            this.config_data.position=item.value
-          }
-          if(item.label=='pile_depth'){
-            this.config_data.depth=item.value
-          }
-          if(item.label=='pile_diameter'){
-            this.config_data.diameter=item.value
-          }
-        })*/
-      })
-    },
   },
 
 
@@ -365,21 +407,22 @@ export default {
       _this.temp(val,_this.diameter,_this,clientWidth);
       _this.$nextTick(()=>{
         let pile=document.getElementById('pile');
-        let pileHeight = window.getComputedStyle(pile).height;
-        let pileWidth = window.getComputedStyle(pile).width;
-        _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
-        _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
-        _this.$refs.pMap.width = parseFloat(pileWidth);
-        _this.$refs.pMap.height = parseFloat(pileHeight);
-        _this.$refs.pMap.init();
+        if(pile){
+          let pileHeight = window.getComputedStyle(pile).height;
+          let pileWidth = window.getComputedStyle(pile).width;
+          _this.$refs.pMap.canvas.width = parseFloat(pileWidth);
+          _this.$refs.pMap.canvas.height = parseFloat(pileHeight);
+          _this.$refs.pMap.width = parseFloat(pileWidth);
+          _this.$refs.pMap.height = parseFloat(pileHeight);
+          _this.$refs.pMap.init();
+        }
       });
-    },
-    isClose(val,oldVal){
     },
     clientWidth(val,oldVal){
       this.$nextTick(()=>{
         let pile=document.getElementById('pile');
         if(!pile){
+
         }else{
           let pileHeight,pileWidth;
           if(pile.currentStyle){
@@ -404,8 +447,8 @@ export default {
       this.temp(this.dialogFullscreen,this.diameter,this,val)
     },
     config_post_data(val,oldVal){
-      console.log(val)
-      this.getDeviceConfig(val)
+      //console.log(val);
+      this.config_all(val);
     }
   }
 }
@@ -545,6 +588,14 @@ export default {
             font-size: 25px;
             color: #333333;
           }
+        }
+        .noConfig{
+          width: 100%;
+          height: calc(60% - 40px);
+          font-size: 18px;
+          font-weight: bold;
+          text-align: center;
+          padding-top: 40%;
         }
       }
 
