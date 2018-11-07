@@ -1,6 +1,6 @@
 <template>
  <div>
-   <h-pile :is="currentView"></h-pile>
+   <h-pile :is="currentView" :isShow="isShow"></h-pile>
    <!--<historical :isShow="isShow" :newStyle="newStyle"></historical>-->
  </div>
 </template>

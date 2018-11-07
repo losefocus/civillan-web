@@ -265,10 +265,7 @@ export default {
       });
     },
     getCategoryList(){
-      //this.allListQuery.tenant=this.$cookies.get('tenant');
       categories.list(this.allListQuery).then(res => {
-        console.log(res);
-        let list = res.result.items;
         this.productLists=res.result.items;
         this.productLists.unshift({id:0,name:'全部类型',code:''});
       })

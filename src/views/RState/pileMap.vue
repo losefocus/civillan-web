@@ -1,7 +1,8 @@
 <template>
   <div class="mycanvas" style="width: 100%;height: 100%;">
     <!-- <div id="map" style="width:100%;height:100%;"></div> -->
-    <canvas  id="canvas" width="100%" height="100%" ></canvas>
+    <div v-show="isShow" class="noConfig">未找到当前作业的配置参数</div>
+    <canvas v-show="!isShow" id="canvas" width="100%" height="100%" ></canvas>
   </div>
 </template>
 <script>
@@ -13,6 +14,7 @@
         canvas:null,
         width:1,
         height:1,
+        isShow:false,
       }
     },
     components:{
@@ -25,7 +27,7 @@
     },
     methods:{
       init(){
-        var context;
+        let context;
         this.canvas = document.getElementById('canvas');
         context = this.canvas.getContext('2d');
         context.fillStyle = "#fff";
@@ -35,24 +37,33 @@
         let ps = this.dataInfo.ps;
 
         //当前桩
-        var current = this.dataInfo.pile_id//{lon:120.042071817, lat:30.862442958,title:"A8"};
-        console.log(this.dataInfo);
-        //画布坐标显示范围
-        let laglgn = current.content;
+        let current = this.dataInfo.pile_id//{lon:120.042071817, lat:30.862442958,title:"A8"};
 
+        //画布坐标显示范围
+        let laglgn;
+        if(current){
+          laglgn = current.content;
+        }
         let lng_,lat_,title;
-        laglgn.every(res=>{
-          if(res.label == "pile_position"){
-            this.minLon = parseFloat(res.value.split(",")[0]) - 0.00006;
-            this.minLat = parseFloat(res.value.split(",")[1]) + 0.00006;
-            this.maxLon = parseFloat(res.value.split(",")[0]) + 0.00006;
-            this.maxLat = parseFloat(res.value.split(",")[1]) - 0.00006;
-            lng_ = res.value.split(",")[0];
-            lat_ = res.value.split(",")[1];
-            title = current.name.split('_')[2];
-            return false
-          }
-        });
+        if(laglgn!=undefined){
+          this.isShow=false
+          laglgn=JSON.parse(laglgn);
+          laglgn.every(res=>{
+            if(res.label == "pile_position"){
+              this.minLon = parseFloat(res.value.split(",")[0]) - 0.00006;
+              this.minLat = parseFloat(res.value.split(",")[1]) + 0.00006;
+              this.maxLon = parseFloat(res.value.split(",")[0]) + 0.00006;
+              this.maxLat = parseFloat(res.value.split(",")[1]) - 0.00006;
+              lng_ = res.value.split(",")[0];
+              lat_ = res.value.split(",")[1];
+              title = current.name.split('+')[2];
+              return false
+            }
+          });
+        }else{
+          this.isShow=true
+        }
+
         ps.forEach(ll => {
           let markerColor = "#726763";
           if(ll.status == 0) markerColor = '#72676333';
@@ -60,7 +71,7 @@
           else if(ll.status == 2) markerColor = '#66D06E';
           ll.content.every(res=>{
             if(res.label == "pile_position"){
-              drawPoint(this.mapToScreen(res.value.split(",")[0], res.value.split(",")[1],ll.name.split('_')[2]),markerColor, "#FFFFFF")
+              drawPoint(this.mapToScreen(res.value.split(",")[0], res.value.split(",")[1],ll.name.split('_')[1]),markerColor, "#FFFFFF")
               return false
             }
           })
@@ -103,7 +114,7 @@
         X = (longitude - this.minLon) * 3600 / scaleX;
         Y = (this.maxLat - latitude) * 3600 / scaleY;
 
-        let tit = (title)?title:''
+        let tit = (title)?title:'';
         return { x: X, y: Y, title: tit };
       },
       mousePosition(ev) {
@@ -137,6 +148,12 @@
     height: 100%;
     margin: auto;
   }
-
+  .noConfig{
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 35%;
+  }
 
 </style>

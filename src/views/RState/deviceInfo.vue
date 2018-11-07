@@ -148,6 +148,7 @@
       color: rgba(218,218,218,1);
       width:100%;
       height: 10%;
+      min-height: 25px;
       margin-top: 10%;
       overflow: hidden;
       .d-model{

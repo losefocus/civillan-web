@@ -45,7 +45,7 @@
         isActive:'',
         navList:[],
         loading:null,
-        isShow:true,
+        isShow:false,
         dialogVisible: false,
         dialogWidth:'75%',
         dialogHeight:{
