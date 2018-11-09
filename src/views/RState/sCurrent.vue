@@ -32,7 +32,7 @@ export default {
           if(res.result.items.length>0){
             res.result.items.forEach(item=>{
               if(item.label=='rcurrent'){
-                if(this.rcurrent!=undefined&&item.maxValue!=undefined){
+                if(item.maxValue!=undefined){
                   this.rcurrent = item.maxValue;
                 }else{
                   this.rcurrent=500;
