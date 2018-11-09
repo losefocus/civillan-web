@@ -6,10 +6,10 @@
           {{ info.name }}
           <el-popover
             placement="right-start"
-            width="400"
             trigger="click"
           >
-            <p>{{ info.comment }}</p>
+            <p v-if="info.comment">{{ info.comment }}</p>
+            <p v-else>暂无项目详情</p>
             <span class="d-content" slot="reference"><span class="el-icon-info"></span></span>
           </el-popover>
         </div>
@@ -176,7 +176,7 @@
             {
               name:'报警类型',
               type:'pie',
-              radius : '45%',
+              radius : '70%',
               center: ['50%', '55%'],
               avoidLabelOverlap: true,
               labelLine: {
@@ -185,11 +185,11 @@
                 }
               },
               data:[
-                {value:1563, name:'搅拌桩故障'},
-                {value:310, name:'泡沫混凝土故障'},
-                {value:234, name:'喷淋故障'},
-                {value:1244, name:'预应力张拉故障'},
-                {value:548, name:'预应力压浆故障'},
+                {value:1563, name:'搅拌桩'},
+                {value:310, name:'泡沫混凝土'},
+                {value:234, name:'喷淋养护'},
+                {value:1244, name:'预应力张拉'},
+                {value:548, name:'预应力压浆'},
               ]
             }
           ]
