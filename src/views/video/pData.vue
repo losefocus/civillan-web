@@ -70,7 +70,8 @@ export default {
       post_data:{
         page_index:1,
         page_size:10,
-        type:1
+        type:1,
+        project_id:this.$cookies.get('projectId')
       },
       dialogVisible:false,
       loading:null,

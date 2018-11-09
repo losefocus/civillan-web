@@ -933,9 +933,6 @@
             _this.tableData.forEach(function (item) {
               item.data.forEach(list=>{
                 list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
-                /*console.log(_this.timestampToTime(parseFloat(list.p_time)));
-                a+=list.p_time;
-                //console.log(a)*/
               })
             });
             _this.loading=false
@@ -951,7 +948,6 @@
       //打开子列表图表
       getChart(lists){
         this.isActive=2;
-        console.log(lists);
         this.option1.xAxis[0].data=[],
         this.option2.xAxis.data=[],
         this.option3.xAxis.data=[],
@@ -967,7 +963,6 @@
         let beginTime=lists.begin_time;
         lists.data.forEach(item=>{
           beginTime+=item.p_time;
-          console.log(this.timestampToTime(parseInt(beginTime)));
           this.option1.xAxis[0].data.push(this.timestampToTime(parseInt(beginTime)));
           this.option1.series[0].data.push(Number(item.p_pulp));
           this.option1.series[1].data.push(parseInt(Math.abs(item.p_down_speed)));

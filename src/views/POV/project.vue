@@ -16,7 +16,6 @@
         <div class="i-time">
           <span class="t-title">项目工期：</span>
           <span class="t-date">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</span>
-          <el-progress style="width: 100%;margin-top: 10px" :percentage="70" color="#24BCF7"></el-progress>
         </div>
         <ul class="i-statistics">
           <li class="s-data">
@@ -47,14 +46,15 @@
         </ul>
         <div class="i-box p-item" style="width: 100%;">
           <el-popover
-            placement="left"
+            placement="right"
             trigger="click"
             v-for="(list,index) in organTypeList"
             :key="index"
           >
-            <p style="line-height: 30px">{{list.organList[0].name}}</p>
-            <p style="line-height: 30px">{{list.organList[0].address}}</p>
-            <p style="line-height: 30px"><span style="margin-right: 20px">{{list.organList[0].contact}}</span> <span>{{list.organList[0].phone}}</span></p>
+            <p style="line-height: 30px" v-if="list.organList.length>0">{{list.organList[0].name}}</p>
+            <p style="line-height: 30px" v-if="list.organList.length>0">{{list.organList[0].address}}</p>
+            <p v-else>无</p>
+            <p style="line-height: 30px" v-if="list.organList.length>0"><span style="margin-right: 20px">{{list.organList[0].contact}}</span> <span>{{list.organList[0].phone}}</span></p>
             <div class="c-info c-infoM" slot="reference">
               <div class="c-icon">
                 <span class="iconfont icon-house"></span>
@@ -62,7 +62,7 @@
 
               <div>
                 <h2>{{list.name}}</h2>
-                <p>{{list.organList[0].name}}</p>
+                <p v-if="list.organList.length>0">{{list.organList[0].name}}</p>
               </div>
 
             </div>
@@ -472,7 +472,7 @@
         }
       }
       .i-time{
-        margin-top: 6%;
+        margin-top: 8%;
         color: #666666;
         width: 100%;
         .t-title{
@@ -486,7 +486,7 @@
       .i-statistics{
         width: 100%;
         padding: 0 5% 0 0;
-        margin-top: 5%;
+        margin-top: 10%;
 
 
       .s-data{

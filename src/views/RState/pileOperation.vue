@@ -95,8 +95,7 @@
           <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
           <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
         </div>
-        <i v-if="dataInfo.record_sta == 3" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
-        <i v-else-if="dataInfo.rpipe_sta == 4 && dataInfo.rspeed!=0" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
+        <i v-if="dataInfo.rpipe_sta == 4 && dataInfo.rspeed!=0 && dataInfo.record_sta != 3" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
       </div>
       <div class="bot">
         <div class="hole">
@@ -138,22 +137,27 @@
         u_deep:-1,
         rd_deep:-1,
         ru_deep:-1,
+        onOff:false,
       }
     },
-    created(){},
+    created(){
+
+    },
     mounted(){
       this.init(this.dataInfo)
     },
     methods:{
-      init(dataInfo){
+      init(dataInfo,oldVal){
         let data = dataInfo;
         if(data.record_sta==3){
           data.rpipe_sta = 4;
+          this.onOff=true;
         }
         dataInfo.rdeep=parseFloat(dataInfo.rdeep).toFixed(2);
         if( !('rpipe_sta' in data) || data.rpipe_sta == 0 ){
 
         }else if(data.rpipe_sta == 1){
+
           this.d_deep=data.rdeep;
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             let d0 = data.rdeep/data.depth_design;
@@ -269,7 +273,7 @@
     watch:{
       dataInfo:{//深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
-          this.init(val)
+          this.init(val,oldVal)
         },
       },
       d_deep:{

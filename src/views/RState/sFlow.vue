@@ -64,58 +64,76 @@
         }, 1000);*/
       },
       realTime(post_data){
-        this.myChart = this.$echarts.init(document.getElementById('flow'));
-        let tips=Number(post_data.rflow).toFixed(2);
-        if(isNaN(tips)){
-          tips=0
+        let flow=document.getElementById('flow');
+        if(flow){
+          this.myChart = this.$echarts.init(flow);
+          let tips=Number(post_data.rflow).toFixed(2);
+          if(isNaN(tips)){
+            tips=0
+          }
+          let loading=()=> {
+            if(tips>this.rflow){
+              return [{
+                value: this.rflow,
+                itemStyle: {
+                  normal: {
+                    color: '#F31A1A',
+                    //shadowBlur: 10,
+                    //shadowColor: 'rgba(31,189,238)'
+                  }
+                }
+              }, {
+                value: 0,
+              }];
+            }else{
+              return [{
+                value: tips,
+                itemStyle: {
+                  normal: {
+                    color: '#1FBDEE',
+                    //shadowBlur: 10,
+                    //shadowColor: 'rgba(31,189,238)'
+                  }
+                }
+              }, {
+                value: this.rflow - tips,
+              }];
+            }
+          };
+          this.myChart.setOption({
+            title: [{
+              text: tips +' '+'/'+' ' + this.rflow,
+              left: 'center',
+              top: '42%',
+              textStyle: {
+                color: '#333333',
+                fontSize:'14',
+              }
+            }, {
+              text: 'L/min',
+              left: 'center',
+              top: '58%',
+              //textAlign: 'center',
+              textStyle: {
+                color: '#999999',
+                fontSize:'12'
+              }
+            }],
+            color:'rgba(31,189,238,0.2)',
+            series: [{
+              name: 'loading',
+              type: 'pie',
+              radius: ['85%', '92%'],
+              hoverAnimation: false,
+              label: {
+                normal: {
+                  show: false,
+                }
+              },
+              data: loading(),
+            }]
+          });
         }
-        let loading=()=> {
-          return [{
-            value: tips,
-            itemStyle: {
-              normal: {
-                color: '#1FBDEE',
-                //shadowBlur: 10,
-                //shadowColor: 'rgba(31,189,238)'
-              }
-            }
-          }, {
-            value: this.rflow - tips,
-          }];
-        };
-        this.myChart.setOption({
-          title: [{
-            text: tips +' '+'/'+' ' + this.rflow,
-            left: 'center',
-            top: '42%',
-            textStyle: {
-              color: '#333333',
-              fontSize:'16',
-            }
-          }, {
-            text: 'L/min',
-            left: 'center',
-            top: '58%',
-            //textAlign: 'center',
-            textStyle: {
-              color: '#999999',
-              fontSize:'12'
-            }
-          }],
-          color:'rgba(31,189,238,0.2)',
-          series: [{
-            name: 'loading',
-            type: 'pie',
-            radius: ['85%', '92%'],
-            hoverAnimation: false,
-            label: {
-              normal: {
-                show: false,
-              }
-            },
-            data: loading(),
-          }]
-        });
       },
       resize(){
         if(this.myChart!=null){

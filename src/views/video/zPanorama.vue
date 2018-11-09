@@ -76,7 +76,8 @@
         post_data:{
           page_index:1,
           page_size:10,
-          type:3
+          type:3,
+          project_id:this.$cookies.get('projectId')
         }
       }
     },

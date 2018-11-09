@@ -26,7 +26,7 @@
         <div class="i-company">{{productName}}</div>
         <div class="i-state">
           <span>记录状态</span>
-          <div v-if="RT_data.record_sta" :class="{'led-green':RT_data.record_sta==1,'led-gray':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div>
+          <div v-if="RT_data.record_sta" :class="{'led-green':RT_data.record_sta==1,'led-skyBlue':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div>
           <div v-else class="led-gray"></div>
         </div>
       </div>
@@ -148,7 +148,7 @@
       color: rgba(218,218,218,1);
       width:100%;
       height: 10%;
-      min-height: 25px;
+      min-height: 30px;
       margin-top: 10%;
       overflow: hidden;
       .d-model{
@@ -200,14 +200,24 @@
             -webkit-box-shadow: 0px 0px 2px 4px #666666;
             border-radius: 50%;
           }
-          .led-blue{
+          .led-skyBlue{
             display: inline-block;
-            background-color: #29E0F7;
+            background-color: #12E7FF;
             width: 6px;
             height: 6px;
-            box-shadow: 0px 0px 2px 4px #24BCF7;
-            -moz-box-shadow: 0px 0px 2px 4px #24BCF7;
-            -webkit-box-shadow: 0px 0px 2px 4px #24BCF7;
+            box-shadow: 0px 0px 2px 4px #31C4F7;
+            -moz-box-shadow: 0px 0px 2px 4px #31C4F7;
+            -webkit-box-shadow: 0px 0px 2px 4px #31C4F7;
+            border-radius: 50%;
+          }
+          .led-blue{
+            display: inline-block;
+            background-color: #3494F7;
+            width: 6px;
+            height: 6px;
+            box-shadow: 0px 0px 2px 4px #2A5BF7;
+            -moz-box-shadow: 0px 0px 2px 4px #2A5BF7;
+            -webkit-box-shadow: 0px 0px 2px 4px #2A5BF7;
             border-radius: 50%;
           }
           span{
