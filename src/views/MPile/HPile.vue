@@ -681,6 +681,7 @@
           },
           yAxis: {
             type: 'value',
+
             name:'电流(A)',
             min:0,
             max:150,
@@ -695,12 +696,23 @@
         },
         option4:{
           title: {
-            text: '浆量分布曲线',
+            text: '浆量、深度分布曲线',
             top:'3%',
             left:'3%',
           },
           tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            axisPointer:{
+              type: 'line',
+              axis: 'y'
+            },
+            formatter:function (params) {
+              var res='<div><p>深度(米)：'+params[0].data[1]+'</p></div>';
+              for(var i=0;i<params.length;i++){
+                res+='<div>'+'<div style="width: 10px;height: 10px;border-radius: 50%;display: inline-block;background: '+params[i].color+';"></div>'+'<p style="display: inline-block;margin-left: 10px;font-size: 12px;">'+params[i].seriesName+'：'+params[i].data[0]+'</p>'+'</div>'
+              }
+              return res;
+            }
           },
           legend: {
             align:'right',
@@ -713,17 +725,23 @@
             bottom:'10%',
           },
           xAxis: {
-            name:'深度(m)',
+            name:'浆量',
+            nameTextStyle:{
+              align:'left',
+              verticalAlign:'top',
+            },
+            position:'top',
             axisLine:{
               onZero: false,
             },
-            type: 'category',
+            type: 'value',
             boundaryGap: false,
-            data: []
+            //data: []
           },
           yAxis: {
             type: 'value',
-            name: '浆量(L/0.25m)',
+            name: '深度(m)',
+            inverse:true,
           },
           series: [
             {
@@ -948,10 +966,10 @@
       //打开子列表图表
       getChart(lists){
         this.isActive=2;
-        this.option1.xAxis[0].data=[],
-        this.option2.xAxis.data=[],
-        this.option3.xAxis.data=[],
-        this.option4.xAxis.data=[],
+        this.option1.xAxis[0].data=[];
+        this.option2.xAxis.data=[];
+        this.option3.xAxis.data=[];
+        this.option4.xAxis.data=[];
 
         this.option1.series[0].data=[];
         this.option1.series[1].data=[];
@@ -961,6 +979,25 @@
         this.option4.series[0].data=[];
 
         let beginTime=lists.begin_time;
+
+        //数组分组
+        let sorted = this.groupBy(lists.data, function(item){
+          return [item.p_deep];
+        });
+        let deepPulp=[];
+        sorted.forEach(item=>{
+          if(item.length>1){
+            deepPulp.push([item[0].p_pulp,item[0].p_deep/100]);
+          }else{
+            let num=0;
+            item.forEach(i=>{
+              num+=i.p_pulp;
+            });
+            deepPulp.push([num,item[0].p_deep/100])
+          }
+        });
+
+
         lists.data.forEach(item=>{
           beginTime+=item.p_time;
           this.option1.xAxis[0].data.push(this.timestampToTime(parseInt(beginTime)));
@@ -973,9 +1010,21 @@
           this.option3.xAxis.data.push(this.timestampToTime(parseInt(beginTime)));
           this.option3.series[0].data.push(parseInt(item.p_current));
 
-          this.option4.xAxis.data.push(parseInt('-'+item.p_deep));
-          this.option4.series[0].data.push(parseInt(item.p_pulp));
+          //this.option4.xAxis.data=pulpArr;
+          this.option4.series[0].data=deepPulp;
         })
+      },
+
+      groupBy( array , f ) {
+        let groups = {};
+        array.forEach( function( o ) {
+          let group = JSON.stringify( f(o) );
+          groups[group] = groups[group] || [];
+          groups[group].push( o );
+        });
+        return Object.keys(groups).map( function( group ) {
+          return groups[group];
+        });
       },
 
       //时间戳转化日期

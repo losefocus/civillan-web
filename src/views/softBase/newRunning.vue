@@ -214,7 +214,7 @@
   }
   .t-Body{
     height: 100%;
-    min-height: 550px;
+    min-height: 600px;
     overflow: auto;
     padding: 10px;
     background: #f5f5f9;
