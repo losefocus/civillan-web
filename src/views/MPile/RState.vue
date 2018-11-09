@@ -168,9 +168,7 @@ export default {
       rspeed:3,//速度实时数据
       rcurrent:3,//电流实时数据
 
-      RT_data:{
-        depth_design:30,
-      }, //实时数据
+      RT_data:{}, //实时数据
 
       slurryData:[], //段浆量
       ashData:[], //段灰量
@@ -184,6 +182,7 @@ export default {
 
       config_post_data:{},
       config_data:{},
+      sensorConfig:{},
     }
   },
   props:['dialogFullScreen','deviceKey','isClose','clientWidth'],
@@ -194,11 +193,8 @@ export default {
     }
   },
   created(){
-
-    //this.getDeviceConfig(this.deviceKey);
     let deviceKey=this.$store.state.project.deviceKey;
     this.getData(deviceKey);
-
     this.timer=setInterval(()=>{
       this.getData(deviceKey);
     },5000);
@@ -232,8 +228,8 @@ export default {
       setTimeout(()=>{
         this.$refs.pMap.width = parseFloat(pileWidth);
         this.$refs.pMap.height = parseFloat(pileHeight);
-        if( this.$refs.sCurrent!==undefined){this.$refs.sCurrent.resize()}
         if( this.$refs.aSp!==undefined){this.$refs.aSp.resize();}
+        if( this.$refs.sCurrent!==undefined){this.$refs.sCurrent.resize()}
         if( this.$refs.sSpeed!==undefined){this.$refs.sSpeed.resize()}
         if( this.$refs.sFlow!==undefined){this.$refs.sFlow.resize()}
       },100);
@@ -276,11 +272,8 @@ export default {
     config_all(post_data){
       Promise.all([deviceConfig.list({'key':post_data}),config.list({page_index:1, page_size:10000})]).then(res=>{
         this.pileData.pile_id=res[0].result;
-        //this.config_data=JSON.parse(res[0].result.content);
-        console.log(res[0].result);
         if(res[0].result!=undefined){
           JSON.parse(res[0].result.content).forEach(item=>{
-            console.log(item);
             if(item.label=='pile_position'){
               this.config_data.position=item.value
             }
@@ -308,9 +301,7 @@ export default {
         }else{
           this.noConfig=true;
           this.DesignDeep=30;
-          console.log('30000')
         }
-
 
         let aa = res[1].result.items;
         aa.forEach((item,index)=>{
@@ -326,28 +317,9 @@ export default {
       })
     },
 
-    /*getPileData(){
-      config.list({page_index:1, page_size:10000}).then(res=>{
-        if(res.success){
-          let aa = res.result.items;
-          aa.forEach((item,index)=>{
-            let arr = JSON.parse(item.content);
-            item.content=arr
-          });
-          this.pileData.ps=aa;
-          if(this.$refs.pMap){
-            this.$refs.pMap.init()}
-          }else{
-        //console.log('CAD数据获取失败')
-          }
-      })
-    },*/
-
-
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
-        console.log(res.result);
         if(res.success){
           res.result.rdeep=parseFloat(res.result.rdeep);
           this.RT_data=res.result;
@@ -396,7 +368,8 @@ export default {
       config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
       })
     },
-    //设备配置参数
+
+    //设备变量参数
   },
 
 
@@ -447,7 +420,6 @@ export default {
       this.temp(this.dialogFullscreen,this.diameter,this,val)
     },
     config_post_data(val,oldVal){
-      //console.log(val);
       this.config_all(val);
     }
   }

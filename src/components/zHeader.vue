@@ -2,7 +2,7 @@
 <div style="height:100%;">
   <div class="hd-logo hd-left" :style="{backgroundImage: 'url(' + logoImg + ')' }"></div>
   <!--<span class="iconfont icon-collapse"></span>-->
-  <div class="hd-name hd-left">工程施工实时监控系统</div>
+  <div class="hd-name hd-left">工程信息化智慧云平台</div>
 
   <img src="@/assets/header/label_close.png" class="hd-right hd-close" @click="close()">
   <div class="hd-uName hd-right">
