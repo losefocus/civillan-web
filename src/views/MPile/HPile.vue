@@ -81,10 +81,10 @@
         <template slot-scope="props">
           <div  class="expand_head">
             <ul class="expand_tab">
-              <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">列表</li>
-              <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="isActive=2">概览</li>
+              <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">段数据列表</li>
+              <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="getChart(props.row)">图表曲线</li>
             </ul>
-            <div class="exportExcel">导出</div>
+            <div class="exportExcel" @click="expandExcel(props.row.data)">导出</div>
           </div>
 
           <el-table
@@ -109,8 +109,8 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="段灰量（L/m）">
-              align="center"
+              label="段灰量（L/m）"
+              align="center">
               <template slot-scope="props">
                 {{ props.row.p_ash | formatP}}
               </template>
@@ -159,10 +159,10 @@
           </el-table>
           <div v-else>
             <ul class="expand_charts">
-              <li><chart :options="option1" :auto-resize=true></chart></li>
-              <li style="margin-left: 20px"><chart :options="option2" :auto-resize=true></chart></li>
-              <li style="margin-top: 20px"><chart :options="option3" :auto-resize=true></chart></li>
-              <li style="margin: 20px 0 0 20px"><chart :options="option4" :auto-resize=true></chart></li>
+              <li  v-if="isActive==2"><chart :options="option1" :auto-resize=true></chart></li>
+              <li  v-if="isActive==2" style="margin-left: 20px"><chart :options="option2" :auto-resize=true></chart></li>
+              <li  v-if="isActive==2" style="margin-top: 20px"><chart :options="option3" :auto-resize=true></chart></li>
+              <li  v-if="isActive==2" style="margin: 20px 0 0 20px"><chart :options="option4" :auto-resize=true></chart></li>
             </ul>
           </div>
         </template>
@@ -559,7 +559,7 @@
             axisPointer: {type: 'cross'}
           },
           legend: {
-            data:['流量','速度'],
+            data:['流量(L/min)','速度(cm/min)'],
             align:'right',
             right:'3%',
             top:'5%',
@@ -571,26 +571,26 @@
           xAxis: [
             {
               type: 'category',
-              data: ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00']
+              data: []
             }
           ],
           yAxis: [
             {
               type: 'value',
-              name: '流量（L/min）',
+              name: '流量(L/min)',
               min: 0,
-              max: 250,
-              interval: 50,
+              max:50,
+              //interval: 5,
               axisLabel: {
                 formatter: '{value}'
               }
             },
             {
               type: 'value',
-              name: '速度（cm/min）',
+              name: '速度(cm/min)',
               min: 0,
-              max: 25,
-              interval: 5,
+              max:999.99,
+              //interval: 5,
               axisLabel: {
                 formatter: '{value}'
               }
@@ -598,16 +598,16 @@
           ],
           series: [
             {
-              name:'流量',
+              name:'流量(L/min)',
               type:'line',
-              yAxisIndex: 1,
-              data:[2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+              //yAxisIndex: 1,
+              data:[]
             },
             {
-              name:'速度',
+              name:'速度(cm/min)',
               type:'line',
               yAxisIndex: 1,
-              data:[1.0, 4.2, 2.3, 7.5, 8.3, 11.2, 15.3, 2.4, 6.0, 16.5, 12.0, 6.2]
+              data:[]
             }
           ]
         },
@@ -626,154 +626,117 @@
             top:'5%',
           },
           grid: {
-            left: '4%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
+            top:'25%',
+            right:'5%',
+            bottom:'10%',
           },
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00']
+            axisLine:{
+              onZero: false,
+            },
+            data: []
           },
           yAxis: {
             type: 'value',
+            name: '深度(m)',
+            min:-30,
+            max:0,
           },
           series: [
             {
-              name:'深度',
+              name:'深度(m)',
               type:'line',
-              stack: '总量',
-              data:[-5, -10, -15, -20, -25, -50, -3]
+              data:[]
             },
           ]
         },
         option3:{
           title: {
-            text: '外、内钻杆电流曲线'
+            text: '钻杆电流曲线',
+            top:'3%',
+            left:'3%',
           },
           tooltip: {
             trigger: 'axis'
           },
           legend: {
-            data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+            align:'right',
+            right:'3%',
+            top:'5%',
           },
           grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-          },
-          toolbox: {
-            feature: {
-              saveAsImage: {}
-            }
+            top:'25%',
+            right:'5%',
+            bottom:'10%',
           },
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: ['周一','周二','周三','周四','周五','周六','周日']
+            axisLine:{
+              onZero: false,
+            },
+            data: []
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            name:'电流(A)',
+            min:0,
+            max:150,
           },
           series: [
             {
-              name:'邮件营销',
+              name:'电流(A)',
               type:'line',
-              stack: '总量',
-              data:[120, 132, 101, 134, 90, 230, 210]
+              data:[]
             },
-            {
-              name:'联盟广告',
-              type:'line',
-              stack: '总量',
-              data:[220, 182, 191, 234, 290, 330, 310]
-            },
-            {
-              name:'视频广告',
-              type:'line',
-              stack: '总量',
-              data:[150, 232, 201, 154, 190, 330, 410]
-            },
-            {
-              name:'直接访问',
-              type:'line',
-              stack: '总量',
-              data:[320, 332, 301, 334, 390, 330, 320]
-            },
-            {
-              name:'搜索引擎',
-              type:'line',
-              stack: '总量',
-              data:[820, 932, 901, 934, 1290, 1330, 1320]
-            }
           ]
         },
         option4:{
           title: {
-            text: '浆量分布曲线'
+            text: '浆量分布曲线',
+            top:'3%',
+            left:'3%',
           },
           tooltip: {
             trigger: 'axis'
           },
           legend: {
-            data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+            align:'right',
+            right:'3%',
+            top:'5%',
           },
           grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-          },
-          toolbox: {
-            feature: {
-              saveAsImage: {}
-            }
+            top:'25%',
+            right:'10%',
+            bottom:'10%',
           },
           xAxis: {
+            name:'深度(m)',
+            axisLine:{
+              onZero: false,
+            },
             type: 'category',
             boundaryGap: false,
-            data: ['周一','周二','周三','周四','周五','周六','周日']
+            data: []
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            name: '浆量(L/0.25m)',
           },
           series: [
             {
-              name:'邮件营销',
+              name:'浆量(L/0.25m)',
               type:'line',
-              stack: '总量',
-              data:[120, 132, 101, 134, 90, 230, 210]
+              data:[]
             },
-            {
-              name:'联盟广告',
-              type:'line',
-              stack: '总量',
-              data:[220, 182, 191, 234, 290, 330, 310]
-            },
-            {
-              name:'视频广告',
-              type:'line',
-              stack: '总量',
-              data:[150, 232, 201, 154, 190, 330, 410]
-            },
-            {
-              name:'直接访问',
-              type:'line',
-              stack: '总量',
-              data:[320, 332, 301, 334, 390, 330, 320]
-            },
-            {
-              name:'搜索引擎',
-              type:'line',
-              stack: '总量',
-              data:[820, 932, 901, 934, 1290, 1330, 1320]
-            }
           ]
         },
 
+        expandTable:[],
 
+        chartTime:[],
       }
     },
     filters: {
@@ -784,10 +747,8 @@
     },
     props:['isShow','newStyle','deviceKey'],
     created(){
-      console.log(this.isShow);
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
       this.post_data.key=deviceInfo.key;
-      console.log(deviceInfo.key);
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
       this.getList(this.post_data);
@@ -840,6 +801,7 @@
           }
         })
       },
+      //excel导出全部
       importExcelAll(){
         history.list({page_index:1,page_size:100,key:''}).then(res=>{
           if(res.success){
@@ -871,6 +833,32 @@
         }).catch(err => {
         });
       },
+      //excel导出子数据
+      expandExcel(data){
+        /*let expandData=data;
+        require.ensure([], () => {
+          if(data.length!==0){
+            const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
+            let tHeader = ['段浆量(L/m)','段灰量(L/m)','段深度(cm)','段电流(A)','段密度(g/cm3)','段喷压(pa)','钻速(cm/min)']; //将对应的属性名转换成中文
+            let filterVal = ['p_pulp','p_ash','p_deep','p_current','p_density','p_pressure','p_down_speed']; //table表格中对应的属性名
+            let list=[];
+            let obj = {};
+            //console.log(expandData);
+            expandData.forEach(e=>{
+              for(let i=0;i<filterVal.length;i++){
+                //console.log(e[filterVal[i]]);
+                obj[filterVal[i]] = e[filterVal[i]]
+              }
+              //console.log(obj);
+              list.push(obj);
+            });
+            const data = this.formatJson(filterVal, list);
+            export_json_to_excel(tHeader, data, '数据报表');
+          }else{
+            //this.$message.error('请先选择需要导出的项目！')
+          }
+        })*/
+      },
 
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => v[j]));
@@ -901,6 +889,7 @@
 
       },
       handleExpandChange(row,expandedRows){
+        this.isActive=1
       },
       //类型改变
       deviceChange(val){
@@ -936,14 +925,19 @@
       //获取列表
       getList(post_data) {
         let _this=this;
+        let a=0;
         history.list(post_data).then(res=>{
           if(res.success){
             _this.total=res.result.total;
-            console.log(res.result);
-            res.result.items.forEach(function (item) {
-              item.pile_describe=item.pile_describe.replace(/(^\s*)|(\s*$)/g, "")
-            });
             _this.tableData=res.result.items;
+            _this.tableData.forEach(function (item) {
+              item.data.forEach(list=>{
+                list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
+                /*console.log(_this.timestampToTime(parseFloat(list.p_time)));
+                a+=list.p_time;
+                //console.log(a)*/
+              })
+            });
             _this.loading=false
           }else {
             _this.$message.error(res.message);
@@ -952,6 +946,50 @@
         }).catch(err => {
           this.loading=false;
         });
+      },
+
+      //打开子列表图表
+      getChart(lists){
+        this.isActive=2;
+        console.log(lists);
+        this.option1.xAxis[0].data=[],
+        this.option2.xAxis.data=[],
+        this.option3.xAxis.data=[],
+        this.option4.xAxis.data=[],
+
+        this.option1.series[0].data=[];
+        this.option1.series[1].data=[];
+
+        this.option2.series[0].data=[];
+        this.option3.series[0].data=[];
+        this.option4.series[0].data=[];
+
+        let beginTime=lists.begin_time;
+        lists.data.forEach(item=>{
+          beginTime+=item.p_time;
+          console.log(this.timestampToTime(parseInt(beginTime)));
+          this.option1.xAxis[0].data.push(this.timestampToTime(parseInt(beginTime)));
+          this.option1.series[0].data.push(Number(item.p_pulp));
+          this.option1.series[1].data.push(parseInt(Math.abs(item.p_down_speed)));
+
+          this.option2.xAxis.data.push(this.timestampToTime(parseInt(beginTime)));
+          this.option2.series[0].data.push(parseInt('-'+item.p_deep));
+
+          this.option3.xAxis.data.push(this.timestampToTime(parseInt(beginTime)));
+          this.option3.series[0].data.push(parseInt(item.p_current));
+
+          this.option4.xAxis.data.push(parseInt('-'+item.p_deep));
+          this.option4.series[0].data.push(parseInt(item.p_pulp));
+        })
+      },
+
+      //时间戳转化日期
+      timestampToTime(timestamp){
+        let date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        let h = date.getHours() + ':';
+        let m = date.getMinutes() + ':';
+        let s = date.getSeconds()<10 ? '0'+ date.getSeconds() : date.getSeconds();
+        return h+m+s;
       },
 
       //统计总数

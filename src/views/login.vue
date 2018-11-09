@@ -6,7 +6,7 @@
       </div>
       <div class="l-side" @keyup.enter.native="keyDown">
         <p class="user-title">用户登录</p>
-        <p class="cp-system">工程信息化智慧云平台管理系统</p>
+        <p class="cp-system">工程信息化智慧云平台</p>
 
         <form action="" @submit.prevent="submit">
           <div class="log-spacing l-label">

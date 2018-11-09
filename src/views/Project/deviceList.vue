@@ -96,9 +96,6 @@
   import deviceGrouping from '@/api/project/deviceGrouping'
   import deviceList from '@/api/project/deviceList'
   import deviceData from '@/api/device/deviceData'
-
-
-
   import newRunning from '@/views/softBase/newRunning.vue'
 
   import jbzImg from '@/assets/device/JBZ.png'

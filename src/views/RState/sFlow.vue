@@ -5,6 +5,7 @@
 </template>
 
 <script>
+  import deviceConfig from '@/api/device/deviceConfig.js'
   export default {
     name: "sFlow",
     props:[
@@ -15,6 +16,7 @@
         myChart:null,
         timer:null,
         tips:0,
+        rflow:null,
       }
     },
     mounted(){
@@ -22,12 +24,52 @@
     },
     methods:{
       init(post_data){
+        let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+        let id=deviceInfo.id;
+        if(this.rflow!=null){
+          this.realTime(post_data)
+        }else{
+          deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
+            if(res.result.items.length>0){
+              res.result.items.forEach(item=>{
+                if(item.label=='rflow'){
+                  if(item.maxValue!=undefined){
+                    this.rflow = item.maxValue;
+                  }else{
+                    this.rflow = 500
+                  }
+                  this.realTime(post_data)
+                }
+              });
+            }
+            // return res.result
+          });
+        }
+        /*this.timer=setInterval(function() {
+
+          if (tips == 200) {
+            tips = 0;
+          } else {
+            ++tips;
+          }
+          _this.myChart.setOption({
+            title: {
+              text: tips +' '+'/'+' ' + 200
+            },
+            series: [{
+              name: 'loading',
+              data: loading()
+            }]
+          })
+        }, 1000);*/
+      },
+      realTime(post_data){
         this.myChart = this.$echarts.init(document.getElementById('flow'));
         let tips=Number(post_data.rflow).toFixed(2);
         if(isNaN(tips)){
           tips=0
         }
-        function loading() {
+        let loading=()=> {
           return [{
             value: tips,
             itemStyle: {
@@ -38,17 +80,17 @@
               }
             }
           }, {
-            value: 200 - tips,
+            value: this.rflow - tips,
           }];
-        }
+        };
         this.myChart.setOption({
           title: [{
-            text: tips +' '+'/'+' ' + 200,
+            text: tips +' '+'/'+' ' + this.rflow,
             left: 'center',
             top: '42%',
             textStyle: {
               color: '#333333',
-              fontSize:'16'
+              fontSize:'16',
             }
           }, {
             text: 'L/min',
@@ -74,25 +116,13 @@
             data: loading(),
           }]
         });
-        /*this.timer=setInterval(function() {
-          if (tips == 200) {
-            tips = 0;
-          } else {
-            ++tips;
-          }
-          _this.myChart.setOption({
-            title: {
-              text: tips +' '+'/'+' ' + 200
-            },
-            series: [{
-              name: 'loading',
-              data: loading()
-            }]
-          })
-        }, 1000);*/
       },
       resize(){
-        this.myChart.resize()
+        if(this.myChart!=null){
+          this.myChart.resize()
+        }else{
+
+        }
       }
     },
     watch:{
