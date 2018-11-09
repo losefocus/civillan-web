@@ -31,16 +31,13 @@ export default {
         deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
           if(res.result.items.length>0){
             res.result.items.forEach(item=>{
-              console.log(item);
               if(item.label=='rcurrent'){
                 if(this.rcurrent!=undefined&&item.maxValue!=undefined){
                   this.rcurrent = item.maxValue;
-                  console.log(this.rcurrent);
                 }else{
                   this.rcurrent=500;
                 }
                 this.realTime(post_data)
-
               }
             });
           }
@@ -85,7 +82,6 @@ export default {
           value: this.rcurrent - tips,
         }];
       };
-      console.log(this.rcurrent);
       this.myChart.setOption({
         title: [{
           text: tips +' '+'/'+' ' + this.rcurrent,
