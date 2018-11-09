@@ -73,7 +73,9 @@
         playerList:[],
         post_data:{
           page_index:1,
-          page_size:10
+          page_size:10,
+          type:4,
+          project_id:this.$cookies.get('projectId')
         },
         playerOptions: {
           autoplay: false,

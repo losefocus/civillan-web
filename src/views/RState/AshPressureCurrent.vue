@@ -41,6 +41,7 @@
         data4:{
           rcurrentData:[],ashData:[],rpressureData:[],title:'复提',
         },
+
       }
     },
     props:[
@@ -67,71 +68,92 @@
           dataInfo.rcurrent=0
         }
 
+        let ashData=[parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)];
+        let rcurrent=[parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)];
+
+
         if(dataInfo.rpipe_sta==1){
           if(oldVal!=undefined){
-            if(dataInfo.par_ash!=oldVal.par_ash){
-              this.data1.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rpressure!=oldVal.rpressure){
-              this.data1.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rcurrent!=oldVal.rcurrent){
-              this.data1.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            if(dataInfo.rdeep==oldVal.rdeep){
+              if(dataInfo.par_ash!=oldVal.par_ash){
+                this.data1.ashData.push(ashData);
+              }
+              if(dataInfo.rcurrent!=oldVal.rcurrent){
+                this.data1.rcurrentData.push(rcurrent);
+              }
+            }else{
+              this.data1.ashData.push(ashData);
+              this.data1.rcurrentData.push(rcurrent);
             }
           }else{
-            this.data1.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data1.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data1.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            this.data1.ashData.push(ashData);
+            this.data1.rcurrentData.push(rcurrent);
           }
         }else if(dataInfo.rpipe_sta==2){
           if(oldVal!=undefined){
-            if(dataInfo.par_ash!=oldVal.par_ash){
-              this.data2.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rpressure!=oldVal.rpressure){
-              this.data2.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rcurrent!=oldVal.rcurrent){
-              this.data2.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            if(dataInfo.rdeep==oldVal.rdeep){
+              if(dataInfo.par_ash!=oldVal.par_ash){
+                this.data2.ashData.push(ashData);
+              }
+              if(dataInfo.rcurrent!=oldVal.rcurrent){
+                this.data2.rcurrentData.push(rcurrent);
+              }
+            }else{
+              this.data2.ashData.push(ashData);
+              this.data2.rcurrentData.push(rcurrent);
             }
           }else{
-            this.data2.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data2.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data2.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            this.data2.ashData.push(ashData);
+            this.data2.rcurrentData.push(rcurrent);
           }
         }else if(dataInfo.rpipe_sta==3){
           if(oldVal!=undefined){
-            if(dataInfo.par_ash!=oldVal.par_ash){
-              this.data3.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rpressure!=oldVal.rpressure){
-              this.data3.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rcurrent!=oldVal.rcurrent){
-              this.data3.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            if(dataInfo.rdeep==oldVal.rdeep){
+              if(dataInfo.par_ash!=oldVal.par_ash){
+                this.data3.ashData.push(ashData);
+              }
+              if(dataInfo.rcurrent!=oldVal.rcurrent){
+                this.data3.rcurrentData.push(rcurrent);
+              }
+            }else{
+              this.data3.ashData.push(ashData);
+              this.data3.rcurrentData.push(rcurrent);
             }
           }else{
-            this.data3.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data3.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data3.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            this.data3.ashData.push(ashData);
+            this.data3.rcurrentData.push(rcurrent);
           }
         }else if(dataInfo.rpipe_sta==4){
           if(oldVal!=undefined){
-            if(dataInfo.par_ash!=oldVal.par_ash){
-              this.data4.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rpressure!=oldVal.rpressure){
-              this.data4.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            }
-            if(dataInfo.rcurrent!=oldVal.rcurrent){
-              this.data4.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            if(dataInfo.rdeep==oldVal.rdeep){
+              if(dataInfo.par_ash!=oldVal.par_ash){
+                this.data4.ashData.push(ashData);
+              }
+              if(dataInfo.rcurrent!=oldVal.rcurrent){
+                this.data4.rcurrentData.push(rcurrent);
+              }
+            }else{
+              this.data4.ashData.push(ashData);
+              this.data4.rcurrentData.push(rcurrent);
             }
           }else{
-            this.data4.ashData.push([parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data4.rpressureData.push([parseFloat(dataInfo.rpressure).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
-            this.data4.rcurrentData.push([parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)]);
+            this.data4.ashData.push(ashData);
+            this.data4.rcurrentData.push(rcurrent);
           }
         }
+
+        if(dataInfo.record_sta==3){
+          this.data1.ashData=[];
+          this.data2.ashData=[];
+          this.data3.ashData=[];
+          this.data4.ashData=[];
+          this.data1.rcurrentData=[];
+          this.data2.rcurrentData=[];
+          this.data3.rcurrentData=[];
+          this.data4.rcurrentData=[];
+        }
+
+        //console.log(this.data1.rcurrentData);
 
         this.myChart1 = this.$echarts.init(document.getElementById('myCharts1'));
         this.myChart2 = this.$echarts.init(document.getElementById('myCharts2'));
@@ -229,25 +251,13 @@
                 data: data.ashData
               },
               {
-                name: '压力(MPa)',
-                type: 'line',
-                showSymbol: false,
-                itemStyle: {
-                  normal: {
-                    color: '#50C9F9',
-                    borderColor: '#50C9F9',
-                  }
-                },
-                data: data.rpressureData
-              },
-              {
                 name: '电流(A)',
                 type: 'line',
                 showSymbol: false,
                 itemStyle: {
                   normal: {
-                    color: '#FF9933',
-                    borderColor: '#FF9933',
+                    color: '#2CC0FF',
+                    borderColor: '#2CC0FF',
                   }
                 },
                 data: data.rcurrentData
