@@ -116,9 +116,11 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="p_deep"
               align="center"
-              label="段深度（cm）">
+              label="段深度（m）">
+              <template slot-scope="props">
+                {{ props.row.p_deep / 100}}
+              </template>
             </el-table-column>
             <el-table-column
               align="center"
@@ -636,13 +638,15 @@
             axisLine:{
               onZero: false,
             },
+            position:'top',
             data: []
           },
           yAxis: {
             type: 'value',
             name: '深度(m)',
-            min:-30,
-            max:0,
+            inverse:true,
+            min:0,
+            max:30,
           },
           series: [
             {
@@ -1005,7 +1009,7 @@
           this.option1.series[1].data.push(parseInt(Math.abs(item.p_down_speed)));
 
           this.option2.xAxis.data.push(this.timestampToTime(parseInt(beginTime)));
-          this.option2.series[0].data.push(parseInt('-'+item.p_deep));
+          this.option2.series[0].data.push(parseInt(item.p_deep)/100);
 
           this.option3.xAxis.data.push(this.timestampToTime(parseInt(beginTime)));
           this.option3.series[0].data.push(parseInt(item.p_current));
