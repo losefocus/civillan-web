@@ -19,30 +19,24 @@
          </div>
          <div class="noConfig" v-if="noConfig">未找到当前作业的配置参数</div>
          <div v-else class="d-box">
-           <div>
-             <p class="d-key">桩间距</p>
-             <p class="d-value">{{config_data.spacing}}</p>
-           </div>
-           <div>
-             <p class="d-key">桩长</p>
-             <p class="d-value">{{config_data.depth}}</p>
-           </div>
-           <div>
-             <p class="d-key">桩径</p>
-             <p class="d-value">{{config_data.diameter}}</p>
-           </div>
-           <div>
-             <p class="d-key">水灰比</p>
-             <p class="d-value">{{config_data.ratio}}</p>
-           </div>
-           <div>
-             <p class="d-key">灰量</p>
-             <p class="d-value">{{config_data.ash}}</p>
-           </div>
-           <!--<div>
-             <p class="d-key">工艺</p>
-             <p class="d-value1">{{config_data.process}}</p>
-           </div>-->
+           <template>
+             <el-table
+               :data="config_data"
+               border
+               style="width: 100%;height: calc(100% - 30px);overflow: auto">
+               <el-table-column
+                 prop="name"
+                 align="center"
+                 label="名称">
+               </el-table-column>
+               <el-table-column
+                 prop="value"
+                 align="center"
+                 :show-overflow-tooltip="true"
+                 label="值">
+               </el-table-column>
+             </el-table>
+           </template>
          </div>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
@@ -139,7 +133,17 @@ export default {
       noConfig:true,
       pileData:{
         ps:[],
-        pile_id:{},
+        pile_id:/*{content:'[{"label":"pile_position","name":"桩位置","value":"120.044018147,30.858786963"},{"label":"pile_depth","name":"桩长","value":"11"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
+          createdAt:1535618538,
+          createdBy:70,
+          id:7533,
+          key:"k2230_940_D7",
+          name:"k2230_940_D7",
+          projectId:21,
+          sort:0,
+          status:2,
+          tenant:"21fe87251b01541399c7c1a8cec741c5",
+          typeId:124,}*/{},
       },
       angelWidth:0,
       noDevice:false,
@@ -187,7 +191,7 @@ export default {
     this.getData(deviceKey);
     this.timer=setInterval(()=>{
       this.getData(deviceKey);
-    },5000);
+    },3000);
 
   },
   mounted(){
@@ -263,30 +267,7 @@ export default {
       Promise.all([deviceConfig.list({'key':post_data}),config.list({page_index:1, page_size:10000})]).then(res=>{
         this.pileData.pile_id=res[0].result;
         if(res[0].result!=undefined){
-          JSON.parse(res[0].result.content).forEach(item=>{
-            if(item.label=='pile_position'){
-              this.config_data.position=item.value
-            }
-            if(item.label=='pile_depth'){
-              this.config_data.depth=item.value;
-              this.DesignDeep=item.value;
-            }
-            if(item.label=='pile_diameter'){
-              this.config_data.diameter=item.value
-            }
-            if(item.label=='pile_spacing'){
-              this.config_data.spacing=item.value
-            }
-            if(item.label=='water_cement_ratio'){
-              this.config_data.ratio=item.value
-            }
-            if(item.label=='ash_quantity'){
-              this.config_data.ash=item.value
-            }
-            if(item.label=='process_type'){
-              this.config_data.process=item.value
-            }
-          });
+          this.config_data=JSON.parse(res[0].result.content);
           this.noConfig=false
         }else{
           this.noConfig=true;
@@ -335,7 +316,13 @@ export default {
           this.ashData.push(par_ash);
           this.rpressureData.push(rpressure);
 
-          this.config_post_data=res.result.pile_describe;
+          if(this.config_post_data==res.result.pile_describe){
+
+          }else{
+            this.config_post_data=res.result.pile_describe;
+            sessionStorage.setItem('pile_describe','asd')
+          }
+
           //this.getDeviceConfig(res.result.pile_describe)
         }else {
           this.progressHeight='100%';
@@ -417,7 +404,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+  .el-table::before{
+    height: 0 !important;
+  }
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
   }
@@ -524,31 +513,12 @@ export default {
           }
         }
         .d-box{
-          height: 60%;
-
+          height: calc(100% - 60px);
           div{
-            margin-top: 50px;
+            margin-top: 20px;
             float: left;
             text-align: center;
             width: 33%;
-          }
-          .d-key{
-            font-size: 14px;
-            color: #666666;
-          }
-          .d-value{
-            margin-top: 10px;
-            font-weight: bold;
-            height: 30px;
-            font-size: 25px;
-            color: #333333;
-          }
-          .d-value1{
-            margin-top: 10px;
-            font-weight: bold;
-            height: 30px;
-            font-size: 25px;
-            color: #333333;
           }
         }
         .noConfig{

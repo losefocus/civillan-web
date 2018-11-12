@@ -39,6 +39,7 @@
         //当前桩
         let current = this.dataInfo.pile_id//{lon:120.042071817, lat:30.862442958,title:"A8"};
 
+
         //画布坐标显示范围
         let laglgn;
         if(current){
@@ -46,9 +47,9 @@
         }
         let lng_,lat_,title;
         if(laglgn!=undefined){
-          this.isShow=false
+          this.isShow=false;
           laglgn=JSON.parse(laglgn);
-          laglgn.every(res=>{
+          laglgn.forEach(res=>{
             if(res.label == "pile_position"){
               this.minLon = parseFloat(res.value.split(",")[0]) - 0.00006;
               this.minLat = parseFloat(res.value.split(",")[1]) + 0.00006;
@@ -56,10 +57,10 @@
               this.maxLat = parseFloat(res.value.split(",")[1]) - 0.00006;
               lng_ = res.value.split(",")[0];
               lat_ = res.value.split(",")[1];
-              title = current.name.split('+')[2];
-              return false
+              title = current.name.split('_')[1];
             }
           });
+
         }else{
           this.isShow=true
         }

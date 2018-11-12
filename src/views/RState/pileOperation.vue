@@ -278,13 +278,19 @@
       },
       d_deep:{
         handler(val, oldVal){
+          //console.log(val, oldVal);
+
+
           if(val==' - '){
             this.d_deep=val
           }else{
+            val=Number(val);
+            oldVal=Number(oldVal);
             if(val>=oldVal){
-              this.d_deep=val
+              this.d_deep=val;
             }else{
-              this.d_deep=oldVal
+              console.log(val+'<'+oldVal);
+              this.d_deep=oldVal;
             }
           }
         },
@@ -296,6 +302,8 @@
           }else if(oldVal==' - '){
             this.u_deep=val;
           }else{
+            val=Number(val);
+            oldVal=Number(oldVal);
               if (val <= oldVal) {
                 this.u_deep = val
               } else {
@@ -309,6 +317,8 @@
           if(val==' - '){
             this.rd_deep=val
           }else {
+            val=Number(val);
+            oldVal=Number(oldVal);
             if (val >= oldVal) {
               this.rd_deep = val
             } else {
@@ -322,6 +332,8 @@
           if(val==' - '){
             this.ru_deep=val
           }else {
+            val=Number(val);
+            oldVal=Number(oldVal);
             if (val <= oldVal) {
               this.ru_deep = val
             } else {
