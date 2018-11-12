@@ -116,7 +116,7 @@ export default {
       _this.changeWidth();
       _this.isShow=false;
     }
-    /*window.onresize = function (){
+    window.onresize = function (){
       let clientWidth=document.body.clientWidth;
       if(clientWidth<=1450){
         _this.isCollapse=false;
@@ -127,7 +127,7 @@ export default {
         _this.changeWidth();
         _this.isShow=false;
       }
-    };*/
+    };
   },
   mounted(){
     this.isActive=sessionStorage.getItem('isActive') || 0;
