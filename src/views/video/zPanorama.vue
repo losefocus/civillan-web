@@ -124,12 +124,11 @@
   }
   .noData{
     width: 100%;
-    height: 100%;
+    height: 80%;
     font-size: 30px;
     font-weight: bold;
-    display: flex;
-    align-items:center;/*垂直居中*/
-    justify-content: center;/*水平居中*/
+    padding-top: 20%;
+    text-align: center;
     .icon-zanwushuju2{
       font-size: 80px;
       color: #cccccc;

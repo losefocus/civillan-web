@@ -20,10 +20,11 @@
             :total="deviceTotal">
           </el-pagination>
         </el-select>
+        <!--<span style="float: left">当前桩号：{{ pile_describe }}</span>-->
         <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect2"
-            :key="item.value2"
+            :key="item.name"
             :label="item.name"
             :value="item.value2">
           </el-option>
@@ -37,6 +38,8 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="timestamp"
+          @change="getTime(value7)"
           :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%;float: left;">
         </el-date-picker>
         <div class="c-button">
@@ -133,7 +136,7 @@
               align="center"
               label="段密度（g/cm3）">
               <template slot-scope="props">
-                {{ props.row.p_density | formatZ}}
+                {{ props.row.p_density | formatP}}
               </template>
             </el-table-column>
             <el-table-column
@@ -148,6 +151,13 @@
               label="钻速（cm/min）">
               <template slot-scope="props">
                 {{ Math.abs(props.row.p_down_speed) | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="段时长（s）">
+              <template slot-scope="props">
+                {{ Math.abs(props.row.p_time)}}
               </template>
             </el-table-column>
             <el-table-column
@@ -176,9 +186,21 @@
       <el-table-column
         v-if="newData.pile_describe.checked"
         label="桩号"
+        align="center"
         width="130">
         <template slot-scope="props">
-          <a href="#">{{props.row.pile_describe}}</a>
+          <el-popover
+            placement="right-start"
+            title="作业配置参数"
+            trigger="click"
+            >
+            <div v-if="noConfig" style="color:#F85959">未找到当前作业的配置参数</div>
+            <ul v-else v-for="(list,index) in config_data" :key="index">
+              <li><span style="display: inline-block;width: 45px;vertical-align: top;">{{list.name}}</span> : <span style="display:inline-block;margin-left: 10px;vertical-align: top;width:110px;word-wrap:break-word;">{{list.value}}</span></li>
+            </ul>
+
+            <p slot="reference" class="c-describe" @click="getConfig(props.row.pile_describe)">{{props.row.pile_describe}}</p>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column
@@ -258,7 +280,8 @@
         v-if="newData.max_current.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="最大钻杆电流(A)">
+        width="120 "
+        label="最大电流(A)">
         <template slot-scope="props">
           {{ props.row.max_current | formatP}}
         </template>
@@ -438,6 +461,7 @@
 <script>
   import history from '@/api/project/history'
   import deviceList from '@/api/project/deviceList'
+  import deviceConfig from '@/api/device/deviceConfig.js'
   import {formatDate} from '@/common/formatDate.js';
   import Bus from '@/common/eventBus'
   import RthyinfoFormat from '@/common/RthyinfoFormat.js'
@@ -488,13 +512,15 @@
         value1:'', // 全部桩选定值
         value2:'',// 评分等级选定值
         deviceSelect2:[
-          {value2:1,name:'A (80-100)'},
-          {value2:2,name:'B (70-80)'},
-          {value2:3,name:'C (60-70)'},
-          {value2:4,name:'D (50-60)'},
-          {value2:5,name:'E (40-50)'},
+          {value2:[80,100],name:'A (80-100)'},
+          {value2:[70,80],name:'B (70-80)'},
+          {value2:[60,70],name:'C (60-70)'},
+          {value2:[50,60],name:'D (50-60)'},
+          {value2:[40,50],name:'E (40-50)'},
         ],// 评分等级选定值
-        value7: '',// 时间选定值
+        value7:'',// 时间选定值
+
+
         device:'',// 全部设备选定值
         //deviceKey:'',// 设备key值
         tableData: [],// 列表数据
@@ -510,7 +536,7 @@
           begin_time:{title:'开始时间',checked:true},
           end_time:{title:'结束时间',checked:true},
           depth:{title:'实际桩长',checked:true},
-          re_depth:{title:'复搅深度',checked:true},
+          re_depth:{title:'复搅深度',checked:false},
           water_cement_ratio:{title:'水灰比',checked:true},
           cumulative_ash:{title:'累计灰量',checked:true},
           cumulative_pulp:{title:'累计浆量',checked:true},
@@ -539,8 +565,12 @@
           key:'',
           page_index:1,
           page_size:10,
-          sort_by:'begin_time',
-          direction:'asc',
+          start:'',
+          end:'',
+          maxScore:'',
+          minScore:'',
+          /*sort_by:'begin_time',
+          direction:'asc',*/
         },
         device_data:{//全部设备select列表
           page_index:1,
@@ -759,6 +789,11 @@
         expandTable:[],
 
         chartTime:[],
+
+        noConfig:false,
+
+        config_data:[],
+        pile_describe:'',
       }
     },
     filters: {
@@ -770,6 +805,7 @@
     props:['isShow','newStyle','deviceKey'],
     created(){
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+      this.pile_describe=deviceInfo.pile_describe;
       this.post_data.key=deviceInfo.key;
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
@@ -780,7 +816,6 @@
       })
     },
     mounted(){
-
     },
     methods: {
       handleExport(command){
@@ -907,10 +942,30 @@
         }
       },
 
-      displayScreening(){
-
+      //获取作业配置参数
+      getConfig(config){
+        deviceConfig.list({'key':config}).then(res=>{
+          if(res.result!=undefined){
+            this.noConfig=false;
+            this.config_data=JSON.parse(res.result.content);
+          }else{
+            this.noConfig=true;
+          }
+        })
       },
-      handleExpandChange(row,expandedRows){
+      //获取时间
+      getTime(data){
+        console.log(data)
+        if(data){
+          this.post_data.start=data[0]/1000;
+          this.post_data.end=data[1]/1000;
+        }else{
+          this.post_data.start='';
+          this.post_data.end='';
+        }
+      },
+
+      handleExpandChange(){
         this.isActive=1
       },
       //类型改变
@@ -919,8 +974,10 @@
         this.getList(this.post_data);
         this.getRecords(val)
       },
-      deviceChange1(){
-        this.deviceKey=val;
+      deviceChange1(val){
+        console.log(val);
+        this.post_data.minScore=val[0];
+        this.post_data.maxScore=val[1];
       },
       handleCommand(command) { //
         this.$message(command);
@@ -947,7 +1004,7 @@
       //获取列表
       getList(post_data) {
         let _this=this;
-        let a=0;
+        _this.loading=true;
         history.list(post_data).then(res=>{
           if(res.success){
             _this.total=res.result.total;
@@ -990,14 +1047,16 @@
         });
         let deepPulp=[];
         sorted.forEach(item=>{
-          if(item.length>1){
+          console.log(item);
+          if(item.length==1){
             deepPulp.push([item[0].p_pulp,item[0].p_deep/100]);
           }else{
             let num=0;
             item.forEach(i=>{
-              num+=i.p_pulp;
+                num+=i.p_pulp;
             });
-            deepPulp.push([num,item[0].p_deep/100])
+            num=num.toFixed(2);
+            deepPulp.push([num,item[0].p_deep/100]);
           }
         });
 
@@ -1043,7 +1102,8 @@
       //统计总数
       getRecords(key){
         history.records({key:key}).then(res=>{
-          this.recordSum=res.result[0]
+          this.recordSum=res.result[0];
+          //console.log(this.recordSum)
         })
       },
 
@@ -1078,7 +1138,6 @@
       },
 
       query(){
-        this.post_data.key=this.deviceKey;
         this.post_data.page_index=1;
         this.getList(this.post_data)
       },
@@ -1187,6 +1246,10 @@
     text-align: center;
     background: #ffffff;
   };
+  .c-describe{
+    color: #1ab3e6;
+    cursor: pointer;
+  }
   .expand_head{
     width: 100%;
     height: 36px;
