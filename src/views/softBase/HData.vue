@@ -1,6 +1,6 @@
 <template>
  <div>
-   <h-pile :is="currentView" :isShow="isShow"></h-pile>
+   <h-pile :is="currentView"></h-pile>
    <!--<historical :isShow="isShow" :newStyle="newStyle"></historical>-->
  </div>
 </template>
@@ -19,7 +19,6 @@ export default {
   props:['deviceType','deviceKey'],
   data(){
     return{
-      isShow:true,
       newStyle:{
         'padding':'0',
         'margin-top':'-15px'

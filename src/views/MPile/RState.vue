@@ -320,12 +320,13 @@ export default {
 
           }else{
             this.config_post_data=res.result.pile_describe;
-            sessionStorage.setItem('pile_describe','asd')
+            sessionStorage.setItem('pile_describe',res.result.pile_describe)
           }
 
           //this.getDeviceConfig(res.result.pile_describe)
         }else {
           this.progressHeight='100%';
+          sessionStorage.setItem('pile_describe',false)
         }
       }).catch(err=>{
         this.progressHeight='100%';

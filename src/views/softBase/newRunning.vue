@@ -6,7 +6,7 @@
         <div @click="changeFullScreen()"><i class="iconfont" :class="{'icon-dEnlarge':changeIcon==true,'icon-dNarrow':changeIcon==false}"></i></div>
       </div>
     </ul>
-    <r-state :deviceKey="deviceKey" :is="currentView" :isShow="isShow" :clientWidth="clientWidth" :dialogFullScreen="dialogFullScreen" class="t-Body"></r-state>
+    <r-state :deviceKey="deviceKey" :is="currentView" :isShow="isShow" :isDevice="isDevice" :clientWidth="clientWidth" :dialogFullScreen="dialogFullScreen" class="t-Body"></r-state>
   </div>
 </template>
 
@@ -45,7 +45,8 @@
         isActive:'',
         navList:[],
         loading:null,
-        isShow:false,
+        isShow:true,
+        isDevice:true,
         dialogVisible: false,
         dialogWidth:'75%',
         dialogHeight:{

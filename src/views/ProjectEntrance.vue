@@ -89,7 +89,7 @@
                     if (!SvgMarker.supportSvg) {
                       alert('当前环境不支持SVG');
                     }
-                    var markerList = new MarkerList({
+                    let markerList = new MarkerList({
                       //关联的map对象
                       map: map,
                       //列表的dom容器的id
@@ -136,9 +136,9 @@
                       },
                       //返回数据项对应的列表节点
                       getListElement: function(dataItem, context, recycledListElement) {
-                        var tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'/*+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'*/+'<span style="width: 220px;height: 42px;margin-left:20px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 14px;vertical-align: middle;" class=<%- dataItem.listId %>><%- dataItem.name %>'+'</span>'+'</p>';
+                        let tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'/*+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'*/+'<span style="width: 220px;height: 42px;margin-left:20px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 14px;vertical-align: middle;" class=<%- dataItem.listId %>><%- dataItem.name %>'+'</span>'+'</p>';
 
-                        var content = MarkerList.utils.template(tpl, {
+                        let content = MarkerList.utils.template(tpl, {
                           dataItem: dataItem,
                           dataIndex: context.index
                         });
@@ -190,7 +190,7 @@
                       'markerClick markerMouseover markerMouseout ' +
                       'infoWindowClick infoWindowMouseover infoWindowMouseout',
                       function(event, record) {
-                        var $ = MarkerList.utils.$,
+                        let $ = MarkerList.utils.$,
                           template = MarkerList.utils.template;
                       });
 
@@ -220,7 +220,7 @@
 
                     markerList.on('markerClick',function (event,info) {
                       $('#my-list ul li li').removeClass('selected');
-                      for (var i=0;i<$('#my-list p').length;i++){
+                      for (let i=0;i<$('#my-list p').length;i++){
                         let eventId='id'+event.target.opts.id;
                         if($('#my-list p').eq(i).hasClass(eventId)){
                           $('#my-list p').eq(i).parent().addClass('selected');

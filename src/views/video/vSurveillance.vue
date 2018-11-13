@@ -51,6 +51,17 @@
         </div>
       </waterfall-slot>
     </waterfall>
+    <div class="m-pagination" v-if="!noData">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="listCurrentChange"
+        :current-page="post_data.page_index"
+        layout="total,sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="10"
+        :total='total'>
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -69,7 +80,7 @@
     },
     data(){
       return{
-        noData:false,
+        noData:true,
         playerList:[],
         post_data:{
           page_index:1,
@@ -101,6 +112,7 @@
           poster: "http://pic36.photophoto.cn/20150724/0008020996795371_b.jpg",
         },
         loading:null,
+        total:0,
       }
     },
     //时间格式过滤器
@@ -135,6 +147,7 @@
           if(res.success){
             if(res.result.items.length>0){
               res.result.items.forEach((item,i)=>{
+                this.total=res.result.total;
                 this.noData=false;
                 this.playerOptions.poster=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
                 this.playerOptions.sources[0].src=item.url;
@@ -154,6 +167,14 @@
         }).catch(e=>{
           this.loading.close();
         })
+      },
+      handleSizeChange(size){
+        this.post_data.page_size=size;
+        this.getList(this.post_data);
+      },
+      listCurrentChange(currentPage){
+        this.post_data.page_index = currentPage;
+        this.getList(this.post_data);
       },
       // listen event
       onPlayerPlay(player) {
@@ -281,5 +302,10 @@
     .c-both{
       clear: both;
     }
+  }
+  .m-pagination{
+    padding: 20px;
+    text-align: center;
+    //background: #ffffff;
   }
 </style>
