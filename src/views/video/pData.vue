@@ -135,7 +135,7 @@ export default {
     //展开模态框
     getBig(item){
       this.dialogVisible=true;
-      this.bigPictureUrl=item.thumbnailFileBaseUrl+item.thumbnailFilePath
+      this.bigPictureUrl=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
     },
     //获取数据列表
     getList(post_data){
