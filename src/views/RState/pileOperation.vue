@@ -118,20 +118,20 @@
     data(){
       return{
         tiem_1:{
-          style_stake:{bottom:'40%'}
+          style_stake:{bottom:'5%'}
         },
         tiem_2:{
-          style_stake:{bottom:'5%'},
-          style_hole:{height:'0%'}
+          style_stake:{bottom:'40%'},
+          style_hole:{height:'100%'}
         },
         tiem_3:{
           style_stake:{bottom:'5%'},
-          style_hole:{height:'0%'}
+          style_hole:{height:'100%'}
         },
         tiem_4:{
-          style_stake:{bottom:'5%'},
-          style_hole:{height:'0%'},
-          style_hole_over:{height:'0%'},
+          style_stake:{bottom:'40%'},
+          style_hole:{height:'100%'},
+          style_hole_over:{height:'100%'},
         },
         d_deep:-1,
         u_deep:-1,
@@ -267,6 +267,7 @@
             this.tiem_3= {style_stake:{bottom:'5%'},style_hole:{height:'100%'}}
             this.tiem_4= {style_stake:{bottom:'40%'},style_hole:{height:'100%'},style_hole_over:{height:'100%'}}
           }
+        }else{
         }
       }
     },
@@ -278,9 +279,6 @@
       },
       d_deep:{
         handler(val, oldVal){
-          //console.log(val, oldVal);
-
-
           if(val==' - '){
             this.d_deep=val
           }else{
@@ -289,7 +287,6 @@
             if(val>=oldVal){
               this.d_deep=val;
             }else{
-              console.log(val+'<'+oldVal);
               this.d_deep=oldVal;
             }
           }
@@ -299,7 +296,7 @@
         handler(val, oldVal){
           if(val==' - '){
             this.u_deep=val
-          }else if(oldVal==' - '){
+          }else if(oldVal==' - '||oldVal==-1){
             this.u_deep=val;
           }else{
             val=Number(val);

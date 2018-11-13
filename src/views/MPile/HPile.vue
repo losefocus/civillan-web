@@ -3,7 +3,7 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-show="isShow==undefined" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
+        <el-select v-show="!isDevice" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="item.key+item.id"
@@ -20,7 +20,12 @@
             :total="deviceTotal">
           </el-pagination>
         </el-select>
-        <!--<span style="float: left">当前桩号：{{ pile_describe }}</span>-->
+        <img v-if="pile_describe=='false'" :src="nPile" style="width: 25px;height: 25px;float: left;margin-right: 15px;">
+        <img v-else :src="tPile" style="width: 30px;height: 30px;float: left;margin-right: 15px;">
+        <span v-if="isDevice" class="n-pile">
+          <span v-if="pile_describe=='false'" style="font-size: 16px;">暂无作业</span>
+          <span v-else><span>当前桩号：</span><span style="font-size: 18px;font-weight: bold">{{ pile_describe }}</span></span>
+        </span>
         <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect2"
@@ -46,7 +51,7 @@
           <el-button type="info" size="mini" @click="query">查询</el-button>
         </div>
         <div class="c-button">
-          <el-button type="info" size="mini" @click="query">重置</el-button>
+          <el-button type="info" size="mini" @click="Refresh">重置</el-button>
         </div>
       </div>
       <div class="c-handle">
@@ -115,7 +120,7 @@
               label="段灰量（L/m）"
               align="center">
               <template slot-scope="props">
-                {{ props.row.p_ash | formatP}}
+                {{ props.row.p_total_ash | formatP}}
               </template>
             </el-table-column>
             <el-table-column
@@ -463,11 +468,17 @@
   import deviceList from '@/api/project/deviceList'
   import deviceConfig from '@/api/device/deviceConfig.js'
   import {formatDate} from '@/common/formatDate.js';
+  import nPile from '@/assets/device/n-pile.png';
+  import tPile from '@/assets/device/t-pile.png';
+
   import Bus from '@/common/eventBus'
   import RthyinfoFormat from '@/common/RthyinfoFormat.js'
   export default {
     data() {
       return {
+        nPile:nPile,
+        tPile:tPile,
+
         loading: true,
         isActive:1,
         isCollapse:true, //是否展开nav
@@ -794,6 +805,8 @@
 
         config_data:[],
         pile_describe:'',
+
+        key:'',
       }
     },
     filters: {
@@ -802,10 +815,11 @@
         return formatDate(date, 'MM-dd hh:mm'); //yyyy-MM-dd hh:mm
       }
     },
-    props:['isShow','newStyle','deviceKey'],
+    props:['isShow','newStyle','deviceKey','isDevice'],
     created(){
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      this.pile_describe=deviceInfo.pile_describe;
+      this.pile_describe=sessionStorage.getItem('pile_describe');
+      this.key=deviceInfo.key;
       this.post_data.key=deviceInfo.key;
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
@@ -955,7 +969,6 @@
       },
       //获取时间
       getTime(data){
-        console.log(data)
         if(data){
           this.post_data.start=data[0]/1000;
           this.post_data.end=data[1]/1000;
@@ -975,7 +988,6 @@
         this.getRecords(val)
       },
       deviceChange1(val){
-        console.log(val);
         this.post_data.minScore=val[0];
         this.post_data.maxScore=val[1];
       },
@@ -1009,11 +1021,11 @@
           if(res.success){
             _this.total=res.result.total;
             _this.tableData=res.result.items;
-            _this.tableData.forEach(function (item) {
+            /*_this.tableData.forEach(function (item) {
               item.data.forEach(list=>{
                 list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
               })
-            });
+            });*/
             _this.loading=false
           }else {
             _this.$message.error(res.message);
@@ -1047,7 +1059,6 @@
         });
         let deepPulp=[];
         sorted.forEach(item=>{
-          console.log(item);
           if(item.length==1){
             deepPulp.push([item[0].p_pulp,item[0].p_deep/100]);
           }else{
@@ -1101,9 +1112,8 @@
 
       //统计总数
       getRecords(key){
-        history.records({key:key}).then(res=>{
+        history.records(this.post_data).then(res=>{
           this.recordSum=res.result[0];
-          //console.log(this.recordSum)
         })
       },
 
@@ -1142,6 +1152,17 @@
         this.getList(this.post_data)
       },
       Refresh(){
+        this.value2='';
+        this.value7='';
+        this.post_data={ // 请求数据
+          key:this.key,
+          page_index:1,
+          page_size:10,
+          start:'',
+          end:'',
+          maxScore:'',
+          minScore:'',
+        };
         this.getList(this.post_data)
       }
     },
@@ -1150,6 +1171,10 @@
         handler(val, oldVal){
           this.post_data.key=val;
           this.getList(this.post_data)
+        },
+      },
+      isShow:{
+        handler(val, oldVal){
         },
       }
     },
@@ -1173,6 +1198,13 @@
     background: #fff;
     overflow: hidden;
 
+    .n-pile{
+      float: left;
+      display: inline-block;
+      height: 30px;
+      line-height: 30px;
+      margin-right: 20px;
+    }
     .c-handle{
       margin-top: 20px;
       float: right;

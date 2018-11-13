@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;height: 100%;">
     <!--<chart :options="PulpingQuantity" :auto-resize=true></chart>-->
-    <div style="height: 40px;line-height: 40px;padding-left: 10px;font-size: 16px;font-weight: bold;">
+    <div class="t-charts">
       段灰量、电流随桩机里程变化曲线
     </div>
     <div style="height: calc(100% - 40px)">
@@ -164,7 +164,7 @@
           let option={
             title:{
               text:data.title,
-              left:'2%',
+              left:'4%',
               textStyle:{
                 fontSize:12,
                 fontWeight:'normal',
@@ -187,7 +187,7 @@
             grid: {
               top:'27%',
               left: '15%',
-              right: '6%',
+              right: '10%',
               bottom: '8%',
             },
             yAxis: [{
@@ -199,13 +199,13 @@
                   color: '#ccc'
                 }
               },
-              axisLabel: {
-                margin: 10,
-                textStyle: {
-                  fontSize: 12,
-                  color: '#999'
-                }
-              },
+                axisLabel: {
+                  margin: 6,
+                  textStyle: {
+                    fontSize: 10,
+                    color: '#999'
+                  }
+                },
               max:30,
               min:0,
             }],
@@ -214,7 +214,10 @@
               position:'top',
               name: '',
               axisTick: {
-                show: false
+                show: true
+              },
+              nameTextStyle:{
+
               },
               axisLine: {
                 lineStyle: {
@@ -222,17 +225,14 @@
                 }
               },
               axisLabel: {
-                margin: 10,
+                margin: 6,
                 textStyle: {
-                  fontSize: 12,
+                  fontSize: 10,
                   color: '#999'
                 }
               },
               splitLine: {
-                lineStyle: {
-                  type: 'solid',
-                  color: '#ccc'
-                }
+                show:false,
               },
               max:100,
               min:0,
@@ -296,5 +296,11 @@
 </script>
 
 <style scoped lang="scss">
-
+.t-charts{
+  height: 40px;
+  line-height: 50px;
+  padding-left: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
 </style>

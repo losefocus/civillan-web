@@ -9,6 +9,8 @@ import 'es6-promise/auto'
 import 'babel-polyfill'
 import '../static/common/reset.css'
 
+
+
 Vue.use(VueBus);
 
 Vue.config.productionTip = false;

@@ -76,6 +76,7 @@
         warmingText:'',
         RT_data:{},
         isAngle:false,
+        timer1:null,
       }
     },
     props:['realData'],
@@ -84,7 +85,13 @@
       this.RT_data=this.realData;
 
       this.getDeviceInfo(deviceInfo);
-      this.getAlarms(deviceInfo.key)
+      this.timer1=setInterval(()=>{
+        this.getAlarms(deviceInfo.key)
+      },3000);
+
+    },
+    beforeDestroy(){
+      clearInterval(this.timer1);
     },
     methods:{
       //设备信息
@@ -364,4 +371,5 @@
       }
     }
   }
+
 </style>

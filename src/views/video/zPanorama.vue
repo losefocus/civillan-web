@@ -69,7 +69,7 @@
     },
     data(){
       return{
-        noData:false,
+        noData:true,
         loading:null,
         lists:[],
         dialogVisible:false,
@@ -78,7 +78,8 @@
           page_size:10,
           type:3,
           project_id:this.$cookies.get('projectId')
-        }
+        },
+        total:0,
       }
     },
     created(){
@@ -98,6 +99,7 @@
         media.list(post_data).then(res=>{
           if(res.success){
             if(res.result.items.length>0){
+              this.total=res.result.total;
               this.noData=false;
               this.lists=res.result.items;
               this.loading.close();
@@ -112,7 +114,15 @@
         }).catch(e=>{
           this.loading.close();
         })
-      }
+      },
+      handleSizeChange(size){
+        this.post_data.page_size=size;
+        this.getList(this.post_data);
+      },
+      listCurrentChange(currentPage){
+        this.post_data.page_index = currentPage;
+        this.getList(this.post_data);
+      },
     }
   }
 </script>
@@ -203,6 +213,11 @@
         }
       }
     }
+  }
+  .m-pagination{
+    padding: 20px;
+    text-align: center;
+    //background: #ffffff;
   }
 
 </style>

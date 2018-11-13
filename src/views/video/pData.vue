@@ -8,9 +8,17 @@
         </div>
       </div>
     </div>
+    <!--<div >
+      <ul id="galley">
+        <li v-for="(item, index) in lists" :index="item.id" @click="getViewer">
+          <img :src="item.thumbnailFileBaseUrl+item.thumbnailFilePath">
+        </li>
+      </ul>
+    </div>-->
     <waterfall
       style="margin-left: -10px;width: calc( 100% + 20px)"
       v-else="noData"
+      id="galley"
       :line-gap="350"
       :min-line-gap="350"
       :max-line-gap="450"
@@ -23,10 +31,11 @@
         :order="index"
         :key="item.id"
         move-class="item-move"
+
       >
-        <div class="item p-box" :style="item.style" :index="item.id">
-          <div class="p-body" @click="getBig(item)">
-            <div class="b-box" :style="{'backgroundImage':'url('+ item.thumbnailFileBaseUrl+item.thumbnailFilePath+')'}"></div>
+        <div  class="item p-box" :style="item.style" :index="item.id">
+          <div class="p-body" >
+            <img class="b-box" :src="item.thumbnailFileBaseUrl+item.thumbnailFilePath" @click="getViewer">
             <div class="v-name">
               <div class="v-title">{{ item.name }}</div>
               <div class="v-time">{{ item.createdAt*1000 |  formatDate}}</div>
@@ -36,12 +45,17 @@
       </waterfall-slot>
     </waterfall>
 
-    <el-dialog
-      :visible.sync="dialogVisible"
-      width="70%"
-    >
-      <div class="b-picture" :style="{'backgroundImage':'url('+ bigPictureUrl+')'}"></div>
-    </el-dialog>
+    <div class="m-pagination" v-if="!noData">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="listCurrentChange"
+        :current-page="post_data.page_index"
+        layout="total,sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="10"
+        :total='total'>
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -50,6 +64,9 @@
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   import media from '@/api/video/media'
   import {formatDate} from '@/common/formatDate.js';
+
+  import Viewer from 'viewerjs';
+  import '../../../node_modules/viewerjs/dist/viewer.css';
 export default {
   name: "pData",
   components:{
@@ -66,7 +83,7 @@ export default {
   data(){
     return{
       lists:[],
-      noData:false,
+      noData:true,
       post_data:{
         page_index:1,
         page_size:10,
@@ -76,16 +93,49 @@ export default {
       dialogVisible:false,
       loading:null,
       bigPictureUrl:null,
+      viewer:null,
+      total:0,
     }
   },
   created(){
     this.getList(this.post_data)
   },
+  mounted(){
+
+  },
   methods:{
+    getViewer(){
+      this.viewer = new Viewer(document.getElementById('galley'),{
+        toolbar: {
+          zoomIn: 4,
+          zoomOut: 4,
+          oneToOne: 4,
+          reset: 4,
+          prev: 4,
+          play: {
+            show: 4,
+            size: 'large',
+          },
+          next: 4,
+          rotateLeft: 4,
+          rotateRight: 4,
+          flipHorizontal: 4,
+          flipVertical: 4,
+        },
+      });
+    },
+    handleSizeChange(size){
+      this.post_data.page_size=size;
+      this.getList(this.post_data);
+    },
+    listCurrentChange(currentPage){
+      this.post_data.page_index = currentPage;
+      this.getList(this.post_data);
+    },
     //展开模态框
     getBig(item){
       this.dialogVisible=true;
-      this.bigPictureUrl=item.thumbnailFileBaseUrl+item.thumbnailFilePath
+      this.bigPictureUrl=item.thumbnailFileBaseUrl+item.thumbnailFilePath;
     },
     //获取数据列表
     getList(post_data){
@@ -98,6 +148,7 @@ export default {
           if(res.result.items.length>0){
             this.noData=false;
             this.lists=res.result.items;
+            this.total=res.result.total;
             this.loading.close()
           }else{
             this.noData=true;
@@ -168,9 +219,8 @@ export default {
       height: calc(100% - 20px);
       border: 10px solid #ffffff;
       .b-box{
+        width: 100%;
         height: 85%;
-        //background: url("../../assets/project/pData.png") no-repeat;
-        background-size: 100% 100%;
       }
       .v-name{
         background: #ffffff;
@@ -194,5 +244,37 @@ export default {
     width: 100%;
     height: 600px;
     background-size: 100% 100%;
+  }
+
+
+  pictures {
+    width: 100%;
+    height: 75vh;
+    background: #cccccc;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    overflow: auto;
+  }
+
+  .pictures li {
+    /*float: left;*/
+    margin: 10px;
+    border: 1px solid #000;
+    -webkit-box-shadow: 5px 5px 5px #000;
+    -moz-box-shadow: 5px 5px 5px #000;
+    box-shadow: 5px 5px 5px #000;
+
+  }
+
+  .pictures li img {
+    height: 200px;
+  }
+  .m-pagination{
+    padding: 20px;
+    text-align: center;
+    //background: #ffffff;
   }
 </style>
