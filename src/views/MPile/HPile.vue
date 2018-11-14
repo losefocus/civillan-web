@@ -20,8 +20,12 @@
             :total="deviceTotal">
           </el-pagination>
         </el-select>
-        <img v-if="pile_describe=='false'" :src="nPile" style="width: 25px;height: 25px;float: left;margin-right: 15px;">
-        <img v-else :src="tPile" style="width: 30px;height: 30px;float: left;margin-right: 15px;">
+
+        <div v-if="isDevice" style="float: left;">
+          <img v-if="pile_describe=='false'" :src="nPile" style="width: 25px;height: 25px;margin-right: 15px;">
+          <img v-else :src="tPile" style="width: 30px;height: 30px;float: left;margin-right: 15px;">
+        </div>
+
         <span v-if="isDevice" class="n-pile">
           <span v-if="pile_describe=='false'" style="font-size: 16px;">暂无作业</span>
           <span v-else><span>当前桩号：</span><span style="font-size: 18px;font-weight: bold">{{ pile_describe }}</span></span>
