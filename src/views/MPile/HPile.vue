@@ -1,7 +1,17 @@
 <template>
   <div class="h-box" :style="newStyle">
     <!-- 标题和控制栏 -->
-    <div class="c-box" :class="{'c-box1':isCollapse}">
+
+    <div class="c-box" :class="{'c-box1':isDevice}">
+      <div  v-if="isDevice" :class="{'c-device':'isDevice'}">
+        <div>
+          <img :src="tPile" style="width: 25px;height: 25px;float: left;margin-right: 15px;margin-top: 3px">
+        </div>
+        <div class="n-pile">
+          <span><span>设备名称：</span><span style="font-size: 18px;font-weight: bold">{{ pile_describe }}</span></span>
+        </div>
+        <div style="clear: both"></div>
+      </div>
       <div class="c-query">
         <el-select v-show="!isDevice" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
           <el-option
@@ -21,15 +31,10 @@
           </el-pagination>
         </el-select>
 
-        <div v-if="isDevice" style="float: left;">
-          <img v-if="pile_describe=='false'" :src="nPile" style="width: 25px;height: 25px;margin-right: 15px;">
-          <img v-else :src="tPile" style="width: 30px;height: 30px;float: left;margin-right: 15px;">
+        <div v-if="isDevice" style="float: left">
+          <el-input style="width: 120px" v-model="post_data.pileId" placeholder="请输入桩号" size="mini"></el-input>
         </div>
 
-        <span v-if="isDevice" class="n-pile">
-          <span v-if="pile_describe=='false'" style="font-size: 16px;">暂无作业</span>
-          <span v-else><span>当前桩号：</span><span style="font-size: 18px;font-weight: bold">{{ pile_describe }}</span></span>
-        </span>
         <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
           <el-option
             v-for="item in deviceSelect2"
@@ -115,13 +120,13 @@
             </el-table-column>
             <el-table-column
               align="center"
-              label="段浆量（L/m）">
+              label="段浆量（L）">
               <template slot-scope="props">
                 {{ props.row.p_pulp | formatP}}
               </template>
             </el-table-column>
             <el-table-column
-              label="段灰量（L/m）"
+              label="段灰量（Kg）"
               align="center">
               <template slot-scope="props">
                 {{ props.row.p_total_ash | formatP}}
@@ -131,7 +136,7 @@
               align="center"
               label="段深度（m）">
               <template slot-scope="props">
-                {{ props.row.p_deep / 100}}
+                {{ props.row.p_deep / 100 | formatZ}}
               </template>
             </el-table-column>
             <el-table-column
@@ -143,14 +148,14 @@
             </el-table-column>
             <el-table-column
               align="center"
-              label="段密度（g/cm3）">
+              label="段密度（g/cm³）">
               <template slot-scope="props">
                 {{ props.row.p_density | formatP}}
               </template>
             </el-table-column>
             <el-table-column
               align="center"
-              label="段喷压（pa）">
+              label="段喷压（MPa）">
               <template slot-scope="props">
                 {{ props.row.p_pressure | formatP}}
               </template>
@@ -203,12 +208,12 @@
             title="作业配置参数"
             trigger="click"
             >
-            <div v-if="noConfig" style="color:#F85959">未找到当前作业的配置参数</div>
+            <div v-if="noConfig" style="color:#999999">未找到当前作业的配置参数</div>
             <ul v-else v-for="(list,index) in config_data" :key="index">
-              <li><span style="display: inline-block;width: 45px;vertical-align: top;">{{list.name}}</span> : <span style="display:inline-block;margin-left: 10px;vertical-align: top;width:110px;word-wrap:break-word;">{{list.value}}</span></li>
+              <li><span style="display: inline-block;width: 50px;vertical-align: top;font-size: 12px;">{{list.name}}</span> : <span style="display:inline-block;margin-left: 10px;vertical-align: top;width:110px;word-wrap:break-word;">{{list.value}}</span></li>
             </ul>
 
-            <p slot="reference" class="c-describe" @click="getConfig(props.row.pile_describe)">{{props.row.pile_describe}}</p>
+            <p slot="reference" class="c-describe" @click="getConfig(props.row.pile_describe)">{{props.row.pile_describe}} [参数]</p>
           </el-popover>
         </template>
       </el-table-column>
@@ -244,7 +249,8 @@
         v-if="newData.depth.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="实际桩长">
+        width="100"
+        label="实际桩长(m)">
         <template slot-scope="props">
           {{ props.row.depth | formatP}}
         </template>
@@ -262,7 +268,8 @@
         v-if="newData.re_depth.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="复搅深度">
+        width="100"
+        label="复搅深度(m)">
         <template slot-scope="scope">
           {{scope.row.re_depth | formatZ}}
         </template>
@@ -271,7 +278,8 @@
         v-if="newData.cumulative_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="累计灰量">
+        width="100"
+        label="累计灰量(Kg)">
         <template slot-scope="props">
           {{ props.row.cumulative_ash | formatP}}
         </template>
@@ -280,7 +288,8 @@
         v-if="newData.cumulative_pulp.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="累计浆量">
+        width="100"
+        label="累计浆量(L)">
         <template slot-scope="props">
           {{ props.row.cumulative_pulp | formatP}}
         </template>
@@ -289,7 +298,7 @@
         v-if="newData.max_current.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="120 "
+        width="100"
         label="最大电流(A)">
         <template slot-scope="props">
           {{ props.row.max_current | formatP}}
@@ -299,7 +308,8 @@
         align="center"
         v-if="newData.down_speed.checked"
         :show-overflow-tooltip=true
-        label="平均下钻速度">
+        width="150"
+        label="平均下钻速度(cm/min)">
         <template slot-scope="props">
           {{ props.row.down_speed | formatZ}}
         </template>
@@ -308,7 +318,8 @@
         v-if="newData.up_speed.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="平均提钻速度">
+        width="150"
+        label="平均提钻速度(cm/min)">
         <template slot-scope="props">
           {{ props.row.up_speed | formatZ}}
         </template>
@@ -317,7 +328,8 @@
         v-if="newData.average_pulp.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="平均浆量">
+        width="100"
+        label="平均浆量(L)">
         <template slot-scope="props">
           {{ props.row.average_pulp | formatP}}
         </template>
@@ -326,7 +338,8 @@
         v-if="newData.average_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="平均灰量">
+        width="100"
+        label="平均灰量(Kg)">
         <template slot-scope="props">
           {{ props.row.average_ash | formatP}}
         </template>
@@ -335,7 +348,8 @@
         v-if="newData.average_current.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="平均电流"
+        label="平均电流(A)"
+        width="100"
         prop="average_current">
         <template slot-scope="props">
           {{ props.row.average_current | formatP}}
@@ -345,7 +359,8 @@
         v-if="newData.max_down_speed.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="最大钻速">
+        width="150"
+        label="最大钻速(cm/min)">
         <template slot-scope="props">
           {{ props.row.max_down_speed | formatZ}}
         </template>
@@ -354,7 +369,8 @@
         v-if="newData.max_up_speed.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="最大提速">
+        width="150"
+        label="最大提速(cm/min)">
         <template slot-scope="props">
           {{  Math.abs(props.row.max_up_speed) | formatZ}}
         </template>
@@ -372,7 +388,8 @@
         v-if="newData.sprayed_time.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="喷浆时间">
+        width="100"
+        label="喷浆时间(s)">
         <template slot-scope="props">
           {{ props.row.sprayed_time | formatDate }}
         </template>
@@ -381,14 +398,16 @@
         v-if="newData.t_type_length.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="扩大头桩长"
+        width="100"
+        label="扩大头桩长(m)"
         prop="t_type_length">
       </el-table-column>
       <el-table-column
         v-if="newData.t_type_slurry.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="扩大头浆量">
+        width="100"
+        label="扩大头浆量(L)">
         <template slot-scope="props">
           {{ props.row.t_type_slurry | formatP}}
         </template>
@@ -397,7 +416,8 @@
         v-if="newData.bottom_part_slurry.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="下部桩浆量">
+        width="100"
+        label="下部桩浆量(L)">
         <template slot-scope="props">
           {{ props.row.bottom_part_slurry | formatP}}
         </template>
@@ -406,7 +426,8 @@
         v-if="newData.t_type_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="扩大桩灰量">
+        width="110"
+        label="扩大桩灰量(Kg)">
         <template slot-scope="props">
           {{ props.row.t_type_ash | formatP}}
         </template>
@@ -415,7 +436,8 @@
         v-if="newData.bottom_part_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        label="下部桩灰量">
+        width="110"
+        label="下部桩灰量(Kg)">
         <template slot-scope="props">
           {{ props.row.bottom_part_ash | formatP}}
         </template>
@@ -584,8 +606,7 @@
           end:'',
           maxScore:'',
           minScore:'',
-          /*sort_by:'begin_time',
-          direction:'asc',*/
+          pileId:'',
         },
         device_data:{//全部设备select列表
           page_index:1,
@@ -822,7 +843,7 @@
     props:['isShow','newStyle','deviceKey','isDevice'],
     created(){
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      this.pile_describe=sessionStorage.getItem('pile_describe');
+      this.pile_describe=deviceInfo.name;
       this.key=deviceInfo.key;
       this.post_data.key=deviceInfo.key;
       this.deviceName=sessionStorage.getItem('deviceName');
@@ -1115,7 +1136,7 @@
       },
 
       //统计总数
-      getRecords(key){
+      getRecords(){
         history.records(this.post_data).then(res=>{
           this.recordSum=res.result[0];
         })
@@ -1153,7 +1174,8 @@
 
       query(){
         this.post_data.page_index=1;
-        this.getList(this.post_data)
+        this.getList(this.post_data);
+        this.getRecords(this.post_data)
       },
       Refresh(){
         this.value2='';
@@ -1166,6 +1188,7 @@
           end:'',
           maxScore:'',
           minScore:'',
+          pileId:'',
         };
         this.getList(this.post_data)
       }
@@ -1196,12 +1219,19 @@
     justify-content: space-between
   }
   .c-box{
+
     //margin-top: 15px;
     padding: 0 2% 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
     overflow: hidden;
+    .c-device{
+      margin: 20px 0 20px 0;
 
+    }
+    .t-pile{
+
+    }
     .n-pile{
       float: left;
       display: inline-block;
@@ -1210,7 +1240,6 @@
       margin-right: 20px;
     }
     .c-handle{
-      margin-top: 20px;
       float: right;
       div{
         float: left;
@@ -1228,7 +1257,6 @@
     }
     .c-query{
       width: 675px;
-      margin-top: 20px;
       margin-right: 30px;
       overflow: hidden;
       float: left;
@@ -1257,8 +1285,8 @@
     flex-wrap:wrap;
   }
   .s-box{
-    height: 60px;
-    line-height: 60px;
+    height: 50px;
+    line-height: 50px;
     background: #ffffff;
     border-bottom: 2px solid #ebeef5;
     .s-body{
@@ -1278,7 +1306,7 @@
     }
   }
   .m-pagination{
-    padding: 20px;
+    padding: 10px;
     text-align: center;
     background: #ffffff;
   };

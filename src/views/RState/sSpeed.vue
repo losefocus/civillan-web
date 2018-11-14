@@ -36,7 +36,7 @@
                   if(item.maxValue!=undefined){
                     this.rspeed = item.maxValue;
                   }else{
-                    this.rspeed = 500;
+                    this.rspeed = 250;
                   }
                   this.realTime(post_data)
                 }
@@ -69,12 +69,11 @@
           this.myChart = this.$echarts.init(speed);
           let tips=Number(post_data.rspeed).toFixed(2);
           if(isNaN(tips)){
-            tips=0
-          }else{
-
+            tips='0.00';
           }
           let loading=()=> {
             if(tips>this.rspeed){
+
               return [{
                 value: this.rspeed,
                 itemStyle: {

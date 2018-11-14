@@ -31,6 +31,7 @@ function round (v, len) {
 } // end round
 
  export  function formatZ(v) {
+   if (v == 0) return "0.00";
   if (v == null || v == "" || isNaN(v)) {
     return "";
   }
