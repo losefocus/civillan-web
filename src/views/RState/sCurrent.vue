@@ -35,7 +35,7 @@ export default {
                 if(item.maxValue!=undefined){
                   this.rcurrent = item.maxValue;
                 }else{
-                  this.rcurrent=500;
+                  this.rcurrent=120;
                 }
                 this.realTime(post_data)
               }
@@ -67,8 +67,9 @@ export default {
       if(current){
         this.myChart = this.$echarts.init(current);
         let tips=Number(post_data.rcurrent).toFixed(2);
+        console.log(post_data.rcurrent);
         if(isNaN(tips)){
-          tips=0
+          tips='0.00'
         }
         let loading=()=> {
           if(tips>this.rcurrent){

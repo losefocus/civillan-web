@@ -69,7 +69,7 @@
           this.myChart = this.$echarts.init(flow);
           let tips=Number(post_data.rflow).toFixed(2);
           if(isNaN(tips)){
-            tips=0
+            tips='0.00'
           }
           let loading=()=> {
             if(tips>this.rflow){
