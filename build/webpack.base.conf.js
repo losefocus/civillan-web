@@ -46,6 +46,7 @@ module.exports = {
         loader: 'babel-loader',
         include: [
           resolve('src'),
+          resolve('static'),
           resolve('test'),
           resolve('node_modules/vue-echarts'),
           resolve('node_modules/resize-detector'),

@@ -41,7 +41,7 @@
 <script>
   import { mapActions , mapState} from 'vuex'
   import login from '@/api/userCenter/login'
-  import group from '@/assets/login/group.png'
+  import group from '@/assets/login/group.jpg'
   import logo from '@/assets/login/logo.png'
   export default {
     data() {

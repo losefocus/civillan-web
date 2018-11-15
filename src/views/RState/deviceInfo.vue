@@ -209,22 +209,22 @@
           }
           .led-skyBlue{
             display: inline-block;
+            background-color: #f7ef8a;
+            width: 6px;
+            height: 6px;
+            box-shadow: 0px 0px 2px 4px #ffaa17;
+            -moz-box-shadow: 0px 0px 2px 4px #ffaa17;
+            -webkit-box-shadow: 0px 0px 2px 4px #ffaa17;
+            border-radius: 50%;
+          }
+          .led-blue{
+            display: inline-block;
             background-color: #12E7FF;
             width: 6px;
             height: 6px;
             box-shadow: 0px 0px 2px 4px #31C4F7;
             -moz-box-shadow: 0px 0px 2px 4px #31C4F7;
             -webkit-box-shadow: 0px 0px 2px 4px #31C4F7;
-            border-radius: 50%;
-          }
-          .led-blue{
-            display: inline-block;
-            background-color: #3494F7;
-            width: 6px;
-            height: 6px;
-            box-shadow: 0px 0px 2px 4px #2A5BF7;
-            -moz-box-shadow: 0px 0px 2px 4px #2A5BF7;
-            -webkit-box-shadow: 0px 0px 2px 4px #2A5BF7;
             border-radius: 50%;
           }
           span{
