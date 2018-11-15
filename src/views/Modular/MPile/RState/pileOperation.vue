@@ -11,7 +11,7 @@
       <div class="bot">
         <div class="hole hole_1">
         </div>
-        <div class="depth_design">设计桩长 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{dataInfo.depth_design}}</span> m</div>
+        <div class="depth_design">设计桩长 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{dataInfo.depth_design || 20}}</span> m</div>
       </div>
     </div>
     <div class="item" :class="{visible:dataInfo.rpipe_sta<1}">
