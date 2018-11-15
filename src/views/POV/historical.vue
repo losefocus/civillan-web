@@ -212,7 +212,6 @@
     padding: 15px 0 0 20px;
     height: 50px;
     background: #ffffff;
-    margin-bottom: 10px;
     li{
       font-size: 14px;
       cursor: pointer;

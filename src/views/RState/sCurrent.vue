@@ -67,7 +67,6 @@ export default {
       if(current){
         this.myChart = this.$echarts.init(current);
         let tips=Number(post_data.rcurrent).toFixed(2);
-        console.log(post_data.rcurrent);
         if(isNaN(tips)){
           tips='0.00'
         }

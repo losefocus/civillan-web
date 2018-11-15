@@ -28,7 +28,6 @@
   import state from '@/assets/AMap/marker.png'
   import toTree from '@/common/toTree'
   import timeStamp from '@/common/timeStamp'
-  import $ from 'jquery'
   export default {
     name: "ProjectEntrance",
     components:{

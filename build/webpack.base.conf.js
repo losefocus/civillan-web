@@ -87,10 +87,13 @@ module.exports = {
     ]
   },
   externals: {
+    'vue': 'Vue',
     'AMap': 'window.AMap',
     'AMapUI':'AMapUI',
     'vue-router': 'VueRouter',
     'axios': 'axios',
+    'ElementUI':'ElementUI',
+    'echats':'echats',
     'store':'store',
     'vuex': 'Vuex',
     'three':'THREE',
