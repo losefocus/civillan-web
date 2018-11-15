@@ -36,7 +36,7 @@
                   if(item.maxValue!=undefined){
                     this.rflow = item.maxValue;
                   }else{
-                    this.rflow = 500
+                    this.rflow = 100
                   }
                   this.realTime(post_data)
                 }

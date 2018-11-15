@@ -97,9 +97,9 @@
 <script>
   import echarts from 'echarts'
   import RadialProgressBar from 'vue-radial-progress'
-  import sCurrent from '@/views/RState/sCurrent'
-  import sSpeed from '@/views/RState/sSpeed'
-  import sFlow from '@/views/RState/sFlow'
+  import sCurrent from '@/views/Modular/MPile/RState/sCurrent'
+  import sSpeed from '@/views/Modular/MPile/RState/sSpeed'
+  import sFlow from '@/views/Modular/MPile/RState/sFlow'
   import {formatDate} from '@/common/formatDate.js';
 
   import deviceData from '@/api/device/deviceData'
@@ -107,10 +107,10 @@
   import deviceUser from '@/api/device/deviceUser.js'
   import deviceConfig from '@/api/device/deviceConfig.js'
 
-  import aSp from '@/views/RState/AshPressureCurrent.vue'
-  import pOperation from '@/views/RState/pileOperation.vue'
-  import pMap from '@/views/RState/pileMap.vue'
-  import deviceInfo from '@/views/RState/deviceInfo.vue'
+  import aSp from '@/views/Modular/MPile/RState/AshPressureCurrent.vue'
+  import pOperation from '@/views/Modular/MPile/RState/pileOperation.vue'
+  import pMap from '@/views/Modular/MPile/RState/pileMap.vue'
+  import deviceInfo from '@/views/Modular/MPile/RState/deviceInfo.vue'
   import Bus from '@/common/eventBus'
 export default {
   name: "runningState",
@@ -170,7 +170,7 @@ export default {
       progressNum:40,//深度进度
       progress:0,
       progressHeight:'',
-      DesignDeep:30,
+      DesignDeep:20,
 
       isTab:false,//设备型号切换,
 

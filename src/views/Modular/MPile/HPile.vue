@@ -200,9 +200,10 @@
       <el-table-column
         v-if="newData.pile_describe.checked"
         label="桩号"
-        align="center"
-        width="150">
+        width="190">
         <template slot-scope="props">
+          <span>{{props.row.pile_describe}}</span>
+          <span>[</span>
           <el-popover
             placement="right-start"
             title="作业配置参数"
@@ -210,11 +211,14 @@
             >
             <div v-if="noConfig" style="color:#999999">未找到当前作业的配置参数</div>
             <ul v-else v-for="(list,index) in config_data" :key="index">
-              <li><span style="display: inline-block;width: 50px;vertical-align: top;font-size: 12px;">{{list.name}}</span> : <span style="display:inline-block;margin-left: 10px;vertical-align: top;width:110px;word-wrap:break-word;">{{list.value}}</span></li>
+              <li><span style="display: inline-block;width: 50px;vertical-align: top;font-size: 12px;">{{list.name}}</span> : <span style="display:inline-block;margin-left: 10px;vertical-align: top;width:95px;word-wrap:break-word;font-size: 12px;">{{list.value}}</span></li>
             </ul>
 
-            <p slot="reference" class="c-describe" @click="getConfig(props.row.pile_describe)">{{props.row.pile_describe}} [参数]</p>
+            <span class="c-parameter"  slot="reference"   @click="getConfig(props.row.pile_describe)">参数</span>
           </el-popover>
+          <span>|</span>
+          <span  slot="reference"  @click="visible = false" class="c-parameter">回放</span>
+          <span>]</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -1314,9 +1318,16 @@
     background: #ffffff;
   };
   .c-describe{
+    //color: #1ab3e6;
+    cursor: pointer;
+
+  }
+  .c-parameter{
     color: #1ab3e6;
     cursor: pointer;
+    text-decoration:underline;
   }
+
   .expand_head{
     width: 100%;
     height: 36px;

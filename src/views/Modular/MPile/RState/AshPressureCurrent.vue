@@ -2,7 +2,7 @@
   <div style="width: 100%;height: 100%;">
     <!--<chart :options="PulpingQuantity" :auto-resize=true></chart>-->
     <div class="t-charts">
-      段灰量、电流随桩机里程变化曲线
+      段灰量(Kg)、电流(A)随桩机里程变化曲线
     </div>
     <div style="height: calc(100% - 40px)">
       <div id="myCharts1" style="width: 50%;height: 50%;float: left;"></div>
@@ -75,12 +75,8 @@
         if(dataInfo.rpipe_sta==1){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
-              if(dataInfo.par_ash!=oldVal.par_ash){
-                this.data1.ashData.push(ashData);
-              }
-              if(dataInfo.rcurrent!=oldVal.rcurrent){
-                this.data1.rcurrentData.push(rcurrent);
-              }
+              this.data1.ashData[this.data1.ashData.length-1] = ashData;
+              this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
             }else{
               this.data1.ashData.push(ashData);
               this.data1.rcurrentData.push(rcurrent);
@@ -92,12 +88,8 @@
         }else if(dataInfo.rpipe_sta==2){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
-              if(dataInfo.par_ash!=oldVal.par_ash){
-                this.data2.ashData.push(ashData);
-              }
-              if(dataInfo.rcurrent!=oldVal.rcurrent){
-                this.data2.rcurrentData.push(rcurrent);
-              }
+              this.data1.ashData[this.data1.ashData.length-1] = ashData;
+              this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
             }else{
               this.data2.ashData.push(ashData);
               this.data2.rcurrentData.push(rcurrent);
@@ -109,12 +101,8 @@
         }else if(dataInfo.rpipe_sta==3){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
-              if(dataInfo.par_ash!=oldVal.par_ash){
-                this.data3.ashData.push(ashData);
-              }
-              if(dataInfo.rcurrent!=oldVal.rcurrent){
-                this.data3.rcurrentData.push(rcurrent);
-              }
+              this.data1.ashData[this.data1.ashData.length-1] = ashData;
+              this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
             }else{
               this.data3.ashData.push(ashData);
               this.data3.rcurrentData.push(rcurrent);
@@ -126,12 +114,8 @@
         }else if(dataInfo.rpipe_sta==4){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
-              if(dataInfo.par_ash!=oldVal.par_ash){
-                this.data4.ashData.push(ashData);
-              }
-              if(dataInfo.rcurrent!=oldVal.rcurrent){
-                this.data4.rcurrentData.push(rcurrent);
-              }
+              this.data1.ashData[this.data1.ashData.length-1] = ashData;
+              this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
             }else{
               this.data4.ashData.push(ashData);
               this.data4.rcurrentData.push(rcurrent);
@@ -206,7 +190,7 @@
                     color: '#999'
                   }
                 },
-              max:30,
+              max:dataInfo.depth_design,
               min:0,
             }],
             xAxis: [{
@@ -234,7 +218,7 @@
               splitLine: {
                 show:false,
               },
-              max:100,
+              max:60,
               min:0,
             }],
             series: [

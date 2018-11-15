@@ -368,12 +368,13 @@ body .el-table th.gutter {
 }*/
 
 /*兼容ie*/
-.el-input__inner.el-range-editor--mini{
+.el-input__inner .el-range-editor--mini{
   line-height: 20px;
 }
 .materielTable{
   height: 80px;
 }
+
 
 
 
