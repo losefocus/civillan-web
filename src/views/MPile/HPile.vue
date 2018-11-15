@@ -201,7 +201,7 @@
         v-if="newData.pile_describe.checked"
         label="桩号"
         align="center"
-        width="130">
+        width="150">
         <template slot-scope="props">
           <el-popover
             placement="right-start"
@@ -220,6 +220,7 @@
       <el-table-column
         v-if="newData.machine_key.checked"
         label="桩机号"
+        align="center"
         width="130">
         <template slot-scope="props">
           {{props.row.machine_key}}
@@ -1044,21 +1045,20 @@
       },
       //获取列表
       getList(post_data) {
-        let _this=this;
-        _this.loading=true;
+        this.loading=true;
         history.list(post_data).then(res=>{
           if(res.success){
-            _this.total=res.result.total;
-            _this.tableData=res.result.items;
+            this.total=res.result.total;
+            this.tableData=res.result.items;
             /*_this.tableData.forEach(function (item) {
               item.data.forEach(list=>{
                 list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
               })
             });*/
-            _this.loading=false
+            this.loading=false
           }else {
-            _this.$message.error(res.message);
-            _this.loading=false
+            this.$message.error(res.message);
+            this.loading=false
           }
         }).catch(err => {
           this.loading=false;

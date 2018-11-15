@@ -1,6 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
+// import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store/store'
@@ -8,8 +8,6 @@ import VueBus from 'vue-bus'
 import 'es6-promise/auto'
 import 'babel-polyfill'
 import '../static/common/reset.css'
-
-
 
 Vue.use(VueBus);
 
@@ -21,17 +19,11 @@ Vue.prototype.$api = api;
 import promise from 'es6-promise'; //axios兼容IE
 promise.polyfill();
 
-import axios from 'axios'
-Vue.prototype.$http= axios;
-
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI);
 
 import VueCookies from 'vue-cookies'
 Vue.use(VueCookies);
 
-import echarts from 'echarts'
+
 Vue.prototype.$echarts = echarts;
 
 import ECharts from 'vue-echarts/components/ECharts.vue'
@@ -41,7 +33,6 @@ import * as filters from './filters' // 全局filter
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 });
-
 
 // 手动引入 ECharts 各模块来减小打包体积
 import 'echarts/lib/chart/bar'

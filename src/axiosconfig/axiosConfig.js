@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import axios from 'axios'
 import qs from 'qs'
 import router from '../router/index.js'
 import { Message, Loading } from 'element-ui'

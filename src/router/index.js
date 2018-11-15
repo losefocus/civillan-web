@@ -1,11 +1,5 @@
-import Vue from 'vue'
-import store from '@/store/store'
 
-import Router from 'vue-router'
-
-Vue.use(Router);
-
-const vRouter = new Router({
+const vRouter = new VueRouter({
   routes: [
     {
       path: '/',
