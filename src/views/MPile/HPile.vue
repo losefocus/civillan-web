@@ -162,7 +162,7 @@
             </el-table-column>
             <el-table-column
               align="center"
-              label="钻速（cm/min）">
+              label="速度（cm/min）">
               <template slot-scope="props">
                 {{ Math.abs(props.row.p_down_speed) | formatZ}}
               </template>
@@ -843,9 +843,12 @@
     props:['isShow','newStyle','deviceKey','isDevice'],
     created(){
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      this.pile_describe=deviceInfo.name;
-      this.key=deviceInfo.key;
-      this.post_data.key=deviceInfo.key;
+      if(this.isDevice){
+        this.pile_describe=deviceInfo.name;
+        this.key=deviceInfo.key;
+        this.post_data.key=deviceInfo.key;
+      }
+
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
       this.getList(this.post_data);
@@ -855,6 +858,7 @@
       })
     },
     mounted(){
+
     },
     methods: {
       handleExport(command){
@@ -1221,13 +1225,12 @@
   .c-box{
 
     //margin-top: 15px;
-    padding: 0 2% 20px;
+    padding: 20px 2% ;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
     overflow: hidden;
     .c-device{
-      margin: 20px 0 20px 0;
-
+      margin: 0 0 20px 0;
     }
     .t-pile{
 
