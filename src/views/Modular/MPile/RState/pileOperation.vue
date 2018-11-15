@@ -88,12 +88,14 @@
         <div class="info1"  v-show="dataInfo.rpipe_sta == 4">深度 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{ru_deep}}</span> m</div>
 -->
         <div class="info" v-show="dataInfo.rpipe_sta == 4||dataInfo.rpipe_sta == 5">
-          <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:#4dbce6">已完成</p>
-          <p v-else class="status-title">复提</p>
-          <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
-          <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
-          <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
-          <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
+          <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:#4dbce6;margin: 80px 0 0 10px;">已完成</p>
+          <div v-else>
+            <p class="status-title">复提</p>
+            <p>深度 <span :style="dataInfo.rdeep>dataInfo.depth_design?'color:red':''">{{dataInfo.rdeep}}</span> m</p>
+            <p>钻速 <span>{{dataInfo.rspeed | formatZ}}</span> cm/min</p>
+            <p>电流 <span>{{dataInfo.rcurrent | formatZ}}</span> A</p>
+            <p>流量 <span>{{dataInfo.rflow | formatZ}}</span> L/min</p>
+          </div>
         </div>
         <i v-if="dataInfo.rpipe_sta == 4 && dataInfo.rspeed!=0 && dataInfo.record_sta != 3" class="iconfont icon-jiantou-up icon_up" style="color:#4dbce6;font-size:20px;"></i>
       </div>
