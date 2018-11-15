@@ -398,7 +398,7 @@
     left: 50%;
     width: 115px;
     height: 120px;
-    background: url(../../assets/RState/stake-03.png)no-repeat center bottom;
+    background: url(../../../../assets/RState/stake-03.png)no-repeat center bottom;
     background-size: contain;
     font-size: 12px;
     padding-left: 15px;
@@ -411,7 +411,7 @@
     left: 50%;
     width: 115px;
     height: 40px;
-    background: url(../../assets/RState/stake-03.png)no-repeat center bottom;
+    background: url(../../../../assets/RState/stake-03.png)no-repeat center bottom;
     background-size: contain;
     font-size: 12px;
     padding-left: 15px;
@@ -438,7 +438,7 @@
     position: absolute;
     left: 39%;
     bottom: -10%;
-    background: url(../../assets/RState/liquid-01.png)no-repeat center bottom;
+    background: url(../../../../assets/RState/liquid-01.png)no-repeat center bottom;
     background-size: contain;
     animation:nozzle 1s infinite;
     -moz-animation:nozzle 1s infinite; /* Firefox */
@@ -543,20 +543,20 @@
     line-height: 16px;
     padding-left: 15px;
     text-align: left;
-    background: url(../../assets/RState/stake-03.png)no-repeat center bottom;
+    background: url(../../../../assets/RState/stake-03.png)no-repeat center bottom;
     background-size: contain
   }
   .item .stake{
     width: 100%;
     height: 100%;
-    background: url(../../assets/RState/stake-01.png)no-repeat center bottom;
+    background: url(../../../../assets/RState/stake-01.png)no-repeat center bottom;
     background-size: contain;
   }
   .item .hole{
     width: 25%;
     height: 100%;
     margin: auto;
-    background: url(../../assets/RState/stake-02.png)no-repeat center bottom;
+    background: url(../../../../assets/RState/stake-02.png)no-repeat center bottom;
     background-size: cover;
     overflow: hidden;
     position: relative;

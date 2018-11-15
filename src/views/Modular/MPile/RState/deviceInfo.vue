@@ -199,12 +199,12 @@
           }
           .led-gray{
             display: inline-block;
-            background-color: #393939;
+            background-color: #c1c1c1;
             width: 6px;
             height: 6px;
-            box-shadow: 0px 0px 2px 4px #666666;
-            -moz-box-shadow: 0px 0px 2px 4px #666666;
-            -webkit-box-shadow: 0px 0px 2px 4px #666666;
+            box-shadow: 0px 0px 2px 4px #858585;
+            -moz-box-shadow: 0px 0px 2px 4px #858585;
+            -webkit-box-shadow: 0px 0px 2px 4px #858585;
             border-radius: 50%;
           }
           .led-skyBlue{
@@ -281,7 +281,7 @@
         float: right;
         width: 60px;
         height: 60px;
-        background: url("../../assets/RState/angle.png") no-repeat;
+        background: url("../../../../assets/RState/angle.png") no-repeat;
         background-size: 100% 100%;
         position: relative;
         .a-spot{

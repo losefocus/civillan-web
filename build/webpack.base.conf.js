@@ -93,7 +93,6 @@ module.exports = {
     'AMapUI':'AMapUI',
     'vue-router': 'VueRouter',
     'axios': 'axios',
-    'ElementUI':'ElementUI',
     'echats':'echats',
     'store':'store',
     'vuex': 'Vuex',

@@ -13,18 +13,18 @@
 <script>
   import deviceGrouping from '@/api/project/deviceGrouping'
 
-  import SAnalysis from '@/views/MPile/SAnalysis'
-  import RState from '@/views/MPile/RState'
-  import AQuery from '@/views/MPile/AQuery'
-  import HPile from '@/views/MPile/HPile'
-  import NRecord from '@/views/MPile/NRecord'
+  import SAnalysis from '@/views/Modular/MPile/SAnalysis'
+  import RState from '@/views/Modular/MPile/RState'
+  import AQuery from '@/views/Modular/MPile/AQuery'
+  import HPile from '@/views/Modular/MPile/HPile'
+  import NRecord from '@/views/Modular/MPile/NRecord'
 
-  import FConcrete from '@/views/FConcrete/FConcrete'
-  import HFoam from '@/views/FConcrete/HFoam'
+  import FConcrete from '@/views/Modular/FConcrete/FConcrete'
+  import HFoam from '@/views/Modular/FConcrete/HFoam'
 
-  import SCuring from '@/views/SCuring/SCuring'
+  import SCuring from '@/views/Modular/SCuring/SCuring'
 
-  import TTensile from '@/views/TTensile/TTensile'
+  import TTensile from '@/views/Modular/TTensile/TTensile'
 
   import Bus from '@/common/eventBus'
   export default {
