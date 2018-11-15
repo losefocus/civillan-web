@@ -190,7 +190,7 @@
                     color: '#999'
                   }
                 },
-              max:dataInfo.depth_design,
+              max:dataInfo.depth_design || 20,
               min:0,
             }],
             xAxis: [{

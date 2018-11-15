@@ -231,12 +231,13 @@ export default {
     //设备信息
     getDeviceInfo(){
       this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
+      console.log(this.deviceInfo1.status);
       if(this.deviceInfo1.status==11){
         this.noDevice=false;
       }else{
         this.noDevice=true;
         this.RT_data={};
-        this.RT_data.depth_design=30;
+        this.RT_data.depth_design=20;
         clearInterval(this.timer);
       }
     },
@@ -271,7 +272,7 @@ export default {
           this.noConfig=false
         }else{
           this.noConfig=true;
-          this.DesignDeep=30;
+          this.DesignDeep=20;
         }
 
         let aa = res[1].result.items;
