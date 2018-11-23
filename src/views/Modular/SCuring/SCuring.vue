@@ -58,19 +58,10 @@
 <script>
   import echarts from 'echarts'
   import RadialProgressBar from 'vue-radial-progress'
-  import sCurrent from '@/views/Modular/MPile/RState/sCurrent'
-  import sSpeed from '@/views/Modular/MPile/RState/sSpeed'
-  import sFlow from '@/views/Modular/MPile/RState/sFlow'
   import {formatDate} from '@/common/formatDate.js';
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
-  import deviceUser from '@/api/device/deviceUser.js'
-  import deviceConfig from '@/api/device/deviceConfig.js'
-
-  import aSp from '@/views/Modular/MPile/RState/AshPressureCurrent.vue'
-  import pOperation from '@/views/Modular/MPile/RState/pileOperation.vue'
-  import pMap from '@/views/Modular/MPile/RState/pileMap.vue'
 
   import Maintenance from '@/assets/curing/Maintenance.png'
   import MaintenanceOff from '@/assets/curing/MaintenanceOff.png'
@@ -83,12 +74,6 @@
     name: "SCuring",
     components:{
       RadialProgressBar,
-      sCurrent,
-      sSpeed,
-      sFlow,
-      aSp,
-      pOperation,
-      pMap,
       deviceInfo,
     },
     data(){
@@ -115,11 +100,7 @@
         progressNum:0,
         angelWidth:0,
         noDevice:false,
-        deviceType:['1','2','3'],
         deviceIndex:1,
-        deviceName:[
-          {name:'NB-001'},{name:'NB-002'},{name:'NB-003'}
-        ],
         isShow:true,
         titleActive:'1',//设备样式切换
         classChange:1,//改变样式
@@ -136,10 +117,6 @@
           {state:0,num:8888,id:8,name:'浙江桥梁工程'},
           {state:1,num:8888,id:8,name:'浙江桥梁工程'},
         ],
-
-        progress:0,
-        progressHeight:'',
-        DesignDeep:30,
 
         isTab:false,//设备型号切换
 

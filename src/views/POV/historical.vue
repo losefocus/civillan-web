@@ -97,12 +97,12 @@
       getCategoryList(){
         //this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
-          let list = res.result.items;
           this.navList=res.result.items;
         })
       },
       changeTab(list,index){ //切换tab
         this.isActive=index;
+        console.log(list.code);
         if(list.code=='JBZ'){
           this.currentView='HPile'
         }else if(list.code=='PMHNT'){
@@ -198,7 +198,7 @@
 <style lang="scss" scoped>
   .n-box{
     padding: 20px;
-    height: auto;
+    height: calc(100% - 120px);
     background: #f5f5f9;
   }
   .t-rows{

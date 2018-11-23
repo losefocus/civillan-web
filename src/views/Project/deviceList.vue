@@ -38,7 +38,7 @@
             <span>{{item.name}}</span>
           </div>
           <div class="d-title">
-            <span v-if="item.product">{{item.product.alias}}</span>
+            <span v-if="item.product">{{item.key}}</span>
             <span v-else>-</span>
             <!--<span v-if="item.device_type=='双头搅拌桩'">双头搅拌桩</span>
             <span v-if="item.device_type=='高压旋桩'">高压旋桩</span>-->
@@ -56,7 +56,7 @@
                 k2358-805
               </div>
 
-              <div class="d-date">作业进度</div>
+              <div class="d-date">形象进度</div>
               <div>
                 <el-progress  :percentage="80" color="rgb(36, 188, 247)" :show-text='false'></el-progress>
               </div>
@@ -170,7 +170,7 @@
     },
 
     computed: {
-      ...mapState({token:state=>state.login.token})
+      ...mapState({token:state=>state.project.deviceKey})
     },
     methods: {
       ...mapActions('deviceKey',['incrementKey']),
@@ -210,15 +210,13 @@
       radioEvent(){
         this.dialogVisible = false;
       },
-      getDetails(item,index){ //获取详情
+      getDetails(item){ //获取详情
         this.deviceType=item.type;
         this.dialogVisible=true;
         this.deviceName=item.name;
         let deviceInfo=JSON.stringify(item);
-        //Bus.$emit('deviceInfo',deviceInfo);
-        this.$store.dispatch('incrementKey',item.key);
-        //sessionStorage.setItem('deviceType',item.type);
         sessionStorage.setItem('deviceInfo',deviceInfo);
+        this.$store.dispatch('incrementKey',item.key);
         this.deviceKey=item.key;
       },
       isFullScreen(val){ //是否打开模态框

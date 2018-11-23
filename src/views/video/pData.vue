@@ -235,11 +235,6 @@ export default {
       }
     }
   }
-  .b-picture{
-    width: 100%;
-    height: 600px;
-    background-size: 100% 100%;
-  }
 
 
   pictures {

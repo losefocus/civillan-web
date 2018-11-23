@@ -1,5 +1,20 @@
 <template>
  <div style="position: relative;height: 100%">
+   <div class="b-control" v-if="isConctrol">
+     <el-button size="mini" @click="start()">开始</el-button>
+     <el-button size="mini" @click="replay()">重播</el-button>
+     <el-button size="mini" @click="stop()">暂停</el-button>
+     <el-button size="mini" @click="end()">结束</el-button>
+
+     <el-dropdown style="margin-left: 10px;" size="mini" split-button  trigger="click"  @command="accelerate">
+       播放速度
+       <el-dropdown-menu slot="dropdown">
+         <el-dropdown-item command="3000">正常</el-dropdown-item>
+         <el-dropdown-item command="2000">2倍</el-dropdown-item>
+         <el-dropdown-item command="1000">3倍</el-dropdown-item>
+       </el-dropdown-menu>
+     </el-dropdown>
+   </div>
    <transition name="fade">
      <div class="b-device" v-if="noDevice"><div class="t-device">设备已离线！</div></div>
    </transition>
@@ -40,7 +55,7 @@
          </div>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
-         <a-sp :dataInfo="RT_data" ref="aSp"></a-sp>
+         <a-sp :dataInfo="RT_data" ref="aSp" :isReplay="isReplay"></a-sp>
        </li>
        <li class="s-chart" id="pile">
         <!-- <chart :options="ElectricCurrent" :auto-resize=true></chart>-->
@@ -95,7 +110,6 @@
 </template>
 
 <script>
-  import echarts from 'echarts'
   import RadialProgressBar from 'vue-radial-progress'
   import sCurrent from '@/views/Modular/MPile/RState/sCurrent'
   import sSpeed from '@/views/Modular/MPile/RState/sSpeed'
@@ -104,14 +118,13 @@
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
-  import deviceUser from '@/api/device/deviceUser.js'
   import deviceConfig from '@/api/device/deviceConfig.js'
 
   import aSp from '@/views/Modular/MPile/RState/AshPressureCurrent.vue'
   import pOperation from '@/views/Modular/MPile/RState/pileOperation.vue'
   import pMap from '@/views/Modular/MPile/RState/pileMap.vue'
   import deviceInfo from '@/views/Modular/MPile/RState/deviceInfo.vue'
-  import Bus from '@/common/eventBus'
+  import { mapActions , mapState} from 'vuex'
 export default {
   name: "runningState",
   components:{
@@ -130,20 +143,11 @@ export default {
 
     return {
       timer:null,//定时器,
+      timer1:null,
       noConfig:true,
       pileData:{
         ps:[],
-        pile_id:/*{content:'[{"label":"pile_position","name":"桩位置","value":"120.044018147,30.858786963"},{"label":"pile_depth","name":"桩长","value":"11"},{"label":"pile_diameter","name":"桩径","value":"0.25"}]',
-          createdAt:1535618538,
-          createdBy:70,
-          id:7533,
-          key:"k2230_940_D7",
-          name:"k2230_940_D7",
-          projectId:21,
-          sort:0,
-          status:2,
-          tenant:"21fe87251b01541399c7c1a8cec741c5",
-          typeId:124,}*/{},
+        pile_id:{},
       },
       angelWidth:0,
       noDevice:false,
@@ -169,7 +173,7 @@ export default {
       rpressureData:[], //段灰量
       progressNum:40,//深度进度
       progress:0,
-      progressHeight:'',
+      progressHeight:'100%',
       DesignDeep:20,
 
       isTab:false,//设备型号切换,
@@ -177,22 +181,29 @@ export default {
       config_post_data:{},
       config_data:{},
       sensorConfig:{},
+      num:0,
+      timeSpeed:2000,
+      isReplay:false,
+      ss:false,
+
+      historyData:[],
+      isConctrol:false,
     }
   },
-  props:['dialogFullScreen','deviceKey','isClose','clientWidth'],
+  props:['dialogFullScreen','deviceKey','isClose','clientWidth','isDevice'],
   filters: {
     formatDate(time) {
       let date = new Date(time);
       return formatDate(date, 'yyyy-MM-dd'); //yyyy-MM-dd hh:mm
     }
   },
+  computed: {
+    ...mapState({changeTab:state=>state.project.changeTab}),
+    ...mapState({token:state=>state.project.backTab})
+  },
   created(){
-    let deviceKey=this.$store.state.project.deviceKey;
-    this.getData(deviceKey);
-    this.timer=setInterval(()=>{
-      this.getData(deviceKey);
-    },3000);
-
+    this.getHistory();
+    this.changeData()
   },
   mounted(){
     this.init();
@@ -200,10 +211,138 @@ export default {
     this.getDeviceInfo();
   },
   beforeDestroy(){
+    this.num=0;
+    this.closeTab();
     clearInterval(this.timer);
+    clearInterval(this.timer1);
   },
 
   methods:{
+    ...mapActions('backTab',['incrementBack']),
+    ...mapActions('changeTab',['incrementTab']),
+
+    closeTab(){
+      this.$store.dispatch('incrementTab',false);
+    },
+    //历史数据和实时数据的切换
+    changeData(){
+      if(this.$store.state.project.changeTab==true){
+        this.isConctrol=true;
+        clearInterval(this.timer1);
+        this.timer=setInterval(()=>{
+          this.playBack()
+        }, this.timeSpeed);
+      }else{
+        this.isConctrol=false;
+        let deviceKey=this.$store.state.project.deviceKey;
+        this.getData(deviceKey);
+        this.timer1=setInterval(()=>{
+          this.getData(deviceKey);
+        },3000);
+      }
+    },
+
+    //历史回放
+    //开始
+    start(){
+      clearInterval(this.timer);
+      this.timer=setInterval(()=>{
+        this.playBack()
+      }, this.timeSpeed);
+    },
+    //重播
+    replay(){
+      clearInterval(this.timer);
+      this.isReplay=true;
+      this.num=0;
+      this.timer=setInterval(()=>{
+        this.playBack()
+      }, this.timeSpeed);
+    },
+    //暂停
+    stop(){
+      clearInterval(this.timer)
+    },
+    //结束
+    end(){
+      if(this.isDevice){
+        this.$bus.emit('deviceEnd',true);
+        this.$store.dispatch('incrementTab',true);
+      }else{
+        this.$bus.emit('allEnd',false)
+      }
+    },
+    //播放速度
+    accelerate(command){
+      clearInterval(this.timer);
+      this.timeSpeed=command;
+      this.timer=setInterval(()=>{
+        this.playBack()
+      }, this.timeSpeed);
+    },
+    //获取后台历史数据
+    getHistory(){
+      let replayData=sessionStorage.getItem('replayData');
+      let post_data=JSON.parse(replayData);
+      deviceData.replay(post_data).then(res=>{
+        this.historyData=res.result
+      }).catch(e=>{
+
+      })
+    },
+    //数据输出
+    playBack(){
+      this.isReplay=false;
+      let result=this.historyData;
+      this.RT_data= Object.assign({},result[this.num]);
+      this.progress=Number(this.RT_data.rdeep).toFixed(2);
+      this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
+      this.RT_data.depth_design=this.DesignDeep;
+      this.num=this.num+1;
+      //如果超过数组长度，清除定时器
+      if(this.num>=result.length){
+        clearInterval(this.timer)
+      }
+    },
+
+    //实时数据
+    getData(key){
+      deviceData.list({'key':key}).then(res=>{
+        if(res.success){
+          res.result.rdeep=parseFloat(res.result.rdeep);
+          this.RT_data=res.result;
+          this.RT_data.depth_design=this.DesignDeep;
+          this.RT_data.status=1;
+          this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
+
+          this.rflow=res.result.rflow;
+          this.rspeed=Math.abs(res.result.rspeed);
+          this.rcurrent=res.result.rcurrent;
+          this.progress=res.result.rdeep.toFixed(2);
+          if(isNaN(this.progress)){
+            this.progress=0
+          }
+          this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
+
+          let par_slurry=res.result.par_slurry;
+          let par_ash=res.result.par_ash;
+          let rpressure=res.result.rpressure;
+
+          this.slurryData.push(par_slurry);
+          this.ashData.push(par_ash);
+          this.rpressureData.push(rpressure);
+
+          if(this.config_post_data!=res.result.pile_describe){
+            this.config_post_data=res.result.pile_describe;
+          }
+        }else {
+          this.progressHeight='100%';
+        }
+      }).catch(err=>{
+        this.progressHeight='100%';
+      });
+    },
+
     init(){
       let clientWidth=document.body.clientWidth;
       this.temp(this.dialogFullscreen,this.diameter,this,clientWidth);
@@ -231,7 +370,6 @@ export default {
     //设备信息
     getDeviceInfo(){
       this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      console.log(this.deviceInfo1.status);
       if(this.deviceInfo1.status==11){
         this.noDevice=false;
       }else{
@@ -241,15 +379,20 @@ export default {
         clearInterval(this.timer);
       }
     },
+    //切换设备
     deviceChange(index){
       this.deviceIndex=index;
     },
+
+    //子组件的自适应
     temp(isDialog,diameter,that,clientWidth) {
       if( that.$refs.sCurrent!==undefined){that.$refs.sCurrent.resize()}
       if( that.$refs.sSpeed!==undefined){that.$refs.sSpeed.resize()}
       if( that.$refs.sFlow!==undefined){that.$refs.sFlow.resize()}
       if( that.$refs.aSp!==undefined){this.$refs.aSp.resize();}
     },
+
+    //运行状态，
     tabChange(x){
       if(x==0){
         this.isTab=false;
@@ -257,13 +400,14 @@ export default {
         this.isTab=true;
       }
     },
+
+    //dom重新渲染
     reload () {
       this.isRouterAlive = false;
       this.$nextTick(() => (this.isRouterAlive = true))
     },
 
     //根据桩号获取相应的配置参数
-
     config_all(post_data){
       Promise.all([deviceConfig.list({'key':post_data}),config.list({page_index:1, page_size:10000})]).then(res=>{
         this.pileData.pile_id=res[0].result;
@@ -289,50 +433,8 @@ export default {
       })
     },
 
-    //实时数据
-    getData(key){
-      deviceData.list({'key':key}).then(res=>{
-        if(res.success){
-          res.result.rdeep=parseFloat(res.result.rdeep);
-          this.RT_data=res.result;
-          this.RT_data.depth_design=this.DesignDeep;
-          this.RT_data.status=1;
-          this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
 
 
-          this.rflow=res.result.rflow;
-          this.rspeed=Math.abs(res.result.rspeed);
-          this.rcurrent=res.result.rcurrent;
-          this.progress=res.result.rdeep.toFixed(2);
-          if(isNaN(this.progress)){
-            this.progress=0
-          }
-          this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
-
-          let par_slurry=res.result.par_slurry;
-          let par_ash=res.result.par_ash;
-          let rpressure=res.result.rpressure;
-
-          this.slurryData.push(par_slurry);
-          this.ashData.push(par_ash);
-          this.rpressureData.push(rpressure);
-
-          if(this.config_post_data==res.result.pile_describe){
-
-          }else{
-            this.config_post_data=res.result.pile_describe;
-            sessionStorage.setItem('pile_describe',res.result.pile_describe)
-          }
-
-          //this.getDeviceConfig(res.result.pile_describe)
-        }else {
-          this.progressHeight='100%';
-          sessionStorage.setItem('pile_describe',false)
-        }
-      }).catch(err=>{
-        this.progressHeight='100%';
-      });
-    },
     getStyle(obj,attr) {
       if(obj.currentStyle)
       {
@@ -347,7 +449,6 @@ export default {
       config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
       })
     },
-
     //设备变量参数
   },
 
@@ -400,7 +501,7 @@ export default {
     },
     config_post_data(val,oldVal){
       this.config_all(val);
-    }
+    },
   }
 }
 </script>
@@ -436,6 +537,14 @@ export default {
   .echarts {
     width: 100%;
     height: 100%;
+  }
+  .b-control{
+    padding:10px 20px;
+    background: rgba(0,0,0,0.3);
+    position: absolute;
+    z-index:9999999;
+    right:20px;
+    top:20px;
   }
   .b-device{
     position: absolute;

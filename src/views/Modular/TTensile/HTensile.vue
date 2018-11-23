@@ -1,169 +1,263 @@
 <template>
   <div class="h-box" :style="newStyle">
     <!-- 标题和控制栏 -->
-    <div class="c-box" :class="{'c-box1':isCollapse}">
-      <div class="c-query">
-        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px 0 0;width: 20%;float: left;">
-          <el-option
-            v-for="item in deviceSelect2"
-            :key="item.value2"
-            :label="item.name"
-            :value="item.value2">
-          </el-option>
-        </el-select>
-        <el-date-picker
-          v-model="value7"
-          size="mini"
-          type="daterange"
-          align="center"
-          unlink-panels
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :picker-options="pickerOptions2" style="margin: 0 5px;width: 40%;float: left;">
-        </el-date-picker>
-        <div class="c-button">
-          <el-button type="info" size="mini" @click="query">查询</el-button>
-        </div>
-        <div class="c-button">
-          <el-button type="info" size="mini" @click="query">重置</el-button>
-        </div>
-      </div>
-      <div class="c-handle">
-        <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
-          <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
-          <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
-            <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
-            <!--<el-dropdown-item>Word</el-dropdown-item>
-            <el-dropdown-item>PDF</el-dropdown-item>-->
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-button style="margin-left: 10px" type="primary" icon="el-icon-refresh" size="mini" @click="Refresh">刷新</el-button>
-        <el-popover
-          placement="bottom"
-          trigger="click">
-          <div class="t-rows">
-            <el-dropdown-item style="width: 90px;" v-for="(row,index) in newData" :key="index"><el-checkbox v-model="row.checked">{{row.title}}</el-checkbox></el-dropdown-item>
-          </div>
-          <el-button slot="reference" type="primary" icon="el-icon-caret-bottom" size="mini">选择列</el-button>
-        </el-popover>
-      </div>
-    </div>
-    <el-table
+    <h-process v-if="dataTab==3"></h-process>
+    <h-trip v-if="dataTab==2"></h-trip>
+    <div v-if="dataTab==1">
+      <div class="c-box" :class="{'c-box1':isCollapse}">
+        <div class="c-query">
+          <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px 0 0;width: 20%;float: left;">
+            <el-option
+              v-for="item in deviceSelect2"
+              :key="item.value2"
+              :label="item.name"
+              :value="item.value2">
+            </el-option>
+          </el-select>
+          <el-date-picker
+            v-model="value7"
+            size="mini"
+            type="daterange"
+            align="center"
+            unlink-panels
 
-      ref="multipleSelection"
-      :data="tableData1"
-      style="width: 100%"
-      align="center"
-      :highlight-current-row=true
-      @selection-change="handleSelectionChange"
-      @expand-change="handleExpandChange"
-    >
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        v-if="newData.begin_time.checked"
-        width="130"
-        label="开始时间"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions2" style="margin: 0 5px;width: 40%;float: left;">
+          </el-date-picker>
+          <div class="c-button">
+            <el-button type="info" size="mini" @click="query">查询</el-button>
+          </div>
+          <div class="c-button">
+            <el-button type="info" size="mini" @click="query">重置</el-button>
+          </div>
+        </div>
+        <div class="c-handle">
+          <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
+            <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
+            <el-dropdown-menu slot="dropdown" >
+              <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
+              <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
+              <!--<el-dropdown-item>Word</el-dropdown-item>
+              <el-dropdown-item>PDF</el-dropdown-item>-->
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-button style="margin-left: 10px" type="primary" icon="el-icon-refresh" size="mini" @click="Refresh">刷新</el-button>
+          <el-popover
+            placement="bottom"
+            trigger="click">
+            <div class="t-rows">
+              <el-dropdown-item style="width: 90px;" v-for="(row,index) in newData" :key="index"><el-checkbox v-model="row.checked">{{row.title}}</el-checkbox></el-dropdown-item>
+            </div>
+            <el-button slot="reference" type="primary" icon="el-icon-caret-bottom" size="mini">选择列</el-button>
+          </el-popover>
+        </div>
+      </div>
+      <el-table
+        ref="multipleSelection"
+        :data="tableData1"
+        style="width: 100%"
         align="center"
+        header-row-class-name="pass-header"
+        :highlight-current-row=true
+        @selection-change="handleSelectionChange"
+        @expand-change="handleExpandChange"
       >
-        <template slot-scope="props">
-          {{ props.row.a | formatDate }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="newData.end_time.checked"
-        width="130"
-        label="结束时间"
-        align="center"
-      >
-        <template slot-scope="props">
-          {{ props.row.b | formatDate }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="newData.depth.checked"
-        :show-overflow-tooltip=true
-        align="center"
-        label="轻质土流量">
-        <template slot-scope="props">
-          {{ props.row.c | formatP}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="newData.water_cement_ratio.checked"
-        :show-overflow-tooltip=true
-        align="center"
-        label="水泥用量">
-        <template slot-scope="scope">
-          {{scope.row.d | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="newData.re_depth.checked"
-        :show-overflow-tooltip=true
-        align="center"
-        label="发泡剂用量">
-        <template slot-scope="scope">
-          {{scope.row.e | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="newData.cumulative_ash.checked"
-        :show-overflow-tooltip=true
-        align="center"
-        label="用水总量">
-        <template slot-scope="props">
-          {{ props.row.f | formatP}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="newData.rate.checked"
-        :show-overflow-tooltip=true
-        align="center"
-        label="评分值"
-        prop="g">
-      </el-table-column>
-    </el-table>
-    <!--<div class="s-box">
-      <div class="s-body">
-        <span class="s-total">总桩数</span>
-        <span class="s-num" v-if="recordSum">{{recordSum.total_pile_num}}</span>
-        <span class="s-num" v-else>0</span>
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="孔道号"
+          align="center"
+          width="180"
+        >
+          <template slot-scope="props">
+            <span>{{props.row.a}}</span>
+            <span>[ </span>
+            <el-popover
+              placement="right-start"
+              title="作业配置参数"
+              trigger="click"
+            >
+              <ul >
+                <li><span class="c-name">梁板类型</span> : <span class="c-key">20米箱梁-中跨（B)</span></li>
+                <li><span class="c-name">桥梁名称</span> : <span class="c-key">杭州湾特大桥（HE）</span></li>
+                <li><span class="c-name">预制梁场</span> : <span class="c-key">中建3号</span></li>
+                <li><span class="c-name">梁孔数量</span> : <span class="c-key">888</span></li>
+              </ul>
+              <span class="c-parameter"  slot="reference">参数</span>
+            </el-popover>
+            <span> | </span>
+            <el-popover
+              placement="right-start"
+              title="孔道设置信息"
+              trigger="click"
+            >
+              <ul class="b-pass">
+                <li><span>钢绞线长度(m)：</span><span>25.8</span></li>
+                <li><span>张拉工艺：</span><span>2</span></li>
+                <li><span>弹性模量(Gpa)：</span><span>0</span></li>
+                <li><span>分级比例：</span><span>0</span></li>
+                <li><span>张拉次序：</span><span>1</span></li>
+                <li><span>分级张力(KN)：</span><span>0</span></li>
+              </ul>
+              <el-table
+                :data="tableData"
+                border
+                style="width: 100%">
+                <el-table-column
+                  prop="a"
+                  align="center"
+                  width="130"
+                  label="千斤顶编号">
+                </el-table-column>
+                <el-table-column
+                  prop="b"
+                  align="center"
+                  label="检验日期"
+                  width="130">
+                </el-table-column>
+                <el-table-column
+                  prop="c"
+                  width="130"
+                  align="center"
+                  label="油压泵编号">
+                </el-table-column>
+                <el-table-column
+                  prop="d"
+                  width="130"
+                  align="center"
+                  label="油压表编号">
+                </el-table-column>
+                <el-table-column
+                  prop="e"
+                  width="130"
+                  align="center"
+                  label="回归系数a">
+                </el-table-column>
+                <el-table-column
+                  prop="f"
+                  width="130"
+                  align="center"
+                  label="回归系数b">
+                </el-table-column>
+              </el-table>
+
+              <span class="c-parameter"  slot="reference">孔道信息</span>
+            </el-popover>
+            <span> ]</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="梁号"
+          align="center"
+          prop="b"
+        >
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="设备编号"
+          prop="c">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="II号张拉力(KN)">
+          <template slot-scope="scope">
+            {{scope.row.d | formatZ}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="I号张拉力(KN)">
+          <template slot-scope="scope">
+            {{scope.row.e | formatZ}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="设计张力">
+          <template slot-scope="props">
+            {{ props.row.f | formatP}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="总伸长量"
+          prop="g">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="总伸长量"
+          prop="h">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="设计伸长量"
+          prop="i">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="延伸量误差"
+          prop="j">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="超张百分比"
+          prop="k">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="张拉时间"
+          prop="l">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="记录时间"
+          prop="m">
+        </el-table-column>
+        <el-table-column
+          :show-overflow-tooltip=true
+          align="center"
+          label="状态"
+          prop="n">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="操作"
+          width="100">
+          <template slot-scope="scope">
+            <el-button @click="getTrip(scope.row)" type="text" size="small">行程数据</el-button>
+            <el-button @click="getProcess(scope.row)" type="text" size="small" style="margin-left: 0">过程数据</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="m-pagination">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="listCurrentChange"
+          :current-page="post_data.page_index"
+          layout="total,sizes, prev, pager, next, jumper"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="10"
+          :total='total'>
+        </el-pagination>
       </div>
-      <div class="s-body">
-        <span class="s-total">总桩长</span>
-        <span class="s-num" v-if="recordSum">{{recordSum.total_depth | formatZ}}</span>
-        <span class="s-num" v-else>0</span>
-        <span class="s-total">m</span>
-      </div>
-      <div class="s-body">
-        <span class="s-total">总浆量</span>
-        <span class="s-num" v-if="recordSum">{{recordSum.total_cumulative_pulp | formatZ}}</span>
-        <span class="s-num" v-else>0</span>
-        <span class="s-total">L</span>
-      </div>
-      <div class="s-body">
-        <span class="s-total">总灰量</span>
-        <span class="s-num" v-if="recordSum">{{recordSum.total_cumulative_ash | formatZ}}</span>
-        <span class="s-num" v-else>0</span>
-        <span class="s-total">KG</span>
-      </div>
-    </div>-->
-    <div class="m-pagination">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="listCurrentChange"
-        :current-page="post_data.page_index"
-        layout="total,sizes, prev, pager, next, jumper"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
-        :total='total'>
-      </el-pagination>
     </div>
+
   </div>
 </template>
 <script>
@@ -172,7 +266,14 @@
   import {formatDate} from '@/common/formatDate.js';
   import Bus from '@/common/eventBus'
   import RthyinfoFormat from '@/common/RthyinfoFormat.js'
+
+  import HProcess from '@/views/Modular/TTensile/HTensile/HProcess.vue'
+  import HTrip from '@/views/Modular/TTensile/HTensile/HTrip.vue'
   export default {
+    components:{
+      HProcess,
+      HTrip,
+    },
     data() {
       return {
         loading: true,
@@ -221,48 +322,66 @@
         device:'',// 全部设备选定值
         //deviceKey:'',// 设备key值
         tableData1: [
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
-          {a:'2018-10-10',b:'2018-10-10',c:'20',d:'30',e:40,f:50,g:60},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
+          {a:'N1',b:'LH9012',c:'LJZL01-0305',d:'1367.1',e:1367.1,f:1367.1,g:1367.1,h:1367.1,i:1367.1,j:1367.1,k:1367.1,l:'2018-10-10',m:'2018-10-10',},
         ],// 列表数据
+        tableData: [{
+          a: '1',
+          b: '2018.11.20',
+          c: '1',
+          d: '5571',
+          e: '0.017300',
+          f: '-0.170000',
+        }, {
+          a: '1',
+          b: '2018.11.20',
+          c: '1',
+          d: '5571',
+          e: '0.017300',
+          f: '-0.170000',
+        }, {
+          a: '1',
+          b: '2018.11.20',
+          c: '1',
+          d: '5571',
+          e: '0.017300',
+          f: '-0.170000',
+        }, {
+          a: '1',
+          b: '2018.11.20',
+          c: '1',
+          d: '5571',
+          e: '0.017300',
+          f: '-0.170000',
+        }, ],
         input9: '',
 
         multipleSelection:[],
 
         //选择列
         newData:{
-          pile_id:{title:'桩号',checked:true},
-          begin_time:{title:'开始时间',checked:true},
-          end_time:{title:'结束时间',checked:true},
-          depth:{title:'实际桩长',checked:true},
-          re_depth:{title:'复搅深度',checked:true},
-          water_cement_ratio:{title:'水灰比',checked:true},
-          cumulative_ash:{title:'累计灰量',checked:true},
-          cumulative_pulp:{title:'累计浆量',checked:true},
-          max_current:{title:'最大钻杆电流',checked:true},
-          down_speed:{title:'平均下钻速度',checked:false},
-          up_speed:{title:'平均提钻速度',checked:false},
-          average_pulp:{title:'平均浆量',checked:false},
-          average_ash:{title:'平均灰量',checked:false},
-          average_current:{title:'平均电流',checked:false},
-          max_down_speed:{title:'最大钻速',checked:true},
-          max_up_speed:{title:'最大提速',checked:true},
-          max_slope:{title:'最大斜度',checked:true},
-          sprayed_time:{title:'喷浆时间',checked:false},
-          t_type_length:{title:'扩大头桩长',checked:false},
-          t_type_slurry:{title:'扩大头浆量',checked:false},
-          bottom_part_slurry:{title:'扩大桩灰量',checked:false},
-          t_type_ash:{title:'下部桩浆量',checked:false},
-          bottom_part_ash:{title:'下部桩灰量',checked:false},
-          rate:{title:'评分',checked:true},
+          pile_id:{title:'孔道号',checked:true},
+          begin_time:{title:'梁号',checked:true},
+          end_time:{title:'设备编号',checked:true},
+          depth:{title:'II号张拉力 （KN）',checked:true},
+          re_depth:{title:'I号张拉力 （KN）',checked:true},
+          water_cement_ratio:{title:'设计张力',checked:true},
+          cumulative_ash:{title:'总伸长量',checked:true},
+          cumulative_pulp:{title:'设计伸长量',checked:true},
+          max_current:{title:'延伸量误差',checked:true},
+          down_speed:{title:'张拉时间',checked:false},
+          up_speed:{title:'记录时间',checked:false},
+          average_pulp:{title:'状态',checked:false},
+          average_ash:{title:'明细',checked:false},
         },
         tableHeader:[],
         tableName:[],
@@ -274,6 +393,7 @@
         },
         deviceTotal:0,
         deviceName:'',
+        dataTab:1,
       }
     },
     filters: {
@@ -290,12 +410,24 @@
       this.getRecords();*/
       Bus.$on('isCollapse',res=>{
         this.isCollapse=res
+      });
+      this.$bus.on('tab',(res)=>{
+        this.dataTab=res;
       })
     },
     mounted(){
 
     },
     methods: {
+      //切换记录数据页
+      getTrip(){
+        this.dataTab=2
+      },
+      //切换过程数据页
+      getProcess(){
+        this.dataTab=3
+      },
+
       handleExport(command){
         if(command=='1'){
           this.importExcel();
@@ -452,7 +584,6 @@
         })
       },
 
-
       query(){
         this.post_data.key=this.deviceKey;
         this.post_data.page_index=1;
@@ -473,6 +604,7 @@
   }
 </script>
 <style lang="scss" scoped>
+
   .h-box{
     height: 100%;
     background: #f5f5f9;
@@ -561,6 +693,37 @@
     padding: 20px;
     text-align: center;
     background: #ffffff;
+  }
+  .c-name{
+    display: inline-block;
+    width: 50px;
+    vertical-align: top;
+    font-size: 12px;
+  }
+  .c-key{
+    display:inline-block;
+    margin-left: 10px;
+    vertical-align: top;
+    width:115px;
+    word-wrap:break-word;
+    font-size: 12px;
+  }
+  .c-parameter{
+    color: #1ab3e6;
+    cursor: pointer;
+    text-decoration:underline;
+  }
+  .b-pass{
+    border: 1px solid #ebeef5;
+    height: 40px;
+    li{
+      font-size: 12px;
+      float: left;
+      width: 130px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+    }
   }
 </style>
 

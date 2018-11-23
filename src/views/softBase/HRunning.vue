@@ -12,21 +12,10 @@
 
 <script>
   import deviceGrouping from '@/api/project/deviceGrouping'
-
-  import SAnalysis from '@/views/Modular/MPile/SAnalysis'
   import RState from '@/views/Modular/MPile/RState'
-  import AQuery from '@/views/Modular/MPile/AQuery'
-  import HPile from '@/views/Modular/MPile/HPile'
-  import NRecord from '@/views/Modular/MPile/NRecord'
-
   import FConcrete from '@/views/Modular/FConcrete/FConcrete'
-  import HFoam from '@/views/Modular/FConcrete/HFoam'
-
   import SCuring from '@/views/Modular/SCuring/SCuring'
-
   import TTensile from '@/views/Modular/TTensile/TTensile'
-  import HTensile from '@/views/Modular/TTensile/HTensile'
-
   import PGrouting from '@/views/Modular/PGrouting/PGrouting'
 
   import Bus from '@/common/eventBus'
@@ -34,15 +23,9 @@
     name: "newRunning",
     components: {
       RState,
-      AQuery,
-      HPile,
-      SAnalysis,
-      NRecord,
       FConcrete,
-      HFoam,
       SCuring,
       TTensile,
-      HTensile,
       PGrouting
     },
     data () {
@@ -51,7 +34,7 @@
         navList:[],
         loading:null,
         isShow:true,
-        isDevice:true,
+        isDevice:false,
         dialogVisible: false,
         dialogWidth:'75%',
         dialogHeight:{
@@ -67,9 +50,6 @@
         deviceName:'',
         tHeader:[
           {name:'运行状况'},
-          {name:'历史数据'},
-          {name:'统计分析'},
-          {name:'故障报警'},
         ],
         tBody:[],
         tIndex:0,
@@ -105,12 +85,8 @@
           this.currentView=this.tBody[0];
         }
       });
-      this.$bus.on('deviceEnd',res=>{
-        if(res){
-          this.tIndex=1;
-          this.currentView=this.tBody[1];
-        }
-      });
+
+
       this.getFullScreen(this.dialogFullScreen);
       this.selfAdaption()
     },
@@ -152,19 +128,19 @@
       },
       changeType(){
         if(this.deviceType=='PMHNT'){
-          this.tBody=['FConcrete', 'HFoam', 'SAnalysis', 'AQuery',];
+          this.tBody=['FConcrete'];
           this.currentView='FConcrete'
         }else if(this.deviceType=='JBZ'){
-          this.tBody=['RState', 'HPile', 'SAnalysis', 'AQuery',];
+          this.tBody=['RState'];
           this.currentView='RState'
         }else if(this.deviceType=='PLYH'){
-          this.tBody=['SCuring', 'HFoam', 'SAnalysis', 'AQuery',];
+          this.tBody=['SCuring'];
           this.currentView='SCuring'
         }else if(this.deviceType=='YYLZL'){
-          this.tBody=['TTensile', 'HTensile', 'SAnalysis', 'AQuery',];
+          this.tBody=['TTensile'];
           this.currentView='TTensile'
         }else if(this.deviceType=='YYLYJ'){
-          this.tBody=['PGrouting', 'HFoam', 'SAnalysis', 'AQuery',];
+          this.tBody=['PGrouting'];
           this.currentView='SCuring'
         }
       },
@@ -206,32 +182,32 @@
     width: 100%;
     height: 45px;
     background: #ffffff;
-  li{
-    cursor: pointer;
-    float: left;
-    width:160px;
-    height:45px;
-    text-align: center;
-    line-height: 45px;
-    font-size:14px;
-    color:rgba(153,153,153,1);
-  }
-  .t-handle{
-    float: right;
-    width: 60px;
-    height: 45px;
-    line-height: 45px;
-    margin-right: 30px;
-    display: flex;
-    justify-content: space-around;
-  div{
-    cursor: pointer;
-  }
-  }
-  .active {
-    background-color: #F85959;
-    color: #ffffff;
-  }
+    li{
+      cursor: pointer;
+      float: left;
+      width:160px;
+      height:45px;
+      text-align: center;
+      line-height: 45px;
+      font-size:14px;
+      color:rgba(153,153,153,1);
+    }
+    .t-handle{
+      float: right;
+      width: 60px;
+      height: 45px;
+      line-height: 45px;
+      margin-right: 30px;
+      display: flex;
+      justify-content: space-around;
+      div{
+        cursor: pointer;
+      }
+    }
+    .active {
+      background-color: #F85959;
+      color: #ffffff;
+    }
   }
   .t-Body{
     height: 100%;

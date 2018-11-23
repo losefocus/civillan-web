@@ -160,16 +160,7 @@ export default {
       this.changeWidth()
     }
   },
-  /*watch: {
-    $route(to,from){
-      this.lists.forEach((item,i)=>{
-        if(item.path==to.path){
-          this.isActive=i;
-          sessionStorage.setItem('isActive',this.isActive);
-        }
-      })
-    },
-  },*/
+
 }
 </script>
 
@@ -212,7 +203,7 @@ export default {
 
 
   .fade-enter-active,.fade-leave-active{
-    transition: 0.6s all ease;
+    transition: 0.3s all ease;
   }
   .fade-enter-active{
      opacity: 1;
@@ -234,7 +225,7 @@ export default {
     background-size: cover;
     text-align: center;
     color: #ffffff;
-    transition: 0.6s all ease;
+    transition: 0.3s all ease;
     overflow: hidden;
     .pj-title{
       width: 100%;

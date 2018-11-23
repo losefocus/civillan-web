@@ -94,15 +94,6 @@ export default {
         //{name:'通知记录'},
         {name:'故障报警'},
       ],
-      tBody:[
-        'RState',
-        'HData',
-        'SAnalysis',
-        //'NRecord',
-        'AQuery',
-      ],
-      tIndex:0,
-      currentView:'RState',
       isBusy: false,
       post_data:{
         page_size:999,

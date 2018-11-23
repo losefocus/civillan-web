@@ -363,6 +363,9 @@ body .el-table th.gutter {
 .h-header{
   background: rgba(105,106,114,0.6) !important;
 }
+.pass-header{
+  background: rgba(105,106,114,0.6) !important;
+}
 /*.el-table__header-wrapper{
   background-color: #E1E1E3 !important;
 }*/
@@ -411,6 +414,6 @@ body .el-table th.gutter {
 
 /*走马灯高度自适应*/
 .el-carousel__container{
-  height: 91% !important;
+  height: 100% !important;
 }
 

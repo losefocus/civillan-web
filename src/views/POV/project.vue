@@ -4,46 +4,17 @@
       <li class="p-info">
         <div class="i-name">
           {{ info.name }}
-          <el-popover
-            placement="right-start"
-            trigger="click"
-          >
-            <p v-if="info.comment">{{ info.comment }}</p>
-            <p v-else>暂无项目详情</p>
-            <span class="d-content" slot="reference"><span class="el-icon-info"></span></span>
-          </el-popover>
         </div>
         <div class="i-time">
           <span class="t-title">项目工期：</span>
           <span class="t-date">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</span>
         </div>
-        <ul class="i-statistics">
-          <li class="s-data">
-            <router-link to="device">
-              <p class="d-num">{{ deviceTotal }}</p>
-              <p class="d-name">现场设备</p>
-            </router-link>
-          </li>
-          <li class="s-data">
-            <router-link to="#">
-              <p class="d-num">{{ userTotal }}</p>
-              <p class="d-name">施工人员</p>
-            </router-link>
-          </li>
-          <li class="s-data">
-            <router-link to="video">
-              <p class="d-num">{{ videoTotal }}</p>
-              <p class="d-name">影像资料</p>
-            </router-link>
-          </li>
-          <li class="s-data">
-            <router-link to="document">
-              <p class="d-num">{{ documentTotal }}</p>
-              <p class="d-name">文档资料</p>
-            </router-link>
-          </li>
-          <div class="clear"></div>
-        </ul>
+        <div class="i-statistics" v-if="info.comment">
+          {{ info.comment }}
+        </div>
+        <div class="i-statistics" v-else>
+          暂无简介
+        </div>
         <div class="i-box p-item" style="width: 100%;">
           <el-popover
             placement="right"
@@ -69,56 +40,48 @@
           </el-popover>
         </div>
       </li>
-      <li class="d-map">
-        <d-map :searchStyle="searchStyle" :typeStyle="typeStyle" :newStyle="newStyle"></d-map>
-        <div class="m-searchBox" @click="enlarge()">
-          <span class="iconfont icon-dEnlarge"></span>
-        </div>
-      </li>
-    </ul>
-    <ul class="a-box">
       <li class="p-info">
-        <chart :options="polar1" :auto-resize=true></chart>
-      </li>
-      <li class="d-map">
-        <div class="t-workSchedule">
-          作业进度
-        </div>
-        <el-carousel  indicator-position="outside" :autoplay="false" trigger="click" style="height: calc(100% - 40px);">
-          <el-carousel-item v-for="(items,index) in deviceList" :key="index">
-            <ul style="width: 100%;height: 100%">
-              <li class="b-device" v-for="(item,i) in items" :key="i">
-                <div class="d-name">{{item.name}}</div>
-                <ul class="d-progress">
-                  <li class="p-title"><span>进度</span></li>
-                  <li class="p-progress">
-                    <el-progress :percentage="70" :show-text="false"></el-progress>
-                  </li>
-                  <div style="clear: both"></div>
-                </ul>
-                <ul class="d-Statistics">
-                  <li class="s-body">
-                    <div class="s-title">作业总数</div>
-                    <div class="s-num">300</div>
-                  </li>
-                  <li class="s-body">
-                    <div class="s-title">已完成</div>
-                    <div class="s-num">200</div>
-                  </li>
-                  <li class="s-body">
-                    <div class="s-title">剩余</div>
-                    <div class="s-num">100</div>
-                  </li>
-                  <li class="s-body">
-                    <div class="s-title">合格率</div>
-                    <div class="s-num">60</div>
-                  </li>
-                </ul>
-              </li>
-            </ul>
+        <el-carousel trigger="click"  style="height: 100%;">
+          <el-carousel-item v-for="item in mediaList" :key="item">
+            <div class="pj-title" style="width: 100%;height: 100%;" :style="{'background-image': 'url(' + item.thumbnailFileBaseUrl+item.thumbnailFilePath+ ')','background-repeat':'no-repeat','background-size':'cover','background-position':'center'}"></div>
           </el-carousel-item>
         </el-carousel>
       </li>
+    </ul>
+    <ul class="a-box">
+      <ul class="b-group">
+        <li class="g-list" v-for="item in groupList" :key="item"  @click="JumpRouter">
+          <div class="m-name">
+            <p>{{item.name}}</p>
+            <img class="i-jump" :src="jumpIn">
+          </div>
+          <div :style="{'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100%','width':'100%','height':'230px'}"></div>
+          <div class="m-info">
+            <div class="t-progress">
+              形象进度
+            </div>
+            <el-progress :percentage="70" color="#24BCF7"></el-progress>
+            <ul class="b-Statistics">
+              <li class="s-list">
+                <p class="l-name">在线设备</p>
+                <div class="n-body">
+                  <span class="d-online">90</span>
+                  <span class="d-total">/</span>
+                  <span class="d-total">100</span>
+                </div>
+              </li>
+              <li class="s-list" >
+                <p class="l-name">预警次数</p>
+                <div class="n-body">
+                  <span class="n-alarm">90</span>
+                </div>
+              </li>
+              <div style="clear: both"></div>
+            </ul>
+          </div>
+
+        </li>
+      </ul>
     </ul>
   </div>
 </template>
@@ -132,6 +95,8 @@
   import project from '@/api/userCenter/project'
   import {formatDate} from '@/common/formatDate.js';
   import categories from '@/api/configure/categories'
+  import deviceGrouping from '@/api/project/deviceGrouping'
+  import jumpIn from '@/assets/project/jumpIn.png'
 
   import Bus from '@/common/eventBus'
   export default {
@@ -142,161 +107,11 @@
     data(){
       return{
         loading:null,
-        polar1:{
-          title : {
-            text: '报警分布',
-            x:'left'
-          },
-          toolbox: {
-            feature: {
-              restore: {
-                title:'刷新'
-              },
-              saveAsImage: {
-                title:'下载'
-              }
-            },
-          },
-          aria: {
-            show: true
-          },
-          tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
-          },
-          /*legend: {
-            type: 'scroll',
-            orient: 'horizontal',
-            top:50,
-            x: 'left',
-            itemGap: 10,
-            data:['设备故障','下钻速度异常','电流异常','掺量异常','电压异常','流量异常']
-          },*/
-          series: [
-            {
-              name:'报警类型',
-              type:'pie',
-              radius : '70%',
-              center: ['50%', '55%'],
-              avoidLabelOverlap: true,
-              labelLine: {
-                normal: {
-                  show: true
-                }
-              },
-              data:[
-                {value:1563, name:'搅拌桩'},
-                {value:310, name:'泡沫混凝土'},
-                {value:234, name:'喷淋养护'},
-                {value:1244, name:'预应力张拉'},
-                {value:548, name:'预应力压浆'},
-              ]
-            }
-          ]
-        }, //统计分析图表
-        searchStyle:{ //搜索框的位置
-          top:'0',
-          right:'85px',
-        },
-        typeStyle:{ //类型过滤的位置
-          top:'0',
-          left:'0',
-        },
-        newStyle:{
-          padding:0,
-          height:'100%',
-          width:'100%'
-        },
-        polar2:{
-          color: ['#3398DB'],
-          title: {
-            text: '施工进度',
-            //textStyle: {
-            //    color: '#fff'
-            //}
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow'
-            },
-            formatter: "{b} <br> 进度: {c}%"
-          },
-          toolbox: {
-            feature: {
-              restore: {
-                title:'刷新'
-              },
-              saveAsImage: {
-                title:'下载'
-              }
-            },
-          },
-          /*legend: {
-              data: [date]
-          },*/
-          grid: {
-            left: '4%',
-            right: '4%',
-            bottom: '2%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'value',
-            boundaryGap: [0, 0.01],
-            min: 0,
-            max: 100,
-            interval: 20,
-            axisLabel: {
-              formatter: '{value}%',
-              textStyle: {
-                //color: '#fff',
-                fontWeight: '80'
-              }
-            }
-          },
-          yAxis: {
-            type: 'category',
-            data: ['拌和站', '路基路面', '桥梁工程', '软基处理'],
-            axisLabel: {
-              show: true,
-              interval: 0,
-              rotate: 0,
-              margin: 10,
-              inside: false,
-              textStyle: {
-                //color: '#fff',
-                fontWeight: '50'
-              }
-            }
-          },
-          series: [{
-            type: 'bar',
-            barWidth:'50%',
-            label: {
-              normal: {
-                show: true,
-                 formatter: '{c}%',
-                /*formatter: function(v) {
-                  var val = v.data;
-                  if (val == 0) {
-                    return '';
-                  }
-                  return val;
-                },*/
-                color: '#fff'
-              }
-            },
-            data: [66, 33, 44, 55]
-          }]
-        }, //施工进度图表
+        jumpIn:jumpIn,
         info:{}, //项目信息
         organTypeList:{}, //单位信息
         userTotal:'',
         lists:{},
-        deviceTotal:"", //设备总数，
-        videoTotal:'', //影像总数，
-        documentTotal:'', // 文档总数
         allListQuery:{ //类型select列表请求参数
           page_index: 1,
           page_size: 999,
@@ -304,6 +119,14 @@
           sort_by:'sort'
         },
         deviceList:[],
+        mediaList:[],
+        media_data:{
+          page_index:1,
+          page_size:10,
+          type:1,
+          project_id:this.$cookies.get('projectId')
+        },
+        groupList:[],
       }
     },
     filters: {
@@ -322,19 +145,16 @@
 
       let id=this.$cookies.get('projectId');
       let tenant=this.$cookies.get('tenant');
-
-      this.getDeviceTotal(id);
       this.getMediaTotal();
-      this.getDocumentTotal(id);
+      this.getGroupList(id);
       this.getInfo(id,tenant);
-      this.getPersonnel(id);
       this.getDeviceType();
     },
     methods:{
       enlarge(){
         this.$router.push('/device/deviceMap');
       },
-      getDeviceTotal(id){
+      /*getDeviceTotal(id){
         //设备总数获取
         deviceList.list({'project_id':id}).then(res=>{
           if(res.success){
@@ -346,13 +166,25 @@
         }).catch(err => {
           this.loading.close();
         });
+      },*/
+      //跳转路由
+      JumpRouter(){
+        this.$router.push('/device')
+      },
+      //获取类型列表数据
+      getGroupList(id){
+        //this.allListQuery.tenant=this.$cookies.get('tenant');
+        deviceGrouping.list({project_id:id}).then(res => {
+          console.log(res);
+          this.groupList=res.result.items;
+        })
       },
       getMediaTotal(){
         //影像总数
-        media.list().then(res=>{
+        media.list(this.media_data).then(res=>{
           if(res.success){
             this.loading.close();
-            this.videoTotal=res.result.total
+            this.mediaList=res.result.items
           }else{
             this.loading.close();
           }
@@ -433,11 +265,11 @@
   .n-box{
     height: calc(100% - 40px);
     width:calc(100% - 40px);
-    min-height: 756px;
+    min-height: 850px;
     padding: 20px;
     background: #f5f5f9;
   }
-  .el-carousel__item h3 {
+  .el-carousel__item div {
     color: #475669;
     font-size: 14px;
     opacity: 0.75;
@@ -445,21 +277,14 @@
     margin: 0;
   }
 
-  /*.el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-
-  .el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
-  }*/
   .p-box{
-    height: calc(50% - 10px);
+    width: 450px;
+    height: 100%;
+    float: left;
     .p-info{
-      float: left;
       padding: 20px;
       width: 410px;
-      height:calc(100% - 40px);
-      min-height: 335px;
+      height:calc(50% - 50px);
       background: #ffffff;
       margin-right: 20px;
       box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
@@ -472,39 +297,24 @@
         }
       }
       .i-time{
-        margin-top: 8%;
+        margin-top: 5%;
         color: #666666;
         width: 100%;
-        .t-title{
-          font-weight: bold;
-        }
-        .t-date{
-          font-family:"微软雅黑";
-          font-size: 14px;
-        }
+        font-weight: bold;
+        font-size: 14px;
       }
       .i-statistics{
         width: 100%;
         padding: 0 5% 0 0;
-        margin-top: 10%;
-
-
-      .s-data{
-          float: left;
-          margin:0 6%;
-          cursor: pointer;
-          .d-num{
-            text-align: center;
-            font-size: 32px;
-            color: #24BCF7;
-            font-weight: bold;
-          }
-          .d-name{
-            margin-top: 10px;
-            font-size: 12px;
-            color: #666666;
-          }
-        }
+        margin-top: 8%;
+        overflow: hidden;
+        text-overflow:ellipsis;//值为clip表示剪切，ellipsis时为显示省略号
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:4; //指定显示多少行
+        line-height: 30px;
+        color:#999999;
+        font-size: 14px;
       }
       .s-data:last-child{
         margin-right: 0 !important;
@@ -541,109 +351,81 @@
           margin-bottom: 24px;
         }
       }
-    }
-    .d-map{
-      float: left;
-      width: calc( 100% - 470px );
-      height:100%;
-      min-height: 375px;
-      background: #ffffff;
-      position: relative;
-      .m-searchBox{
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        border-radius: 50%;
-        text-align: center;
-        background: #ffffff;
-        box-shadow:0px -1px 0px 0px rgba(0,0,0,0.02),0px 3px 6px 0px rgba(0,0,0,0.2);
-        position: absolute;
-        top:15px;
-        right: 15px;
-        cursor: pointer;
-      }
-      box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
+    };
+    .p-info:last-child{
+      width: 450px;
+      height: calc(100% - 440px);
+      padding: 0;
+      margin-top: 20px;
     }
   }
   .a-box{
-    height: calc(50% - 10px);
-    margin-top: 20px;
-    .p-info{
-      float: left;
-      padding: 20px;
-      width: 410px;
-      height:calc(100% - 40px);
-      background: #ffffff;
-      margin-right: 20px;
-      box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
-    }
-    .d-map{
-      box-shadow:0px 3px 4px 0px rgba(144,164,183,0.2);
-      float: left;
-      padding: 20px;
-      width: calc( 100% - 510px ) ;
-      height:calc(100% - 40px);
-      background: #ffffff;
-      .t-workSchedule{
-        width:100%;
-        height: 40px;
-        font-weight: bold;
-        font-size: 18px;
-      }
-      .b-device{
-        margin-top: 10px;
-        width: 22%;
-        height: calc(98% - 60px);
-        background: #6fdde8;
+    float: left;
+    width: calc(100% - 470px);
+    height: 100%;
+    margin-left: 20px;
+    overflow: auto;
+    .b-group{
+      .g-list{
+        cursor: pointer;
         float: left;
-        margin-right: 1%;
-        background:rgba(255,255,255,1);
-        box-shadow:0px 3px 8px 0px rgba(144,164,183,0.5);
-        padding:20px 1%;
-        .d-name{
+        width: 260px;
+        min-width: 220px;
+        margin-left: 21px;
+        height: 420px;
+        background: #ffffff;
+        margin-bottom: 20px;
+        position: relative;
+        .m-name{
+          position: absolute;
+          width: calc(100% - 60px);
+          padding: 30px;
+          height: 170px;
           font-size: 18px;
           font-weight: bold;
-          margin-left: 10%;
-        }
-        .d-progress{
-          margin-top: 10%;
-          margin-left: 10%;
-          .p-title{
-            width: 20%;
-            font-size: 12px;
-            float: left;
-          }
-          .p-progress{
-            padding-top: 4%;
-            width: 70%;
-            float: left;
+          color: #ffffff;
+          background: rgba(0,0,0,0.5);
+          .i-jump{
+            width: 38px;
+            margin-top: 30px;
           }
         }
-        .d-Statistics{
-          text-align: center;
-          .s-body{
-            width: 50%;
-            float: left;
-            margin-top: 15%;
-            .s-title{
-              font-size: 14px;
-              color:#666666;
-            }
-            .s-num{
-              margin-top: 8%;
-              font-weight: bold;
-              font-size: 20px;
-              color: #333333;
+        img{
+          width: 100%;
+        }
+        .m-info{
+          padding: 20px;
+          .t-progress{
+            font-size: 14px;
+            color: #666666;
+          }
+          .b-Statistics{
+            margin-top: 20px;
+            .s-list{
+              width: 50%;
+              float: left;
             }
           }
         }
-      }
-      .b-device:first-child{
-        margin-left: 0.5%;
-      }
-      .b-device:last-child{
-        margin-right: 0;
       }
     }
+  }
+  .a-box::-webkit-scrollbar {/*滚动条整体样式*/
+    width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+    background: #ffffff;
+  }
+  .a-box::-webkit-scrollbar-button{
+    background: rgba(0,0,0,0.2);
+  }
+  .a-box::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+  }
+  .a-box::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
   }
 </style>

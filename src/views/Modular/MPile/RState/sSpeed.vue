@@ -39,10 +39,15 @@
                     this.rspeed = 250;
                   }
                   this.realTime(post_data)
+                }else{
+                  this.rspeed = 250;
                 }
               });
             }
             // return res.result
+          }).catch(e=>{
+            console.log(e)
+            this.rspeed = 250;
           });
         }
         /*this.timer=setInterval(function() {
