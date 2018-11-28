@@ -48,34 +48,85 @@
       'isReplay'
     ],
     created(){
-      this.history()
+      this.changeData()
     },
     mounted(){
       this.myCharts(this.dataInfo)
     },
     methods:{
+      //历史回放数据和实时数据的切换
+      changeData(){
+        if(this.$store.state.project.changeTab==true){
+          this.data1={rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',};
+          this.data2={rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',};
+          this.data3={rcurrentData:[],ashData:[],rpressureData:[],title:'复下',};
+          this.data4={rcurrentData:[],ashData:[],rpressureData:[],title:'复提',};
+        }else{
+          this.history()
+        }
+      },
+      //实时历史数据
       history(){
         deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
           if(res.success){
             if(res.result.length>0){
               let data=res.result;
               let temp=[];
+
               for(let i=0;i<data.length;i++){
                 let item=JSON.parse(data[i]);
+                console.log(item);
+                let oldItem;
+                if(i>0){
+                  oldItem=JSON.parse(data[i-1]);
+                }
                 let ashData=[parseFloat(item.par_ash).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
                 let rcurrent=[parseFloat(item.rcurrent).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
                 if(item.rpipe_sta==1){
-                  this.data1.ashData.push(ashData);
-                  this.data1.rcurrentData.push(rcurrent);
+                  console.log(item);
+                  if(item.rdeep==oldItem.rdeep){
+                    if(item.par_ash==oldItem.par_ash){
+                    }else{
+                      this.data1.ashData.push(ashData);
+                      this.data1.rcurrentData.push(rcurrent);
+                    }
+                  }else{
+                    this.data1.ashData.push(ashData);
+                    this.data1.rcurrentData.push(rcurrent);
+                  }
                 }else if(item.rpipe_sta==2){
-                  this.data2.ashData.push(ashData);
-                  this.data2.rcurrentData.push(rcurrent);
+                  if(item.rdeep==oldItem.rdeep){
+                    if(item.par_ash==oldItem.par_ash){
+                    }else{
+                      this.data2.ashData.push(ashData);
+                      this.data2.rcurrentData.push(rcurrent);
+                    }
+                  }else{
+                    this.data2.ashData.push(ashData);
+                    this.data2.rcurrentData.push(rcurrent);
+                  }
                 }else if(item.rpipe_sta==3){
-                  this.data3.ashData.push(ashData);
-                  this.data3.rcurrentData.push(rcurrent);
+                  if(item.rdeep==oldItem.rdeep){
+                    if(item.par_ash==oldItem.par_ash){
+                    }else{
+                      this.data3.ashData.push(ashData);
+                      this.data3.rcurrentData.push(rcurrent);
+                    }
+                  }else{
+                    this.data3.ashData.push(ashData);
+                    this.data3.rcurrentData.push(rcurrent);
+                  }
                 }else if(item.rpipe_sta==4){
-                  this.data4.ashData.push(ashData);
-                  this.data4.rcurrentData.push(rcurrent);
+                  if(item.rdeep==oldItem.rdeep){
+                    if(item.par_ash==oldItem.par_ash){
+                    }else{
+                      this.data4.ashData.push(ashData);
+                      this.data4.rcurrentData.push(rcurrent);
+                    }
+                  }else{
+                    this.data4.ashData.push(ashData);
+                    this.data4.rcurrentData.push(rcurrent);
+                  }
                 }
               }
             }
@@ -85,12 +136,17 @@
         });
       },
 
+
+
+
+      //实时数据
       getState(dataInfo,oldVal){
-        let ashData=[parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)];
-        let rcurrent=[parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)];
+        let newDeep=parseFloat(dataInfo.rdeep).toFixed(2);
+        let ashData=[parseFloat(dataInfo.par_ash).toFixed(2),newDeep];
+        let rcurrent=[parseFloat(dataInfo.rcurrent).toFixed(2),newDeep];
         if(dataInfo.rpipe_sta==1){
           if(oldVal!=undefined){
-            if(dataInfo.rdeep==oldVal.rdeep){
+            if(newDeep==oldVal.rdeep){
               this.data1.ashData[this.data1.ashData.length-1] = ashData;
               this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
             }else{
@@ -103,7 +159,7 @@
           }
         }else if(dataInfo.rpipe_sta==2){
           if(oldVal!=undefined){
-            if(dataInfo.rdeep==oldVal.rdeep){
+            if(newDeep==oldVal.rdeep){
               this.data2.ashData[this.data2.ashData.length-1] = ashData;
               this.data2.rcurrentData[this.data2.rcurrentData.length-1] = rcurrent;
             }else{
@@ -116,7 +172,7 @@
           }
         }else if(dataInfo.rpipe_sta==3){
           if(oldVal!=undefined){
-            if(dataInfo.rdeep==oldVal.rdeep){
+            if(newDeep==oldVal.rdeep){
               this.data3.ashData[this.data3.ashData.length-1] = ashData;
               this.data3.rcurrentData[this.data3.rcurrentData.length-1] = rcurrent;
             }else{
@@ -129,7 +185,7 @@
           }
         }else if(dataInfo.rpipe_sta==4){
           if(oldVal!=undefined){
-            if(dataInfo.rdeep==oldVal.rdeep){
+            if(newDeep==oldVal.rdeep){
               this.data4.ashData[this.data4.ashData.length-1] = ashData;
               this.data4.rcurrentData[this.data4.rcurrentData.length-1] = rcurrent;
             }else{

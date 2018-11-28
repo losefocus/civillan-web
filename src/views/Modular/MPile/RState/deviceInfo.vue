@@ -100,19 +100,15 @@
       changeKey(){
         let key='';
         if(this.$store.state.project.changeTab==true){
-          console.log('历史');
           key=this.$store.state.project.historyKey
         }else{
-          console.log('实时');
           key=this.$store.state.project.deviceKey
         }
         this.getInfo(key)
       },
       //获取设备信息
       getInfo(key){
-        console.log(key);
         deviceList.list({key:key}).then(res=>{
-          console.log(res);
           let data=res.result.items[0];
           //设备类型
           if(data.type=='PMHNT'){
