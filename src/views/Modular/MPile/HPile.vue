@@ -366,7 +366,7 @@
         :show-overflow-tooltip=true
         align="center"
         width="150"
-        label="最大钻速(cm/min)">
+        label="最大速度(cm/min)">
         <template slot-scope="props">
           {{ props.row.max_down_speed | formatZ}}
         </template>
