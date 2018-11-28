@@ -326,7 +326,7 @@
           average_pulp:{title:'平均浆量',checked:false},
           average_ash:{title:'平均灰量',checked:false},
           average_current:{title:'平均电流',checked:false},
-          max_down_speed:{title:'最大钻速',checked:true},
+          max_down_speed:{title:'最大速度',checked:true},
           max_up_speed:{title:'最大提速',checked:true},
           max_slope:{title:'最大斜度',checked:true},
           sprayed_time:{title:'喷浆时间',checked:false},

@@ -85,7 +85,7 @@
            <div class="p-echart">
              <s-speed ref="sSpeed" :dataInfo="RT_data"></s-speed>
            </div>
-           <div class="p-title">钻速</div>
+           <div class="p-title">速度</div>
          </div>
          <div class="p-box">
            <div class="p-echart">
