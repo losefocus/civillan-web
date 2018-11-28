@@ -169,6 +169,7 @@
 </template>
 
 <script>
+  import deviceGrouping from '@/api/project/deviceGrouping'
   import deviceList from '@/api/project/deviceList'
   import categories from '@/api/configure/categories'
   import Bus from '@/common/eventBus'
@@ -353,16 +354,16 @@
         total:0,
         navList:[],
         isActive:'',
-        allListQuery:{ //类型select列表请求参数
-          page_index: 1,
-          page_size: 999,
-          direction:'asc',
-          sort_by:'sort'
+        group_post:{
+          page_index:1,
+          page_size:10,
+          parent_id:sessionStorage.getItem('groupId'),
+          project_id:this.$cookies.get('projectId')
         },
       }
     },
     created(){
-      this.getCategoryList()
+      this.getGroup();
       this.getDeviceList(this.device_data);
       Bus.$on('isCollapse',res=>{
         this.isCollapse=res
@@ -410,7 +411,7 @@
         this.device_data.page_index = currentPage;
         this.getList(this.post_data);
       },
-      getList:function (post_data) { //获取列表
+      getList(post_data) { //获取列表
         let _this=this;
         let tableList=[];
         history.list(post_data).then(res=>{
@@ -424,11 +425,28 @@
           }
         })
       },
-      getCategoryList(){
-        //this.allListQuery.tenant=this.$cookies.get('tenant');
-        categories.list(this.allListQuery).then(res => {
-          this.navList=res.result.items;
-        })
+      getGroup(){
+        deviceGrouping.list(this.group_post).then(res=>{
+          console.log(res);
+          if(res.success){
+            this.navList=res.result.items;
+            let allDevice={
+              project_id:this.$cookies.get('projectId'),
+              name:'全部',
+              id:sessionStorage.getItem('groupId'),
+            };
+            this.navList.unshift(allDevice);
+            this.getList(this.post_data);
+
+            this.$nextTick(()=>{
+              this.isShow=true
+            });
+          }else{
+            this.$message.error(res.message);
+          }
+        }).catch(e=>{
+
+        });
       },
 
       deviceCurrentChange:function(currentPage){ //全部设备select当前页

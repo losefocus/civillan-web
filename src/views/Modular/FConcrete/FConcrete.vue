@@ -127,39 +127,20 @@
 </template>
 
 <script>
-  import echarts from 'echarts'
   import liquidFill from 'echarts-liquidfill'
   import RadialProgressBar from 'vue-radial-progress'
-  import sCurrent from '@/views/Modular/MPile/RState/sCurrent'
-  import sSpeed from '@/views/Modular/MPile/RState/sSpeed'
-  import sFlow from '@/views/Modular/MPile/RState/sFlow'
   import {formatDate} from '@/common/formatDate.js';
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
-  import deviceUser from '@/api/device/deviceUser.js'
-  import deviceConfig from '@/api/device/deviceConfig.js'
-
-  import aSp from '@/views/Modular/MPile/RState/AshPressureCurrent.vue'
-  import pOperation from '@/views/Modular/MPile/RState/pileOperation.vue'
-  import pMap from '@/views/Modular/MPile/RState/pileMap.vue'
   import deviceInfo from '@/views/Modular/MPile/RState/deviceInfo.vue'
   export default {
     name: "runningState",
     components:{
       RadialProgressBar,
-      sCurrent,
-      sSpeed,
-      sFlow,
-      aSp,
-      pOperation,
-      pMap,
       deviceInfo,
     },
     data(){
-      let data = [0,10,20,30,40,50,60,70,80,90,100];
-      let Data=data;
-
       return {
         timer:null,//定时器,
         pileData:{
@@ -186,22 +167,8 @@
         isShow:true,
         titleActive:'1',//设备样式切换
         classChange:1,//改变样式
-        isRouterAlive: true, //ECharts刷新
-        completedSteps:3,//进度条中已完成步骤的数量
-
-        rflow:3,//流量实时数据
-        rspeed:3,//速度实时数据
-        rcurrent:3,//电流实时数据
 
         RT_data:{}, //实时数据
-
-        slurryData:[], //段浆量
-        ashData:[], //段灰量
-        rpressureData:[], //段灰量
-        progressNum:40,//深度进度
-        progress:0,
-        progressHeight:'',
-        DesignDeep:30,
 
         isWarming:true,//未发现问题显示
         warmingText:'',

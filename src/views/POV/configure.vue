@@ -3,7 +3,7 @@
     <div class="j-box">
       <div class="j-table">
         <div class="i-box">
-          <div style="float: left">
+          <div style="float: left;width: 85%;">
             <ul class="a-box">
               <li v-for="(list,index) in navList" :key="index" @click="changeTab(list,index)" :class="{active:index==isActive}">
                 {{list.name}}

@@ -17,14 +17,12 @@
   import history from '@/api/project/history'
   import deviceList from '@/api/project/deviceList'
   import {formatDate} from '@/common/formatDate.js';
-  import Bus from '@/common/eventBus'
 
   import HPile from '@/views/Modular/MPile/HPile'
   import HFoam from '@/views/Modular/FConcrete/HFoam'
   import HTensile from '@/views/Modular/TTensile/HTensile.vue'
 
-  import categories from '@/api/configure/categories'
-  import RthyinfoFormat from '@/common/RthyinfoFormat.js'
+  import deviceGrouping from '@/api/project/deviceGrouping'
   export default {
     data() {
       return {
@@ -59,11 +57,11 @@
         deviceTotal:0,
         deviceName:'',
         navList:[],
-        allListQuery:{ //类型select列表请求参数
-          page_index: 1,
-          page_size: 999,
-          direction:'asc',
-          sort_by:'sort'
+        group_post:{
+          page_index:1,
+          page_size:10,
+          parent_id:sessionStorage.getItem('groupId'),
+          project_id:this.$cookies.get('projectId')
         },
         isActive:'',
       }
@@ -83,23 +81,33 @@
     created(){
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);
-      /*this.getList(this.post_data);
-      this.getRecords();
-      Bus.$on('isCollapse',res=>{
-        this.isCollapse=res
-      })*/
     },
     mounted(){
-      this.getCategoryList()
+      this.getGroup()
     },
     methods: {
       //获取类型列表数据
-      getCategoryList(){
-        //this.allListQuery.tenant=this.$cookies.get('tenant');
-        categories.list(this.allListQuery).then(res => {
-          let list = res.result.items;
-          this.navList=res.result.items;
-        })
+      getGroup(){
+        deviceGrouping.list(this.group_post).then(res=>{
+          if(res.success){
+            this.navList=res.result.items;
+            let allDevice={
+              project_id:this.$cookies.get('projectId'),
+              name:'全部',
+              id:sessionStorage.getItem('groupId'),
+            };
+            this.navList.unshift(allDevice);
+            this.getList(this.post_data);
+
+            this.$nextTick(()=>{
+              this.isShow=true
+            });
+          }else{
+            this.$message.error(res.message);
+          }
+        }).catch(e=>{
+
+        });
       },
       changeTab(list,index){ //切换tab
         this.isActive=index;
@@ -198,7 +206,7 @@
 <style lang="scss" scoped>
   .n-box{
     padding: 20px;
-    height: auto;
+    height: calc(100% - 120px);
     background: #f5f5f9;
   }
   .t-rows{

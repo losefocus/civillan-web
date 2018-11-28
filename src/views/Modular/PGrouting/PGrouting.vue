@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative;height: 100%">
     <transition name="fade">
-      <div class="b-device" v-if="noDevice"><div class="t-device">设备已离线！</div></div>
+      <div class="b-device" v-if="noDevice"><div class="t-device">预应力压浆！</div></div>
     </transition>
     <div class="r-box">
       <ul class="s-box1">
@@ -12,123 +12,29 @@
           <ul class="b-dashboard">
             <li class="c-dashboard">
               <chart :options="polar1" :auto-resize=true></chart>
+              <ul class="c-option">
+                <li><span class="c-name">开始时间：</span><span class="c-key">2018-11-12 12:30:10</span></li>
+                <li><span class="c-name">搅拌时间：</span><span class="c-key">240s</span></li>
+              </ul>
             </li>
             <li class="c-dashboard">
-              <div class="d-data">
-                <div class="d-title">Ⅰ号张拉断面</div>
-                <ul class="d-state">
-                  <li class="c-state">
-                    <span class="t-title">顶行程</span>
-                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
-                    <span class="t-num">100.0 mm</span>
-                  </li>
-                  <li class="c-state">
-                    <span class="t-title">张拉次数</span>
-                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
-                    <span class="t-num">25.0</span>
-                  </li>
-                  <li class="c-state">
-                    <span class="t-title">工作状态</span>
-                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
-                    <span class="t-num" style="color:#1FBDEE;">准备中</span>
-                  </li>
-                </ul>
-              </div>
-
-            </li>
-          </ul>
-          <ul class="t-statistics">
-            <li class="s-body">
-              <div class="s-content">
-                <span>千斤顶:</span>
-                <span>0003</span>
-              </div >
-              <div class="s-content">
-                <span>油压泵:</span>
-                <span>0002</span>
-              </div>
-            </li>
-            <li class="s-body">
-              <div class="s-content">
-                <span>伸长量:</span>
-                <span>100.0mm</span>
-              </div>
-              <div class="s-content">
-                <span>回缩量:</span>
-                <span>1000mm</span>
-              </div>
-            </li>
-            <li class="s-body">
-              <div class="s-content">
-                <span>系数a:</span>
-                <span>0.00183</span>
-              </div>
-              <div class="s-content">
-                <span>系数b:</span>
-                <span>0.00183</span>
-              </div>
+              <chart :options="polar1" :auto-resize=true></chart>
+              <ul class="c-option">
+                <li><span class="c-name">配合比：</span><span class="c-key">14 : 1 : 7</span><span>（水泥:压浆剂:水）</span></li>
+                <li><span class="c-name">水胶比：</span><span class="c-key">0.33</span></li>
+              </ul>
             </li>
           </ul>
         </li>
-        <li class="b-statistics">
-          <ul class="b-dashboard">
-            <li class="c-dashboard">
-              <chart :options="polar1" :auto-resize=true></chart>
+        <li class="b-data">
+          <ul class="d-window">
+            <li class="w-body">
+              <div class="w-name">进浆量(L)</div>
+              <div class="w-key">300</div>
             </li>
-            <li class="c-dashboard">
-              <div class="d-data">
-                <div class="d-title">Ⅱ号张拉断面</div>
-                <ul class="d-state">
-                  <li class="c-state">
-                    <span class="t-title">顶行程</span>
-                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
-                    <span class="t-num">100.0 mm</span>
-                  </li>
-                  <li class="c-state">
-                    <span class="t-title">张拉次数</span>
-                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
-                    <span class="t-num">25.0</span>
-                  </li>
-                  <li class="c-state">
-                    <span class="t-title">工作状态</span>
-                    <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
-                    <span class="t-num" style="color:#1FBDEE;">准备中</span>
-                  </li>
-                </ul>
-              </div>
-
-            </li>
-          </ul>
-          <ul class="t-statistics">
-            <li class="s-body">
-              <div class="s-content">
-                <span>千斤顶:</span>
-                <span>0003</span>
-              </div >
-              <div class="s-content">
-                <span>油压泵:</span>
-                <span>0002</span>
-              </div>
-            </li>
-            <li class="s-body">
-              <div class="s-content">
-                <span>伸长量:</span>
-                <span>100.0mm</span>
-              </div>
-              <div class="s-content">
-                <span>回缩量:</span>
-                <span>1000mm</span>
-              </div>
-            </li>
-            <li class="s-body">
-              <div class="s-content">
-                <span>系数a:</span>
-                <span>0.00183</span>
-              </div>
-              <div class="s-content">
-                <span>系数b:</span>
-                <span>0.00183</span>
-              </div>
+            <li class="w-body">
+              <div class="w-name">进浆量(L)</div>
+              <div class="w-key">300</div>
             </li>
           </ul>
         </li>
@@ -139,14 +45,10 @@
           <div class="l-today">
             <ul class="t-tensileData">
               <li class="d-tensile">
-                <span class="t-title">张拉次数</span>
-                <span class="el-icon-caret-right t-icon" style="color: #D8D8D8"></span>
-                <span class="t-num">10</span>
+                <span>N匝道2号桥</span>
               </li>
-              <li class="d-tensile" style="margin-right: 0">
-                <span class="t-title">张拉顺序</span>
-                <span class="el-icon-caret-right t-icon"  style="color: #D8D8D8"></span>
-                <span class="t-num">9</span>
+              <li class="d-tensile1">
+                <span>梁板类型：30米T粱</span>
               </li>
               <div style="clear: both"></div>
             </ul>
@@ -154,37 +56,41 @@
           <div class="b-line"></div>
           <ul class="b-detailed">
             <li class="c-detailed">
-              <span>最大张力：</span>
+              <span>孔道数：</span>
               <span>10000.0</span>
               <span>KN</span>
             </li>
             <li class="c-detailed">
-              <span>分级张拉：</span>
+              <span>孔道内径：</span>
               <span>0~3</span>
             </li>
             <li class="c-detailed">
-              <span>超张拉力百分比：</span>
+              <span>孔道长度：</span>
+              <span>50%</span>
+            </li>
+            <li class="c-detailed">
+              <span>步骤次数：</span>
               <span>50%</span>
             </li>
           </ul>
           <ul class="b-detailed">
             <li class="c-detailed">
-              <span>理论伸长量：</span>
+              <span>压浆模式：</span>
               <span>1000.0</span>
               <span>mm</span>
             </li>
             <li class="c-detailed">
-              <span>钢绞线长度：</span>
+              <span>压浆方向：</span>
               <span>100.0</span>
               <span>m</span>
             </li>
             <li class="c-detailed">
-              <span>砼设计强度：</span>
+              <span>流动初速：</span>
               <span>50.00</span>
               <span>Mpa</span>
             </li>
             <li class="c-detailed">
-              <span>砼强度：</span>
+              <span>流动度：</span>
               <span>50.00</span>
               <span>Mpa</span>
             </li>
@@ -197,16 +103,16 @@
           <div style="width: 100%;height: 20%;position: absolute;top:8%;">
             <ul class="l-current">
               <li class="c-temperature">
-                <span class="t-title">1号顶张拉力</span>
+                <span class="t-title">浆液温度：</span>
                 <i class="el-icon-caret-right" style="color: #D8D8D8"></i>
                 <span class="t-num">25.0</span>
                 <span class="t-unit">℃</span>
               </li>
               <li class="c-temperature">
-                <span class="t-title">2号顶张拉力</span>
+                <span class="t-title">环境温度：</span>
                 <i class="el-icon-caret-right"  style="color: #D8D8D8"></i>
                 <span class="t-num">66</span>
-                <span class="t-unit">%</span>
+                <span class="t-unit">℃</span>
               </li>
             </ul>
           </div>
@@ -241,20 +147,6 @@
 
       return {
         timer:null,//定时器,
-        pileData:{
-          ps:[],
-          pile_id:{content:[{"label":"pile_position","name":"桩位置","value":"120.049345774,30.850305056"},{"label":"pile_depth","name":"桩长","value":"13"},{"label":"pile_diameter","name":"桩径","value":"0.25"}],
-            createdAt:1535618538,
-            createdBy:70,
-            id:7533,
-            key:"k2230_940_E17",
-            name:"k2230_940_E17",
-            projectId:21,
-            sort:0,
-            status:2,
-            tenant:"21fe87251b01541399c7c1a8cec741c5",
-            typeId:124,},
-        },
         angelWidth:0,
         noDevice:false,
         deviceType:['1','2','3'],
@@ -266,21 +158,11 @@
         titleActive:'1',//设备样式切换
         classChange:1,//改变样式
         isRouterAlive: true, //ECharts刷新
-        completedSteps:3,//进度条中已完成步骤的数量
-
-        rflow:3,//流量实时数据
-        rspeed:3,//速度实时数据
-        rcurrent:3,//电流实时数据
 
         RT_data:{}, //实时数据
 
-        slurryData:[], //段浆量
-        ashData:[], //段灰量
-        rpressureData:[], //段灰量
         progressNum:40,//深度进度
         progress:0,
-        progressHeight:'',
-        DesignDeep:30,
 
         isWarming:true,//未发现问题显示
         warmingText:'',
@@ -502,7 +384,7 @@
         if(this.deviceInfo.status==11){
           this.noDevice=false;
         }else{
-          this.noDevice=true;
+          this.noDevice=false;
         }
       },
       deviceChange(index){
@@ -594,7 +476,7 @@
         this.myChart = this.$echarts.init(document.getElementById('THCharts'));
         this.myChart.setOption({
           title: {
-            text: '张拉力变化曲线',
+            text: '时间-压力变化曲线',
             show: true,
             textStyle: {
               fontWeight: 'bold',
@@ -643,7 +525,7 @@
           yAxis: [
             {
               type: 'value',
-              name: '2号顶张拉力',
+              name: '环境温度：',
               min: 0,
               position: 'right',
               max:maxdata2,
@@ -655,7 +537,7 @@
             },
             {
               type: 'value',
-              name: '1号顶张拉力',
+              name: '浆液温度：',
               min: 0,
               position: 'left',
               max:maxdata1,
@@ -673,13 +555,13 @@
           ],
           series: [
             {
-              name:'1号顶张拉力',
+              name:'环境温度：',
               type:'line',
               yAxisIndex: 0,
               data:data2,
             },
             {
-              name:'2号顶张拉力',
+              name:'浆液温度：',
               type:'line',
               yAxisIndex: 1,
               data:data1,
@@ -898,25 +780,21 @@
           width: 100%;
           .t-tensileData{
             .d-tensile{
-              float: left;
               margin-right: 7%;
-              margin-top: 10%;
-              .t-title{
-                font-size: 16px;
-                color: #666666;
-              }
-              .t-num{
-                font-size: 20px;
+              margin-top: 7%;
+              span{
+                color:#666666;
+                font-size: 18px;
                 font-weight: bold;
-                color: #1FBDEE;
               }
+            }
+            .d-tensile1{
+              margin-top: 5px;
+              color: #999999;
             }
           }
         }
-        .b-line{
-          margin-top: 6%;
-          border-bottom:2px solid rgba(151,151,151,0.3);
-        }
+
         .b-detailed{
           margin-top: 6%;
           .c-detailed{
@@ -930,62 +808,63 @@
         float: left;
         height: calc(100% - 40px);
         margin-left: 10px;
-        width:calc( 38.5% - 70px );
+        width:calc( 53.5% - 70px );
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
         padding: 20px;
         .b-dashboard{
           width: 100%;
-          height: 80%;
-          border-bottom: 2px solid rgba(151,151,151,0.3);
+          height: 100%;
           .c-dashboard{
             float: left;
             width: 50%;
-            height: 100%;
+            height: 80%;
 
-            .d-data{
-              width: 100%;
-              margin-left: 20%;
-              .d-title{
-                color: #333333;
-                font-size: 18px;
-                font-weight: bold;
-                margin-top: 30%;
-              }
-              .d-state{
-                margin-top: 15%;
-                .c-state{
-                  margin-top: 10%;
-                  .t-title{
-                    display: inline-block;
-                    width: 56px;
-                  }
-                  .t-num{
-                    margin-left: 2%;
-                  }
+            .c-option{
+              width: 240px;
+              margin: 30px auto;
+              font-size: 14px;
+              li{
+                height: 30px;
+                .c-name{
+                  color: #999999;
+                }
+                .c-key{
+                  color: #666666;
+                  font-weight: bold;
                 }
               }
             }
-
           }
         }
-        .t-statistics{
-          .s-body{
-            width: 33.33%;
-            height: 20%;
-            float: left;
-            font-size: 13px;
-            color: #666666;
-            .s-content{
-              margin-top: 10%;
+      }
+      .b-data{
+        float: left;
+        height: 100%;
+        margin-left: 10px;
+        width:calc( 23.5% - 30px );
+        .d-window{
+          height: 100%;
+          .w-body{
+            text-align: center;
+            background:rgba(255,255,255,1);
+            box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+            height: calc(50% - 5px);
+            overflow: hidden;
+            .w-name{
+              margin-top: 25%;
+              font-size: 18px;
+            }
+            .w-key{
+              color: #1FBDEE;
+              margin-top: 10px;
+              font-weight: bold;
+              font-size: 40px;
             }
           }
-          .s-body:nth-child(2){
-            text-align: center;
-          }
-          .s-body:last-child{
-            text-align: right;
-            margin-right: 0;
+          .w-body:last-child{
+            height: calc(50% - 5px);
+            margin-top: 10px;
           }
         }
       }

@@ -84,9 +84,6 @@
         <div class="stake">
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 4 && parseInt(tiem_4.style_stake.bottom)>=12"></div>
         </div>
-<!--
-        <div class="info1"  v-show="dataInfo.rpipe_sta == 4">深度 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{ru_deep}}</span> m</div>
--->
         <div class="info" v-show="dataInfo.rpipe_sta == 4||dataInfo.rpipe_sta == 5">
           <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:#4dbce6;margin: 80px 0 0 10px;">已完成</p>
           <div v-else>
@@ -106,15 +103,10 @@
         </div>
       </div>
     </div>
-    <!-- <div class="item" :class="{visible:dataInfo.rpipe_sta<5}">
-        <div class="top"><div class="stake"></div></div>
-        <div class="bot">
-            <div class="hole hole_5"></div>
-        </div>
-    </div> -->
   </div>
 </template>
 <script>
+  import deviceData from '@/api/device/deviceData'
   export default {
     props:["dataInfo"],
     data(){
@@ -135,27 +127,65 @@
           style_hole:{height:'100%'},
           style_hole_over:{height:'100%'},
         },
-        d_deep:-1,
-        u_deep:-1,
-        rd_deep:-1,
-        ru_deep:-1,
+        d_deep:0,
+        u_deep:20,
+        rd_deep:0,
+        ru_deep:0,
         onOff:false,
+        tData:{},
       }
     },
     created(){
-
+      this.history();
     },
     mounted(){
       this.init(this.dataInfo)
     },
     methods:{
-      init(dataInfo,oldVal){
-        let data = dataInfo;
-        if(data.record_sta==3){
-          data.rpipe_sta = 4;
-          this.onOff=true;
-        }
-        dataInfo.rdeep=parseFloat(dataInfo.rdeep).toFixed(2);
+      init(dataInfo){
+        this.running(dataInfo)
+      },
+      history(){
+        deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
+          if(res.success&&res.result!=[]){
+            let a=0;
+            let b=20;
+            let c=0;
+            let d=20;
+            res.result.forEach(item=>{
+              item=JSON.parse(item);
+              let rdeep=Number(item.rdeep).toFixed(2);
+              rdeep=Number(rdeep);
+              item.depth_design=this.dataInfo.depth_design;
+              if(item.rpipe_sta == 1){
+                if(rdeep>=a){
+                  a=rdeep;
+                }
+                this.d_deep=a;
+              }else if(item.rpipe_sta == 2){
+                if(rdeep<=b){
+                  b=rdeep;
+                }
+                this.u_deep=b;
+              }else if(item.rpipe_sta == 3){
+                if(rdeep>=c){
+                  c=rdeep;
+                }
+                this.rd_deep=c;
+              }else if(item.rpipe_sta == 4){
+                if(rdeep<=d){
+                  d=rdeep;
+                }
+                this.ru_deep=d;
+              }
+            });
+          }
+        }).catch(e=>{
+
+        });
+      },
+      running(data){
+        data.rdeep=parseFloat(data.rdeep).toFixed(2);
         if( !('rpipe_sta' in data) || data.rpipe_sta == 0 ){
 
         }else if(data.rpipe_sta == 1){
@@ -171,19 +201,12 @@
 
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             //记录下钻的深度
-            if(this.d_deep==-1){
-              this.d_deep=' - ';
-              this.tiem_1.style_stake = {bottom:'5%'};
-            }else{
-              let d_deep = this.d_deep/data.depth_design;
-              let l1 = 35*(1-d_deep)+5;
-              this.tiem_1.style_stake = {bottom:l1+'%'};
-            }
-
-
+            let d_deep = this.d_deep/data.depth_design;
+            let l1 = 35*(1-d_deep)+5;
+            this.tiem_1.style_stake = {bottom:l1+'%'};
 
             let d0 = data.rdeep/data.depth_design;
-            let l = 35*(1-d0)+5
+            let l = 35*(1-d0)+5;
             this.tiem_2.style_stake = {bottom:l+'%'};
             this.tiem_2.style_hole = {height:(1-d0)*100+'%'}
           }
@@ -191,25 +214,14 @@
           this.rd_deep=data.rdeep;
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             //记录下钻的深度
-            if(this.d_deep==-1){
-              this.d_deep=' - ';
-              this.tiem_1.style_stake = {bottom:'5%'};
-            }else{
-              let d_deep = this.d_deep/data.depth_design;
-              let l1 = 35*(1-d_deep)+5;
-              this.tiem_1.style_stake = {bottom:l1+'%'};
-            }
+            let d_deep = this.d_deep/data.depth_design;
+            let l1 = 35*(1-d_deep)+5;
+            this.tiem_1.style_stake = {bottom:l1+'%'};
             // 记录提钻的深度
-            if(this.u_deep==-1){
-              this.u_deep=' - ';
-              this.tiem_2.style_stake = {bottom:'40%'};
-              this.tiem_2.style_hole = {height:100+'%'};
-            }else{
-              let u_deep = this.u_deep/data.depth_design;
-              let l2 = 35*(1-u_deep)+5;
-              this.tiem_2.style_stake = {bottom:l2+'%'};
-              this.tiem_2.style_hole = {height:(1-u_deep)*100+'%'};
-            }
+            let u_deep = this.u_deep/data.depth_design;
+            let l2 = 35*(1-u_deep)+5;
+            this.tiem_2.style_stake = {bottom:l2+'%'};
+            this.tiem_2.style_hole = {height:(1-u_deep)*100+'%'};
 
             let d0 = data.rdeep/data.depth_design;
             let l = 35*(1-d0)+5;
@@ -220,124 +232,90 @@
           this.ru_deep=data.rdeep;
           if(data.depth_design!=0&&data.rdeep<=data.depth_design){
             //记录下钻的深度
-            if(this.d_deep==-1){
-              this.d_deep=' - '
-              this.tiem_1.style_stake = {bottom:'5%'};
-            }else{
-              let d_deep = this.d_deep/data.depth_design;
-              let l1 = 35*(1-d_deep)+5;
-              this.tiem_1.style_stake = {bottom:l1+'%'};
-            }
+            let d_deep = this.d_deep/data.depth_design;
+            let l1 = 35*(1-d_deep)+5;
+            this.tiem_1.style_stake = {bottom:l1+'%'};
             // 记录提钻的深度
-            if(this.u_deep==-1){
-              this.u_deep=' - ';
-              this.tiem_2.style_stake = {bottom:'40%'};
-              this.tiem_2.style_hole = {height:100+'%'};
-            }else{
-              let u_deep = this.u_deep/data.depth_design;
-              let l2 = 35*(1-u_deep)+5;
-              this.tiem_2.style_stake = {bottom:l2+'%'};
-              this.tiem_2.style_hole = {height:(1-u_deep)*100+'%'};
-            }
+            let u_deep = this.u_deep/data.depth_design;
+            let l2 = 35*(1-u_deep)+5;
+            this.tiem_2.style_stake = {bottom:l2+'%'};
+            this.tiem_2.style_hole = {height:(1-u_deep)*100+'%'};
 
             //记录复下的深度
-            if(this.rd_deep==-1){
-              this.rd_deep=' - ';
-              this.tiem_3.style_stake = {bottom:5+'%'};
-              this.tiem_3.style_hole = {height:'100%'};
-            }else{
-              let rd_deep = this.rd_deep/data.depth_design;
-              let l3 = 35*(1-rd_deep)+5;
-              this.tiem_3.style_stake = {bottom:l3+'%'};
-              this.tiem_3.style_hole = {height:'100%'};
-            }
+            let rd_deep = this.rd_deep/data.depth_design;
+            let l3 = 35*(1-rd_deep)+5;
+            this.tiem_3.style_stake = {bottom:l3+'%'};
+            this.tiem_3.style_hole = {height:'100%'};
 
-
-            /*this.tiem_1.style_stake = {bottom:'5%'};
-            this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}};
-            this.tiem_3= {style_stake:{bottom:'5%'},style_hole:{height:'100%'}};*/
-            let d0 = data.rdeep/data.depth_design
+            let d0 = data.rdeep/data.depth_design;
             let l = 35*(1-d0)+5;
             this.tiem_4.style_stake = {bottom:l+'%'};
             this.tiem_4.style_hole = {height:'100%'};
             this.tiem_4.style_hole_over = {height:(1-d0)*100+'%'}
           }
         }else if((data.rpipe_sta == 5)){
-          if(data.depth_design!=0&&data.rdeep<=data.depth_design){
+          if(data.depth_design!=0&&deep<=data.depth_design){
             this.tiem_1.style_stake = {bottom:'5%'}
             this.tiem_2= {style_stake:{bottom:'40%'},style_hole:{height:'100%'}}
             this.tiem_3= {style_stake:{bottom:'5%'},style_hole:{height:'100%'}}
             this.tiem_4= {style_stake:{bottom:'40%'},style_hole:{height:'100%'},style_hole_over:{height:'100%'}}
           }
-        }else{
         }
       }
     },
     watch:{
-      dataInfo:{//深度监听，可监听到对象、数组的变化
+      dataInfo:{ //深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
-          this.init(val,oldVal)
+          if(val.record_sta==3){
+            val.rpipe_sta=4;
+            this.init(val)
+          }else{
+            this.init(val);
+          }
         },
       },
       d_deep:{
         handler(val, oldVal){
-          if(val==' - '){
-            this.d_deep=val
+          val=Number(val);
+          oldVal=Number(oldVal);
+          if(val>=oldVal){
+            this.d_deep=val;
           }else{
-            val=Number(val);
-            oldVal=Number(oldVal);
-            if(val>=oldVal){
-              this.d_deep=val;
-            }else{
-              this.d_deep=oldVal;
-            }
+            this.d_deep=oldVal;
           }
         },
+        deep:true
       },
       u_deep:{
         handler(val, oldVal){
-          if(val==' - '){
-            this.u_deep=val
-          }else if(oldVal==' - '||oldVal==-1){
-            this.u_deep=val;
-          }else{
-            val=Number(val);
-            oldVal=Number(oldVal);
-              if (val <= oldVal) {
-                this.u_deep = val
-              } else {
-                this.u_deep = oldVal
-              }
-            }
-        },
+          val=Number(val);
+          oldVal=Number(oldVal);
+          if (val <= oldVal) {
+            this.u_deep = val
+          } else {
+            this.u_deep = oldVal
+          }
+        }
       },
       rd_deep:{
         handler(val, oldVal){
-          if(val==' - '){
-            this.rd_deep=val
-          }else {
-            val=Number(val);
-            oldVal=Number(oldVal);
-            if (val >= oldVal) {
-              this.rd_deep = val
-            } else {
-              this.rd_deep = oldVal
-            }
+          val=Number(val);
+          oldVal=Number(oldVal);
+          if (val >= oldVal) {
+            this.rd_deep = val
+          } else {
+            this.rd_deep = oldVal
           }
         },
       },
       ru_deep:{
         handler(val, oldVal){
-          if(val==' - '){
-            this.ru_deep=val
-          }else {
-            val=Number(val);
-            oldVal=Number(oldVal);
-            if (val <= oldVal) {
-              this.ru_deep = val
-            } else {
-              this.ru_deep = oldVal
-            }
+          val=Number(val);
+          oldVal=Number(oldVal);
+          if (val <= oldVal) {
+            this.ru_deep = val
+          } else {
+            this.ru_deep = oldVal
           }
         },
       },

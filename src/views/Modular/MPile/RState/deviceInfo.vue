@@ -17,7 +17,7 @@
       <div class="i-body">
         <div class="i-name">{{deviceName1}}</div>
         <div class="i-state">
-          <span style="vertical-align: center">喷浆状态</span>
+          <span style="vertical-align: center">{{deviceType.state1}}</span>
           <div v-if="RT_data.nozzle_sta" :class="{'led-green':RT_data.nozzle_sta=='1','led-gray':RT_data.nozzle_sta==0}"></div>
           <div v-else class="led-gray"></div>
         </div>
@@ -25,7 +25,7 @@
       <div class="i-body">
         <div class="i-company">{{productName}}</div>
         <div class="i-state">
-          <span>记录状态</span>
+          <span>{{deviceType.state2}}</span>
           <div v-if="RT_data.record_sta" :class="{'led-green':RT_data.record_sta==1,'led-skyBlue':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div>
           <div v-else class="led-gray"></div>
         </div>
@@ -63,6 +63,7 @@
 <script>
   import deviceUser from '@/api/device/deviceUser.js'
   import deviceData from '@/api/device/deviceData'
+  import deviceList from '@/api/project/deviceList'
   export default {
     name: "deviceInfo",
     data(){
@@ -76,59 +77,100 @@
         warmingText:'',
         RT_data:{},
         isAngle:false,
-        timer1:null,
+        timer2:null,
+        deviceType:{}
       }
     },
     props:['realData'],
-    mounted(){
-      let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+    created(){
       this.RT_data=this.realData;
-
-      this.getDeviceInfo(deviceInfo);
-      this.timer1=setInterval(()=>{
+      /*this.getAlarms(deviceInfo.key);
+      this.timer2=setInterval(()=>{
         this.getAlarms(deviceInfo.key)
-      },3000);
-
+      },3000);*/
+    },
+    mounted(){
+      this.changeKey()
     },
     beforeDestroy(){
-      clearInterval(this.timer1);
+      clearInterval(this.timer2);
     },
     methods:{
-      //设备信息
-      getDeviceInfo(deviceInfo){
-        if(deviceInfo.status==11){
-          this.noDevice=false;
+      //判断是实时还是历史
+      changeKey(){
+        let key='';
+        if(this.$store.state.project.changeTab==true){
+          key=this.$store.state.project.historyKey
         }else{
-          this.noDevice=false;
+          key=this.$store.state.project.deviceKey
         }
-        if(deviceInfo.type=='JBZ'){
-          this.isAngle=true
-        }else{
-          this.isAngle=false
-        }
-        this.productName=deviceInfo.product.name;
-        this.deviceName1=deviceInfo.name;
-        deviceUser.list({device_id:deviceInfo.id}).then(res=>{
-          if(res.success){
-            if(res.result.total){
-              this.deviceUserName=res.result.items[0].projectUser.name;
-              this.deviceUserPhone=res.result.items[0].projectUser.phone;
-            }
-          }
-        })
+        this.getInfo(key)
       },
-      //报警信息
-      getAlarms(key){
-        deviceData.alarms({'key':key}).then(res=>{
-          if(res.result){
-            this.isWarming=false;
-            this.warmingText=res.result[0].message
-          }else{
-            this.isWarming=true
+      //获取设备信息
+      getInfo(key){
+        deviceList.list({key:key}).then(res=>{
+          let data=res.result.items[0];
+          //设备类型
+          if(data.type=='PMHNT'){
+            this.deviceType.state1='在线状态';
+            this.deviceType.state2='出料状态';
+          }else if(data.type=='JBZ'){
+            this.deviceType.state1='喷浆状态';
+            this.deviceType.state2='记录状态';
+          }else if(data.type=='PLYH'){
+            this.deviceType.state1='在线状态';
+            this.deviceType.state2='养护状态';
+          }else if(data.type=='YYLZL'){
+            this.deviceType.state1='在线状态';
+            this.deviceType.state2='张拉状态';
+          }else if(data.type=='YYLYJ'){
+            this.deviceType.state1='在线状态';
+            this.deviceType.state2='压浆状态';
           }
+          //设备信息
+          if(data.status==11){
+            this.noDevice=false;
+          }else{
+            this.noDevice=false;
+          }
+          if(data.type=='JBZ'){
+            this.isAngle=true
+          }else{
+            this.isAngle=false
+          }
+          this.productName=data.product.name;
+          this.deviceName1=data.name;
+          deviceUser.list({device_id:data.id}).then(res=>{
+            if(res.success){
+              if(res.result.total){
+                this.deviceUserName=res.result.items[0].projectUser.name;
+                this.deviceUserPhone=res.result.items[0].projectUser.phone;
+              }
+            }
+          })
+
         }).catch(e=>{
 
         })
+      },
+
+
+      //报警信息
+      getAlarms(key){
+        if(key){
+          deviceData.alarms({'key':key}).then(res=>{
+            if(res.success){
+              this.isWarming=false;
+              this.warmingText=res.result[0].message
+            }else{
+              this.isWarming=true
+            }
+          }).catch(e=>{
+
+          })
+        }else{
+        }
+
       }
     },
     watch:{

@@ -14,7 +14,6 @@
 </template>
 
 <script>
-  import echarts from 'echarts'
   import deviceData from '@/api/device/deviceData'
   export default {
     name: "AshPressureCurrent",
@@ -45,33 +44,50 @@
       }
     },
     props:[
-      'dataInfo'
+      'dataInfo',
+      'isReplay'
     ],
     created(){
-
+      this.history()
     },
     mounted(){
       this.myCharts(this.dataInfo)
     },
     methods:{
-      myCharts(dataInfo,oldVal){
-        if(isNaN(dataInfo.rdeep)){
-          dataInfo.rdeep=0
-        }
-        if(isNaN(dataInfo.par_ash)){
-          dataInfo.par_ash=0
-        }
-        if(isNaN(dataInfo.rpressure)){
-          dataInfo.rpressure=0
-        }
-        if(isNaN(dataInfo.rcurrent)){
-          dataInfo.rcurrent=0
-        }
+      history(){
+        deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
+          if(res.success){
+            if(res.result.length>0){
+              let data=res.result;
+              let temp=[];
+              for(let i=0;i<data.length;i++){
+                let item=JSON.parse(data[i]);
+                let ashData=[parseFloat(item.par_ash).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
+                let rcurrent=[parseFloat(item.rcurrent).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
+                if(item.rpipe_sta==1){
+                  this.data1.ashData.push(ashData);
+                  this.data1.rcurrentData.push(rcurrent);
+                }else if(item.rpipe_sta==2){
+                  this.data2.ashData.push(ashData);
+                  this.data2.rcurrentData.push(rcurrent);
+                }else if(item.rpipe_sta==3){
+                  this.data3.ashData.push(ashData);
+                  this.data3.rcurrentData.push(rcurrent);
+                }else if(item.rpipe_sta==4){
+                  this.data4.ashData.push(ashData);
+                  this.data4.rcurrentData.push(rcurrent);
+                }
+              }
+            }
+          }
+        }).catch(e=>{
 
+        });
+      },
+
+      getState(dataInfo,oldVal){
         let ashData=[parseFloat(dataInfo.par_ash).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)];
         let rcurrent=[parseFloat(dataInfo.rcurrent).toFixed(2),parseFloat(dataInfo.rdeep).toFixed(2)];
-
-
         if(dataInfo.rpipe_sta==1){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
@@ -88,8 +104,8 @@
         }else if(dataInfo.rpipe_sta==2){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
-              this.data1.ashData[this.data1.ashData.length-1] = ashData;
-              this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
+              this.data2.ashData[this.data2.ashData.length-1] = ashData;
+              this.data2.rcurrentData[this.data2.rcurrentData.length-1] = rcurrent;
             }else{
               this.data2.ashData.push(ashData);
               this.data2.rcurrentData.push(rcurrent);
@@ -101,8 +117,8 @@
         }else if(dataInfo.rpipe_sta==3){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
-              this.data1.ashData[this.data1.ashData.length-1] = ashData;
-              this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
+              this.data3.ashData[this.data3.ashData.length-1] = ashData;
+              this.data3.rcurrentData[this.data3.rcurrentData.length-1] = rcurrent;
             }else{
               this.data3.ashData.push(ashData);
               this.data3.rcurrentData.push(rcurrent);
@@ -114,8 +130,8 @@
         }else if(dataInfo.rpipe_sta==4){
           if(oldVal!=undefined){
             if(dataInfo.rdeep==oldVal.rdeep){
-              this.data1.ashData[this.data1.ashData.length-1] = ashData;
-              this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
+              this.data4.ashData[this.data4.ashData.length-1] = ashData;
+              this.data4.rcurrentData[this.data4.rcurrentData.length-1] = rcurrent;
             }else{
               this.data4.ashData.push(ashData);
               this.data4.rcurrentData.push(rcurrent);
@@ -125,17 +141,25 @@
             this.data4.rcurrentData.push(rcurrent);
           }
         }
+      },
 
-        if(dataInfo.record_sta==3){
-          this.data1.ashData=[];
-          this.data2.ashData=[];
-          this.data3.ashData=[];
-          this.data4.ashData=[];
-          this.data1.rcurrentData=[];
-          this.data2.rcurrentData=[];
-          this.data3.rcurrentData=[];
-          this.data4.rcurrentData=[];
+      myCharts(dataInfo,oldVal){
+        if(isNaN(dataInfo.rdeep)){
+          dataInfo.rdeep=0
         }
+        if(isNaN(dataInfo.par_ash)){
+          dataInfo.par_ash=0
+        }
+        if(isNaN(dataInfo.rpressure)){
+          dataInfo.rpressure=0
+        }
+        if(isNaN(dataInfo.rcurrent)){
+          dataInfo.rcurrent=0
+        }
+
+
+        this.getState(dataInfo,oldVal);
+
 
         //console.log(this.data1.rcurrentData);
 
@@ -251,9 +275,7 @@
           return option
         }
 
-
         //let Data=[0,10,20,30,40,50];
-
 
         this.myChart1.setOption(getOption(this.data1));
         this.myChart2.setOption(getOption(this.data2));
@@ -274,6 +296,14 @@
         handler(val, oldVal){
           this.myCharts(val,oldVal)
         },
+      },
+      isReplay(val, oldVal){
+        if(val){
+          this.data1={rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',};
+          this.data2={rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',};
+          this.data3={rcurrentData:[],ashData:[],rpressureData:[],title:'复下',};
+          this.data4={rcurrentData:[],ashData:[],rpressureData:[],title:'复提',};
+        }
       }
     }
   }
@@ -284,7 +314,7 @@
   height: 40px;
   line-height: 50px;
   padding-left: 10px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 }
 </style>

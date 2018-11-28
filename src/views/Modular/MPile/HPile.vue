@@ -110,6 +110,7 @@
             header-row-class-name="h-header"
             header-align="center"
             border
+            max-height="500"
             :data="props.row.data"
             style="width: 100%">
             <el-table-column
@@ -206,18 +207,18 @@
           <span>[</span>
           <el-popover
             placement="right-start"
-            title="作业配置参数"
+            title="作业设计参数"
             trigger="click"
             >
-            <div v-if="noConfig" style="color:#999999">未找到当前作业的配置参数</div>
+            <div v-if="noConfig" style="color:#999999">未找到当前作业的设计参数</div>
             <ul v-else v-for="(list,index) in config_data" :key="index">
-              <li><span style="display: inline-block;width: 50px;vertical-align: top;font-size: 12px;">{{list.name}}</span> : <span style="display:inline-block;margin-left: 10px;vertical-align: top;width:95px;word-wrap:break-word;font-size: 12px;">{{list.value}}</span></li>
+              <li><span class="c-name">{{list.name}}</span> : <span class="c-key">{{list.value}}</span></li>
             </ul>
 
             <span class="c-parameter"  slot="reference"   @click="getConfig(props.row.pile_describe)">参数</span>
           </el-popover>
           <span>|</span>
-          <span  slot="reference"  @click="visible = false" class="c-parameter">回放</span>
+          <span  slot="reference"  @click="playback(props.row)" class="c-parameter">回放</span>
           <span>]</span>
         </template>
       </el-table-column>
@@ -487,10 +488,20 @@
         :current-page="post_data.page_index"
         layout="total,sizes, prev, pager, next, jumper"
         :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
+        :page-size="post_data.page_size"
         :total='total'>
       </el-pagination>
     </div>
+
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :width="dialogWidth"
+      :fullscreen="dialogFullScreen"
+      top="7vh"
+      style="min-width: 1024px;"
+    >
+      <h-running @changeIcon="isFullScreen" v-if="dialogVisible" :style="dialogHeight" :deviceType="deviceType" :dialogFullScreen="dialogFullScreen"></h-running>
+    </el-dialog>
   </div>
 </template>
 
@@ -503,8 +514,12 @@
   import tPile from '@/assets/device/t-pile.png';
 
   import Bus from '@/common/eventBus'
-  import RthyinfoFormat from '@/common/RthyinfoFormat.js'
+  import { mapActions , mapState} from 'vuex'
+  import HRunning from '@/views/softBase/HRunning.vue'
   export default {
+    components:{
+      HRunning
+    },
     data() {
       return {
         nPile:nPile,
@@ -837,6 +852,15 @@
         pile_describe:'',
 
         key:'',
+
+        dialogVisible: false,
+        dialogWidth:'70%',
+        dialogHeight:{
+          height:'700px'
+        },
+        dialogFullScreen:false,
+        changeIcon:true,
+        deviceType:'',
       }
     },
     filters: {
@@ -846,15 +870,14 @@
       }
     },
     props:['isShow','newStyle','deviceKey','isDevice'],
+    computed: {
+      ...mapState({changeTab:state=>state.project.changeTab}),
+      ...mapState({token:state=>state.project.historyKey}),
+      ...mapState({token:state=>state.project.backTab})
+    },
     created(){
-      let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      if(this.isDevice){
-        this.pile_describe=deviceInfo.name;
-        this.key=deviceInfo.key;
-        this.post_data.key=deviceInfo.key;
-      }
-
-      this.deviceName=sessionStorage.getItem('deviceName');
+      this.deviceEnd();
+      this.getPostData();
       this.getDeviceList(this.device_data);
       this.getList(this.post_data);
       this.getRecords();
@@ -863,9 +886,85 @@
       })
     },
     mounted(){
+      this.$bus.on('allEnd',res=>{
+        this.dialogVisible=res;
+      });
+    },
+    beforeDestroy(){
 
     },
+
     methods: {
+      ...mapActions('historyKey',['incrementHistory']),
+      ...mapActions('changeTab',['incrementTab']),
+      ...mapActions('backTab',['incrementBack']),
+
+      isFullScreen(val){ //是否打开模态框
+        if(!val){
+          this.dialogWidth='100%';
+          this.dialogHeight={
+            height:'calc(100% - 65px)'
+          };
+          this.changeIcon=!this.changeIcon;
+          this.dialogFullScreen=true;
+        }else{
+          this.dialogWidth='70%';
+          this.dialogHeight={
+            height:'700px'
+          };
+          this.changeIcon=!this.changeIcon;
+          this.dialogFullScreen=false;
+        }
+      },
+      //回放结束处理
+      deviceEnd(){
+        if(this.$store.state.project.changeTab){
+          let post_Data=JSON.parse(sessionStorage.getItem('replayData'));
+          this.post_data.page_index=post_Data.page_index;
+          this.getList(this.post_data);
+        }
+      },
+      //组件销毁时 使结束状态重置
+      changeBack(){
+        this.$store.dispatch('incrementBack',false);
+      },
+
+      //是否是设备 列表请求参数
+      getPostData(){
+        let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+        this.deviceName=sessionStorage.getItem('deviceName');
+        if(this.isDevice){
+          this.pile_describe=deviceInfo.name;
+          this.key=deviceInfo.key;
+          this.post_data.key=deviceInfo.key;
+        }
+      },
+
+      //回放
+      playback(data){
+        deviceList.list({key:data.device_key}).then(res=>{
+          this.deviceType=res.result.items[0].type;
+          let post_data={
+            key:data.device_key,
+            type:res.result.items[0].type,
+            pileId:data.pile_describe,
+            page_index:this.post_data.page_index,
+          };
+          this.$store.dispatch('incrementTab',true);
+          sessionStorage.setItem('replayData',JSON.stringify(post_data));
+          //是否是设备
+          if(this.isDevice){
+            Bus.$emit('changeTab',true);
+          }else{
+            this.dialogVisible=true;
+            this.$store.dispatch('incrementHistory',data.device_key);
+          }
+        }).catch(e=>{
+
+        });
+
+      },
+
       handleExport(command){
         if(command=='1'){
           this.importExcel();
@@ -873,6 +972,7 @@
           this.importExcelAll();
         }
       },
+
       //excel导出
       importExcel() {
         require.ensure([], () => {
@@ -1321,6 +1421,20 @@
     //color: #1ab3e6;
     cursor: pointer;
 
+  }
+  .c-name{
+    display: inline-block;
+    width: 50px;
+    vertical-align: top;
+    font-size: 12px;
+  }
+  .c-key{
+    display:inline-block;
+    margin-left: 10px;
+    vertical-align: top;
+    width:95px;
+    word-wrap:break-word;
+    font-size: 12px;
   }
   .c-parameter{
     color: #1ab3e6;

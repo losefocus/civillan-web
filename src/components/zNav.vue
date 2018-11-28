@@ -12,6 +12,11 @@
           </div>
         </transition>
 
+        <div class="g-name">
+          <span>{{groupName}}</span>
+          <div class="n-line"></div>
+        </div>
+
         <ul class="nav-box">
           <li v-for="(list,index) in lists" class="nav-list">
             <router-link tag="div" :to="list.path" class="nav-link">
@@ -46,23 +51,24 @@ export default {
      isCollapseIcom:'navClose',
      navIndex:'',
      projectName:'',
+     groupName:'',
      lists:[
        {
          name:'项目总览',
          icon:'icon-project_new',
          path:'/project',
        },{
-         name:'设备列表',
+         name:'全部设备',
          icon:'icon-device_new',
-         path:'/device'
+         path:'/deviceList'
        },{
-         name:'数据报表',
+         name:'历史数据',
          icon:'icon-history_new',
          path:'/historical'
        },{
-         name:'统计分析',
-         icon:'icon-statistics_new',
-         path:'/analysis'
+         name:'预警信息',
+         icon:'icon-alarm_new',
+         path:'/alarm'
        },{
          name:'作业成效',
          icon:'icon-results_new',
@@ -72,14 +78,6 @@ export default {
          icon:'icon-config_new',
          path:'/configure'
        },{
-         name:'故障报警',
-         icon:'icon-alarm_new',
-         path:'/alarm'
-       },{
-         name:'质量评估',
-         icon:'icon-assessment_new',
-         path:'/quality'
-       },{
          name:'现场影像',
          icon:'icon-video_new',
          path:'/video'
@@ -87,47 +85,29 @@ export default {
          name:'文档资料',
          icon:'icon-document_new',
          path:'/document'
-       },
+       },/*{
+         name:'统计分析',
+         icon:'icon-statistics_new',
+         path:'/analysis'
+       },{
+         name:'质量评估',
+         icon:'icon-assessment_new',
+         path:'/quality'
+       },*/
      ]
    }
   },
   created(){
     let _this=this;
     this.$bus.on('isCollapse', (data)=>{
-      //console.log(data);
       _this.isCollapse=data;
     });
-
-    let id=this.$cookies.get('projectId');
-    let tenant=this.$cookies.get('tenant');
-    project.info({'project_id':id,'tenant':tenant}).then(res=>{
-      this.projectName=res.result.name;
-    });
+    this.getInfo();
     this.isActive=0;
+    this.groupName=sessionStorage.getItem('groupName');
     this.projectLogo=this.$cookies.get('projectLogo');
+    this.getResize();
 
-    let cWidth=document.body.clientWidth;
-    if(cWidth<1450){
-      _this.isCollapse=false;
-      _this.changeWidth();
-      _this.isShow=false;
-    }else{
-      _this.isCollapse=true;
-      _this.changeWidth();
-      _this.isShow=false;
-    }
-    window.onresize = function (){
-      let clientWidth=document.body.clientWidth;
-      if(clientWidth<=1450){
-        _this.isCollapse=false;
-        _this.changeWidth();
-        _this.isShow=false;
-      }else{
-        _this.isCollapse=true;
-        _this.changeWidth();
-        _this.isShow=false;
-      }
-    };
   },
   mounted(){
     this.isActive=sessionStorage.getItem('isActive') || 0;
@@ -138,6 +118,38 @@ export default {
     })
   },
   methods:{
+    getInfo(){
+      let id=this.$cookies.get('projectId');
+      let tenant=this.$cookies.get('tenant');
+      project.info({'project_id':id,'tenant':tenant}).then(res=>{
+        this.projectName=res.result.name;
+      });
+    },
+    getResize(){
+      let _this=this;
+      let cWidth=document.body.clientWidth;
+      if(cWidth<1450){
+        _this.isCollapse=false;
+        _this.changeWidth();
+        _this.isShow=false;
+      }else{
+        _this.isCollapse=true;
+        _this.changeWidth();
+        _this.isShow=false;
+      }
+      window.onresize = function (){
+        let clientWidth=document.body.clientWidth;
+        if(clientWidth<=1450){
+          _this.isCollapse=false;
+          _this.changeWidth();
+          _this.isShow=false;
+        }else{
+          _this.isCollapse=true;
+          _this.changeWidth();
+          _this.isShow=false;
+        }
+      };
+    },
     changeWidth(){
       if(this.isCollapse==true){
         this.navWidth='245px';
@@ -160,16 +172,12 @@ export default {
       this.changeWidth()
     }
   },
-  /*watch: {
-    $route(to,from){
-      this.lists.forEach((item,i)=>{
-        if(item.path==to.path){
-          this.isActive=i;
-          sessionStorage.setItem('isActive',this.isActive);
-        }
-      })
-    },
-  },*/
+  watch: {
+    $route () {
+      this.groupName=sessionStorage.getItem('groupName')
+    }
+  },
+
 }
 </script>
 
@@ -212,7 +220,7 @@ export default {
 
 
   .fade-enter-active,.fade-leave-active{
-    transition: 0.6s all ease;
+    transition: 0.3s all ease;
   }
   .fade-enter-active{
      opacity: 1;
@@ -234,7 +242,7 @@ export default {
     background-size: cover;
     text-align: center;
     color: #ffffff;
-    transition: 0.6s all ease;
+    transition: 0.3s all ease;
     overflow: hidden;
     .pj-title{
       width: 100%;
@@ -249,6 +257,25 @@ export default {
         position: absolute;
         bottom: 0;
       }
+    }
+  }
+  .g-name{
+    transition: 0.1s all ease;
+    span{
+      display: inline-block;
+      font-size: 18px;
+      width: 100%;
+      text-align: center;
+      height: 50px;
+      line-height: 50px;
+      color:#333333;
+      font-family:PingFangSC-Medium;
+      font-weight:bold;
+    }
+    .n-line{
+      margin: 5px auto;
+      width: 40px;
+      border-bottom: 3px solid #EFEFEF;
     }
   }
   .nav-box{
@@ -343,6 +370,9 @@ export default {
           }
         };
       }
+    }
+    .g-name{
+      display: none;
     }
   }
 </style>

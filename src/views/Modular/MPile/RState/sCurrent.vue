@@ -38,10 +38,14 @@ export default {
                   this.rcurrent=120;
                 }
                 this.realTime(post_data)
+              }else{
+                this.rcurrent=120;
               }
             });
           }
           // return res.result
+        }).catch(e=>{
+          this.rcurrent=120;
         });
       }
       /*this.timer=setInterval(function() {

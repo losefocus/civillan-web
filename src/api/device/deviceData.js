@@ -6,5 +6,11 @@ export default {
   },
   alarms(params) {
     return get('/foreground/realtime/alarms',params)
+  },
+  history(params){
+    return get('/foreground/realtime/history',params)
+  },
+  replay(params){
+    return get('/foreground/history/replay',params)
   }
 }

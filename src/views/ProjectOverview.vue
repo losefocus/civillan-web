@@ -4,8 +4,8 @@
       <el-header height="70px" style="border-bottom: 1px solid rgba(230,234,238,1);">
         <z-header ></z-header>
       </el-header>
-      <el-container style="height: calc(100% - 70px);">
-        <z-nav style="float: left;height: calc(100%)"></z-nav>
+      <el-container style="height: calc(100% - 70px);" v-cloak>
+        <z-nav style="float: left;height: calc(100%)" v-show="isNav"></z-nav>
         <div class="z-main" style="height: 100%;">
           <div v-show="isActive" class="breadcrumb-box">
             <div :class="{'b-title':isActive}">{{ title }}</div>
@@ -36,14 +36,17 @@
       return{
         title:'',
         isActive:true,
+        isNav:true,
       }
     },
     mounted(){
       this.title=this.$route.name;
       if(this.$route.path=='/project'){
         this.isActive=false;
+        this.isNav=false;
       }else {
         this.isActive=true;
+        this.isNav=true;
       }
     },
     methods:{
@@ -54,8 +57,10 @@
       $route(to,from){
         if(to.path=='/project'){
           this.isActive=false;
+          this.isNav=false;
         }else {
           this.isActive=true;
+          this.isNav=true;
         }
         this.title=this.$route.name;
       }
@@ -101,7 +106,7 @@
     background: #f5f5f9;
     float: left;
     //padding: 20px;
-    width: calc(100% - 245px);
+    width: 100%;
     overflow: auto;
   }
   .z-main::-webkit-scrollbar {/*滚动条整体样式*/
@@ -121,11 +126,5 @@
     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     border-radius: 0;
     background: rgba(0,0,0,0.1);
-  }
-  @media screen and (max-width: 1467px){
-    .z-main{
-      background: #f5f5f9;
-      width: calc(100% - 90px);
-    }
   }
 </style>
