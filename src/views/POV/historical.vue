@@ -110,6 +110,7 @@
         });
       },
       changeTab(list,index){ //切换tab
+        console.log(list.code);
         this.isActive=index;
         if(list.code=='JBZ'){
           this.currentView='HPile'

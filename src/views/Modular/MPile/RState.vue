@@ -202,7 +202,6 @@ export default {
     ...mapState({token:state=>state.project.backTab})
   },
   created(){
-    this.getHistory();
     this.changeData()
   },
   mounted(){
@@ -227,6 +226,7 @@ export default {
     //历史数据和实时数据的切换
     changeData(){
       if(this.$store.state.project.changeTab==true){
+        this.getHistory();
         this.isConctrol=true;
         clearInterval(this.timer1);
         this.timer=setInterval(()=>{
