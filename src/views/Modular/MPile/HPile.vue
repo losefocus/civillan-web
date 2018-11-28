@@ -461,6 +461,7 @@
         <span class="s-total">总桩数</span>
         <span class="s-num" v-if="recordSum">{{recordSum.total_pile_num}}</span>
         <span class="s-num" v-else>0</span>
+        <span class="s-total">根</span>
       </div>
       <div class="s-body">
         <span class="s-total">总桩长</span>
@@ -478,7 +479,7 @@
         <span class="s-total">总灰量</span>
         <span class="s-num" v-if="recordSum">{{recordSum.total_cumulative_ash | formatZ}}</span>
         <span class="s-num" v-else>0</span>
-        <span class="s-total">KG</span>
+        <span class="s-total">Kg</span>
       </div>
     </div>
     <div class="m-pagination">

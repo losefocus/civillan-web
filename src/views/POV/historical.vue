@@ -61,7 +61,9 @@
           page_index:1,
           page_size:10,
           parent_id:sessionStorage.getItem('groupId'),
-          project_id:this.$cookies.get('projectId')
+          project_id:this.$cookies.get('projectId'),
+          direction:'asc',
+          sort_by:'sort'
         },
         isActive:'',
       }

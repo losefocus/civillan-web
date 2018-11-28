@@ -54,7 +54,7 @@ export default {
      groupName:'',
      lists:[
        {
-         name:'项目总览',
+         name:'项目首页',
          icon:'icon-project_new',
          path:'/project',
        },{

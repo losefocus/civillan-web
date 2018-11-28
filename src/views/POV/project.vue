@@ -336,7 +336,7 @@
         margin-bottom: 5px;
       }
       .b-Statistics{
-        margin-top: 40px;
+        margin-top: 25px;
         .s-list,.a-list{
           width: 50%;
           float: left;
@@ -406,13 +406,13 @@
       }
       .i-statistics{
         width: 100%;
+        height: 120px;
         padding: 0 5% 0 0;
         margin-top: 6%;
         overflow: hidden;
-        text-overflow:ellipsis;//值为clip表示剪切，ellipsis时为显示省略号
-        display:-webkit-box;
-        -webkit-box-orient:vertical;
-        -webkit-line-clamp:4; //指定显示多少行
+        display: -webkit-box;//对象作为弹性伸缩盒子模型显示
+        -webkit-box-orient: vertical;//设置或检索伸缩盒对象的子元素的排列方式
+        -webkit-line-clamp: 4;//溢出省略的界限
         line-height: 30px;
         color:#999999;
         font-size: 14px;
@@ -428,7 +428,7 @@
         margin-right: 0 !important;
       }
       .i-box {
-        margin-top: 8%;
+        margin-top: 6%;
         background: #ffffff;
         .c-info{
           float: left;

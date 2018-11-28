@@ -56,25 +56,18 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   res => {
     if (res.status === 200) {
-      //loadingInstance.close();
-      /*if(!res.data.success){
-        //console.log(res.data.message);
-        Message({
-          message: res.data.message,
-          type: 'error'
-        });
-      }*/
       return res;
     }
   },
   error => {
+    console.log(error);
     let errMsg = error.toString();
     let code = errMsg.substr(errMsg.indexOf('code') + 5);
-    Message({
+    console.log(errorCode[code] || errorCode['default']);
+    /*Message({
       message: errorCode[code] || errorCode['default'],
       type: 'error'
-    });
-    //console.log(error.request.status);
+    });*/
     switch(error.request.status){
       case 401:
         Message.error('您的账号暂未授权');
@@ -84,32 +77,7 @@ axios.interceptors.response.use(
         Message.error('服务器繁忙，请稍后访问');
         break;
     }
-    //loadingInstance.close();
-    /*console.log(err.request.status);
-    switch(err.request.status){
-      case 401:
-        Message.error('您的账号暂未授权');
-        router.replace({
-          path: 'login',
-          //query: {redirect: router.currentRoute.fullPath}
-        });
-        break;
-      case 500:
-        Message.error('服务器繁忙，请稍后访问');
-        break;
-    }*/
-    /*if(err.request&&err.request.status===401){
-      console.log('401');
-      Message.error('未授权');
-      //router.push({ path: 'login' })
-      router.replace({
-        path: 'login',
-        query: {redirect: router.currentRoute.fullPath}
-      })
-    }else {
-      console.log('身份验证失败')
-    }*/
-    //Message.error('请求失败，请稍后再试');
+
     return Promise.reject(err)
   }
 );
