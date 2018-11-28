@@ -184,7 +184,7 @@
             let allDevice={
               project_id:this.$cookies.get('projectId'),
               name:'全部',
-                id:sessionStorage.getItem('groupId'),
+              id:sessionStorage.getItem('groupId'),
             };
             this.navList.unshift(allDevice);
             this.getList(this.post_data);
