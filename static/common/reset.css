@@ -308,6 +308,9 @@ button, input, select, textarea { font-size:100%; }
 body .el-table th.gutter {
   display: table-cell !important;
 }
+.el-table td{
+  padding: 8px 0 !important;
+}
 
 .el-table{
   font-size: 12px !important;

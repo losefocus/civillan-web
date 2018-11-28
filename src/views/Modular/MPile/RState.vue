@@ -206,7 +206,6 @@ export default {
   },
   mounted(){
     this.init();
-    this.reload();
     this.getDeviceInfo();
   },
   beforeDestroy(){

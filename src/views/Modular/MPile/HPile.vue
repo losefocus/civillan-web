@@ -955,6 +955,7 @@
           //是否是设备
           if(this.isDevice){
             Bus.$emit('changeTab',true);
+            this.$store.dispatch('incrementHistory',data.device_key);
           }else{
             this.dialogVisible=true;
             this.$store.dispatch('incrementHistory',data.device_key);
