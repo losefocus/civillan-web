@@ -21,6 +21,7 @@
     methods: {
       getBreadcrumb () {
         let matched = this.$route.matched.filter(item => item.name);
+        matched.splice(1,0,{name:sessionStorage.getItem('groupName'),path:'/project'});
         this.breadList = matched;
       }
     },

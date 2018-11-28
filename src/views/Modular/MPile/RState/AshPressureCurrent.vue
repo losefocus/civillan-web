@@ -314,7 +314,7 @@
   height: 40px;
   line-height: 50px;
   padding-left: 10px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 }
 </style>

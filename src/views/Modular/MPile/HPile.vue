@@ -943,7 +943,6 @@
       //回放
       playback(data){
         deviceList.list({key:data.device_key}).then(res=>{
-          console.log(res.result.items[0].type);
           this.deviceType=res.result.items[0].type;
           let post_data={
             key:data.device_key,

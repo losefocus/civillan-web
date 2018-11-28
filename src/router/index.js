@@ -32,25 +32,10 @@ const vRouter = new VueRouter({
           meta: { requireAuth: true},
         },
         {
-          path: '/device',
-          component: resolve => require(['@/views/POV/device'],resolve),
-          name:'设备信息',
-          redirect:"/device/deviceList",
-          meta: { requireAuth: true },
-          children:[
-            {
-              path:'/device/deviceList',
-              component:resolve => require(['@/views/Project/deviceList'],resolve),
-              name:'设备列表',
-              meta:{requireAuth: true}
-            },
-            {
-              path:'/device/deviceMap',
-              component:resolve => require(['@/views/Project/deviceMap'],resolve),
-              name:'设备地图',
-              meta:{requireAuth: true}
-            }
-          ]
+          path:'/deviceList',
+          component:resolve => require(['@/views/Project/deviceList'],resolve),
+          name:'设备列表',
+          meta:{requireAuth: true},
         },
         {
           path: '/configure',

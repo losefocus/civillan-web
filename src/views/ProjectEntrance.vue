@@ -135,7 +135,7 @@
                       },
                       //返回数据项对应的列表节点
                       getListElement: function(dataItem, context, recycledListElement) {
-                        let tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'/*+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'*/+'<span style="width: 220px;height: 42px;margin-left:20px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 14px;vertical-align: middle;" class=<%- dataItem.listId %>><%- dataItem.name %>'+'</span>'+'</p>';
+                        let tpl ='<p class=<%- dataItem.listId %> style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">'/*+'<i class="iconfont icon-circularPoint" style="font-size: 30px;margin-right: 10px;vertical-align: middle;"></i>'*/+'<span style="width: 220px;height: 42px;margin-left:20px;line-height: 42px; text-overflow:ellipsis;white-space:nowrap; overflow: hidden;font-size: 14px;vertical-align: middle;" class=<%- dataItem.listId %> title=<%- dataItem.name %>><%- dataItem.name %>'+'</span>'+'</p>';
 
                         let content = MarkerList.utils.template(tpl, {
                           dataItem: dataItem,

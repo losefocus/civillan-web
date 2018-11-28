@@ -1,43 +1,19 @@
 <template>
-    <div style="position: relative;height: calc(100% - 75px);" >
-    <ul class="a-box">
-        <router-link :to="{path:list.path}" tag="li" v-for="(list,index) in navList" :key="index">
-          {{list.name}}
-        </router-link>
-    </ul>
-    <router-view :searchStyle="searchStyle" :typeStyle="typeStyle"></router-view>
+  <div style="position: relative;height: calc(100% - 75px);" >
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
   import deviceList from '@/views/Project/deviceList'
-  import deviceMap from '@/views/Project/deviceMap'
   export default {
     name: "project_old",
     components: {
-      deviceList,
-      deviceMap
+      deviceList
     },
     data () {
       return {
-        navList:[
-          {
-            path:'/device/deviceMap',
-            name:'设备地图'
-          },
-          {
-            path:'/device/deviceList',
-            name:'设备列表',
-          },
-        ],
-        searchStyle: { //搜索框的位置
-          top: '0',
-          left: '180px',
-        },
-        typeStyle: { //类型过滤的位置
-          top: '0',
-          left: '0',
-        },
+
       };
     }
   }

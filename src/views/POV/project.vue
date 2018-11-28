@@ -12,7 +12,7 @@
         <div class="i-statistics" v-if="info.comment">
           {{ info.comment }}
         </div>
-        <div class="i-statistics" v-else>
+        <div class="i-noStatistics" v-else>
           暂无简介
         </div>
         <div class="i-box p-item" style="width: 100%;">
@@ -41,48 +41,71 @@
         </div>
       </li>
       <li class="p-info">
-        <el-carousel trigger="click"  style="height: 100%;">
+        <el-carousel trigger="click"  style="height: 100%;" indicator-position="none"  arrow="always">
           <el-carousel-item v-for="item in mediaList" :key="item">
             <div class="pj-title" style="width: 100%;height: 100%;" :style="{'background-image': 'url(' + item.thumbnailFileBaseUrl+item.thumbnailFilePath+ ')','background-repeat':'no-repeat','background-size':'cover','background-position':'center'}"></div>
           </el-carousel-item>
         </el-carousel>
       </li>
     </ul>
-    <ul class="a-box">
-      <ul class="b-group">
-        <li class="g-list" v-for="item in groupList" :key="item"  @click="JumpRouter">
-          <div class="m-name">
-            <p>{{item.name}}</p>
-            <img class="i-jump" :src="jumpIn">
-          </div>
-          <div :style="{'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100%','width':'100%','height':'230px'}"></div>
-          <div class="m-info">
-            <div class="t-progress">
-              形象进度
-            </div>
-            <el-progress :percentage="70" color="#24BCF7"></el-progress>
-            <ul class="b-Statistics">
-              <li class="s-list">
-                <p class="l-name">在线设备</p>
-                <div class="n-body">
-                  <span class="d-online">90</span>
-                  <span class="d-total">/</span>
-                  <span class="d-total">100</span>
-                </div>
-              </li>
-              <li class="s-list" >
-                <p class="l-name">预警次数</p>
-                <div class="n-body">
-                  <span class="n-alarm">90</span>
-                </div>
-              </li>
-              <div style="clear: both"></div>
-            </ul>
-          </div>
 
-        </li>
-      </ul>
-    </ul>
+    <div class="b-Roll">
+      <waterfall
+        line = 'v'
+        :fixed-height="true"
+        class="a-box"
+        :line-gap="300"
+        :min-line-gap="250"
+        :max-line-gap="320"
+        :single-max-width="330"
+        :watch="items">
+        <waterfall-slot
+          v-for="(item, index) in groupList"
+          :width="210"
+          :height="440"
+          :order="index"
+          :key="item.id"
+          move-class="item-move"
+        >
+          <div class="item" :key="item" >
+            <div class="m-name" @click="JumpRouter(item)" v-if="item.status!=3" :class="{'noClick':item.status==3}">
+              <p>{{item.name}}</p>
+              <img class="i-jump" :src="jumpIn">
+            </div>
+            <div class="m-name1" v-if="item.status==3">
+              <p>{{item.name}}</p>
+              <img class="i-jump" :src="jumpIn">
+            </div>
+            <div :class="{'g-gray':item.code=='SPAF'||item.code=='GLXT'}" :style="{'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100%','width':'100%','height':'230px'}"></div>
+            <div class="m-info">
+              <div class="t-progress"  v-if="item.code=='RJCL'||item.code=='LJLM'||item.code=='QLGC'||item.code=='SDGC'||item.code=='QTGC'">
+                形象进度
+              </div>
+              <el-progress v-if="item.code=='RJCL'||item.code=='LJLM'||item.code=='QLGC'||item.code=='SDGC'||item.code=='QTGC'" :percentage="70" color="#24BCF7"></el-progress>
+              <div class="n-open" v-if="item.code=='GLXT'">未开通</div>
+              <ul v-else class="b-Statistics">
+                <li class="s-list">
+                  <p class="l-name">在线设备</p>
+                  <div class="n-body">
+                    <span class="d-online">{{item.statistics}}</span>
+                    <span class="d-total">/</span>
+                    <span class="d-total">100</span>
+                  </div>
+                </li>
+                <li class="l-line"></li>
+                <li class="a-list" >
+                  <p class="l-name">预警次数</p>
+                  <div class="n-body">
+                    <span class="n-alarm">{{item.alarm}}</span>
+                  </div>
+                </li>
+                <div style="clear: both"></div>
+              </ul>
+            </div>
+          </div>
+        </waterfall-slot>
+      </waterfall>
+    </div>
   </div>
 </template>
 
@@ -98,11 +121,14 @@
   import deviceGrouping from '@/api/project/deviceGrouping'
   import jumpIn from '@/assets/project/jumpIn.png'
 
-  import Bus from '@/common/eventBus'
+  import Waterfall from 'vue-waterfall/lib/waterfall'
+  import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   export default {
     name: "project",
     components:{
-      dMap
+      dMap,
+      Waterfall,
+      WaterfallSlot
     },
     data(){
       return{
@@ -126,6 +152,14 @@
           type:1,
           project_id:this.$cookies.get('projectId')
         },
+        group_post:{
+          page_index:1,
+          page_size:999,
+          parent_id:0,
+          project_id:this.$cookies.get('projectId'),
+          direction:'asc',
+          sort_by:'sort'
+        },
         groupList:[],
       }
     },
@@ -146,38 +180,37 @@
       let id=this.$cookies.get('projectId');
       let tenant=this.$cookies.get('tenant');
       this.getMediaTotal();
-      this.getGroupList(id);
+      this.getGroupList();
       this.getInfo(id,tenant);
-      this.getDeviceType();
     },
     methods:{
-      enlarge(){
-        this.$router.push('/device/deviceMap');
+      //跳转路由
+      JumpRouter(data){
+        this.$router.push('/deviceList');
+        sessionStorage.setItem('groupId',data.id);
+        sessionStorage.setItem('groupName',data.name)
       },
-      /*getDeviceTotal(id){
-        //设备总数获取
-        deviceList.list({'project_id':id}).then(res=>{
+      sum (m,n){
+         let num = Math.floor(Math.random()*(m - n) + n);
+         return num;
+      },
+
+      //获取类型列表数据
+      getGroupList(){
+        //this.allListQuery.tenant=this.$cookies.get('tenant');
+        deviceGrouping.list(this.group_post).then(res => {
           if(res.success){
-            this.loading.close();
-            this.deviceTotal=res.result.total;
+            res.result.items.forEach(item=>{
+              item.statistics=this.sum(1,100);
+              item.alarm=this.sum(1,100)
+            });
+            this.groupList=res.result.items;
           }else{
             this.loading.close();
           }
         }).catch(err => {
           this.loading.close();
         });
-      },*/
-      //跳转路由
-      JumpRouter(){
-        this.$router.push('/device')
-      },
-      //获取类型列表数据
-      getGroupList(id){
-        //this.allListQuery.tenant=this.$cookies.get('tenant');
-        deviceGrouping.list({project_id:id}).then(res => {
-          console.log(res);
-          this.groupList=res.result.items;
-        })
       },
       getMediaTotal(){
         //影像总数
@@ -185,19 +218,6 @@
           if(res.success){
             this.loading.close();
             this.mediaList=res.result.items
-          }else{
-            this.loading.close();
-          }
-        }).catch(err => {
-          this.loading.close();
-        });
-      },
-      getDocumentTotal(id){
-        //文档总数
-        document.list({ project_id:id}).then(res=>{
-          if(res.success){
-            this.documentTotal=res.result.total;
-            this.loading.close();
           }else{
             this.loading.close();
           }
@@ -218,43 +238,32 @@
           this.loading.close();
         });
       },
-      getPersonnel(id){
-        //人员总数
-        header.list({'project_id':id}).then(res=>{
-          if(res.success){
-            this.userTotal=res.result.total;
-            this.loading.close();
-          }else{
-            this.loading.close();
-          }
-        })
-      },
-      getDeviceType(){
-        categories.list(this.allListQuery).then(res => {
-          let items = res.result.items;
-          let allData = []; //用来装处理完的数组
-          let currData = []; //子数组用来存分割完的数据
-          //循环需要处理的数组
-          for(var i = 0; i < items.length; i++) {
-            //将chartArr[i]添加到子数组
-            currData.push(items[i]);
-            //在这里求4的余数,如果i不等于0,且可以整除 或者考虑到不满4个或等于4个的情况就要加上  i等于当前数组长度-1的时候
-            if((i != 0 && (i + 1) % 4 == 0) || i == items.length - 1) {
-              //把currData加到allData里
-              allData.push(currData);
-              //在这里清空currData
-              currData = [];
-            }
-          }
-          this.deviceList=allData
-        })
-      }
     }
   }
 </script>
 
 <style scoped lang="scss">
+  .n-open{
+    text-align: center;
+    line-height: 150px;
+    font-size:18px;
+    font-family:PingFangSC-Medium;
+    font-weight:800;
+    color:rgba(153,153,153,1);
+  }
+  .g-gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
 
+    filter: grayscale(100%);
+
+    filter: gray;
+  }
+  .noClick{
+    cursor: default;
+  }
   .echarts {
     width: 100%;
     height: 100%;
@@ -265,7 +274,7 @@
   .n-box{
     height: calc(100% - 40px);
     width:calc(100% - 40px);
-    min-height: 850px;
+    min-height: 860px;
     padding: 20px;
     background: #f5f5f9;
   }
@@ -277,8 +286,102 @@
     margin: 0;
   }
 
+  waterfall-slot{
+    background: black;
+  }
+  .item {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    font-size: 0.9em;
+    box-shadow:0 5px 7px 0 rgba(144,164,183,0.3);
+    .m-name{
+      position: absolute;
+      width: calc(100% - 60px);
+      padding: 30px;
+      height: 170px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffffff;
+      background: rgba(0,0,0,0.5);
+      cursor: pointer;
+      .i-jump{
+        width: 38px;
+        margin-top: 30px;
+      }
+    }
+    .m-name1{
+      position: absolute;
+      z-index: 9999;
+      width: calc(100% - 60px);
+      padding: 30px;
+      height: 170px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffffff;
+      background: rgba(0,0,0,0.5);
+      .i-jump{
+        width: 38px;
+        margin-top: 30px;
+      }
+    }
+    img{
+      width: 100%;
+    }
+    .m-info{
+      padding: 20px;
+      .t-progress{
+        font-size: 14px;
+        color: #666666;
+        margin-bottom: 5px;
+      }
+      .b-Statistics{
+        margin-top: 40px;
+        .s-list,.a-list{
+          width: 50%;
+          float: left;
+          .l-name{
+            color:#666666;
+            font-size: 14px;
+          }
+          .n-body{
+            margin-top: 10px;
+            .d-online,.n-alarm{
+              font-size: 32px;
+              font-weight: bold;
+              color:#24BCF7;
+            }
+            .n-alarm{
+              color:#666666;
+            }
+          }
+          .d-total{
+            color:#666666;
+            font-size: 14px;
+          }
+        }
+        .a-list{
+          width: 30%;
+          padding-left: calc(20% - 2px);
+        }
+        .l-line{
+          height: 50px;
+          margin-top: 10px;
+          float: left;
+          border-left: 2px solid #F1F1F1;
+        }
+      }
+    }
+  }
+  .item:hover>.m-name{
+    background: rgba(36,188,247,0.5);
+  }
+
   .p-box{
-    width: 450px;
+    width: 440px;
+    margin-left: 10px;
     height: 100%;
     float: left;
     .p-info{
@@ -313,6 +416,13 @@
         -webkit-box-orient:vertical;
         -webkit-line-clamp:4; //指定显示多少行
         line-height: 30px;
+        color:#999999;
+        font-size: 14px;
+      }
+      .i-noStatistics{
+        width: 100%;
+        height: 120px;
+        line-height: 50px;
         color:#999999;
         font-size: 14px;
       }
@@ -362,53 +472,9 @@
   .a-box{
     float: left;
     width: calc(100% - 470px);
-    height: 100%;
-    margin-left: 20px;
+    height: calc(100% + 25px);
+    margin:-10px 0 0 20px;
     overflow: auto;
-    .b-group{
-      .g-list{
-        cursor: pointer;
-        float: left;
-        width: 260px;
-        min-width: 220px;
-        margin-left: 21px;
-        height: 420px;
-        background: #ffffff;
-        margin-bottom: 20px;
-        position: relative;
-        .m-name{
-          position: absolute;
-          width: calc(100% - 60px);
-          padding: 30px;
-          height: 170px;
-          font-size: 18px;
-          font-weight: bold;
-          color: #ffffff;
-          background: rgba(0,0,0,0.5);
-          .i-jump{
-            width: 38px;
-            margin-top: 30px;
-          }
-        }
-        img{
-          width: 100%;
-        }
-        .m-info{
-          padding: 20px;
-          .t-progress{
-            font-size: 14px;
-            color: #666666;
-          }
-          .b-Statistics{
-            margin-top: 20px;
-            .s-list{
-              width: 50%;
-              float: left;
-            }
-          }
-        }
-      }
-    }
   }
   .a-box::-webkit-scrollbar {/*滚动条整体样式*/
     width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
@@ -428,4 +494,5 @@
     border-radius: 0;
     background: rgba(0,0,0,0.1);
   }
+
 </style>

@@ -4,8 +4,8 @@
       <el-header height="70px" style="border-bottom: 1px solid rgba(230,234,238,1);">
         <z-header ></z-header>
       </el-header>
-      <el-container style="height: calc(100% - 70px);">
-        <z-nav style="float: left;height: calc(100%)" v-if="isNav"></z-nav>
+      <el-container style="height: calc(100% - 70px);" v-cloak>
+        <z-nav style="float: left;height: calc(100%)" v-show="isNav"></z-nav>
         <div class="z-main" style="height: 100%;">
           <div v-show="isActive" class="breadcrumb-box">
             <div :class="{'b-title':isActive}">{{ title }}</div>

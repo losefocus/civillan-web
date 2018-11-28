@@ -89,9 +89,6 @@
     props:['deviceType','dialogFullScreen'],
 
     created(){
-      let id=this.$cookies.get('projectId');
-      let tenant=this.$cookies.get('tenant');
-      this.getGroup(id,tenant);
       this.changeType();
       this.deviceStatus = new Map();
       for (let i=0; i<this.deviceStatusLists.length; i++) {
@@ -115,7 +112,7 @@
       this.selfAdaption()
     },
     beforeDestroy(){
-      console.log('销毁')
+
     },
     methods: {
       getFullScreen(data){
@@ -167,18 +164,6 @@
           this.tBody=['PGrouting', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='SCuring'
         }
-      },
-      getGroup(id,tenant){
-        deviceGrouping.list({'project_id':id,'tenant':tenant,'sort_by':'sort','direction':'asc'}).then(res=>{
-          if(res.success){
-            this.navList=res.result.items;
-            this.getList(this.navList[0].id);
-          }else{
-            this.$message.error(res.message);
-          }
-        }).catch(e=>{
-
-        });
       },
       changeTab1(list,index){ //切换tab
         this.isActive=index;

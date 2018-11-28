@@ -29,7 +29,6 @@ export default {
         this.realTime(post_data)
       }else{
         deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
-          console.log(res)
           if(res.result.items.length>0){
             res.result.items.forEach(item=>{
               if(item.label=='rcurrent'){
