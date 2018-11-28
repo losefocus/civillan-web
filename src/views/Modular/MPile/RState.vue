@@ -223,6 +223,21 @@ export default {
     closeTab(){
       this.$store.dispatch('incrementTab',false);
     },
+    //设备信息
+    getDeviceInfo(){
+      this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
+      if(this.deviceInfo1.status==11){
+        this.noDevice=false;
+      }else{
+        if(this.$store.state.project.changeTab==true){
+          this.noDevice=false;
+        }else{
+          this.noDevice=true;
+          this.RT_data={};
+          this.RT_data.depth_design=20;
+        }
+      }
+    },
     //历史数据和实时数据的切换
     changeData(){
       if(this.$store.state.project.changeTab==true){
@@ -367,18 +382,7 @@ export default {
         if( this.$refs.sFlow!==undefined){this.$refs.sFlow.resize()}
       },100);
     },
-    //设备信息
-    getDeviceInfo(){
-      this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      if(this.deviceInfo1.status==11){
-        this.noDevice=false;
-      }else{
-        this.noDevice=true;
-        this.RT_data={};
-        this.RT_data.depth_design=20;
-        clearInterval(this.timer);
-      }
-    },
+
     //切换设备
     deviceChange(index){
       this.deviceIndex=index;

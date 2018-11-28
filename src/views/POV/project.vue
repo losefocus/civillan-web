@@ -62,7 +62,7 @@
         <waterfall-slot
           v-for="(item, index) in groupList"
           :width="210"
-          :height="440"
+          :height="422"
           :order="index"
           :key="item.id"
           move-class="item-move"
@@ -272,9 +272,7 @@
     clear: both;
   }
   .n-box{
-    height: calc(100% - 40px);
-    width:calc(100% - 40px);
-    min-height: 860px;
+    height: 825px;
     padding: 20px;
     background: #f5f5f9;
   }
@@ -409,7 +407,7 @@
       .i-statistics{
         width: 100%;
         padding: 0 5% 0 0;
-        margin-top: 8%;
+        margin-top: 6%;
         overflow: hidden;
         text-overflow:ellipsis;//值为clip表示剪切，ellipsis时为显示省略号
         display:-webkit-box;
@@ -464,7 +462,7 @@
     };
     .p-info:last-child{
       width: 450px;
-      height: calc(100% - 440px);
+      height: calc(100% - 425px);
       padding: 0;
       margin-top: 20px;
     }
