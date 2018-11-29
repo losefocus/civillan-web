@@ -57,12 +57,8 @@
       //历史回放数据和实时数据的切换
       changeData(){
         if(this.$store.state.project.changeTab==true){
-          this.data1={rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',};
-          this.data2={rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',};
-          this.data3={rcurrentData:[],ashData:[],rpressureData:[],title:'复下',};
-          this.data4={rcurrentData:[],ashData:[],rpressureData:[],title:'复提',};
+          this.clearData()
         }else{
-          console.log('实时');
           this.history()
         }
       },
@@ -74,8 +70,6 @@
               let data=res.result;
               for(let i=0;i<data.length;i++){
                 let item=JSON.parse(data[i]);
-                console.log(item);
-                console.log(item);
                 let oldItem;
                 if(i>0){
                   oldItem=JSON.parse(data[i-1]);
@@ -83,49 +77,68 @@
                 let ashData=[parseFloat(item.par_ash).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
                 let rcurrent=[parseFloat(item.rcurrent).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
                 if(item.rpipe_sta==1){
-                  console.log(item);
-                  if(item.rdeep==oldItem.rdeep){
-                    if(item.par_ash==oldItem.par_ash){
-                    }else{
-                      this.data1.ashData.push(ashData);
-                      this.data1.rcurrentData.push(rcurrent);
-                    }
-                  }else{
+                  if(i==0){
                     this.data1.ashData.push(ashData);
                     this.data1.rcurrentData.push(rcurrent);
+                  }else{
+                    if(item.rdeep!=oldItem.rdeep){
+                      this.data1.ashData.push(ashData);
+                      this.data1.rcurrentData.push(rcurrent);
+                    }else{
+                      if(item.par_ash!=oldItem.par_ash){
+                        this.data1.ashData.push(ashData);
+                      }
+                      if(item.rcurrent!=oldItem.rcurrent){
+                        this.data1.rcurrentData.push(rcurrent);
+                      }
+                    }
                   }
                 }else if(item.rpipe_sta==2){
-                  if(item.rdeep==oldItem.rdeep){
-                    if(item.par_ash==oldItem.par_ash){
-                    }else{
-                      this.data2.ashData.push(ashData);
-                      this.data2.rcurrentData.push(rcurrent);
-                    }
-                  }else{
+                  if(i==0){
                     this.data2.ashData.push(ashData);
                     this.data2.rcurrentData.push(rcurrent);
+                  }else{
+                    if(item.rdeep!=oldItem.rdeep){
+                      this.data2.ashData.push(ashData);
+                      this.data2.rcurrentData.push(rcurrent);
+                    }else{
+                      this.data2.ashData[this.data2.ashData.length-1] = ashData;
+                      this.data2.rcurrentData[this.data2.rcurrentData.length-1] = rcurrent;
+                    }
                   }
                 }else if(item.rpipe_sta==3){
-                  if(item.rdeep==oldItem.rdeep){
-                    if(item.par_ash==oldItem.par_ash){
-                    }else{
-                      this.data3.ashData.push(ashData);
-                      this.data3.rcurrentData.push(rcurrent);
-                    }
-                  }else{
+                  if(i==0){
                     this.data3.ashData.push(ashData);
                     this.data3.rcurrentData.push(rcurrent);
+                  }else{
+                    if(item.rdeep!=oldItem.rdeep){
+                      this.data3.ashData.push(ashData);
+                      this.data3.rcurrentData.push(rcurrent);
+                    }else{
+                      if(item.par_ash!=oldItem.par_ash){
+                        this.data3.ashData.push(ashData);
+                      }
+                      if(item.rcurrent!=oldItem.rcurrent){
+                        this.data3.rcurrentData.push(rcurrent);
+                      }
+                    }
                   }
                 }else if(item.rpipe_sta==4){
-                  if(item.rdeep==oldItem.rdeep){
-                    if(item.par_ash==oldItem.par_ash){
-                    }else{
-                      this.data4.ashData.push(ashData);
-                      this.data4.rcurrentData.push(rcurrent);
-                    }
-                  }else{
+                  if(i==0){
                     this.data4.ashData.push(ashData);
                     this.data4.rcurrentData.push(rcurrent);
+                  }else{
+                    if(item.rdeep!=oldItem.rdeep){
+                      this.data4.ashData.push(ashData);
+                      this.data4.rcurrentData.push(rcurrent);
+                    }else{
+                      if(item.par_ash!=oldItem.par_ash){
+                        this.data4.ashData.push(ashData);
+                      }
+                      if(item.rcurrent!=oldItem.rcurrent){
+                        this.data4.rcurrentData.push(rcurrent);
+                      }
+                    }
                   }
                 }
               }
@@ -318,20 +331,28 @@
         this.myChart2.resize();
         this.myChart3.resize();
         this.myChart4.resize()
+      },
+      clearData(){
+        this.data1={rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',};
+        this.data2={rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',};
+        this.data3={rcurrentData:[],ashData:[],rpressureData:[],title:'复下',};
+        this.data4={rcurrentData:[],ashData:[],rpressureData:[],title:'复提',};
       }
     },
+
     watch:{
       dataInfo:{//深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
-          this.myCharts(val,oldVal)
+          this.myCharts(val,oldVal);
+          if(val.pile_describe!=oldVal.pile_describe){
+            console.log('不同桩');
+            this.clearData()
+          }
         },
       },
       isReplay(val, oldVal){
         if(val){
-          this.data1={rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',};
-          this.data2={rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',};
-          this.data3={rcurrentData:[],ashData:[],rpressureData:[],title:'复下',};
-          this.data4={rcurrentData:[],ashData:[],rpressureData:[],title:'复提',};
+          this.clearData()
         }
       }
     }
