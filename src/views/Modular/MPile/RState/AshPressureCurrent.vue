@@ -345,7 +345,6 @@
         handler(val, oldVal){
           this.myCharts(val,oldVal);
           if(val.pile_describe!=oldVal.pile_describe){
-            console.log('不同桩');
             this.clearData()
           }
         },

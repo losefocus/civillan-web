@@ -419,7 +419,7 @@
       }
       .i-noStatistics{
         width: 100%;
-        height: 120px;
+        height: 150px;
         line-height: 50px;
         color:#999999;
         font-size: 14px;
@@ -456,7 +456,7 @@
           }
         }
         .c-infoM{
-          margin-bottom: 10px;
+          margin-bottom: 20px;
         }
       }
     };
