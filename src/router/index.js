@@ -19,23 +19,38 @@ const vRouter = new VueRouter({
     },
     {
       path: '/ProjectOverview',
-      name: '项目总览',
+      name: '项目首页',
       redirect:"/project",
       component: resolve => require(['@/views/ProjectOverview'],resolve),
       meta: {requireAuth: true},
       children:[
         {
           path: '/project',
-          name:'项目总览',
+          name:'项目首页',
           component: resolve => require(['@/views/POV/project'],resolve),
           //redirect:"/project/deviceMap",
           meta: { requireAuth: true},
         },
         {
-          path:'/deviceList',
-          component:resolve => require(['@/views/Project/deviceList'],resolve),
-          name:'设备列表',
-          meta:{requireAuth: true},
+          path: '/device',
+          component: resolve => require(['@/views/POV/device'],resolve),
+          name:'全部设备',
+          redirect:"/device/deviceList",
+          meta: { requireAuth: true },
+          children:[
+            {
+              path:'/device/deviceList',
+              component:resolve => require(['@/views/Project/deviceList'],resolve),
+              name:'设备列表',
+              meta:{requireAuth: true}
+            },
+            {
+              path:'/device/deviceMap',
+              component:resolve => require(['@/views/Project/deviceMap'],resolve),
+              name:'设备地图',
+              meta:{requireAuth: true}
+            }
+          ]
         },
         {
           path: '/configure',

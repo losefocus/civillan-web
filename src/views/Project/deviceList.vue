@@ -202,7 +202,6 @@
         });
       },
       changeTab(list,index){ //切换tab
-        console.log(list);
         this.isActive=index;
         this.post_data.group_id=list.id;
         this.getList(this.post_data);

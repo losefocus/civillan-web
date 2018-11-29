@@ -1,27 +1,11 @@
 <template>
 <div class="d-box" :style="newStyle">
-  <div class="m-screen">
-    <div class="s-box" :style="searchStyle">
-      <input v-model="searchKey" placeholder="设备名称" id="deviceSearch" name="deviceSearch" type="text">
-      <label for="deviceSearch" class="m-iconBox" @click="search()">
-        <span class="el-icon-search"></span>
-      </label>
-    </div>
-    <div class="s-box s-box1" :style="typeStyle">
-      <el-select size="small" v-model="productType" placeholder="按设备类型过滤" style="width: 150px" @change="typeSelect">
-        <el-option
-          v-for="item in productLists"
-          :key="item.id"
-          :label="item.name"
-          :value="item.code"
-          :disabled="item.disabled">
-        </el-option>
-      </el-select>
-    </div>
-
-
-  </div>
-  <div id="container" style="width: 100%;height: 100%">
+  <ul class="a-box">
+    <li v-for="(list,index) in navList" :key="index" @click="changeTab1(list,index)" :class="{active:index==isActive}">
+      {{list.name}}
+    </li>
+  </ul>
+  <div id="container" style="width: 100%;height: calc(100% - 60px)">
   </div>
   <el-dialog
     :visible.sync="dialogVisible"
@@ -56,7 +40,7 @@
 
   import newRunning from '@/views/softBase/newRunning.vue'
 
-  import deviceData from '@/api/device/deviceData'
+  import deviceGrouping from '@/api/project/deviceGrouping'
   import categories from '@/api/configure/categories'
   import { mapActions , mapState} from 'vuex'
 export default {
@@ -96,12 +80,21 @@ export default {
       ],
       isBusy: false,
       post_data:{
-        page_size:999,
+        project_id:this.$cookies.get('projectId'),
+        group_id:sessionStorage.getItem('groupId'),
+        page_index:1,
+        page_size:10,
       },
-      allListQuery:{ //类型select列表请求参数
-        page_index: 1,
-        page_size: 999
+      group_post:{
+        page_index:1,
+        page_size:10,
+        parent_id:sessionStorage.getItem('groupId'),
+        project_id:this.$cookies.get('projectId'),
+        direction:'asc',
+        sort_by:'sort'
       },
+      navList:[],
+      isActive:'',
     }
   },
   props:[
@@ -110,7 +103,10 @@ export default {
     'newStyle'
   ],
 
-  mounted: function () {
+  created(){
+    this.getGroup()
+  },
+  mounted() {
     let project_id=this.$cookies.get('projectId');
     this.post_data.project_id=project_id;
     this.init(this.post_data);
@@ -121,6 +117,33 @@ export default {
   },
   methods:{
     ...mapActions('deviceKey',['incrementKey']),
+    getGroup(){
+      deviceGrouping.list(this.group_post).then(res=>{
+        if(res.success){
+          this.navList=res.result.items;
+          let allDevice={
+            project_id:this.$cookies.get('projectId'),
+            name:'全部',
+            id:sessionStorage.getItem('groupId'),
+          };
+          this.navList.unshift(allDevice);
+          this.init(this.post_data);
+
+          this.$nextTick(()=>{
+            this.isShow=true
+          });
+        }else{
+          this.$message.error(res.message);
+        }
+      }).catch(e=>{
+
+      });
+    },
+    changeTab1(list,index){ //切换tab
+      this.isActive=index;
+      this.post_data.group_id=list.id;
+      this.init(this.post_data);
+    },
     init(post_data){
       let _this=this;
       this.loading=this.$loading({
@@ -356,6 +379,40 @@ export default {
       color: #ffffff;
       margin-left: -4px;
       cursor: pointer;
+    }
+  }
+  .a-box{
+    width: calc(100% - 20px);
+    padding: 15px 0 0 20px;
+    height: 50px;
+    background: #ffffff;
+    margin-bottom: 10px;
+    li{
+      font-size: 14px;
+      cursor: pointer;
+      float: left;
+      width: 100px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background: #FFFFFF;
+      color: #cccccc;
+      border:1px solid #cccccc;
+      margin-left: -1px;
+    }
+    li:first-child{
+      border-radius: 5px 0 0 5px;
+    }
+    li:last-child{
+      border-radius: 0 5px 5px 0;
+    }
+    .active{
+      background: #F76A6A;
+      color: #ffffff;
+      border:1px solid #F76A6A;
+    }
+    .active+li{
+      border-left: none;
     }
   }
   #container{

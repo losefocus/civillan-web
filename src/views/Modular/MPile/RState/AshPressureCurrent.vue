@@ -2,7 +2,7 @@
   <div style="width: 100%;height: 100%;">
     <!--<chart :options="PulpingQuantity" :auto-resize=true></chart>-->
     <div class="t-charts">
-      段灰量(Kg)、电流(A)随桩机里程变化曲线
+      段灰量(kg)、电流(A)变化曲线
     </div>
     <div style="height: calc(100% - 40px)">
       <div id="myCharts1" style="width: 50%;height: 50%;float: left;"></div>
@@ -62,6 +62,7 @@
           this.data3={rcurrentData:[],ashData:[],rpressureData:[],title:'复下',};
           this.data4={rcurrentData:[],ashData:[],rpressureData:[],title:'复提',};
         }else{
+          console.log('实时');
           this.history()
         }
       },
@@ -71,10 +72,9 @@
           if(res.success){
             if(res.result.length>0){
               let data=res.result;
-              let temp=[];
-
               for(let i=0;i<data.length;i++){
                 let item=JSON.parse(data[i]);
+                console.log(item);
                 console.log(item);
                 let oldItem;
                 if(i>0){
@@ -135,9 +135,6 @@
 
         });
       },
-
-
-
 
       //实时数据
       getState(dataInfo,oldVal){
@@ -213,10 +210,7 @@
           dataInfo.rcurrent=0
         }
 
-
         this.getState(dataInfo,oldVal);
-
-
         //console.log(this.data1.rcurrentData);
 
         this.myChart1 = this.$echarts.init(document.getElementById('myCharts1'));
@@ -248,6 +242,9 @@
                 return res;
               }
             },
+            dataZoom: [ {
+              type: 'inside'
+            }],
             grid: {
               top:'27%',
               left: '15%',
@@ -258,18 +255,6 @@
               type: 'value',
               inverse:true,
               boundaryGap: false,
-              axisLine: {
-                lineStyle: {
-                  color: '#ccc'
-                }
-              },
-                axisLabel: {
-                  margin: 6,
-                  textStyle: {
-                    fontSize: 10,
-                    color: '#999'
-                  }
-                },
               max:dataInfo.depth_design || 20,
               min:0,
             }],
@@ -282,18 +267,6 @@
               },
               nameTextStyle:{
 
-              },
-              axisLine: {
-                lineStyle: {
-                  color: '#ccc'
-                }
-              },
-              axisLabel: {
-                margin: 6,
-                textStyle: {
-                  fontSize: 10,
-                  color: '#999'
-                }
               },
               splitLine: {
                 show:false,
