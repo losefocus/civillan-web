@@ -398,7 +398,7 @@
         }
       }
       .i-time{
-        margin-top: 5%;
+        margin-top: 15px;
         color: #666666;
         width: 100%;
         font-weight: bold;
@@ -406,14 +406,14 @@
       }
       .i-statistics{
         width: 100%;
-        height: 120px;
+        height: 150px;
         padding: 0 5% 0 0;
-        margin-top: 6%;
+        margin-top: 20px;
         overflow: hidden;
         display: -webkit-box;//对象作为弹性伸缩盒子模型显示
         -webkit-box-orient: vertical;//设置或检索伸缩盒对象的子元素的排列方式
-        -webkit-line-clamp: 4;//溢出省略的界限
-        line-height: 30px;
+        -webkit-line-clamp: 6;//溢出省略的界限
+        line-height: 25px;
         color:#999999;
         font-size: 14px;
       }
@@ -428,12 +428,12 @@
         margin-right: 0 !important;
       }
       .i-box {
-        margin-top: 6%;
+        margin-top: 10px;
         background: #ffffff;
         .c-info{
           float: left;
           width: 195px;
-          margin: 3% 5px 0 0;
+          margin: 10px 5px 0 0;
           cursor: pointer;
           display: flex;
 
@@ -456,7 +456,7 @@
           }
         }
         .c-infoM{
-          margin-bottom: 24px;
+          margin-bottom: 10px;
         }
       }
     };
