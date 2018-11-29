@@ -300,8 +300,8 @@
       width: calc(100% - 60px);
       padding: 30px;
       height: 170px;
-      font-size: 18px;
-      font-weight: bold;
+      font-size: 26px;
+      font-weight: 500;
       color: #ffffff;
       background: rgba(0,0,0,0.5);
       cursor: pointer;
@@ -316,8 +316,8 @@
       width: calc(100% - 60px);
       padding: 30px;
       height: 170px;
-      font-size: 18px;
-      font-weight: bold;
+      font-size: 26px;
+      font-weight: 500;
       color: #ffffff;
       background: rgba(0,0,0,0.5);
       .i-jump{
@@ -409,13 +409,28 @@
         height: 150px;
         padding: 0 5% 0 0;
         margin-top: 20px;
-        overflow: hidden;
-        display: -webkit-box;//对象作为弹性伸缩盒子模型显示
-        -webkit-box-orient: vertical;//设置或检索伸缩盒对象的子元素的排列方式
-        -webkit-line-clamp: 6;//溢出省略的界限
+        overflow: auto;
         line-height: 25px;
         color:#999999;
         font-size: 14px;
+      }
+      .i-statistics::-webkit-scrollbar {/*滚动条整体样式*/
+        width:4px;     /*高宽分别对应横竖滚动条的尺寸*/
+        height: 4px;
+        background: #ffffff;
+      }
+      .i-statistics::-webkit-scrollbar-button{
+        background: rgba(0,0,0,0.2);
+      }
+      .i-statistics::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.2);
+      }
+      .i-statistics::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 0;
+        background: rgba(0,0,0,0.1);
       }
       .i-noStatistics{
         width: 100%;

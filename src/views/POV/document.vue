@@ -35,6 +35,7 @@
       @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
+        align="center"
         width="50">
       </el-table-column>
       <el-table-column

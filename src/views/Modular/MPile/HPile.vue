@@ -13,7 +13,7 @@
         <div style="clear: both"></div>
       </div>
       <div class="c-query">
-        <el-select v-show="!isDevice" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 30%;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
+        <el-select v-show="!isDevice" v-model="device"  filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini"  style="margin: 0 5px 0 0;width: 150px;float: left;" clearable @change="deviceChange" @visible-change="visibleChange">
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="item.key+item.id"
@@ -35,7 +35,7 @@
           <el-input style="width: 120px" v-model="post_data.pileId" placeholder="请输入桩号" size="mini"></el-input>
         </div>
 
-        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 15%;float: left;">
+        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange1" style="margin: 0 5px;width: 105px;float: left;">
           <el-option
             v-for="item in deviceSelect2"
             :key="item.name"
@@ -44,17 +44,16 @@
           </el-option>
         </el-select>
         <el-date-picker
-          v-model="value7"
           size="mini"
-          type="daterange"
-          align="center"
-          unlink-panels
+          v-model="value7"
+          type="datetimerange"
+          :picker-options="pickerOptions2"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          value-format="timestamp"
           @change="getTime(value7)"
-          :picker-options="pickerOptions2" style="margin: 0 5px;width: 30%;float: left;">
+          style="margin: 0 5px;width: 315px;float: left;"
+          align="center">
         </el-date-picker>
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">查询</el-button>
@@ -69,8 +68,6 @@
           <el-dropdown-menu slot="dropdown" >
             <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
             <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
-            <!--<el-dropdown-item>Word</el-dropdown-item>
-            <el-dropdown-item>PDF</el-dropdown-item>-->
           </el-dropdown-menu>
         </el-dropdown>
         <el-button style="margin-left: 10px" type="primary" icon="el-icon-refresh" size="mini" @click="Refresh">刷新</el-button>
@@ -127,7 +124,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="段灰量（Kg）"
+              label="段灰量（kg）"
               align="center">
               <template slot-scope="props">
                 {{ props.row.p_total_ash | formatP}}
@@ -286,7 +283,7 @@
         :show-overflow-tooltip=true
         align="center"
         min-width="80"
-        label="累计灰量(Kg)">
+        label="累计灰量(kg)">
         <template slot-scope="props">
           {{ props.row.cumulative_ash | formatZ}}
         </template>
@@ -346,7 +343,7 @@
         :show-overflow-tooltip=true
         align="center"
         min-width="80"
-        label="平均灰量(Kg)">
+        label="平均灰量(kg)">
         <template slot-scope="props">
           {{ props.row.average_ash | formatZ}}
         </template>
@@ -435,7 +432,7 @@
         :show-overflow-tooltip=true
         align="center"
         min-width="85"
-        label="扩大桩灰量(Kg)">
+        label="扩大桩灰量(kg)">
         <template slot-scope="props">
           {{ props.row.t_type_ash | formatZ}}
         </template>
@@ -445,7 +442,7 @@
         :show-overflow-tooltip=true
         align="center"
         min-width="85"
-        label="下部桩灰量(Kg)">
+        label="下部桩灰量(kg)">
         <template slot-scope="props">
           {{ props.row.bottom_part_ash | formatZ}}
         </template>
@@ -586,7 +583,6 @@
           {value2:[40,50],name:'E (40-50)'},
         ],// 评分等级选定值
         value7:'',// 时间选定值
-
 
         device:'',// 全部设备选定值
         //deviceKey:'',// 设备key值
@@ -1328,7 +1324,6 @@
 </script>
 <style lang="scss" scoped>
   .h-box{
-    //height: calc(100% - 100px);
     background: #f5f5f9;
   }
   .t-rows{
@@ -1339,8 +1334,7 @@
   }
   .c-box{
 
-    //margin-top: 15px;
-    padding: 20px 2% ;
+    padding: 20px;
     border:1px solid rgba(230,234,238,1);
     background: #fff;
     overflow: hidden;
@@ -1374,8 +1368,7 @@
 
     }
     .c-query{
-      width: 675px;
-      margin-right: 30px;
+      width: 695px;
       overflow: hidden;
       float: left;
       .c-button{
