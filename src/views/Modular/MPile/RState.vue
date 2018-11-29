@@ -225,15 +225,17 @@ export default {
     //设备信息
     getDeviceInfo(){
       this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      if(this.deviceInfo1.status==11){
-        this.noDevice=false;
-      }else{
-        if(this.$store.state.project.changeTab==true){
+      if(this.deviceInfo1){
+        if(this.deviceInfo1.status==11){
           this.noDevice=false;
         }else{
-          this.noDevice=true;
-          this.RT_data={};
-          this.RT_data.depth_design=20;
+          if(this.$store.state.project.changeTab==true){
+            this.noDevice=false;
+          }else{
+            this.noDevice=true;
+            this.RT_data={};
+            this.RT_data.depth_design=20;
+          }
         }
       }
     },

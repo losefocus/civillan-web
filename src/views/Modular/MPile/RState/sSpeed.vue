@@ -25,48 +25,32 @@
     methods:{
       init(post_data){
         let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-        let id=deviceInfo.id;
-        if(this.rspeed!=null){
-          this.realTime(post_data)
-        }else{
-          deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
-            if(res.result.items.length>0){
-              res.result.items.forEach(item=>{
-                if(item.label=='rspeed'){
-                  if(item.maxValue!=undefined){
-                    this.rspeed = item.maxValue;
+        if(deviceInfo){
+          let id=deviceInfo.id;
+          if(this.rspeed!=null){
+            this.realTime(post_data)
+          }else{
+            deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
+              if(res.result.items.length>0){
+                res.result.items.forEach(item=>{
+                  if(item.label=='rspeed'){
+                    if(item.maxValue!=undefined){
+                      this.rspeed = item.maxValue;
+                    }else{
+                      this.rspeed = 250;
+                    }
+                    this.realTime(post_data)
                   }else{
                     this.rspeed = 250;
                   }
-                  this.realTime(post_data)
-                }else{
-                  this.rspeed = 250;
-                }
-              });
-            }
-            // return res.result
-          }).catch(e=>{
-            console.log(e)
-            this.rspeed = 250;
-          });
-        }
-        /*this.timer=setInterval(function() {
-
-          if (tips == 200) {
-            tips = 0;
-          } else {
-            ++tips;
+                });
+              }
+            }).catch(e=>{
+              console.log(e)
+              this.rspeed = 250;
+            });
           }
-          _this.myChart.setOption({
-            title: {
-              text: tips +' '+'/'+' ' + 200
-            },
-            series: [{
-              name: 'loading',
-              data: loading()
-            }]
-          })
-        }, 1000);*/
+        }
       },
       realTime(post_data){
         let speed=document.getElementById('speed');
@@ -84,8 +68,6 @@
                 itemStyle: {
                   normal: {
                     color: '#F31A1A',
-                    //shadowBlur: 10,
-                    //shadowColor: 'rgba(31,189,238)'
                   }
                 }
               }, {
@@ -97,8 +79,6 @@
                 itemStyle: {
                   normal: {
                     color: '#1FBDEE',
-                    //shadowBlur: 10,
-                    //shadowColor: 'rgba(31,189,238)'
                   }
                 }
               }, {
@@ -119,7 +99,6 @@
               text: 'cm/min',
               left: 'center',
               top: '58%',
-              //textAlign: 'center',
               textStyle: {
                 color: '#999999',
                 fontSize:'12'

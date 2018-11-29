@@ -25,47 +25,32 @@
     methods:{
       init(post_data){
         let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-        let id=deviceInfo.id;
-        if(this.rflow!=null){
-          this.realTime(post_data)
-        }else{
-          deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
-            if(res.result.items.length>0){
-              res.result.items.forEach(item=>{
-                if(item.label=='rflow'){
-                  if(item.maxValue!=undefined){
-                    this.rflow = item.maxValue;
+        if(deviceInfo){
+          let id=deviceInfo.id;
+          if(this.rflow!=null){
+            this.realTime(post_data)
+          }else{
+            deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
+              if(res.result.items.length>0){
+                res.result.items.forEach(item=>{
+                  if(item.label=='rflow'){
+                    if(item.maxValue!=undefined){
+                      this.rflow = item.maxValue;
+                    }else{
+                      this.rflow = 100;
+                    }
+                    this.realTime(post_data)
                   }else{
                     this.rflow = 100;
                   }
-                  this.realTime(post_data)
-                }else{
-                  this.rflow = 100;
-                }
-              });
-            }
-            // return res.result
-          }).catch(e=>{
-            this.rflow = 100;
-          });
-        }
-        /*this.timer=setInterval(function() {
-
-          if (tips == 200) {
-            tips = 0;
-          } else {
-            ++tips;
+                });
+              }
+              // return res.result
+            }).catch(e=>{
+              this.rflow = 100;
+            });
           }
-          _this.myChart.setOption({
-            title: {
-              text: tips +' '+'/'+' ' + 200
-            },
-            series: [{
-              name: 'loading',
-              data: loading()
-            }]
-          })
-        }, 1000);*/
+        }
       },
       realTime(post_data){
         let flow=document.getElementById('flow');
@@ -82,8 +67,6 @@
                 itemStyle: {
                   normal: {
                     color: '#F31A1A',
-                    //shadowBlur: 10,
-                    //shadowColor: 'rgba(31,189,238)'
                   }
                 }
               }, {
@@ -95,8 +78,6 @@
                 itemStyle: {
                   normal: {
                     color: '#1FBDEE',
-                    //shadowBlur: 10,
-                    //shadowColor: 'rgba(31,189,238)'
                   }
                 }
               }, {
@@ -117,7 +98,6 @@
               text: 'L/min',
               left: 'center',
               top: '58%',
-              //textAlign: 'center',
               textStyle: {
                 color: '#999999',
                 fontSize:'12'

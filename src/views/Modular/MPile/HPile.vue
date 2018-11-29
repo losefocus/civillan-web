@@ -958,13 +958,15 @@
           };
           this.$store.dispatch('incrementTab',true);
           sessionStorage.setItem('replayData',JSON.stringify(post_data));
+          this.$store.dispatch('incrementHistory',data.device_key);
+          deviceList.list({key:data.device_key}).then(res=>{
+            sessionStorage.setItem('deviceInfo',JSON.stringify(res.result.items[0]));
+          });
           //是否是设备
           if(this.isDevice){
             Bus.$emit('changeTab',true);
-            this.$store.dispatch('incrementHistory',data.device_key);
           }else{
             this.dialogVisible=true;
-            this.$store.dispatch('incrementHistory',data.device_key);
           }
         }).catch(e=>{
 

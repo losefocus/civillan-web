@@ -44,7 +44,6 @@
         radio:"",
         line: 'v',
         items: [],
-        group_id:0,
         deviceKey:'',
         deviceName:'',
         tHeader:[
