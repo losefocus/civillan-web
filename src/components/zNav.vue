@@ -5,9 +5,7 @@
         <transition name="fade">
           <div class="pj-img">
             <div class="pj-title" :style="{'background-image': 'url(' + projectLogo+ ')','background-repeat':'no-repeat','background-size':'100% 100%' }">
-              <p>
-                {{projectName}}
-              </p>
+              <p>{{projectName}}</p>
             </div>
           </div>
         </transition>
@@ -60,7 +58,7 @@ export default {
        },{
          name:'全部设备',
          icon:'icon-device_new',
-         path:'/deviceList'
+         path:'/device'
        },{
          name:'历史数据',
          icon:'icon-history_new',

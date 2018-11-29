@@ -1,13 +1,13 @@
 <template>
   <div class="n-box">
     <ul class="p-box" style="background: #f5f5f9">
-      <li class="p-info">
+      <li class="p-info" v-if="info">
         <div class="i-name">
           {{ info.name }}
         </div>
         <div class="i-time">
           <span class="t-title">项目工期：</span>
-          <span class="t-date">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</span>
+          <span class="t-date" v-if="info.beginAt">{{ info.beginAt*1000 | formatDate }} 至 {{info.endAt*1000 | formatDate}}</span>
         </div>
         <div class="i-statistics" v-if="info.comment">
           {{ info.comment }}
@@ -76,7 +76,7 @@
               <p>{{item.name}}</p>
               <img class="i-jump" :src="jumpIn">
             </div>
-            <div :class="{'g-gray':item.code=='SPAF'||item.code=='GLXT'}" :style="{'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100%','width':'100%','height':'230px'}"></div>
+            <div :class="{'g-gray':item.code=='SPAF'||item.code=='GLXT'}" :style="{'background-image': 'url(' + item.thumbnailBaseUrl+item.thumbnailPath+ ')','background-repeat':'no-repeat','background-size':'100% 100%','width':'100%','height':'230px'}"></div>
             <div class="m-info">
               <div class="t-progress"  v-if="item.code=='RJCL'||item.code=='LJLM'||item.code=='QLGC'||item.code=='SDGC'||item.code=='QTGC'">
                 形象进度
@@ -186,7 +186,7 @@
     methods:{
       //跳转路由
       JumpRouter(data){
-        this.$router.push('/deviceList');
+        this.$router.push('/device');
         sessionStorage.setItem('groupId',data.id);
         sessionStorage.setItem('groupName',data.name)
       },

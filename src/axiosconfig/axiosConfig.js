@@ -7,7 +7,7 @@ import errorCode from '@/common/errorCode'
 // 响应时间
 //var root = process.env.API_ROOT;
 //console.log(router);
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 8000;
 // 配置cookie
  //axios.defaults.withCredentials = true;
 // 配置请求头

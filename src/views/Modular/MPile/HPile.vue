@@ -196,12 +196,12 @@
       </el-table-column>
       <el-table-column
         type="selection"
-        width="55">
+        min-width="30">
       </el-table-column>
       <el-table-column
         v-if="newData.pile_describe.checked"
         label="桩号"
-        width="190">
+        min-width="150">
         <template slot-scope="props">
           <span>{{props.row.pile_describe}}</span>
           <span>[</span>
@@ -226,14 +226,14 @@
         v-if="newData.machine_key.checked"
         label="桩机号"
         align="center"
-        width="130">
+        min-width="100">
         <template slot-scope="props">
           {{props.row.machine_key}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.begin_time.checked"
-        width="130"
+        min-width="85"
         label="开始时间"
         align="center"
       >
@@ -243,7 +243,7 @@
       </el-table-column>
       <el-table-column
         v-if="newData.end_time.checked"
-        width="130"
+        min-width="85"
         label="结束时间"
         align="center"
       >
@@ -255,15 +255,16 @@
         v-if="newData.depth.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="实际桩长(m)">
         <template slot-scope="props">
-          {{ props.row.depth | formatP}}
+          {{ props.row.depth | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.water_cement_ratio.checked"
         :show-overflow-tooltip=true
+        min-width="50"
         align="center"
         label="水灰比">
         <template slot-scope="scope">
@@ -274,7 +275,7 @@
         v-if="newData.re_depth.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="复搅深度(m)">
         <template slot-scope="scope">
           {{scope.row.re_depth | formatZ}}
@@ -284,37 +285,37 @@
         v-if="newData.cumulative_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="累计灰量(Kg)">
         <template slot-scope="props">
-          {{ props.row.cumulative_ash | formatP}}
+          {{ props.row.cumulative_ash | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.cumulative_pulp.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="累计浆量(L)">
         <template slot-scope="props">
-          {{ props.row.cumulative_pulp | formatP}}
+          {{ props.row.cumulative_pulp | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.max_current.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="最大电流(A)">
         <template slot-scope="props">
-          {{ props.row.max_current | formatP}}
+          {{ props.row.max_current | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         align="center"
         v-if="newData.down_speed.checked"
         :show-overflow-tooltip=true
-        width="150"
+        min-width="120"
         label="平均下钻速度(cm/min)">
         <template slot-scope="props">
           {{ props.row.down_speed | formatZ}}
@@ -324,7 +325,7 @@
         v-if="newData.up_speed.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="150"
+        min-width="120"
         label="平均提钻速度(cm/min)">
         <template slot-scope="props">
           {{ props.row.up_speed | formatZ}}
@@ -334,20 +335,20 @@
         v-if="newData.average_pulp.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="平均浆量(L)">
         <template slot-scope="props">
-          {{ props.row.average_pulp | formatP}}
+          {{ props.row.average_pulp | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.average_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="平均灰量(Kg)">
         <template slot-scope="props">
-          {{ props.row.average_ash | formatP}}
+          {{ props.row.average_ash | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
@@ -355,46 +356,47 @@
         :show-overflow-tooltip=true
         align="center"
         label="平均电流(A)"
-        width="100"
+        min-width="80"
         prop="average_current">
         <template slot-scope="props">
-          {{ props.row.average_current | formatP}}
+          {{ props.row.average_current | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.max_down_speed.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="150"
-        label="最大速度(cm/min)">
+        min-width="110"
+        label="最大提速(cm/min)">
         <template slot-scope="props">
-          {{ props.row.max_down_speed | formatZ}}
+          {{ Math.abs(Math.ceil(props.row.max_down_speed))}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.max_up_speed.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="150"
+        min-width="110"
         label="最大提速(cm/min)">
         <template slot-scope="props">
-          {{  Math.abs(props.row.max_up_speed) | formatZ}}
+          {{  Math.abs(Math.ceil(props.row.max_up_speed))}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.max_slope.checked"
         :show-overflow-tooltip=true
+        min-width="60"
         align="center"
         label="最大斜度">
         <template slot-scope="props">
-          {{ props.row.max_slope | formatP}}
+          {{ props.row.max_slope | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.sprayed_time.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="喷浆时间(s)">
         <template slot-scope="props">
           {{ props.row.sprayed_time | formatDate }}
@@ -404,7 +406,7 @@
         v-if="newData.t_type_length.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="扩大头桩长(m)"
         prop="t_type_length">
       </el-table-column>
@@ -412,45 +414,46 @@
         v-if="newData.t_type_slurry.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="扩大头浆量(L)">
         <template slot-scope="props">
-          {{ props.row.t_type_slurry | formatP}}
+          {{ props.row.t_type_slurry | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.bottom_part_slurry.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="100"
+        min-width="80"
         label="下部桩浆量(L)">
         <template slot-scope="props">
-          {{ props.row.bottom_part_slurry | formatP}}
+          {{ props.row.bottom_part_slurry | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.t_type_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="110"
+        min-width="85"
         label="扩大桩灰量(Kg)">
         <template slot-scope="props">
-          {{ props.row.t_type_ash | formatP}}
+          {{ props.row.t_type_ash | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.bottom_part_ash.checked"
         :show-overflow-tooltip=true
         align="center"
-        width="110"
+        min-width="85"
         label="下部桩灰量(Kg)">
         <template slot-scope="props">
-          {{ props.row.bottom_part_ash | formatP}}
+          {{ props.row.bottom_part_ash | formatZ}}
         </template>
       </el-table-column>
       <el-table-column
         v-if="newData.rate.checked"
         :show-overflow-tooltip=true
+        min-width="60"
         align="center"
         label="评分值"
         prop="rate">
@@ -479,7 +482,13 @@
         <span class="s-total">总灰量</span>
         <span class="s-num" v-if="recordSum">{{recordSum.total_cumulative_ash | formatZ}}</span>
         <span class="s-num" v-else>0</span>
-        <span class="s-total">Kg</span>
+        <span class="s-total">kg</span>
+      </div>
+      <div class="s-body">
+        <span class="s-total">平均掺量</span>
+        <span class="s-num" v-if="recordSum">{{(recordSum.total_cumulative_ash/recordSum.total_depth) | formatZ}}</span>
+        <span class="s-num" v-else>0</span>
+        <span class="s-total">kg</span>
       </div>
     </div>
     <div class="m-pagination">
@@ -1400,7 +1409,7 @@
     border-bottom: 2px solid #ebeef5;
     .s-body{
       float: left;
-      width: 25%;
+      width: 20%;
       text-align: center;
       .s-total{
         font-size: 12px;

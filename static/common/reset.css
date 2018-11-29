@@ -311,6 +311,9 @@ body .el-table th.gutter {
 .el-table td{
   padding: 8px 0 !important;
 }
+.el-table .cell{
+  padding: 0 2px !important;
+}
 
 .el-table{
   font-size: 12px !important;
