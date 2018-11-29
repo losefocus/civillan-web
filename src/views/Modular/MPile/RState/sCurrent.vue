@@ -13,58 +13,44 @@ export default {
       myChart:null,
       timer:null,
       tips:0,
-      rcurrent:null
+      rcurrent:null,
     }
   },
   props:['dataInfo'],
+  created(){
+
+  },
   mounted(){
     this.init(this.dataInfo)
   },
   methods:{
     init(post_data){
       let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      let id=deviceInfo.id;
-
-      if(this.rcurrent!=null){
-        this.realTime(post_data)
-      }else{
-        deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
-          if(res.result.items.length>0){
-            res.result.items.forEach(item=>{
-              if(item.label=='rcurrent'){
-                if(item.maxValue!=undefined){
-                  this.rcurrent = item.maxValue;
+      if(deviceInfo){
+        let id=deviceInfo.id;
+        if(this.rcurrent!=null){
+          this.realTime(post_data)
+        }else{
+          deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
+            if(res.result.items.length>0){
+              res.result.items.forEach(item=>{
+                if(item.label=='rcurrent'){
+                  if(item.maxValue!=undefined){
+                    this.rcurrent = item.maxValue;
+                  }else{
+                    this.rcurrent=120;
+                  }
+                  this.realTime(post_data)
                 }else{
                   this.rcurrent=120;
                 }
-                this.realTime(post_data)
-              }else{
-                this.rcurrent=120;
-              }
-            });
-          }
-          // return res.result
-        }).catch(e=>{
-          this.rcurrent=120;
-        });
-      }
-      /*this.timer=setInterval(function() {
-
-        if (tips == 200) {
-          tips = 0;
-        } else {
-          ++tips;
+              });
+            }
+          }).catch(e=>{
+            this.rcurrent=120;
+          });
         }
-        _this.myChart.setOption({
-          title: {
-            text: tips +' '+'/'+' ' + 200
-          },
-          series: [{
-            name: 'loading',
-            data: loading()
-          }]
-        })
-      }, 1000);*/
+      }
     },
     realTime(post_data){
       let current=document.getElementById('current');
@@ -81,8 +67,6 @@ export default {
               itemStyle: {
                 normal: {
                   color: '#F31A1A',
-                  //shadowBlur: 10,
-                  //shadowColor: 'rgba(31,189,238)'
                 }
               }
             }, {
@@ -94,8 +78,6 @@ export default {
               itemStyle: {
                 normal: {
                   color: '#1FBDEE',
-                  //shadowBlur: 10,
-                  //shadowColor: 'rgba(31,189,238)'
                 }
               }
             }, {
@@ -117,7 +99,6 @@ export default {
             text: 'A',
             left: 'center',
             top: '58%',
-            //textAlign: 'center',
             textStyle: {
               color: '#999999',
               fontSize:'12'
