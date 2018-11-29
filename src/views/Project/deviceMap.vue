@@ -109,7 +109,6 @@ export default {
   mounted() {
     let project_id=this.$cookies.get('projectId');
     this.post_data.project_id=project_id;
-    this.init(this.post_data);
     this.getCategoryList();
   },
   computed: {

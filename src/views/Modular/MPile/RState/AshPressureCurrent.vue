@@ -256,7 +256,8 @@
               }
             },
             dataZoom: [ {
-              type: 'inside'
+              type: 'inside',
+              yAxisIndex: 0
             }],
             grid: {
               top:'27%',
@@ -289,7 +290,7 @@
             }],
             series: [
               {
-                name: '段灰量(Kg)',
+                name: '段灰量(kg)',
                 type: 'line',
                 showSymbol: false,
                 itemStyle: {

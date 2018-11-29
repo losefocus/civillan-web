@@ -49,13 +49,18 @@
       </div>
     </div>
     <div class="i-normal" v-if="isWarming">
-      <p>设备正常运行中</p>
+      <p>{{isReal}}</p>
     </div>
     <div class="i-warning" v-else>
-      <i class="iconfont icon-warming"></i>
-      <div class="w-text">
-        <p>{{warmingText}}</p>
-      </div>
+      <ul class="w-box">
+        <li class="w-list" v-for="item in warmingData" :key="item">
+          <i class="iconfont icon-warming"></i>
+          <div class="w-text">
+            <p>{{item.message}}</p>
+          </div>
+        </li>
+      </ul>
+
     </div>
   </div>
 </template>
@@ -74,20 +79,17 @@
         deviceUserPhone:'',
         progressNum:40,//深度进度
         isWarming:true,//未发现问题显示
-        warmingText:'',
+        warmingData:[],
         RT_data:{},
         isAngle:false,
         timer2:null,
-        deviceType:{}
+        deviceType:{},
+        isReal:'',
       }
     },
     props:['realData'],
     created(){
       this.RT_data=this.realData;
-      /*this.getAlarms(deviceInfo.key);
-      this.timer2=setInterval(()=>{
-        this.getAlarms(deviceInfo.key)
-      },3000);*/
     },
     mounted(){
       this.changeKey()
@@ -100,11 +102,17 @@
       changeKey(){
         let key='';
         if(this.$store.state.project.changeTab==true){
+          this.isReal='历史回放中';
           key=this.$store.state.project.historyKey
         }else{
+          this.isReal='设备正常运行中';
           key=this.$store.state.project.deviceKey
         }
-        this.getInfo(key)
+        this.getInfo(key);
+        this.getAlarms(key);
+        this.timer2=setInterval(()=>{
+          this.getAlarms(key)
+        },3000);
       },
       //获取设备信息
       getInfo(key){
@@ -154,14 +162,17 @@
         })
       },
 
-
       //报警信息
       getAlarms(key){
         if(key){
           deviceData.alarms({'key':key}).then(res=>{
             if(res.success){
-              this.isWarming=false;
-              this.warmingText=res.result[0].message
+              if(res.result.length>0){
+                this.isWarming=false;
+                this.warmingData=res.result
+              }else{
+                this.isWarming=true;
+              }
             }else{
               this.isWarming=true
             }
@@ -357,23 +368,28 @@
       padding-top: 13%;
     }
     .i-warning{
-      width:100%;
-      height:25%;
-      line-height: 45px;
+      width:calc(100% - 40px);
+      padding: 10px 20px;
+      height:calc(25% - 20px);
       background:rgba(248,89,89,0.06);
-      text-align: center;
       overflow: auto;
-      .icon-warming{
-        vertical-align: top;
-        color: #DF2A2A;
+      .w-box{
+        .w-list{
+          margin-top: 5px;
+          .icon-warming{
+            vertical-align: top;
+            color: #DF2A2A;
+          }
+          .w-text{
+            margin-left: 10px;
+            max-width: 80%;
+            vertical-align: top;
+            display: inline-block;
+            text-align: left;
+          }
+        }
       }
-      .w-text{
-        margin-left: 10px;
-        max-width: 80%;
-        vertical-align: top;
-        display: inline-block;
-        text-align: left;
-      }
+
     }
 
     .d-name{

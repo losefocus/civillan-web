@@ -19,7 +19,7 @@
         <div class="stake">
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 1"></div>
         </div>
-        <div class="info1"  v-show="dataInfo.rpipe_sta >= 2">深度 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{d_deep}}</span> m</div>
+        <div class="info1"  v-show="dataInfo.rpipe_sta >= 2">初搅深度 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{d_deep}}</span> m</div>
         <div class="info" v-show="dataInfo.rpipe_sta == 1">
           <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:#4dbce6">已完成</p>
           <p class="status-title">下钻</p>
@@ -40,7 +40,7 @@
         <div class="stake">
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 2"></div>
         </div>
-        <div class="info1"  v-show="dataInfo.rpipe_sta >= 3">深度 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{u_deep}}</span> m</div>
+        <div class="info1"  v-show="dataInfo.rpipe_sta >= 3">复位深度1 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{u_deep}}</span> m</div>
         <div class="info" v-show="dataInfo.rpipe_sta == 2">
           <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:#4dbce6">已完成</p>
           <p class="status-title">提钻</p>
@@ -62,7 +62,7 @@
         <div class="stake">
           <div class="nozzle_sta" v-if="dataInfo.nozzle_sta == 1 && dataInfo.rpipe_sta == 3"></div>
         </div>
-        <div class="info1"  v-show="dataInfo.rpipe_sta >= 4">深度 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{rd_deep}}</span> m</div>
+        <div class="info1"  v-show="dataInfo.rpipe_sta >= 4">复搅深度 <span style="font-size:14px;font-weight:bold;color:#4dbce6">{{rd_deep}}</span> m</div>
         <div class="info" v-show="dataInfo.rpipe_sta == 3">
           <p v-if="dataInfo.record_sta == 3" style="font-size:16px;line-height:20px;font-weight:bold;color:#4dbce6">已完成</p>
           <p class="status-title">复下</p>

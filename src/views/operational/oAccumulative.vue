@@ -88,20 +88,23 @@
       <el-table-column
         align="center"
         type="index"
-        width="50">
+        width="30">
       </el-table-column>
       <el-table-column
         align="center"
+        min-width="80"
         label="序号"
         prop="id">
       </el-table-column>
       <el-table-column
-        width="300"
+        min="150"
+        align="center"
         label="桩机号（设备）"
         prop="startTime">
       </el-table-column>
       <el-table-column
-        width="300"
+        min-width="150"
+        align="center"
         label="型号"
         prop="endTime">
       </el-table-column>
