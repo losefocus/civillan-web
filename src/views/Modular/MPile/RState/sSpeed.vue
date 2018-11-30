@@ -44,6 +44,8 @@
                     this.rspeed = 250;
                   }
                 });
+              }else{
+                this.rspeed = 250;
               }
             }).catch(e=>{
               console.log(e)
