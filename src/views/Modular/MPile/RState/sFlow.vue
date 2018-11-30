@@ -44,6 +44,8 @@
                     this.rflow = 100;
                   }
                 });
+              }else{
+                this.rflow = 100;
               }
               // return res.result
             }).catch(e=>{

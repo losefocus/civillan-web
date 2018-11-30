@@ -45,6 +45,8 @@ export default {
                   this.rcurrent=120;
                 }
               });
+            }else{
+              this.rcurrent=120;
             }
           }).catch(e=>{
             this.rcurrent=120;

@@ -1,7 +1,6 @@
 <template>
   <div class="h-box" :style="newStyle">
     <!-- 标题和控制栏 -->
-
     <div class="c-box" :class="{'c-box1':isDevice}">
       <div  v-if="isDevice" :class="{'c-device':'isDevice'}">
         <div>
@@ -100,7 +99,6 @@
             </ul>
             <div class="exportExcel" @click="expandExcel(props.row.data)">导出</div>
           </div>
-
           <el-table
             v-if="isActive==1"
             header-cell-class-name="history-header"
@@ -499,7 +497,6 @@
         :total='total'>
       </el-pagination>
     </div>
-
     <el-dialog
       :visible.sync="dialogVisible"
       :width="dialogWidth"
@@ -905,7 +902,8 @@
       ...mapActions('changeTab',['incrementTab']),
       ...mapActions('backTab',['incrementBack']),
 
-      isFullScreen(val){ //是否打开模态框
+      //是否打开模态框
+      isFullScreen(val){
         if(!val){
           this.dialogWidth='100%';
           this.dialogHeight={
@@ -922,6 +920,7 @@
           this.dialogFullScreen=false;
         }
       },
+
       //回放结束处理
       deviceEnd(){
         if(this.$store.state.project.changeTab){
@@ -930,6 +929,7 @@
           this.getList(this.post_data);
         }
       },
+
       //组件销毁时 使结束状态重置
       changeBack(){
         this.$store.dispatch('incrementBack',false);
@@ -974,6 +974,7 @@
 
       },
 
+      //导出标记或全部的选择
       handleExport(command){
         if(command=='1'){
           this.importExcel();
@@ -996,13 +997,14 @@
             let tHeader = this.tableHeader; //将对应的属性名转换成中文
             let filterVal = this.tableName; //table表格中对应的属性名
             let list=[];
-            let obj = {};
             this.multipleSelection.forEach(e=>{
+              let obj = {};
               for(let i=0;i<filterVal.length;i++){
-                obj[filterVal[i]] = e[filterVal[i]]
+                obj[filterVal[i]] = e[filterVal[i]];
               }
               list.push(obj);
             });
+
             const data = this.formatJson(filterVal, list);
             export_json_to_excel(tHeader, data, '数据报表');
 
@@ -1015,6 +1017,7 @@
           }
         })
       },
+
       //excel导出全部
       importExcelAll(){
         history.list({page_index:1,page_size:100,key:''}).then(res=>{
@@ -1027,8 +1030,8 @@
             let tHeader = this.tableHeader; //将对应的属性名转换成中文
             let filterVal = this.tableName; //table表格中对应的属性名
             let list=[];
-            let obj = {};
             res.result.items.forEach(e=>{
+              let obj = {};
               for(let i=0;i<filterVal.length;i++){
                 obj[filterVal[i]] = e[filterVal[i]]
               }
@@ -1047,7 +1050,8 @@
         }).catch(err => {
         });
       },
-      //excel导出子数据
+
+      //excel导出报表数据
       expandExcel(data){
         /*let expandData=data;
         require.ensure([], () => {
@@ -1074,17 +1078,17 @@
         })*/
       },
 
+      //导出封装方法
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => v[j]));
       },
-
       Cleanup() {
         window.clearInterval(idTmr);
         CollectGarbage();
       },
-      tableToExcel() {
+      /*tableToExcel() {
         var uri = 'data:application/vnd.ms-excel;base64,',
-          template = '<html><head><meta charset="UTF-8"></head><body><table>{table}</table></body></html>',
+          template = '<html><head><meta charset="UTF-8"></head><body><title>好吧</title><table>{table}</table></body></html>',
           base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) },
           format = function (s, c) {
             return s.replace(/{(\w+)}/g,
@@ -1097,7 +1101,7 @@
           var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML};
           window.location.href = uri + base64(format(template, ctx))
         }
-      },
+      },*/
 
       //获取作业配置参数
       getConfig(config){
@@ -1163,11 +1167,11 @@
           if(res.success){
             this.total=res.result.total;
             this.tableData=res.result.items;
-            /*_this.tableData.forEach(function (item) {
+            this.tableData.forEach(function (item) {
               item.data.forEach(list=>{
                 list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
               })
-            });*/
+            });
             this.loading=false
           }else {
             this.$message.error(res.message);
@@ -1231,6 +1235,7 @@
         })
       },
 
+      //数组分组 groupBy
       groupBy( array , f ) {
         let groups = {};
         array.forEach( function( o ) {
@@ -1264,12 +1269,14 @@
         this.device_data.page_index=currentPage;
         this.getDeviceList(this.device_data);
       },
+
       //全部设备select搜索框
       deviceSearch(query){
         this.device=query;
         this.device_data.name=query;
         this.getDeviceList(this.device_data);
       },
+
       //全部设备的列表
       getDeviceList(post_data){
         let _this=this;
@@ -1278,6 +1285,7 @@
           _this.deviceTotal=res.result.total;
         });
       },
+
       visibleChange(val){
         if(val){
           this.device_data={
@@ -1289,11 +1297,14 @@
         }
       },
 
+      //查询列表
       query(){
         this.post_data.page_index=1;
         this.getList(this.post_data);
         this.getRecords(this.post_data)
       },
+
+      //重置请求参数
       Refresh(){
         this.value2='';
         this.value7='';

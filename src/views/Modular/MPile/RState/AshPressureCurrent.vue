@@ -1,6 +1,5 @@
 <template>
   <div style="width: 100%;height: 100%;">
-    <!--<chart :options="PulpingQuantity" :auto-resize=true></chart>-->
     <div class="t-charts">
       段灰量(kg)、电流(A)变化曲线
     </div>
@@ -18,28 +17,18 @@
   export default {
     name: "AshPressureCurrent",
     data(){
-      let data = [0,10,20,30,40,50,60,70,80,90,100];
-      let Data=data;
       return{
+        rpressureData:[], //压力
         rcurrentData:[], //段浆量
         ashData:[], //段灰量
-        rpressureData:[], //压力
         myChart1:null,
         myChart2:null,
         myChart3:null,
         myChart4:null,
-        data1:{
-          rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',
-        },
-        data2:{
-          rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',
-        },
-        data3:{
-          rcurrentData:[],ashData:[],rpressureData:[],title:'复下',
-        },
-        data4:{
-          rcurrentData:[],ashData:[],rpressureData:[],title:'复提',
-        },
+        data1:{rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',},
+        data2:{rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',},
+        data3:{rcurrentData:[],ashData:[],rpressureData:[],title:'复下',},
+        data4:{rcurrentData:[],ashData:[],rpressureData:[],title:'复提',},
 
       }
     },
@@ -62,6 +51,7 @@
           this.history()
         }
       },
+
       //实时历史数据
       history(){
         deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
@@ -73,73 +63,7 @@
                 let oldItem;
                 if(i>0){
                   oldItem=JSON.parse(data[i-1]);
-                }
-                let ashData=[parseFloat(item.par_ash).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
-                let rcurrent=[parseFloat(item.rcurrent).toFixed(2),parseFloat(item.rdeep).toFixed(2)];
-                if(item.rpipe_sta==1){
-                  if(i==0){
-                    this.data1.ashData.push(ashData);
-                    this.data1.rcurrentData.push(rcurrent);
-                  }else{
-                    if(item.rdeep!=oldItem.rdeep){
-                      this.data1.ashData.push(ashData);
-                      this.data1.rcurrentData.push(rcurrent);
-                    }else{
-                      if(item.par_ash!=oldItem.par_ash){
-                        this.data1.ashData.push(ashData);
-                      }
-                      if(item.rcurrent!=oldItem.rcurrent){
-                        this.data1.rcurrentData.push(rcurrent);
-                      }
-                    }
-                  }
-                }else if(item.rpipe_sta==2){
-                  if(i==0){
-                    this.data2.ashData.push(ashData);
-                    this.data2.rcurrentData.push(rcurrent);
-                  }else{
-                    if(item.rdeep!=oldItem.rdeep){
-                      this.data2.ashData.push(ashData);
-                      this.data2.rcurrentData.push(rcurrent);
-                    }else{
-                      this.data2.ashData[this.data2.ashData.length-1] = ashData;
-                      this.data2.rcurrentData[this.data2.rcurrentData.length-1] = rcurrent;
-                    }
-                  }
-                }else if(item.rpipe_sta==3){
-                  if(i==0){
-                    this.data3.ashData.push(ashData);
-                    this.data3.rcurrentData.push(rcurrent);
-                  }else{
-                    if(item.rdeep!=oldItem.rdeep){
-                      this.data3.ashData.push(ashData);
-                      this.data3.rcurrentData.push(rcurrent);
-                    }else{
-                      if(item.par_ash!=oldItem.par_ash){
-                        this.data3.ashData.push(ashData);
-                      }
-                      if(item.rcurrent!=oldItem.rcurrent){
-                        this.data3.rcurrentData.push(rcurrent);
-                      }
-                    }
-                  }
-                }else if(item.rpipe_sta==4){
-                  if(i==0){
-                    this.data4.ashData.push(ashData);
-                    this.data4.rcurrentData.push(rcurrent);
-                  }else{
-                    if(item.rdeep!=oldItem.rdeep){
-                      this.data4.ashData.push(ashData);
-                      this.data4.rcurrentData.push(rcurrent);
-                    }else{
-                      if(item.par_ash!=oldItem.par_ash){
-                        this.data4.ashData.push(ashData);
-                      }
-                      if(item.rcurrent!=oldItem.rcurrent){
-                        this.data4.rcurrentData.push(rcurrent);
-                      }
-                    }
-                  }
+                  this.getState(item,oldItem)
                 }
               }
             }
@@ -152,11 +76,15 @@
       //实时数据
       getState(dataInfo,oldVal){
         let newDeep=parseFloat(dataInfo.rdeep).toFixed(2);
+        let oldDeep;
+        if(oldVal){
+          oldDeep=parseFloat(oldVal.rdeep).toFixed(2);
+        }
         let ashData=[parseFloat(dataInfo.par_ash).toFixed(2),newDeep];
         let rcurrent=[parseFloat(dataInfo.rcurrent).toFixed(2),newDeep];
         if(dataInfo.rpipe_sta==1){
           if(oldVal!=undefined){
-            if(newDeep==oldVal.rdeep){
+            if(newDeep==oldDeep){
               this.data1.ashData[this.data1.ashData.length-1] = ashData;
               this.data1.rcurrentData[this.data1.rcurrentData.length-1] = rcurrent;
             }else{
@@ -209,6 +137,7 @@
         }
       },
 
+      //echars options
       myCharts(dataInfo,oldVal){
         if(isNaN(dataInfo.rdeep)){
           dataInfo.rdeep=0
@@ -327,12 +256,16 @@
 
 
       },
+
+      //echarts 自适应
       resize(){
         this.myChart1.resize();
         this.myChart2.resize();
         this.myChart3.resize();
         this.myChart4.resize()
       },
+
+      //重置echarts数据
       clearData(){
         this.data1={rcurrentData:[],ashData:[],rpressureData:[],title:'下钻',};
         this.data2={rcurrentData:[],ashData:[],rpressureData:[],title:'提钻',};
@@ -350,7 +283,7 @@
           }
         },
       },
-      isReplay(val, oldVal){
+      isReplay(val){
         if(val){
           this.clearData()
         }
