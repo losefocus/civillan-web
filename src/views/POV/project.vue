@@ -167,9 +167,14 @@
       formatDate(time) {
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd'); //yyyy-MM-dd hh:mm
-      }
+      },
+      formatAll(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss'); //yyyy-MM-dd hh:mm
+      },
     },
     created(){
+
     },
     mounted(){
       this.loading=this.$loading({
@@ -229,6 +234,7 @@
         project.info({'project_id':id,'tenant':tenant}).then(res=>{
           if(res.success){
             this.info=res.result;
+            sessionStorage.setItem('projectInfo',JSON.stringify(res.result));
             this.organTypeList=res.result.organTypeList;
             this.loading.close();
           }else{
@@ -256,9 +262,7 @@
     -moz-filter: grayscale(100%);
     -ms-filter: grayscale(100%);
     -o-filter: grayscale(100%);
-
     filter: grayscale(100%);
-
     filter: gray;
   }
   .noClick{

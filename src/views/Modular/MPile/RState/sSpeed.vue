@@ -42,14 +42,16 @@
                     this.realTime(post_data)
                   }else{
                     this.rspeed = 250;
+                    this.realTime(post_data)
                   }
                 });
               }else{
                 this.rspeed = 250;
+                this.realTime(post_data)
               }
             }).catch(e=>{
-              console.log(e)
               this.rspeed = 250;
+              this.realTime(post_data)
             });
           }
         }

@@ -319,7 +319,7 @@ body .el-table th.gutter {
   font-size: 12px !important;
   /*background-color: rgba(79,80,89,0.2);*/
 }
-.el-table__expanded-cell{
+#history-table .el-table__expanded-cell{
   background-color: #E1E1E3 !important;
   color:#666666 !important;
 }
