@@ -42,14 +42,17 @@
                     this.realTime(post_data)
                   }else{
                     this.rflow = 100;
+                    this.realTime(post_data)
                   }
                 });
               }else{
                 this.rflow = 100;
+                this.realTime(post_data)
               }
               // return res.result
             }).catch(e=>{
               this.rflow = 100;
+              this.realTime(post_data)
             });
           }
         }

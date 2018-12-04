@@ -67,7 +67,7 @@ const vRouter = new VueRouter({
         {
           path: '/historical',
           component: resolve => require(['@/views/POV/historical'],resolve),
-          name:'数据报表',
+          name:'历史数据',
           meta: { requireAuth: true }
         },
         {

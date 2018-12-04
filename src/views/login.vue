@@ -47,6 +47,7 @@
     data() {
       return {
         userInfo:{
+          domain:'civillan',
           checked:false
         },
         groupImg:group,
@@ -59,7 +60,7 @@
         isFail1:false,
         isSuccess1:false,
         isFail2:false,
-        isSuccess2:false,
+        isSuccess2:true,
         isBrowser:false,
       };
     },
@@ -133,6 +134,7 @@
                 loading.close();
                 that.$message.error(res.message)
               }else{
+
                 let wsUrl=JSON.parse(res.result.wsUrl);
                 if(that.userInfo.checked){
                   //sessionStorage.setItem('token',res.result.token);

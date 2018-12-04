@@ -43,13 +43,16 @@ export default {
                   this.realTime(post_data)
                 }else{
                   this.rcurrent=120;
+                  this.realTime(post_data)
                 }
               });
             }else{
               this.rcurrent=120;
+              this.realTime(post_data)
             }
           }).catch(e=>{
             this.rcurrent=120;
+            this.realTime(post_data)
           });
         }
       }

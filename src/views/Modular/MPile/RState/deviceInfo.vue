@@ -213,7 +213,7 @@
       overflow: hidden;
       .d-model{
         float: left;
-        width: 50%;
+        width: 100%;
         font-size: 25px;
         font-weight: bold;
         color: #333333;
