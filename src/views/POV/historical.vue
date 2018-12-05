@@ -8,7 +8,7 @@
         </li>
       </ul>
     </div>
-    <h-pile :is="currentView" :deviceKey="deviceKey"></h-pile>
+    <h-pile :is="currentView" :deviceKey="deviceKey" :isDevice="false"></h-pile>
   </div>
 </template>
 

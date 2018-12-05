@@ -151,7 +151,7 @@ export default {
       },
       angelWidth:0,
       noDevice:false,
-      deviceType:['1','2','3'],
+      deviceHead:[],
       deviceIndex:1,
       deviceName:[
         {name:'NB-001'},{name:'NB-002'},{name:'NB-003'}
@@ -251,6 +251,7 @@ export default {
       }else{
         this.isConctrol=false;
         let deviceKey=this.$store.state.project.deviceKey;
+
         this.getData(deviceKey);
         this.timer1=setInterval(()=>{
           this.getData(deviceKey);
@@ -325,24 +326,25 @@ export default {
     getData(key){
       deviceData.list({'key':key}).then(res=>{
         if(res.success){
+
           res.result.rdeep=parseFloat(res.result.rdeep);
           this.RT_data=res.result;
           this.RT_data.depth_design=this.DesignDeep;
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
 
-          this.rflow=res.result.rflow;
-          this.rspeed=Math.abs(res.result.rspeed);
-          this.rcurrent=res.result.rcurrent;
-          this.progress=res.result.rdeep.toFixed(2);
+          this.rflow=this.RT_data.rflow;
+          this.rspeed=Math.abs(this.RT_data.rspeed);
+          this.rcurrent=this.RT_data.rcurrent;
+          this.progress=this.RT_data.rdeep.toFixed(2);
           if(isNaN(this.progress)){
             this.progress=0
           }
           this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
 
-          let par_slurry=res.result.par_slurry;
-          let par_ash=res.result.par_ash;
-          let rpressure=res.result.rpressure;
+          let par_slurry=this.RT_data.par_slurry;
+          let par_ash=this.RT_data.par_ash;
+          let rpressure=this.RT_data.rpressure;
 
           this.slurryData.push(par_slurry);
           this.ashData.push(par_ash);
@@ -351,6 +353,27 @@ export default {
           if(this.config_post_data!=res.result.pile_describe){
             this.config_post_data=res.result.pile_describe;
           }
+
+          //数据处理
+          console.log(res.result);
+          let rawData=res.result;
+          let commonObj={'depth_design':'','device_key':'','machine_key':'','real_time':'','start_time':'','status':''};
+          let singleData={};
+          let doubleData={};
+          for(let i in commonObj){
+            for(let j in rawData){
+              if(i==j){
+                console.log(i);
+                commonObj[i]=rawData[i]
+              }
+            }
+          }
+          for(let j in rawData){
+            console.log(j)
+          }
+
+
+
         }else {
           this.progressHeight='100%';
         }

@@ -3,9 +3,9 @@
     <div class="i-id">
       <div v-if="RT_data.pile_describe" class="d-model">{{RT_data.pile_describe}}</div>
       <div v-else class="d-model">暂无作业</div>
-      <!--<div class="d-kind">
-        <div v-for="(index,list) in deviceType" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</div>
-      </div>-->
+      <ul class="d-kind" v-if="isPile">
+        <li v-for="(index,list) in deviceHead" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</li>
+      </ul>
     </div>
     <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
     <div class="i-progress">
@@ -85,6 +85,8 @@
         timer2:null,
         deviceType:{},
         isReal:'',
+        deviceHead:[],
+        isPile:false,  //是否是攪拌樁
       }
     },
     props:['realData'],
@@ -108,7 +110,16 @@
           this.isReal='设备正常运行中';
           key=this.$store.state.project.deviceKey
         }
+        let headNum=key.substring(3,4);
+        if(Number(headNum)>1){
+          for(let i=Number(headNum);i>0;i--){
+            this.deviceHead.push(i);
+          }
+        }
+
+
         this.getInfo(key);
+
         this.getAlarms(key);
         this.timer2=setInterval(()=>{
           this.getAlarms(key)
@@ -123,6 +134,11 @@
             this.deviceType.state1='在线状态';
             this.deviceType.state2='出料状态';
           }else if(data.type=='JBZ'){
+            if(this.deviceHead.length<=1){
+              this.isPile=false;
+            }else{
+              this.isPile=true;
+            }
             this.deviceType.state1='喷浆状态';
             this.deviceType.state2='记录状态';
           }else if(data.type=='PLYH'){
@@ -213,10 +229,26 @@
       overflow: hidden;
       .d-model{
         float: left;
-        width: 100%;
+        width: 50%;
         font-size: 25px;
         font-weight: bold;
         color: #333333;
+      }
+      .d-kind{
+        float: left;
+        width: 50%;
+        li{
+          width: 25px;
+          height: 25px;
+          background: #6fdde8;
+          text-align: center;
+          line-height: 25px;
+          margin-left: 10px;
+          float: right;
+          border-radius: 50%;
+          font-size: 12px;
+          color: black;
+        }
       }
     }
     .i-box{

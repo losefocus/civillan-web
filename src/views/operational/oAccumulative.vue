@@ -395,7 +395,6 @@
       //设备分组
       getGroup()  {
         deviceGrouping.list(this.group_post).then(res=>{
-          console.log(res);
           if(res.success){
             this.navList=res.result.items;
             let allDevice={

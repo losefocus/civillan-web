@@ -1,219 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <style>
-    table td {
-      font-size: 14px;
-      width: 200px;
-      height: 30px;
-      text-align: center;
-      font-family: 宋体;
-    }
-    table .tHead {
-      font-size: 24px;
-      font-weight: bold;
-      height: 50px;
-    }
-  </style>
+  <p style="font-size: 20px;color: red;">使用table标签方式将json导出xls文件</p>
+  <button onclick='tableToExcel()'>导出</button>
 </head>
 <body>
-<a download="table导出Excel" id="excelOut" href="#">table导出Excel</a>
-<table cellspacing="0" cellpadding="0" border="1" id="tableToExcel">
-  <thead>
-    <tr>
-      <td class="tHead" colspan="8">水泥土搅拌桩施工现场原始记录表</td>
-    </tr>
-    <tr>
-      <td colspan="4">施工单位：中铁十六局</td>
-      <td colspan="4">桩机编号：16</td>
-    </tr>
-    <tr>
-      <td colspan="4">里程桩号：K2231+750_A124</td>
-      <td colspan="2">桩坐标：</td>
-      <td>251436.4454</td>
-      <td>526810.1424</td>
-    </tr>
-    <tr>
-      <td colspan="2">设计总桩长(m)：</td>
-      <td colspan="2">8.00</td>
-      <td colspan="2">水灰比：</td>
-      <td colspan="2">0.55</td>
-    </tr>
-    <tr>
-      <td colspan="2">水泥 掺量（kg/m）:</td>
-      <td colspan="2">65.0</td>
-      <td colspan="2">桩间距(m)：</td>
-      <td colspan="2">1.1-1.4</td>
-    </tr>
-    <tr>
-      <td colspan="2">提钻速度（cm/min）:</td>
-      <td colspan="2">120.0</td>
-      <td colspan="2">下钻速度（cm/min）:</td>
-      <td colspan="2">100.0</td>
-    </tr>
-    <tr>
-      <td colspan="2">桩径（cm):</td>
-      <td colspan="2">65.0</td>
-      <td colspan="2">空搅深度（m）：</td>
-      <td colspan="2">10.0</td>
-    </tr>
-    <tr>
-      <td colspan="2">开始时间：</td>
-      <td colspan="2">2018/11/14  02:03:54</td>
-      <td colspan="2">结束时间：</td>
-      <td colspan="2">2018/11/14  23:57:41</td>
-    </tr>
-    <tr>
-      <td>深度(m)</td>
-      <td>段浆量（L/m）</td>
-      <td>段灰量（kg/m）</td>
-      <td>段密度（g/cm3）</td>
-      <td>段电流（A）</td>
-      <td>段喷压（MPa）</td>
-      <td>速率（cm/min）</td>
-      <td>状态</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>5.25</td>
-      <td>6.80</td>
-      <td>152.56</td>
-      <td>152.37</td>
-      <td>56.93</td>
-      <td>45.43</td>
-      <td>16.85</td>
-      <td>56.36</td>
-    </tr>
-    <tr>
-      <td>5.25</td>
-      <td>6.80</td>
-      <td>152.56</td>
-      <td>152.37</td>
-      <td>56.93</td>
-      <td>45.43</td>
-      <td>16.85</td>
-      <td>56.36</td>
-    </tr>
-    <tr>
-      <td>5.25</td>
-      <td>6.80</td>
-      <td>152.56</td>
-      <td>152.37</td>
-      <td>56.93</td>
-      <td>45.43</td>
-      <td>16.85</td>
-      <td>56.36</td>
-    </tr>
-    <tr>
-      <td>5.25</td>
-      <td>6.80</td>
-      <td>152.56</td>
-      <td>152.37</td>
-      <td>56.93</td>
-      <td>45.43</td>
-      <td>16.85</td>
-      <td>56.36</td>
-    </tr>
-    <tr>
-      <td>5.25</td>
-      <td>6.80</td>
-      <td>152.56</td>
-      <td>152.37</td>
-      <td>56.93</td>
-      <td>45.43</td>
-      <td>16.85</td>
-      <td>56.36</td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="2">成桩总时间(s)：</td>
-      <td colspan="2">8.00</td>
-      <td colspan="2">最大斜度：</td>
-      <td colspan="2">0.55</td>
-    </tr>
-    <tr>
-      <td colspan="2">往复深度1（m）:</td>
-      <td colspan="2">65.0</td>
-      <td colspan="2">往复深度2（m）:</td>
-      <td colspan="2">1.1-1.4</td>
-    </tr>
-    <tr>
-      <td colspan="2">累计浆量（L）：</td>
-      <td colspan="2">120.0</td>
-      <td colspan="2">累计灰量（kg）：</td>
-      <td colspan="2">100.0</td>
-    </tr>
-    <tr>
-      <td colspan="2">最大电流（A）:</td>
-      <td colspan="2">65.0</td>
-      <td colspan="2">平均灰量（kg/m）： </td>
-      <td colspan="2">10.0</td>
-    </tr>
-    <tr>
-      <td colspan="2">最大提速（cm/min）：</td>
-      <td colspan="2">2018/11/14  02:03:54</td>
-      <td colspan="2">最大钻速（cm/min）：</td>
-      <td colspan="2">2018/11/14  23:57:41</td>
-    </tr>
-    <tr>
-      <td colspan="2">操作人员：</td>
-      <td colspan="2">张春龙</td>
-      <td colspan="2">技术人员：</td>
-      <td colspan="2">张春龙</td>
-    </tr>
-    <tr>
-      <td colspan="2">现场监理：</td>
-      <td colspan="2">张春龙</td>
-      <td colspan="2">打印时间：</td>
-      <td colspan="2">张春龙</td>
-    </tr>
-  </tfoot>
-</table>
 <script>
-  window.onload = function () {
-    tableToExcel('tableToExcel', '下载模板')
-  };
-  //base64转码
-  var base64 = function (s) {
-    return window.btoa(unescape(encodeURIComponent(s)));
-  };
-  //替换table数据和worksheet名字
-  var format = function (s, c) {
-    return s.replace(/{(\w+)}/g,
-      function (m, p) {
-        return c[p];
-      });
-  }
-  function tableToExcel(tableid, sheetName) {
-    var uri = 'data:application/vnd.ms-excel;base64,';
-    var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"' +
-      'xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'
-      + '<x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets>'
-      + '</x:ExcelWorkbook></xml><![endif]-->' +
-      ' <style type="text/css">' +
-      'table td {' +
-      'height: 30px;' +
-      'text-align: center;' +
-      'font-family: 宋体;' +
-      'font-size: 14px;' +
-      ' }' +
-      'table .tHead {' +
-      'font-size: 16px;' +
-      'font-weight: bold;' +
-      'height: 50px;' +
-      ' }' +
-      '</style>' +
-      '</head><body ><table class="excelTable">{table}</table></body></html>';
-    if (!tableid.nodeType) tableid = document.getElementById(tableid);
-    var ctx = {worksheet: sheetName || 'Worksheet', table: tableid.innerHTML};
-    document.getElementById("excelOut").href = uri + base64(format(template, ctx));
-  }
 
+  function tableToExcel(){
+    //要导出的json数据
+    var jsonData = [
+      {
+        name:'路人甲',
+        phone:'123456',
+        email:'123@123456.com'
+      },
+      {
+        name:'炮灰乙',
+        phone:'123456',
+        email:'123@123456.com'
+      },
+      {
+        name:'土匪丙',
+        phone:'123456',
+        email:'123@123456.com'
+      },
+      {
+        name:'流氓丁',
+        phone:'123456',
+        email:'123@123456.com'
+      },
+    ]
+    //列标题
+    var str = '<tr><td>姓名</td><td>电话</td><td>邮箱</td></tr>';
+    //循环遍历，每行加入tr标签，每个单元格加td标签
+    for(let i = 0 ; i < jsonData.length ; i++ ){
+      str+='<tr>';
+      for(let item in jsonData[i]){
+        //增加\t为了不让表格显示科学计数法或者其他格式
+        str+=`<td>${ jsonData[i][item] + '\t'}</td>`;
+      }
+      str+='</tr>';
+    }
+    //Worksheet名
+    var worksheet = 'Sheet1'
+    var uri = 'data:application/vnd.ms-excel;base64,';
+
+    //下载的表格模板数据
+    var template = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+      <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+        <x:Name>${worksheet}</x:Name>
+        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+        </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+        </head><body><table>${str}</table></body></html>`;
+    //下载模板
+    window.location.href = uri + base64(template)
+  }
+  //输出base64编码
+  function base64 (s) { return window.btoa(unescape(encodeURIComponent(s))) }
 </script>
 </body>
 </html>
-
