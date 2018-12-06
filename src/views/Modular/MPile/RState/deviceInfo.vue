@@ -1,10 +1,10 @@
 <template>
   <div class="s-infoBody">
     <div class="i-id">
-      <div v-if="RT_data.pile_describe" class="d-model">{{RT_data.pile_describe}}</div>
+      <div v-if="RT_data.pile_describe" class="d-model" :title="RT_data.pile_describe">{{RT_data.pile_describe}}</div>
       <div v-else class="d-model">暂无作业</div>
       <ul class="d-kind" v-if="isPile">
-        <li v-for="(index,list) in deviceHead" @click="deviceChange(index)" :class="{'deviceActive':index==deviceIndex}">{{index}}</li>
+        <li v-for="(list,index) in deviceHead" @click="deviceChange(list)" :key="list" :class="{'deviceActive':index==deviceIndex}">{{list}}</li>
       </ul>
     </div>
     <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
@@ -86,7 +86,8 @@
         deviceType:{},
         isReal:'',
         deviceHead:[],
-        isPile:false,  //是否是攪拌樁
+        isPile:false,  //是否是攪拌桩
+        deviceIndex:0,
       }
     },
     props:['realData'],
@@ -97,9 +98,15 @@
       this.changeKey()
     },
     beforeDestroy(){
+      this.$bus.off('deviceHead');
       clearInterval(this.timer2);
     },
     methods:{
+      //切换设备头
+      deviceChange(list){
+        this.deviceIndex=list-1;
+        this.$bus.emit('deviceHead',list)
+      },
       //判断是实时还是历史
       changeKey(){
         let key='';
@@ -112,14 +119,12 @@
         }
         let headNum=key.substring(3,4);
         if(Number(headNum)>1){
-          for(let i=Number(headNum);i>0;i--){
+          for(let i=1;i<=Number(headNum);i++){
             this.deviceHead.push(i);
           }
         }
 
-
         this.getInfo(key);
-
         this.getAlarms(key);
         this.timer2=setInterval(()=>{
           this.getAlarms(key)
@@ -217,37 +222,43 @@
     .deviceActive{
       font-size:20px;
       background: #24BCF7;
-      color:#ffffff;
+      color:#ffffff !important;
+      border: 1px solid #24BCF7 !important;
     }
     .i-id{
       font-size: 20px;
       color: rgba(218,218,218,1);
       width:100%;
-      height: 10%;
-      min-height: 30px;
+      height: 8%;
+      min-height: 20px;
       margin-top: 10%;
       overflow: hidden;
       .d-model{
         float: left;
-        width: 50%;
-        font-size: 25px;
+        width: 60%;
+        font-size: 20px;
         font-weight: bold;
         color: #333333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .d-kind{
-        float: left;
-        width: 50%;
+        float: right;
+        width: 30%;
+        min-width: 60px;
         li{
-          width: 25px;
-          height: 25px;
-          background: #6fdde8;
+          cursor: pointer;
+          width: 20px;
+          height: 20px;
           text-align: center;
-          line-height: 25px;
+          line-height: 20px;
           margin-left: 10px;
-          float: right;
+          float: left;
           border-radius: 50%;
+          border: 1px solid #90A4B7;
           font-size: 12px;
-          color: black;
+          color: #90A4B7;
         }
       }
     }
@@ -382,8 +393,8 @@
     }
     .i-progress{
       width: 100%;
-      margin-top: 5%;
-      height: 10%;
+      margin-top: 2%;
+      height: 12%;
       overflow: hidden;
       div{
         float: left;

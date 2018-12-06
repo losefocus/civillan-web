@@ -108,7 +108,7 @@
 <script>
   import deviceData from '@/api/device/deviceData'
   export default {
-    props:["dataInfo"],
+    props:["dataInfo","historyRT"],
     data(){
       return{
         tiem_1:{
@@ -136,7 +136,7 @@
       }
     },
     created(){
-      this.history();
+      this.history(this.historyRT);
     },
     mounted(){
       this.init(this.dataInfo)
@@ -145,44 +145,39 @@
       init(dataInfo){
         this.running(dataInfo)
       },
-      history(){
-        deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
-          if(res.success&&res.result!=[]){
-            let a=0;
-            let b=20;
-            let c=0;
-            let d=20;
-            res.result.forEach(item=>{
-              item=JSON.parse(item);
-              let rdeep=Number(item.rdeep).toFixed(2);
-              rdeep=Number(rdeep);
-              item.depth_design=this.dataInfo.depth_design;
-              if(item.rpipe_sta == 1){
-                if(rdeep>=a){
-                  a=rdeep;
-                }
-                this.d_deep=a;
-              }else if(item.rpipe_sta == 2){
-                if(rdeep<=b){
-                  b=rdeep;
-                }
-                this.u_deep=b;
-              }else if(item.rpipe_sta == 3){
-                if(rdeep>=c){
-                  c=rdeep;
-                }
-                this.rd_deep=c;
-              }else if(item.rpipe_sta == 4){
-                if(rdeep<=d){
-                  d=rdeep;
-                }
-                this.ru_deep=d;
+      history(data){
+        if(data&&data!=[]){
+          let a=0;
+          let b=20;
+          let c=0;
+          let d=20;
+          data.forEach(item=>{
+            let rdeep=Number(item.rdeep).toFixed(2);
+            rdeep=Number(rdeep);
+            item.depth_design=this.dataInfo.depth_design;
+            if(item.rpipe_sta == 1){
+              if(rdeep>=a){
+                a=rdeep;
               }
-            });
-          }
-        }).catch(e=>{
-
-        });
+              this.d_deep=a;
+            }else if(item.rpipe_sta == 2){
+              if(rdeep<=b){
+                b=rdeep;
+              }
+              this.u_deep=b;
+            }else if(item.rpipe_sta == 3){
+              if(rdeep>=c){
+                c=rdeep;
+              }
+              this.rd_deep=c;
+            }else if(item.rpipe_sta == 4){
+              if(rdeep<=d){
+                d=rdeep;
+              }
+              this.ru_deep=d;
+            }
+          });
+        }
       },
       running(data){
         data.rdeep=parseFloat(data.rdeep).toFixed(2);
@@ -272,6 +267,11 @@
           }else{
             this.init(val);
           }
+        },
+      },
+      historyRT:{ //深度监听，可监听到对象、数组的变化
+        handler(val, oldVal){
+          this.history(val);
         },
       },
       d_deep:{

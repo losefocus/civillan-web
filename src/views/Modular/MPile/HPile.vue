@@ -310,7 +310,7 @@
         <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">段数据列表</li>
         <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="getChart(props.row)">图表曲线</li>
       </ul>
-      <div class="exportExcel" :download="filename" id="excelOut" @click="recordExcel">记录报表导出</div>
+      <div class="exportExcel" :download="filename" id="excelOut" @click="recordExcel">记录报表下载</div>
     </div>
     <el-table
       v-if="isActive==1"
@@ -698,6 +698,7 @@
         <span class="s-num" v-else>0</span>
         <span class="s-total">kg/m</span>
       </div>
+      <div style="clear: both"></div>
     </div>
     <div class="m-pagination">
       <el-pagination
@@ -1309,7 +1310,7 @@
             this.statisticsReport.machine_key=this.multipleSelection[0].machine_key;
 
             setTimeout(()=>{
-              this.copyExcel('statisticsTable',this.statisticsReport.begin_time)
+              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
             },200);
 
             //引用赋值  用完清空
@@ -1379,7 +1380,7 @@
 
             list=[];
             setTimeout(()=>{
-              this.copyExcel('statisticsTable',this.statisticsReport.begin_time)
+              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
             },200);
 
           }else {
@@ -1417,9 +1418,10 @@
         //表内数据的处理
         let begin_time = new Date(row.begin_time*1000);
         let end_time = new Date(row.end_time*1000);
-        this.recordReport.filename=formatDate(begin_time, 'yyyy-MM-dd hh-mm-ss');
+        this.recordReport.filename=row.pile_describe+'_原始记录表';
         this.recordReport.end_time=formatDate(end_time, 'yyyy-MM-dd hh:mm:ss');
         this.recordReport.begin_time=formatDate(begin_time, 'yyyy-MM-dd hh:mm:ss');
+
 
         //成桩总时间
         let num=0;
@@ -1429,7 +1431,6 @@
         this.recordReport.p_allTime=num;
         this.isActive=1;
       },
-
 
       //表格导出的封装
       tableToExcel(tableid, sheetName) {
@@ -1920,12 +1921,20 @@
     .s-body{
       float: left;
       width: 20%;
+      height: 50px;
       text-align: center;
       .s-total{
+        display: inline-block;
+        overflow: hidden;
+        height: 50px;
         font-size: 12px;
         color:rgba(102,102,102,1);
       }
       .s-num{
+        display: inline-block;
+        max-width: 120px;
+        height: 50px;
+        overflow: hidden;
         margin: 0 5px;
         font-size:18px;
         font-weight: bold;

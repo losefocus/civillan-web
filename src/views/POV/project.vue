@@ -70,6 +70,7 @@
           <div class="item" :key="item" >
             <div class="m-name" @click="JumpRouter(item)" v-if="item.status!=3" :class="{'noClick':item.status==3}">
               <p>{{item.name}}</p>
+
               <img class="i-jump" :src="jumpIn">
             </div>
             <div class="m-name1" v-if="item.status==3">

@@ -34,10 +34,12 @@
     },
     props:[
       'dataInfo',
-      'isReplay'
+      'isReplay',
+      'historyRT'
     ],
     created(){
       this.changeData()
+      this.history(this.historyRT)
     },
     mounted(){
       this.myCharts(this.dataInfo)
@@ -53,24 +55,19 @@
       },
 
       //实时历史数据
-      history(){
-        deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
-          if(res.success){
-            if(res.result.length>0){
-              let data=res.result;
-              for(let i=0;i<data.length;i++){
-                let item=JSON.parse(data[i]);
-                let oldItem;
-                if(i>0){
-                  oldItem=JSON.parse(data[i-1]);
-                  this.getState(item,oldItem)
-                }
+      history(data){
+        if(data){
+          if(data.length>0){
+            for(let i=0;i<data.length;i++){
+              let item=data[i];
+              let oldItem;
+              if(i>0){
+                oldItem=data[i-1];
+                this.getState(item,oldItem)
               }
             }
           }
-        }).catch(e=>{
-
-        });
+        }
       },
 
       //实时数据
@@ -281,6 +278,11 @@
           if(val.pile_describe!=oldVal.pile_describe){
             this.clearData()
           }
+        },
+      },
+      historyRT:{//深度监听，可监听到对象、数组的变化
+        handler(val, oldVal){
+          this.history(val)
         },
       },
       isReplay(val){
