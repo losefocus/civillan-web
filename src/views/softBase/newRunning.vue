@@ -162,7 +162,7 @@
           this.currentView='TTensile'
         }else if(this.deviceType=='YYLYJ'){
           this.tBody=['PGrouting', 'HFoam', 'SAnalysis', 'AQuery',];
-          this.currentView='SCuring'
+          this.currentView='PGrouting'
         }
       },
       changeTab1(list,index){ //切换tab

@@ -63,8 +63,9 @@
       </div>
       <div class="c-handle">
         <el-dropdown placement="bottom-end" trigger="click" @command="handleExport">
-          <el-button type="primary" icon="el-icon-upload2" size="mini">导出</el-button>
+          <el-button type="primary" icon="el-icon-upload2" size="mini" :disabled="isExport">导出</el-button>
           <el-dropdown-menu slot="dropdown" >
+            <a id="simulation" href=""></a>
             <el-dropdown-item command="1">导出标记项目</el-dropdown-item>
             <el-dropdown-item command="2">导出全部项目</el-dropdown-item>
           </el-dropdown-menu>
@@ -80,6 +81,96 @@
         </el-popover>
       </div>
     </div>
+    <table cellspacing="0" cellpadding="0" border="1" id="statisticsTable" v-show="false">
+      <thead>
+      <tr>
+        <td class="tHead" colspan="8">水泥土搅拌桩施工现场统计报表</td>
+      </tr>
+      <tr>
+        <td colspan="8">工程名称：<span>{{statisticsReport.projectName}}</span></td>
+      </tr>
+      <tr>
+        <td colspan="4">施工单位：<span>{{statisticsReport.ConstructionUnit}}</span></td>
+        <td colspan="4">桩机编号：<span>{{statisticsReport.machine_key}}</span></td>
+      </tr>
+      <tr>
+        <td colspan="2">开始时间：</td>
+        <td colspan="2">{{ statisticsReport.begin_time }}</td>
+        <td colspan="2">结束时间：</td>
+        <td colspan="2">{{ statisticsReport.end_time }}</td>
+      </tr>
+
+            </thead>
+      <tbody>
+      <tr v-for="item in statisticsData">
+        <td v-for="i in item">{{i}}&nbsp;</td>
+      </tr>
+      </tbody>
+      <tfoot v-if="isAll">
+      <tr>
+        <td colspan="2">累计根数（根）：</td>
+        <td colspan="2">{{recordSum.total_pile_num}}</td>
+        <td colspan="2">累计延米数（m）：</td>
+        <td colspan="2">{{statisticsReport.allDepth | formatZ}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">累计浆量（L）：</td>
+        <td colspan="2">{{recordSum.total_cumulative_pulp | formatZ}}</td>
+        <td colspan="2">累计灰量（kg）：</td>
+        <td colspan="2">{{recordSum.total_cumulative_ash | formatZ}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">平均浆量（L）：</td>
+        <td colspan="2">{{recordSum.total_cumulative_pulp/statisticsReport.allDepth | formatZ}}</td>
+        <td colspan="2">平均灰量（kg）：</td>
+        <td colspan="2">{{recordSum.total_cumulative_ash/statisticsReport.allDepth | formatZ}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">操作人员：</td>
+        <td colspan="2"></td>
+        <td colspan="2">技术人员：</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td colspan="2">现场监理：</td>
+        <td colspan="2"></td>
+        <td colspan="2">打印时间：</td>
+        <td colspan="2"></td>
+      </tr>
+      </tfoot>
+      <tfoot v-else>
+      <tr>
+        <td colspan="2">累计根数（根）：</td>
+        <td colspan="2">{{statisticsReport.total}}</td>
+        <td colspan="2">累计延米数（m）：</td>
+        <td colspan="2">{{statisticsReport.allDepth | formatZ}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">累计浆量（L）：</td>
+        <td colspan="2">{{statisticsReport.cumulative_pulp | formatZ}}</td>
+        <td colspan="2">累计灰量（kg）：</td>
+        <td colspan="2">{{statisticsReport.cumulative_ash | formatZ}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">平均浆量（L）：</td>
+        <td colspan="2">{{statisticsReport.average_pulp}}</td>
+        <td colspan="2">平均灰量（kg）：</td>
+        <td colspan="2">{{statisticsReport.average_ash}}</td>
+      </tr>
+      <tr>
+        <td colspan="2">操作人员：</td>
+        <td colspan="2"></td>
+        <td colspan="2">技术人员：</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td colspan="2">现场监理：</td>
+        <td colspan="2"></td>
+        <td colspan="2">打印时间：</td>
+        <td colspan="2"></td>
+      </tr>
+      </tfoot>
+    </table>
 
     <el-table
       id="history-table"
@@ -90,107 +181,7 @@
       align="center"
       :highlight-current-row=true
       @selection-change="handleSelectionChange"
-      @expand-change="handleExpandChange"
-    >
-     <!-- <el-table-column
-        v-show=false
-        label="桩机号"
-        align="center"
-        min-width="100">
-        <template slot-scope="props">
-          <table cellspacing="0" cellpadding="0" border="1" id="statisticsTable" >
-            <thead>
-            <tr>
-              <td class="tHead" colspan="8">水泥土搅拌桩施工现场统计报表</td>
-            </tr>
-            <tr>
-              <td colspan="8">工程名称：<span>{{projectName}}</span></td>
-            </tr>
-            <tr>
-              <td colspan="4">施工单位：<span>{{ConstructionUnit}}</span></td>
-              <td colspan="4">桩机编号：<span>{{props.row.machine_key}}</span></td>
-            </tr>
-            <tr>
-              <td colspan="2">开始时间：</td>
-              <td colspan="2">{{ begin_time }}</td>
-              <td colspan="2">结束时间：</td>
-              <td colspan="2">{{ end_time }}</td>
-            </tr>
-
-            </thead>
-            <tbody>
-            <tr>
-              <td>深度(m)</td>
-              <td>段浆量（L/m）</td>
-              <td>段灰量（kg/m）</td>
-              <td>段密度（g/cm3）</td>
-              <td>段电流（A）</td>
-              <td>段喷压（MPa）</td>
-              <td>速率（cm/min）</td>
-              <td>状态</td>
-            </tr>
-            <tr v-for="item in props.row" :key="item">
-              <td>{{item.p_deep / 100  | formatZ}}&nbsp;</td>
-              <td>{{item.p_pulp  | formatZ}}&nbsp;</td>
-              <td>{{item.p_total_ash  | formatZ}}&nbsp;</td>
-              <td>{{item.p_density  | formatZ}}&nbsp;</td>
-              <td>{{item.p_current  | formatZ}}&nbsp;</td>
-              <td>{{item.p_pressure  | formatZ}}&nbsp;</td>
-              <td>{{Math.abs(Math.round(item.p_down_speed))}}&nbsp;</td>
-              <td>
-                <span v-if="item.p_down_speed >= 0">下钻</span>
-                <span v-else>提钻</span>
-              </td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-              <td colspan="2">成桩总时间(s)：</td>
-              <td colspan="2">{{p_allTime}}</td>
-              <td colspan="2">最大斜度：</td>
-              <td colspan="2">{{props.row.max_slope | formatZ}}&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="2">往复深度1（m）:</td>
-              <td colspan="2">65.0</td>
-              <td colspan="2">往复深度2（m）:</td>
-              <td colspan="2">1.1-1.4</td>
-            </tr>
-            <tr>
-              <td colspan="2">累计浆量（L）：</td>
-              <td colspan="2">{{props.row.cumulative_pulp | formatZ}}&nbsp;</td>
-              <td colspan="2">累计灰量（kg）：</td>
-              <td colspan="2">{{props.row.cumulative_ash | formatZ}}&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="2">最大电流（A）:</td>
-              <td colspan="2">{{props.row.max_current | formatZ}}&nbsp;</td>
-              <td colspan="2">平均灰量（kg/m）： </td>
-              <td colspan="2">{{props.row.average_ash | formatZ}}&nbsp;0</td>
-            </tr>
-            <tr>
-              <td colspan="2">最大提速（cm/min）：</td>
-              <td colspan="2">{{Math.abs(Math.round(props.row.max_up_speed))}}&nbsp;</td>
-              <td colspan="2">最大钻速（cm/min）：</td>
-              <td colspan="2">{{Math.abs(Math.round(props.row.max_down_speed))}}&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="2">操作人员：</td>
-              <td colspan="2"></td>
-              <td colspan="2">技术人员：</td>
-              <td colspan="2"></td>
-            </tr>
-            <tr>
-              <td colspan="2">现场监理：</td>
-              <td colspan="2"></td>
-              <td colspan="2">打印时间：</td>
-              <td colspan="2"></td>
-            </tr>
-            </tfoot>
-          </table>
-        </template>
-      </el-table-column>-->
-
+      @expand-change="handleExpandChange">
       <el-table-column type="expand">
         <template slot-scope="props">
           <table cellspacing="0" cellpadding="0" border="1" id="tableToExcel" v-show="false">
@@ -199,10 +190,10 @@
               <td class="tHead" colspan="8">水泥土搅拌桩施工现场原始记录表</td>
             </tr>
             <tr>
-              <td colspan="8">工程名称：<span>{{projectName}}</span></td>
+              <td colspan="8">工程名称：<span>{{recordReport.projectName}}</span></td>
             </tr>
             <tr>
-              <td colspan="4">施工单位：<span>{{ConstructionUnit}}</span></td>
+              <td colspan="4">施工单位：<span>{{recordReport.ConstructionUnit}}</span></td>
               <td colspan="4">桩机编号：<span>{{props.row.machine_key}}</span></td>
             </tr>
             <tr>
@@ -237,9 +228,9 @@
             </tr>
             <tr>
               <td colspan="2">开始时间：</td>
-              <td colspan="2">{{ begin_time }}</td>
+              <td colspan="2">{{ recordReport.begin_time }}</td>
               <td colspan="2">结束时间：</td>
-              <td colspan="2">{{ end_time }}</td>
+              <td colspan="2">{{ recordReport.end_time }}</td>
             </tr>
 
             </thead>
@@ -262,155 +253,155 @@
               <td>{{item.p_current  | formatZ}}&nbsp;</td>
               <td>{{item.p_pressure  | formatZ}}&nbsp;</td>
               <td>{{Math.abs(Math.round(item.p_down_speed))}}&nbsp;</td>
-              <td>
-                <span v-if="item.p_down_speed >= 0">下钻</span>
-                <span v-else>提钻</span>
-              </td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-              <td colspan="2">成桩总时间(s)：</td>
-              <td colspan="2">{{p_allTime}}</td>
-              <td colspan="2">最大斜度：</td>
-              <td colspan="2">{{props.row.max_slope | formatZ}}&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="2">往复深度1（m）:</td>
-              <td colspan="2">65.0</td>
-              <td colspan="2">往复深度2（m）:</td>
-              <td colspan="2">1.1-1.4</td>
-            </tr>
-            <tr>
-              <td colspan="2">累计浆量（L）：</td>
-              <td colspan="2">{{props.row.cumulative_pulp | formatZ}}&nbsp;</td>
-              <td colspan="2">累计灰量（kg）：</td>
-              <td colspan="2">{{props.row.cumulative_ash | formatZ}}&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="2">最大电流（A）:</td>
-              <td colspan="2">{{props.row.max_current | formatZ}}&nbsp;</td>
-              <td colspan="2">平均灰量（kg/m）： </td>
-              <td colspan="2">{{props.row.average_ash | formatZ}}&nbsp;0</td>
-            </tr>
-            <tr>
-              <td colspan="2">最大提速（cm/min）：</td>
-              <td colspan="2">{{Math.abs(Math.round(props.row.max_up_speed))}}&nbsp;</td>
-              <td colspan="2">最大钻速（cm/min）：</td>
-              <td colspan="2">{{Math.abs(Math.round(props.row.max_down_speed))}}&nbsp;</td>
-            </tr>
-            <tr>
-              <td colspan="2">操作人员：</td>
-              <td colspan="2"></td>
-              <td colspan="2">技术人员：</td>
-              <td colspan="2"></td>
-            </tr>
-            <tr>
-              <td colspan="2">现场监理：</td>
-              <td colspan="2"></td>
-              <td colspan="2">打印时间：</td>
-              <td colspan="2"></td>
-            </tr>
-            </tfoot>
-          </table>
+        <td>
+          <span v-if="item.p_down_speed >= 0">下钻</span>
+          <span v-else>提钻</span>
+        </td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <td colspan="2">成桩总时间(s)：</td>
+        <td colspan="2">{{recordReport.p_allTime}}</td>
+        <td colspan="2">最大斜度：</td>
+        <td colspan="2">{{props.row.max_slope | formatZ}}&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2">往复深度1（m）:</td>
+        <td colspan="2">65.0</td>
+        <td colspan="2">往复深度2（m）:</td>
+        <td colspan="2">1.1-1.4</td>
+      </tr>
+      <tr>
+        <td colspan="2">累计浆量（L）：</td>
+        <td colspan="2">{{props.row.cumulative_pulp | formatZ}}&nbsp;</td>
+        <td colspan="2">累计灰量（kg）：</td>
+        <td colspan="2">{{props.row.cumulative_ash | formatZ}}&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2">最大电流（A）:</td>
+        <td colspan="2">{{props.row.max_current | formatZ}}&nbsp;</td>
+        <td colspan="2">平均灰量（kg/m）： </td>
+        <td colspan="2">{{props.row.average_ash | formatZ}}&nbsp;0</td>
+      </tr>
+      <tr>
+        <td colspan="2">最大提速（cm/min）：</td>
+        <td colspan="2">{{Math.abs(Math.round(props.row.max_up_speed))}}&nbsp;</td>
+        <td colspan="2">最大钻速（cm/min）：</td>
+        <td colspan="2">{{Math.abs(Math.round(props.row.max_down_speed))}}&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2">操作人员：</td>
+        <td colspan="2"></td>
+        <td colspan="2">技术人员：</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td colspan="2">现场监理：</td>
+        <td colspan="2"></td>
+        <td colspan="2">打印时间：</td>
+        <td colspan="2"></td>
+      </tr>
+      </tfoot>
+    </table>
 
-          <div  class="expand_head">
-            <ul class="expand_tab">
-              <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">段数据列表</li>
-              <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="getChart(props.row)">图表曲线</li>
-            </ul>
-            <a class="exportExcel" :download="filename" id="excelOut" href="#">记录报表导出</a>
-          </div>
-          <el-table
-            v-if="isActive==1"
-            header-cell-class-name="history-header"
-            header-row-class-name="h-header"
-            header-align="center"
-            border
-            max-height="500"
-            :data="props.row.data"
-            style="width: 100%">
-            <el-table-column
-              align="center"
-              prop="part_id"
-              label="序号"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="段浆量（L）">
-              <template slot-scope="props">
-                {{ props.row.p_pulp | formatZ}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="段灰量（kg）"
-              align="center">
-              <template slot-scope="props">
-                {{ props.row.p_total_ash | formatZ}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="段深度（m）">
-              <template slot-scope="props">
-                {{ props.row.p_deep / 100 | formatZ}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="段电流（A）">
-              <template slot-scope="props">
-                {{ props.row.p_current | formatZ}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="段密度（g/cm³）">
-              <template slot-scope="props">
-                {{ props.row.p_density | formatZ}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="段喷压（MPa）">
-              <template slot-scope="props">
-                {{ props.row.p_pressure | formatZ}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="速度（cm/min）">
-              <template slot-scope="props">
-                {{ Math.abs(props.row.p_down_speed) | formatZ}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="段时长（s）">
-              <template slot-scope="props">
-                {{ Math.abs(props.row.p_time)}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="状态">
-              <template slot-scope="props">
-                <span v-if="props.row.p_down_speed >= 0">下钻</span>
-                <span v-else>提钻</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div v-else>
-            <ul class="expand_charts">
-              <li  v-if="isActive==2"><chart :options="option1" :auto-resize=true></chart></li>
-              <li  v-if="isActive==2" style="margin-left: 20px"><chart :options="option2" :auto-resize=true></chart></li>
-              <li  v-if="isActive==2" style="margin-top: 20px"><chart :options="option3" :auto-resize=true></chart></li>
-              <li  v-if="isActive==2" style="margin: 20px 0 0 20px"><chart :options="option4" :auto-resize=true></chart></li>
-            </ul>
-          </div>
+    <div  class="expand_head">
+      <ul class="expand_tab">
+        <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">段数据列表</li>
+        <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="getChart(props.row)">图表曲线</li>
+      </ul>
+      <div class="exportExcel" :download="filename" id="excelOut" @click="recordExcel">记录报表下载</div>
+    </div>
+    <el-table
+      v-if="isActive==1"
+      header-cell-class-name="history-header"
+      header-row-class-name="h-header"
+      header-align="center"
+      border
+      max-height="500"
+      :data="props.row.data"
+      style="width: 100%">
+      <el-table-column
+        align="center"
+        prop="part_id"
+        label="序号"
+        width="50">
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="段浆量（L）">
+        <template slot-scope="props">
+          {{ props.row.p_pulp | formatZ}}
         </template>
       </el-table-column>
+      <el-table-column
+        label="段灰量（kg）"
+        align="center">
+        <template slot-scope="props">
+          {{ props.row.p_total_ash | formatZ}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="段深度（m）">
+        <template slot-scope="props">
+          {{ props.row.p_deep / 100 | formatZ}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="段电流（A）">
+        <template slot-scope="props">
+          {{ props.row.p_current | formatZ}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="段密度（g/cm³）">
+        <template slot-scope="props">
+          {{ props.row.p_density | formatZ}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="段喷压（MPa）">
+        <template slot-scope="props">
+          {{ props.row.p_pressure | formatZ}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="速度（cm/min）">
+        <template slot-scope="props">
+          {{ Math.abs(props.row.p_down_speed) | formatZ}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="段时长（s）">
+        <template slot-scope="props">
+          {{ Math.abs(props.row.p_time)}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="状态">
+        <template slot-scope="props">
+          <span v-if="props.row.p_down_speed >= 0">下钻</span>
+          <span v-else>提钻</span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div v-else>
+      <ul class="expand_charts">
+        <li  v-if="isActive==2"><chart :options="option1" :auto-resize=true></chart></li>
+        <li  v-if="isActive==2" style="margin-left: 20px"><chart :options="option2" :auto-resize=true></chart></li>
+        <li  v-if="isActive==2" style="margin-top: 20px"><chart :options="option3" :auto-resize=true></chart></li>
+        <li  v-if="isActive==2" style="margin: 20px 0 0 20px"><chart :options="option4" :auto-resize=true></chart></li>
+      </ul>
+    </div>
+  </template>
+</el-table-column>
       <el-table-column
         type="selection"
         min-width="30">
@@ -707,6 +698,7 @@
         <span class="s-num" v-else>0</span>
         <span class="s-total">kg/m</span>
       </div>
+      <div style="clear: both"></div>
     </div>
     <div class="m-pagination">
       <el-pagination
@@ -1086,14 +1078,31 @@
         dialogFullScreen:false,
         changeIcon:true,
         deviceType:'', //设备类型
-        filename:'', // 数据报表导出文件名
+
         deviceInfo:[], //设备信息
 
-        ConstructionUnit:'', // 建设单位
-        end_time:'', //结束时间
-        begin_time:'', //开始时间
-        projectName:'', //项目名称
-        p_allTime:'', //成桩总时间
+        recordReport:{ //记录报表数据
+          filename:'', // 数据报表导出文件名
+          ConstructionUnit:'', // 建设单位
+          end_time:'', //结束时间
+          begin_time:'', //开始时间
+          projectName:'', //项目名称
+          p_allTime:'', //成桩总时间
+        },
+        statisticsReport:{ //记录报表数据
+          ConstructionUnit:'', // 建设单位
+          end_time:'', //结束时间
+          begin_time:'', //开始时间
+          projectName:'', //项目名称
+          p_allTime:'', //成桩总时间
+          machine_key:'',//桩机号
+        },
+        idTmr:null,
+        statisticsData:[], //统计表格的数据
+
+        isExport:true, //导出按钮禁用控制
+
+        isAll:false,//导出的全部还是局部
       }
     },
     filters: {
@@ -1109,16 +1118,19 @@
       ...mapState({token:state=>state.project.backTab})
     },
     created(){
+      this.getDevice();
       this.deviceEnd();
       this.getPostData();
       this.getDeviceList(this.device_data);
       this.getList(this.post_data);
       this.getRecords();
+      this.getStatistics();
       Bus.$on('isCollapse',res=>{
         this.isCollapse=res
       })
     },
     mounted(){
+
       this.$bus.on('allEnd',res=>{
         this.dialogVisible=res;
       });
@@ -1132,6 +1144,12 @@
       ...mapActions('changeTab',['incrementTab']),
       ...mapActions('backTab',['incrementBack']),
 
+      //判断是否是设备  导出按钮限制
+      getDevice(){
+        if(this.isDevice){
+          this.isExport=false
+        }
+      },
       //是否打开模态框
       isFullScreen(val){
         if(!val){
@@ -1213,30 +1231,54 @@
         }
       },
 
-      //excel导出
+      //统计报表一些数据
+      getStatistics(){
+        //项目信息的数据处理
+        let projectInfo=JSON.parse(sessionStorage.getItem('projectInfo'));
+        this.statisticsReport.projectName=projectInfo.name;
+        projectInfo.organTypeList.forEach(item=>{
+          if(item.alias=='worker'){
+            this.statisticsReport.ConstructionUnit=item.organList[0].name
+          }
+        });
+      },
+
+      //excel导出统计报表选项
       importExcel() {
+        this.isAll=false;
         require.ensure([], () => {
           if(this.multipleSelection.length!==0){
             for(name in this.newData){
-              if(this.newData[name].checked==true){
+              if(this.newData[name].checked){
                 this.tableHeader.push(this.newData[name].title);
                 this.tableName.push(name)
               }
             }
-            const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
+
             let tHeader = this.tableHeader; //将对应的属性名转换成中文
             let filterVal = this.tableName; //table表格中对应的属性名
             let list=[];
+            let allDepth=0; //总桩长
+            let cumulative_pulp=0; //累计浆量
+            let cumulative_ash=0; //累计灰量
             this.multipleSelection.forEach(e=>{
               let obj = {};
+
               for(let i=0;i<filterVal.length;i++){
                 let key=filterVal[i];
                 let lists=e[filterVal[i]];
+
                 if(key=='begin_time'||key=='end_time'){
                   let date = new Date(lists*1000);
                   lists=formatDate(date, 'MM-dd hh:mm')
                 }else if(key=='pile_describe'||key=='rate'){
-
+                  lists=Math.abs(lists);
+                }else if(key=='depth'){
+                  allDepth+=lists
+                }else if(key=='cumulative_pulp'){
+                  cumulative_pulp+=lists
+                }else if(key=='cumulative_ash'){
+                  cumulative_ash+=lists
                 }else if(key=='max_up_speed'||key=='max_down_speed'){
                   lists=Math.abs(lists);
                 }else{
@@ -1244,11 +1286,32 @@
                 }
                 obj[filterVal[i]] = lists;
               }
+
               list.push(obj);
             });
+            console.log(allDepth);
+            console.log(cumulative_pulp/allDepth);
+            console.log(cumulative_ash/allDepth);
+
+            this.statisticsReport.allDepth=allDepth;
+            this.statisticsReport.total=list.length;
+            this.statisticsReport.cumulative_pulp=cumulative_pulp;
+            this.statisticsReport.cumulative_ash=cumulative_ash;
+            this.statisticsReport.average_pulp=Number(cumulative_pulp/allDepth).toFixed(2);
+            this.statisticsReport.average_ash=Number(cumulative_ash/allDepth).toFixed(2);
+
+
 
             const data = this.formatJson(filterVal, list);
-            export_json_to_excel(tHeader, data, '数据报表');
+            data.unshift(tHeader);
+            this.statisticsData=data;
+            this.statisticsReport.begin_time=list[list.length-1].begin_time;
+            this.statisticsReport.end_time=list[0].end_time;
+            this.statisticsReport.machine_key=this.multipleSelection[0].machine_key;
+
+            setTimeout(()=>{
+              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
+            },200);
 
             //引用赋值  用完清空
             this.tableHeader=[];
@@ -1260,33 +1323,66 @@
         })
       },
 
-      //excel导出全部
+      //excel导出统计报表全部
       importExcelAll(){
+        this.isAll=true;
         this.post_data.page_size=9999999;
         history.list(this.post_data).then(res=>{
           if(res.success){
             for(name in this.newData){
-              this.tableHeader.push(this.newData[name].title);
-              this.tableName.push(name)
+              if(this.newData[name].checked){
+                this.tableHeader.push(this.newData[name].title);
+                this.tableName.push(name)
+              }
             }
-            const { export_json_to_excel } = require('@/vendor/Export2Excel');//引入文件
             let tHeader = this.tableHeader; //将对应的属性名转换成中文
             let filterVal = this.tableName; //table表格中对应的属性名
             let list=[];
+            let allDepth=0; //总桩长
             res.result.items.forEach(e=>{
               let obj = {};
               for(let i=0;i<filterVal.length;i++){
-                obj[filterVal[i]] = e[filterVal[i]]
+                let key=filterVal[i];
+                let lists=e[filterVal[i]];
+                if(key=='begin_time'||key=='end_time'){
+                  let date = new Date(lists*1000);
+                  lists=formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+                }else if(key=='pile_describe'||key=='rate'||key=='machine_key'){
+
+                }else if(key=='depth'){
+                  allDepth+=lists
+                }else if(key=='max_up_speed'||key=='max_down_speed'){
+                  lists=Math.abs(lists);
+                }else{
+                  lists=Number(lists).toFixed(2)
+                }
+                obj[filterVal[i]] = lists;
               }
               list.push(obj);
             });
+
+            this.statisticsReport.allDepth=allDepth;
+
+
             const data = this.formatJson(filterVal, list);
-            export_json_to_excel(tHeader, data, '数据报表');
+            //export_json_to_excel(tHeader, data, '数据报表');
+            data.unshift(tHeader);
+            this.statisticsData=data;
+            this.statisticsReport.begin_time=list[list.length-1].begin_time;
+            this.statisticsReport.end_time=list[0].begin_time;
+            this.statisticsReport.machine_key=res.result.items[0].machine_key;
+
+            console.log(this.statisticsReport);
 
             //引用赋值  用完清空
             this.tableHeader=[];
             this.tableName=[];
+
             list=[];
+            setTimeout(()=>{
+              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
+            },200);
+
           }else {
             _this.$message.error(res.message);
           }
@@ -1294,17 +1390,10 @@
         });
       },
 
-      //excel导出报表数据
-      base64 (s) {
-        return window.btoa(unescape(encodeURIComponent(s)));
+      //导出记录报表
+      recordExcel(){
+        this.tableToExcel('tableToExcel', this.recordReport.filename)
       },
-      format (s, c) {
-        return s.replace(/{(\w+)}/g,
-          function (m, p) {
-            return c[p];
-          });
-      },
-
       //展开某行的事件
       handleExpandChange(row,expandedRows){
 
@@ -1319,34 +1408,32 @@
 
         //项目信息的数据处理
         let projectInfo=JSON.parse(sessionStorage.getItem('projectInfo'));
-        this.projectName=projectInfo.name;
+        this.recordReport.projectName=projectInfo.name;
         projectInfo.organTypeList.forEach(item=>{
           if(item.alias=='worker'){
-            this.ConstructionUnit=item.organList[0].name
+            this.recordReport.ConstructionUnit=item.organList[0].name
           }
         });
 
         //表内数据的处理
         let begin_time = new Date(row.begin_time*1000);
         let end_time = new Date(row.end_time*1000);
-        this.filename=formatDate(begin_time, 'yyyy-MM-dd hh-mm-ss');
-        this.end_time=formatDate(end_time, 'yyyy-MM-dd hh:mm:ss');
-        this.begin_time=formatDate(begin_time, 'yyyy-MM-dd hh:mm:ss');
+        this.recordReport.filename=row.pile_describe+'_原始记录表';
+        this.recordReport.end_time=formatDate(end_time, 'yyyy-MM-dd hh:mm:ss');
+        this.recordReport.begin_time=formatDate(begin_time, 'yyyy-MM-dd hh:mm:ss');
+
 
         //成桩总时间
         let num=0;
         row.data.forEach(item=>{
           num+=item.p_time
         });
-        this.p_allTime=num;
+        this.recordReport.p_allTime=num;
         this.isActive=1;
-        setTimeout(()=>{
-          this.tableToExcel('tableToExcel', '下载模板')
-        },100);
       },
 
+      //表格导出的封装
       tableToExcel(tableid, sheetName) {
-        let _this=this;
         let uri = 'data:application/vnd.ms-excel;base64,';
         let template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"' +
           'xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'
@@ -1364,10 +1451,14 @@
           'font-size: 24px;' +
           'text-align:center;' +
           'font-weight: bold;' +
-          'height: 50px;' +
+          'height: 40px;' +
+          ' }' +
+          'table tfoot tr{' +
+          'height: 30px;' +
           ' }' +
           'table tbody td{' +
           'text-align: center;' +
+          'height: 20px;' +
           ' }' +
           '</style>' +
           '</head><body ><table class="excelTable">{table}</table></body></html>';
@@ -1375,9 +1466,91 @@
         let ctx;
         if(tableid){
           ctx = {worksheet: sheetName || 'Worksheet', table: tableid.innerHTML};
-          document.getElementById("excelOut").href = uri + _this.base64(_this.format(template, ctx));
+          document.getElementById('simulation').href = uri + this.base64(this.format(template, ctx));
+          document.getElementById('simulation').download = sheetName + ".xls";//自定义文件名
+          document.getElementById('simulation').click();
         }
       },
+      //整个表格拷贝到EXCEL中
+      copyExcel(tableid, sheetName) {
+        if(this.getExplorer()=='ie') {
+          let curTbl = document.getElementById(tableid);
+          let oXL = new ActiveXObject("Excel.Application");
+          //创建AX对象excel
+          let oWB = oXL.Workbooks.Add();
+          //获取workbook对象
+          let xlsheet = oWB.Worksheets(1);
+          //激活当前sheet
+          let sel = document.body.createTextRange();
+          sel.moveToElementText(curTbl);
+          //把表格中的内容移到TextRange中
+          sel.select;
+          //全选TextRange中内容
+          sel.execCommand("Copy");
+          //复制TextRange中内容
+          xlsheet.Paste();
+          //粘贴到活动的EXCEL中
+          oXL.Visible = true;
+          //设置excel可见属性
+
+          try {
+            let fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
+            console.log(fname);
+          } catch (e) {
+            print("Nested catch caught " + e);
+          } finally {
+            oWB.SaveAs(fname);
+
+            oWB.Close(savechanges = false);
+            //xls.visible = false;
+            oXL.Quit();
+            oXL = null;
+            //结束excel进程，退出完成
+            //window.setInterval("Cleanup();",1);
+            this.idTmr = window.setInterval("Cleanup();", 1);
+          }
+        } else {
+          this.tableToExcel(tableid, sheetName)
+        }
+      },
+      Cleanup() {
+        window.clearInterval(this.idTmr);
+        CollectGarbage();
+      },
+      //浏览器的兼容
+      getExplorer() {
+        var explorer = window.navigator.userAgent ;
+        //ie
+        if (explorer.indexOf("MSIE") >= 0) {
+          return 'ie';
+        }
+        //firefox
+        else if (explorer.indexOf("Firefox") >= 0) {
+          return 'Firefox';
+        }
+        //Chrome
+        else if(explorer.indexOf("Chrome") >= 0){
+          return 'Chrome';
+        }
+        //Opera
+        else if(explorer.indexOf("Opera") >= 0){
+          return 'Opera';
+        }
+        //Safari
+        else if(explorer.indexOf("Safari") >= 0){
+          return 'Safari';
+        }
+      },
+      base64 (s) {
+        return window.btoa(unescape(encodeURIComponent(s)));
+      },
+      format (s, c) {
+        return s.replace(/{(\w+)}/g,
+          function (m, p) {
+            return c[p];
+          });
+      },
+
 
       //导出封装方法
       formatJson(filterVal, jsonData) {
@@ -1399,11 +1572,9 @@
           }
         })
       },
-      //获取设备信息
 
 
-
-      //获取时间
+      //获取时间筛选的区间
       getTime(data){
         if(data){
           this.post_data.start=data[0]/1000;
@@ -1430,6 +1601,7 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+
       //列表改变每页显示的条数
       handleSizeChange: function (size) {
         this.post_data.page_size=size;
@@ -1446,7 +1618,7 @@
         this.post_data.page_index = currentPage;
         this.getList(this.post_data);
       },
-      //获取列表
+      //获取全部历史数据列表
       getList(post_data) {
         this.loading=true;
         history.list(post_data).then(res=>{
@@ -1621,8 +1793,18 @@
       },
       isShow:{
         handler(val, oldVal){
+
         },
-      }
+      },
+      device(val, oldVal){
+        if(val){
+          if(!this.isDevice){
+            this.isExport=false;
+          }
+        }else{
+          this.isExport=true;
+        }
+      },
     },
   }
 </script>
@@ -1638,6 +1820,21 @@
     text-align: center;
   }
   #tableToExcel .tHead {
+    font-size: 30px;
+    font-weight: bold;
+    height: 50px;
+    text-align: center;
+  }
+  #statisticsTable td {
+    font-size: 14px;
+    width: 200px;
+    height: 30px;
+    font-family: 宋体;
+  }
+  #statisticsTable tbody td{
+    text-align: center;
+  }
+  #statisticsTable .tHead {
     font-size: 30px;
     font-weight: bold;
     height: 50px;
@@ -1724,12 +1921,20 @@
     .s-body{
       float: left;
       width: 20%;
+      height: 50px;
       text-align: center;
       .s-total{
+        display: inline-block;
+        overflow: hidden;
+        height: 50px;
         font-size: 12px;
         color:rgba(102,102,102,1);
       }
       .s-num{
+        display: inline-block;
+        max-width: 120px;
+        height: 50px;
+        overflow: hidden;
         margin: 0 5px;
         font-size:18px;
         font-weight: bold;

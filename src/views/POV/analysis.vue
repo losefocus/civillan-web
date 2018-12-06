@@ -3,8 +3,8 @@
     <!-- 标题和控制栏 -->
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select style="width: 5%;float: left" v-if="isShow" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
-        <el-select  v-else="!isShow" v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
+        <el-select style="width: 5%;float: left" v-if="isDevice" v-model="deviceName" size="mini" disabled placeholder="请选择"></el-select>
+        <el-select  v-else v-model="device" filterable :filter-method="deviceSearch" placeholder="全部设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
@@ -253,7 +253,7 @@
         newData:null
       }
     },
-    props:['isShow','newStyle'],
+    props:['isShow','newStyle','isDevice'],
     created:function(){
       this.deviceName=sessionStorage.getItem('deviceName');
       this.getDeviceList(this.device_data);

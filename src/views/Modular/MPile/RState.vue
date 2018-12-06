@@ -16,7 +16,7 @@
      </el-dropdown>
    </div>
    <transition name="fade">
-     <div class="b-device" v-if="noDevice"><div class="t-device">设备已离线！</div></div>
+     <div class="b-device" v-if="noDevice"><div class="t-device">{{typeName}}</div></div>
    </transition>
    <div class="r-box">
      <div class="t-box">
@@ -55,7 +55,7 @@
          </div>
        </li>
        <li class="s-chart" v-if="isRouterAlive">
-         <a-sp :dataInfo="RT_data" ref="aSp" :isReplay="isReplay"></a-sp>
+         <a-sp :dataInfo="RT_data" ref="aSp" :isReplay="isReplay" :historyRT="historyRT"></a-sp>
        </li>
        <li class="s-chart" id="pile">
         <!-- <chart :options="ElectricCurrent" :auto-resize=true></chart>-->
@@ -102,7 +102,7 @@
          </div>
        </li>
        <li class="s-chart1">
-         <p-operation :dataInfo="RT_data"></p-operation>
+         <p-operation :dataInfo="RT_data" :historyRT="historyRT"></p-operation>
        </li>
      </ul>
    </div>
@@ -151,7 +151,7 @@ export default {
       },
       angelWidth:0,
       noDevice:false,
-      deviceType:['1','2','3'],
+      deviceHead:[],
       deviceIndex:1,
       deviceName:[
         {name:'NB-001'},{name:'NB-002'},{name:'NB-003'}
@@ -188,6 +188,11 @@ export default {
 
       historyData:[],
       isConctrol:false,
+
+      controlHead:1,
+      historyRT:[],
+
+      typeName:'',
     }
   },
   props:['dialogFullScreen','deviceKey','isClose','clientWidth','isDevice'],
@@ -202,6 +207,14 @@ export default {
     ...mapState({token:state=>state.project.backTab})
   },
   created(){
+    this.$bus.on('deviceHead',res=>{
+      this.controlHead=res;
+      let deviceKey=this.$store.state.project.deviceKey;
+      this.getData(deviceKey);
+      this.history();
+    });
+
+    this.history();
     this.changeData()
   },
   mounted(){
@@ -219,6 +232,8 @@ export default {
     ...mapActions('backTab',['incrementBack']),
     ...mapActions('changeTab',['incrementTab']),
 
+
+
     closeTab(){
       this.$store.dispatch('incrementTab',false);
     },
@@ -228,15 +243,30 @@ export default {
       if(this.deviceInfo1){
         if(this.deviceInfo1.status==11){
           this.noDevice=false;
+        }else if(this.deviceInfo1.status==0){
+          this.typeName='该设备未激活';
+          this.getDeviceState()
+        }else if(this.deviceInfo1.status==1){
+          this.typeName='该设备已离线';
+          this.getDeviceState()
+        }else if(this.deviceInfo1.status==2){
+          this.typeName='该设备已离场';
+          this.getDeviceState()
+        }else if(this.deviceInfo1.status==21){
+          this.typeName='该设备故障中';
+          this.getDeviceState()
         }else{
-          if(this.$store.state.project.changeTab==true){
-            this.noDevice=false;
-          }else{
-            this.noDevice=true;
-            this.RT_data={};
-            this.RT_data.depth_design=20;
-          }
+
         }
+      }
+    },
+    getDeviceState(){
+      if(this.$store.state.project.changeTab==true){
+        this.noDevice=false;
+      }else{
+        this.noDevice=true;
+        this.RT_data={};
+        this.RT_data.depth_design=20;
       }
     },
     //历史数据和实时数据的切换
@@ -251,6 +281,7 @@ export default {
       }else{
         this.isConctrol=false;
         let deviceKey=this.$store.state.project.deviceKey;
+
         this.getData(deviceKey);
         this.timer1=setInterval(()=>{
           this.getData(deviceKey);
@@ -321,36 +352,96 @@ export default {
       }
     },
 
+
+    //实时历史
+    history(){
+      deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
+        let historyData=[];
+        res.result.forEach(item=>{
+          item=JSON.parse(item);
+          let headNum=Number(this.$store.state.project.deviceKey.substring(3,4));
+          if(headNum>1){
+            let rawData=item;
+            let arr=['expand_sta','nozzle_sta','par_ash','par_slurry','pile_describe','pile_id','process_type','rcurrent'
+              ,'rdeep','rdensity','rdip_angle','record_sta','rflow','rlatitude','rlongitude','rpipe_sta','rpressure','rspeed'];
+            let commonObj={'device_key':'','machine_key':'','real_time':'','start_time':'','status':''};
+            for(let i in commonObj){
+              for(let j in rawData){
+                if(i==j){
+                  commonObj[i]=rawData[i];
+                  delete rawData[i];
+                }
+              }
+            }
+            let array = [];
+            for(let i=0;i<headNum;i++){
+              let obj={}
+              for(let j=0;j<arr.length;j++){
+                obj[arr[j]] = i==0?rawData[arr[j]]:rawData[arr[j]+(i+1)]
+              }
+              array.push(obj)
+            }
+            historyData.push(Object.assign(array[Number(this.controlHead)-1],commonObj))
+          }else{
+            historyData.push(item);
+          }
+        });
+        this.historyRT=historyData
+      }).catch(e=>{
+
+      });
+    },
+
     //实时数据
     getData(key){
       deviceData.list({'key':key}).then(res=>{
         if(res.success){
+          let headNum=Number(this.$store.state.project.deviceKey.substring(3,4));
+          if(headNum>1){
+            let rawData=res.result;
+            let arr=['expand_sta','nozzle_sta','par_ash','par_slurry','pile_describe','pile_id','process_type','rcurrent'
+              ,'rdeep','rdensity','rdip_angle','record_sta','rflow','rlatitude','rlongitude','rpipe_sta','rpressure','rspeed'];
+            let commonObj={'depth_design':'','device_key':'','machine_key':'','real_time':'','start_time':'','status':''};
+            for(let i in commonObj){
+              for(let j in rawData){
+                if(i==j){
+                  commonObj[i]=rawData[i];
+                  delete rawData[i];
+                }
+              }
+            }
+            let array = [];
+            for(let i=0;i<headNum;i++){
+              let obj={}
+              for(let j=0;j<arr.length;j++){
+                obj[arr[j]] = i==0?rawData[arr[j]]:rawData[arr[j]+(i+1)]
+              }
+              array.push(obj)
+            }
+            this.RT_data= Object.assign(array[Number(this.controlHead)-1],commonObj);
+          }else{
+            this.RT_data= res.result;
+            this.RT_data.depth_design=this.DesignDeep;
+          }
+
           res.result.rdeep=parseFloat(res.result.rdeep);
-          this.RT_data=res.result;
           this.RT_data.depth_design=this.DesignDeep;
           this.RT_data.status=1;
           this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
 
-          this.rflow=res.result.rflow;
-          this.rspeed=Math.abs(res.result.rspeed);
-          this.rcurrent=res.result.rcurrent;
-          this.progress=res.result.rdeep.toFixed(2);
+          this.rflow=this.RT_data.rflow;
+          this.rspeed=Math.abs(this.RT_data.rspeed);
+          this.rcurrent=this.RT_data.rcurrent;
+          this.progress=this.RT_data.rdeep.toFixed(2);
           if(isNaN(this.progress)){
             this.progress=0
           }
           this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
 
-          let par_slurry=res.result.par_slurry;
-          let par_ash=res.result.par_ash;
-          let rpressure=res.result.rpressure;
-
-          this.slurryData.push(par_slurry);
-          this.ashData.push(par_ash);
-          this.rpressureData.push(rpressure);
-
           if(this.config_post_data!=res.result.pile_describe){
             this.config_post_data=res.result.pile_describe;
           }
+
         }else {
           this.progressHeight='100%';
         }

@@ -31,7 +31,7 @@
       >
         <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)">
           <!--:class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}"-->
-          <div class="r-state" :class="{'r-state1':item.status==21,'r-state2':item.status==11,'r-state3':item.status==0,'r-state4':item.status==1}">
+          <div class="r-state" :class="{'r-state1':item.status==21,'r-state2':item.status==11,'r-state3':item.status==0,'r-state4':item.status==1||item.status==2,}">
             {{ deviceStatus.get(item.status) }}
           </div>
           <div class="d-name">
@@ -147,6 +147,7 @@
           {id:11,name:'运行中'},
           {id:0,name:'未激活'},
           {id:1,name:'已离线'},
+          {id:2,name:'已离场'},
         ],
         post_data:{
           project_id:this.$cookies.get('projectId'),

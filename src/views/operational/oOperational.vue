@@ -397,7 +397,7 @@
         }*/
       },
       handleExpandChange(row,expandedRows){
-        console.log(expandedRows)
+
       },
       deviceChange(val){ //类型改变
         this.deviceKey=val;
@@ -433,7 +433,6 @@
       },
       getGroup(){
         deviceGrouping.list(this.group_post).then(res=>{
-          console.log(res);
           if(res.success){
             this.navList=res.result.items;
             let allDevice={
