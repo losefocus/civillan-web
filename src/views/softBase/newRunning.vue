@@ -13,20 +13,25 @@
 <script>
   import deviceGrouping from '@/api/project/deviceGrouping'
 
+  //搅拌桩
   import SAnalysis from '@/views/Modular/MPile/SAnalysis'
   import RState from '@/views/Modular/MPile/RState'
   import AQuery from '@/views/Modular/MPile/AQuery'
   import HPile from '@/views/Modular/MPile/HPile'
   import NRecord from '@/views/Modular/MPile/NRecord'
 
+  //泡沫混凝土
   import FConcrete from '@/views/Modular/FConcrete/FConcrete'
   import HFoam from '@/views/Modular/FConcrete/HFoam'
 
+  //喷凝养护
   import SCuring from '@/views/Modular/SCuring/SCuring'
 
+  //预应力张拉
   import TTensile from '@/views/Modular/TTensile/TTensile'
   import HTensile from '@/views/Modular/TTensile/HTensile'
 
+  //预应力压浆
   import PGrouting from '@/views/Modular/PGrouting/PGrouting'
 
   import Bus from '@/common/eventBus'

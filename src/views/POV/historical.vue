@@ -43,12 +43,6 @@
         tableHeader:[],
         tableName:[],
         deviceSelect:[],// 全部设备select的列表
-        recordSum:[],// 统计总数
-        post_data:{ // 请求数据
-          key:'',
-          page_index:1,
-          page_size:10,
-        },
         device_data:{//全部设备select列表
           page_index:1,
           page_size:5,
@@ -131,50 +125,6 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      //列表改变每页显示的条数
-      handleSizeChange: function (size) {
-        this.post_data.page_size=size;
-        this.getList(this.post_data);
-      },
-
-      //列表改变当前页
-      handleCurrentChange: function(currentPage){
-        this.device_data.page_index = currentPage;
-        this.getList(this.post_data);
-      },
-      //列表改变当前页
-      listCurrentChange: function(currentPage){
-        this.post_data.page_index = currentPage;
-        this.getList(this.post_data);
-      },
-      //获取列表
-      getList:function (post_data) {
-        let _this=this;
-        let tableList=[];
-        history.list(post_data).then(res=>{
-          if(res.success){
-            _this.total=res.result.total;
-            /*res.result.items.forEach(function (item) {
-              tableList.push(item);
-            });*/
-            //console.log(res.result.items);
-            _this.tableData=res.result.items;
-            _this.loading=false
-          }else {
-            _this.$message.error(res.message);
-            _this.loading=false
-          }
-        }).catch(err => {
-          this.loading=false;
-        });
-      },
-
-      //统计总数
-      getRecords(){
-        history.records().then(res=>{
-          this.recordSum=res.result[0]
-        })
-      },
 
       //全部设备select当前页
       deviceCurrentChange:function(currentPage){
@@ -183,7 +133,7 @@
       },
       //全部设备select搜索框
       deviceSearch(query){
-        this.device=query
+        this.device=query;
         this.device_data.name=query;
         this.getDeviceList(this.device_data);
       },
@@ -195,7 +145,6 @@
           _this.deviceTotal=res.result.total;
         });
       },
-
     },
   }
 </script>

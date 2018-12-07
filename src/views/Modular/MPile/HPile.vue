@@ -1124,7 +1124,7 @@
       this.getPostData();
       this.getDeviceList(this.device_data);
       this.getList(this.post_data);
-      this.getRecords();
+      this.getRecords(this.post_data);
       this.getStatistics();
       Bus.$on('isCollapse',res=>{
         this.isCollapse=res
@@ -1723,8 +1723,9 @@
       },
 
       //统计总数
-      getRecords(){
-        history.records(this.post_data).then(res=>{
+      getRecords(post_data){
+        history.records(post_data).then(res=>{
+          console.log(res);
           this.recordSum=res.result[0];
         })
       },
@@ -1783,7 +1784,8 @@
           minScore:'',
           pileId:'',
         };
-        this.getList(this.post_data)
+        this.getList(this.post_data);
+        this.getRecords(this.post_data);
       }
     },
     watch:{

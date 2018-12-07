@@ -1,4 +1,5 @@
 <template>
+  <!--搅拌桩-->
  <div style="position: relative;height: 100%">
    <div class="b-control" v-if="isConctrol">
      <el-button size="mini" @click="start()">开始</el-button>
@@ -219,7 +220,6 @@ export default {
   },
   mounted(){
     this.init();
-    this.getDeviceInfo();
   },
   beforeDestroy(){
     this.num=0;
@@ -238,34 +238,13 @@ export default {
       this.$store.dispatch('incrementTab',false);
     },
     //设备信息
-    getDeviceInfo(){
-      this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
-      if(this.deviceInfo1){
-        if(this.deviceInfo1.status==11){
-          this.noDevice=false;
-        }else if(this.deviceInfo1.status==0){
-          this.typeName='该设备未激活';
-          this.getDeviceState()
-        }else if(this.deviceInfo1.status==1){
-          this.typeName='该设备已离线';
-          this.getDeviceState()
-        }else if(this.deviceInfo1.status==2){
-          this.typeName='该设备已离场';
-          this.getDeviceState()
-        }else if(this.deviceInfo1.status==21){
-          this.typeName='该设备故障中';
-          this.getDeviceState()
-        }else{
 
-        }
-      }
-    },
+    //遮罩
     getDeviceState(){
       if(this.$store.state.project.changeTab==true){
         this.noDevice=false;
       }else{
         this.noDevice=true;
-        this.RT_data={};
         this.RT_data.depth_design=20;
       }
     },
@@ -279,13 +258,34 @@ export default {
           this.playBack()
         }, this.timeSpeed);
       }else{
+
         this.isConctrol=false;
         let deviceKey=this.$store.state.project.deviceKey;
 
-        this.getData(deviceKey);
-        this.timer1=setInterval(()=>{
-          this.getData(deviceKey);
-        },3000);
+        this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
+        if(this.deviceInfo1){
+          if(this.deviceInfo1.status==11){
+            this.noDevice=false;
+            this.getData(deviceKey);
+            this.timer1=setInterval(()=>{
+              this.getData(deviceKey);
+            },3000);
+          }else if(this.deviceInfo1.status==0){
+            this.typeName='该设备未激活';
+            this.getDeviceState()
+          }else if(this.deviceInfo1.status==1){
+            this.typeName='该设备已离线';
+            this.getDeviceState()
+          }else if(this.deviceInfo1.status==2){
+            this.typeName='该设备已离场';
+            this.getDeviceState()
+          }else if(this.deviceInfo1.status==21){
+            this.typeName='该设备故障中';
+            this.getDeviceState();
+          }else{
+
+          }
+        }
       }
     },
 
@@ -345,7 +345,6 @@ export default {
       let result=this.historyData;
       this.RT_data= Object.assign({},result[this.num]);
       this.progress=Number(this.RT_data.rdeep).toFixed(2);
-      if(isNaN(this.progress)){this.progress=0}
       this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
       this.RT_data.depth_design=this.DesignDeep;
       this.num=this.num+1;
@@ -423,15 +422,14 @@ export default {
             }
             this.RT_data= Object.assign(array[Number(this.controlHead)-1],commonObj);
             this.RT_data.depth_design=this.DesignDeep;
+            this.progress=Number(this.RT_data.rdeep).toFixed(2);
+            this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
           }else{
             this.RT_data= res.result;
             this.RT_data.depth_design=this.DesignDeep;
+            this.progress=Number(this.RT_data.rdeep).toFixed(2);
+            this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
           }
-
-          res.result.rdeep=parseFloat(res.result.rdeep);
-          this.progress=this.RT_data.rdeep.toFixed(2);
-          if(isNaN(this.progress)){this.progress=0}
-          this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
 
           if(this.config_post_data!=res.result.pile_describe){
             this.config_post_data=res.result.pile_describe;
@@ -643,7 +641,7 @@ export default {
     left:0;
     width: 100%;
     height: 100%;
-    background: rgba(255,255,255,0.7);
+    /*background: rgba(255,255,255,0.7);*/
     z-index: 10;
     overflow: hidden;
     text-align: center;
