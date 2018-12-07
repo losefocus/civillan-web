@@ -38,7 +38,7 @@
       'historyRT'
     ],
     created(){
-      this.changeData()
+      this.changeData();
       this.history(this.historyRT)
     },
     mounted(){
