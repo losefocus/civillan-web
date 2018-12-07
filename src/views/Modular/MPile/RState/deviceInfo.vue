@@ -77,7 +77,7 @@
         deviceName1:'',
         deviceUserName:'',
         deviceUserPhone:'',
-        progressNum:40,//深度进度
+        progressNum:0,//深度进度
         isWarming:true,//未发现问题显示
         warmingData:[],
         RT_data:{},
@@ -214,6 +214,15 @@
       realData:{//深度监听，可监听到对象、数组的变化
         handler(val, oldVal){
           this.RT_data=val;
+          if(val.rpipe_sta==1){
+            this.progressNum=25
+          }else if(val.rpipe_sta==2){
+            this.progressNum=50
+          }else if(val.rpipe_sta==3){
+            this.progressNum=75
+          }else if(val.rpipe_sta==4||val.record_sta==3){
+            this.progressNum=100
+          }
         },
       }
     }

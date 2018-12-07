@@ -1,4 +1,5 @@
 <template>
+  <!--喷凝养护-->
   <div style="position: relative;height: 100%">
     <transition name="fade">
       <div class="b-device" v-if="noDevice"><div class="t-device">设备已离线！</div></div>
