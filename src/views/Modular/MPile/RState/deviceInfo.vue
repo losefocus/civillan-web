@@ -88,6 +88,7 @@
         deviceHead:[],
         isPile:false,  //是否是攪拌桩
         deviceIndex:0,
+        deviceInfo1:{},
       }
     },
     props:['realData'],
@@ -114,9 +115,33 @@
           this.isReal='历史回放中';
           this.isPile=false;
           key=this.$store.state.project.historyKey
+          this.getInfo(key);
         }else{
           this.isReal='设备正常运行中';
-          key=this.$store.state.project.deviceKey
+          key=this.$store.state.project.deviceKey;
+          this.getInfo(key);
+          this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
+          if(this.deviceInfo1){
+            if(this.deviceInfo1.status==11){
+              this.noDevice=false;
+              this.getAlarms(key);
+              this.timer2=setInterval(()=>{
+                this.getAlarms(key)
+              },3000);
+            }else if(this.deviceInfo1.status==0){
+              this.realData={}
+            }else if(this.deviceInfo1.status==1){
+              this.realData={}
+            }else if(this.deviceInfo1.status==2){
+              this.realData={}
+            }else if(this.deviceInfo1.status==21){
+              this.realData={}
+            }else{
+
+            }
+          }
+
+
         }
         let headNum=key.substring(3,4);
         if(Number(headNum)>1){
@@ -125,11 +150,7 @@
           }
         }
 
-        this.getInfo(key);
-        this.getAlarms(key);
-        this.timer2=setInterval(()=>{
-          this.getAlarms(key)
-        },3000);
+
       },
       //获取设备信息
       getInfo(key){
