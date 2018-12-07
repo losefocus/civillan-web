@@ -112,6 +112,7 @@
         let key='';
         if(this.$store.state.project.changeTab==true){
           this.isReal='历史回放中';
+          this.isPile=false;
           key=this.$store.state.project.historyKey
         }else{
           this.isReal='设备正常运行中';
@@ -142,7 +143,11 @@
             if(this.deviceHead.length<=1){
               this.isPile=false;
             }else{
-              this.isPile=true;
+              if(this.$store.state.project.changeTab==true){
+                this.isPile=false;
+              }else{
+                this.isPile=true;
+              }
             }
             this.deviceType.state1='喷浆状态';
             this.deviceType.state2='记录状态';

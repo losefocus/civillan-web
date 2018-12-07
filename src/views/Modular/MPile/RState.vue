@@ -211,10 +211,10 @@ export default {
       this.controlHead=res;
       let deviceKey=this.$store.state.project.deviceKey;
       this.getData(deviceKey);
-      this.history();
+      this.historyReal();
     });
 
-    this.history();
+    this.historyReal();
     this.changeData()
   },
   mounted(){
@@ -331,8 +331,10 @@ export default {
     getHistory(){
       let replayData=sessionStorage.getItem('replayData');
       let post_data=JSON.parse(replayData);
+      console.log(post_data);
       deviceData.replay(post_data).then(res=>{
-        this.historyData=res.result
+        this.historyData=res.result;
+        console.log(res.result);
       }).catch(e=>{
 
       })
@@ -343,6 +345,7 @@ export default {
       let result=this.historyData;
       this.RT_data= Object.assign({},result[this.num]);
       this.progress=Number(this.RT_data.rdeep).toFixed(2);
+      if(isNaN(this.progress)){this.progress=0}
       this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
       this.RT_data.depth_design=this.DesignDeep;
       this.num=this.num+1;
@@ -354,7 +357,7 @@ export default {
 
 
     //实时历史
-    history(){
+    historyReal(){
       deviceData.history({key:this.$store.state.project.deviceKey}).then(res => {
         let historyData=[];
         res.result.forEach(item=>{
@@ -419,23 +422,15 @@ export default {
               array.push(obj)
             }
             this.RT_data= Object.assign(array[Number(this.controlHead)-1],commonObj);
+            this.RT_data.depth_design=this.DesignDeep;
           }else{
             this.RT_data= res.result;
             this.RT_data.depth_design=this.DesignDeep;
           }
 
           res.result.rdeep=parseFloat(res.result.rdeep);
-          this.RT_data.depth_design=this.DesignDeep;
-          this.RT_data.status=1;
-          this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
-
-          this.rflow=this.RT_data.rflow;
-          this.rspeed=Math.abs(this.RT_data.rspeed);
-          this.rcurrent=this.RT_data.rcurrent;
           this.progress=this.RT_data.rdeep.toFixed(2);
-          if(isNaN(this.progress)){
-            this.progress=0
-          }
+          if(isNaN(this.progress)){this.progress=0}
           this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
 
           if(this.config_post_data!=res.result.pile_describe){

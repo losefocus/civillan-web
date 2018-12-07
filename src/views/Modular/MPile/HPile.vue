@@ -836,6 +836,7 @@
         deviceSelect:[],// 全部设备select的列表
         recordSum:[],// 统计总数
         post_data:{ // 请求数据
+          projectId:this.$cookies.get('projectId'),
           key:'',
           page_index:1,
           page_size:10,
@@ -1203,6 +1204,7 @@
             type:res.result.items[0].type,
             pileId:data.pile_describe,
             page_index:this.post_data.page_index,
+            projectId:this.$cookies.get('projectId'),
           };
           this.$store.dispatch('incrementTab',true);
           sessionStorage.setItem('replayData',JSON.stringify(post_data));
