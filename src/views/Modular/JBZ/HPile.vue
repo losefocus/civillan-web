@@ -1291,9 +1291,6 @@
 
               list.push(obj);
             });
-            console.log(allDepth);
-            console.log(cumulative_pulp/allDepth);
-            console.log(cumulative_ash/allDepth);
 
             this.statisticsReport.allDepth=allDepth;
             this.statisticsReport.total=list.length;
@@ -1373,8 +1370,6 @@
             this.statisticsReport.begin_time=list[list.length-1].begin_time;
             this.statisticsReport.end_time=list[0].begin_time;
             this.statisticsReport.machine_key=res.result.items[0].machine_key;
-
-            console.log(this.statisticsReport);
 
             //引用赋值  用完清空
             this.tableHeader=[];
@@ -1497,7 +1492,6 @@
 
           try {
             let fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
-            console.log(fname);
           } catch (e) {
             print("Nested catch caught " + e);
           } finally {
@@ -1725,7 +1719,6 @@
       //统计总数
       getRecords(post_data){
         history.records(post_data).then(res=>{
-          console.log(res);
           this.recordSum=res.result[0];
         })
       },

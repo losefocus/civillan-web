@@ -2,7 +2,13 @@
   <!--预应力压浆-->
   <div style="position: relative;height: 100%">
     <transition name="fade">
-      <div class="b-device" v-if="noDevice"><div class="t-device">预应力压浆！</div></div>
+      <div class="b-device" v-if="noDevice">
+        <div class="t-device">
+          <div class="d-text">
+            {{typeName}}
+          </div>
+        </div>
+      </div>
     </transition>
     <div class="r-box">
       <ul class="s-box1">
@@ -135,7 +141,7 @@
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
 
-  import deviceInfo from '@/views/Modular/MPile/RState/deviceInfo.vue'
+  import deviceInfo from '@/views/Modular/JBZ/RState/deviceInfo.vue'
   export default {
     name: "TTensile",
     components:{
@@ -340,6 +346,7 @@
         },
         ctx:null,
 
+        typeName:'',
 
       }
     },
@@ -379,13 +386,38 @@
         let clientWidth=document.body.clientWidth;
         /*this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)*/
       },
+      //遮罩
+      getDeviceState(){
+        if(this.$store.state.project.changeTab==true){
+          this.noDevice=false;
+        }else{
+          this.noDevice=true;
+          this.RT_data.depth_design=20;
+        }
+      },
       //设备信息
       getDeviceInfo(){
         this.deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
         if(this.deviceInfo.status==11){
           this.noDevice=false;
+          this.getData(deviceKey);
+          this.timer1=setInterval(()=>{
+            this.getData(deviceKey);
+          },3000);
+        }else if(this.deviceInfo.status==0){
+          this.typeName='该设备未激活';
+          this.getDeviceState()
+        }else if(this.deviceInfo.status==1){
+          this.typeName='该设备已离线';
+          this.getDeviceState()
+        }else if(this.deviceInfo.status==2){
+          this.typeName='该设备已离场';
+          this.getDeviceState()
+        }else if(this.deviceInfo.status==21){
+          this.typeName='该设备故障中';
+          this.getDeviceState();
         }else{
-          this.noDevice=false;
+
         }
       },
       deviceChange(index){
@@ -645,7 +677,7 @@
     left:0;
     width: 100%;
     height: 100%;
-    background: rgba(255,255,255,0.7);
+    //background: rgba(255,255,255,0.7);
     z-index: 10;
     overflow: hidden;
     text-align: center;
@@ -653,8 +685,17 @@
     .t-device{
       display: table-cell;
       vertical-align: middle;
-      color: #666666;
-      font-size: 30px;
+      font-size: 25px;
+      text-align: center;
+      .d-text{
+        margin: 0 auto;
+        text-align: center;
+        width: 320px;
+        height: 50px;
+        line-height: 50px;
+        color: #ffffff;
+        background: rgba(0,0,0,0.5);
+      }
     }
   }
   .r-box{

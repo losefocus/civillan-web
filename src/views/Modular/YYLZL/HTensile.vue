@@ -267,8 +267,8 @@
   import Bus from '@/common/eventBus'
   import RthyinfoFormat from '@/common/RthyinfoFormat.js'
 
-  import HProcess from '@/views/Modular/TTensile/HTensile/HProcess.vue'
-  import HTrip from '@/views/Modular/TTensile/HTensile/HTrip.vue'
+  import HProcess from '@/views/Modular/YYLZL/HTensile/HProcess.vue'
+  import HTrip from '@/views/Modular/YYLZL/HTensile/HTrip.vue'
   export default {
     components:{
       HProcess,

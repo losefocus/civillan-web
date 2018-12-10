@@ -17,7 +17,13 @@
      </el-dropdown>
    </div>
    <transition name="fade">
-     <div class="b-device" v-if="noDevice"><div class="t-device">{{typeName}}</div></div>
+     <div class="b-device" v-if="noDevice">
+       <div class="t-device">
+         <div class="d-text">
+           {{typeName}}
+         </div>
+       </div>
+     </div>
    </transition>
    <div class="r-box">
      <div class="t-box">
@@ -26,7 +32,75 @@
      </div>
      <ul class="s-box1">
        <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
-         <device-info :realData="RT_data"></device-info>
+         <div class="i-id">
+           <div v-if="RT_data.pile_describe" class="d-model" :title="RT_data.pile_describe">{{RT_data.pile_describe}}</div>
+           <div v-else class="d-model">暂无作业</div>
+           <ul class="d-kind" v-if="isPile">
+             <li v-for="(list,index) in deviceHead" @click="deviceChange(index)" :key="list" :class="{'deviceActive':index==deviceIndex}" :title="headTitle[index]">{{list}}</li>
+           </ul>
+         </div>
+         <!--<div class="i-start">开始时间：<span>{{ RT_data.start_time/1 | formatDate }}</span></div>-->
+         <div class="i-progress">
+           <div class="i-progressName" style="width: 80px">作业进度：</div>
+           <el-progress :stroke-width="15" :text-inside="true" :percentage="progressNum " color="#24BCF7" style="width: calc(100% - 80px)"></el-progress>
+           <div class="clear"></div>
+         </div>
+         <div class="i-box">
+           <div class="i-body">
+             <div class="i-name">{{deviceName1}}</div>
+             <div class="i-state">
+          <span class="s-title" style="vertical-align: center">
+            {{RT_data.nozzle_sta=='1'?'喷浆中':'未喷浆'}}
+          </span>
+               <div v-if="RT_data.nozzle_sta" :class="{'led-green':RT_data.nozzle_sta=='1','led-gray':RT_data.nozzle_sta==0}"></div>
+               <div v-else class="led-gray"></div>
+             </div>
+           </div>
+           <div class="i-body">
+             <div class="i-company">{{productName}}</div>
+             <div class="i-state">
+          <span class="s-title">
+            <span v-if="RT_data.record_sta==1">记录中</span>
+            <span v-else-if="RT_data.record_sta==2">暂停记录</span>
+            <span v-else-if="RT_data.record_sta==3">记录已完成</span>
+            <span v-else>未记录</span>
+          </span>
+               <div v-if="RT_data.record_sta" :class="{'led-green':RT_data.record_sta==1,'led-skyBlue':RT_data.record_sta==2,'led-blue':RT_data.record_sta==3}"></div>
+               <div v-else class="led-gray"></div>
+             </div>
+           </div>
+         </div>
+         <div class="clear"></div>
+         <div class="clear"></div>
+         <div class="h-box">
+           <div class="b-info">
+             <div class="b-infoName"><span class="iconfont icon-portrait"></span>
+               <span v-if="deviceUserName" class="i-info">{{deviceUserName}}</span>
+               <span v-else class="i-info">未绑定</span>
+             </div>
+             <div class="b-infoCall"><span class="iconfont icon-phonenew"></span>
+               <span v-if="deviceUserPhone" class="i-info">{{deviceUserPhone}}</span>
+               <span v-else class="i-info">暂无联系方式</span>
+             </div>
+           </div>
+           <div class="b-angle" v-if="isAngle">
+             <div class="a-spot"></div>
+           </div>
+         </div>
+         <div class="i-normal" v-if="isWarming">
+           <p>{{isReal}}</p>
+         </div>
+         <div class="i-warning" v-else>
+           <ul class="w-box">
+             <li class="w-list" v-for="item in warmingData" :key="item">
+               <i class="iconfont icon-warming"></i>
+               <div class="w-text">
+                 <p>{{item.message}}</p>
+               </div>
+             </li>
+           </ul>
+
+         </div>
        </li>
        <li class="s-info" :class="{'s-info1':classChange==1}" v-else>
          <div class="d-name">
@@ -72,7 +146,7 @@
                  <div class="progressContainer">
                    <div class="progress" :style="{height:progressHeight}" style="font-size: 12px">
                      <div style="border-bottom: 3px solid #24BCF7;width: 23px;"></div>
-                     <div style="margin-left: 25px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 16px;font-weight: bold;">{{progress}}</span></div>
+                     <div style="margin-left: 25px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 16px;font-weight: bold;">{{isNaN(progress)?0:progress}}</span></div>
                    </div>
                    <span style="margin-left: -25px">0米</span>
                    <span style="position: absolute;bottom: 0;left:-40px;">{{DesignDeep}} 米</span>
@@ -112,19 +186,22 @@
 
 <script>
   import RadialProgressBar from 'vue-radial-progress'
-  import sCurrent from '@/views/Modular/MPile/RState/sCurrent'
-  import sSpeed from '@/views/Modular/MPile/RState/sSpeed'
-  import sFlow from '@/views/Modular/MPile/RState/sFlow'
+  import sCurrent from '@/views/Modular/JBZ/RState/sCurrent'
+  import sSpeed from '@/views/Modular/JBZ/RState/sSpeed'
+  import sFlow from '@/views/Modular/JBZ/RState/sFlow'
   import {formatDate} from '@/common/formatDate.js';
 
   import deviceData from '@/api/device/deviceData'
   import config from '@/api/configure/config.js'
   import deviceConfig from '@/api/device/deviceConfig.js'
 
-  import aSp from '@/views/Modular/MPile/RState/AshPressureCurrent.vue'
-  import pOperation from '@/views/Modular/MPile/RState/pileOperation.vue'
-  import pMap from '@/views/Modular/MPile/RState/pileMap.vue'
-  import deviceInfo from '@/views/Modular/MPile/RState/deviceInfo.vue'
+  import deviceUser from '@/api/device/deviceUser.js'
+  import deviceList from '@/api/project/deviceList'
+
+  import aSp from '@/views/Modular/JBZ/RState/AshPressureCurrent.vue'
+  import pOperation from '@/views/Modular/JBZ/RState/pileOperation.vue'
+  import pMap from '@/views/Modular/JBZ/RState/pileMap.vue'
+  import deviceInfo from '@/views/Modular/JBZ/RState/deviceInfo.vue'
   import { mapActions , mapState} from 'vuex'
 export default {
   name: "runningState",
@@ -153,7 +230,7 @@ export default {
       angelWidth:0,
       noDevice:false,
       deviceHead:[],
-      deviceIndex:1,
+      deviceIndex:0,
       deviceName:[
         {name:'NB-001'},{name:'NB-002'},{name:'NB-003'}
       ],
@@ -190,10 +267,27 @@ export default {
       historyData:[],
       isConctrol:false,
 
-      controlHead:1,
+      controlHead:0,
       historyRT:[],
 
       typeName:'',
+
+      headTitle:[],
+
+      //deviceInfo
+      productName:'',
+      deviceName1:'',
+      deviceUserName:'',
+      deviceUserPhone:'',
+      isWarming:true,//未发现问题显示
+      warmingData:[],
+      isAngle:false,
+      timer2:null,
+      deviceType:{},
+      isReal:'',
+      isPile:false,  //是否是攪拌桩
+      deviceInfo1:{},
+      workState:{},
     }
   },
   props:['dialogFullScreen','deviceKey','isClose','clientWidth','isDevice'],
@@ -208,12 +302,6 @@ export default {
     ...mapState({token:state=>state.project.backTab})
   },
   created(){
-    this.$bus.on('deviceHead',res=>{
-      this.controlHead=res;
-      let deviceKey=this.$store.state.project.deviceKey;
-      this.getData(deviceKey);
-      this.historyReal();
-    });
 
     this.historyReal();
     this.changeData()
@@ -234,10 +322,81 @@ export default {
 
 
 
+    //切换设备头
+    deviceChange(index){
+      this.deviceIndex=index;
+      this.controlHead=index;
+      let deviceKey=this.$store.state.project.deviceKey;
+      this.getData(deviceKey);
+      this.historyReal();
+    },
+
+
+    //报警信息
+    getAlarms(key){
+      if(key){
+        deviceData.alarms({'key':key}).then(res=>{
+          if(res.success){
+            if(res.result.length>0){
+              this.isWarming=false;
+              this.warmingData=res.result
+            }else{
+              this.isWarming=true;
+            }
+          }else{
+            this.isWarming=true
+          }
+        }).catch(e=>{
+
+        })
+      }else{
+      }
+
+    },
+
+
+    //获取设备信息
+    getInfo(key){
+      deviceList.list({key:key}).then(res=>{
+        let data=res.result.items[0];
+        //设备类型
+        let headNum=key.substring(3,4);
+        if(Number(headNum)>1){
+          for(let i=1;i<=Number(headNum);i++){
+            this.deviceHead.push(i);
+          }
+        }
+        if(headNum<=1){
+          this.isPile=false;
+        }else{
+          if(this.$store.state.project.changeTab==true){
+            this.isPile=false;
+          }else{
+            this.isPile=true;
+          }
+        }
+
+        this.productName=data.product.name;
+        this.deviceName1=data.name;
+        deviceUser.list({device_id:data.id}).then(res=>{
+          if(res.success){
+            if(res.result.total){
+              this.deviceUserName=res.result.items[0].projectUser.name;
+              this.deviceUserPhone=res.result.items[0].projectUser.phone;
+            }
+          }
+        })
+
+      }).catch(e=>{
+
+      })
+    },
+
     closeTab(){
       this.$store.dispatch('incrementTab',false);
     },
     //设备信息
+
 
     //遮罩
     getDeviceState(){
@@ -250,7 +409,14 @@ export default {
     },
     //历史数据和实时数据的切换
     changeData(){
+      let key='';
       if(this.$store.state.project.changeTab==true){
+        this.isReal='历史回放中';
+        this.isPile=false;
+        key=this.$store.state.project.historyKey;
+
+        this.getInfo(key);
+
         this.getHistory();
         this.isConctrol=true;
         clearInterval(this.timer1);
@@ -258,17 +424,21 @@ export default {
           this.playBack()
         }, this.timeSpeed);
       }else{
-
+        this.isReal='设备正常运行中';
         this.isConctrol=false;
-        let deviceKey=this.$store.state.project.deviceKey;
-
+        key=this.$store.state.project.deviceKey;
+        this.getInfo(key);
         this.deviceInfo1=JSON.parse(sessionStorage.getItem('deviceInfo'));
         if(this.deviceInfo1){
           if(this.deviceInfo1.status==11){
             this.noDevice=false;
-            this.getData(deviceKey);
+            this.getData(key);
             this.timer1=setInterval(()=>{
-              this.getData(deviceKey);
+              this.getData(key);
+            },3000);
+            this.getAlarms(key);
+            this.timer2=setInterval(()=>{
+              this.getAlarms(key)
             },3000);
           }else if(this.deviceInfo1.status==0){
             this.typeName='该设备未激活';
@@ -287,6 +457,8 @@ export default {
           }
         }
       }
+
+
     },
 
     //历史回放
@@ -331,10 +503,8 @@ export default {
     getHistory(){
       let replayData=sessionStorage.getItem('replayData');
       let post_data=JSON.parse(replayData);
-      console.log(post_data);
       deviceData.replay(post_data).then(res=>{
         this.historyData=res.result;
-        console.log(res.result);
       }).catch(e=>{
 
       })
@@ -377,13 +547,13 @@ export default {
             }
             let array = [];
             for(let i=0;i<headNum;i++){
-              let obj={}
+              let obj={};
               for(let j=0;j<arr.length;j++){
                 obj[arr[j]] = i==0?rawData[arr[j]]:rawData[arr[j]+(i+1)]
               }
               array.push(obj)
             }
-            historyData.push(Object.assign(array[Number(this.controlHead)-1],commonObj))
+            historyData.push(Object.assign(array[Number(this.controlHead)],commonObj))
           }else{
             historyData.push(item);
           }
@@ -401,6 +571,7 @@ export default {
           let headNum=Number(this.$store.state.project.deviceKey.substring(3,4));
           if(headNum>1){
             let rawData=res.result;
+
             let arr=['expand_sta','nozzle_sta','par_ash','par_slurry','pile_describe','pile_id','process_type','rcurrent'
               ,'rdeep','rdensity','rdip_angle','record_sta','rflow','rlatitude','rlongitude','rpipe_sta','rpressure','rspeed'];
             let commonObj={'depth_design':'','device_key':'','machine_key':'','real_time':'','start_time':'','status':''};
@@ -413,28 +584,32 @@ export default {
               }
             }
             let array = [];
+            let headTitle=[];
             for(let i=0;i<headNum;i++){
-              let obj={}
+              let obj={};
               for(let j=0;j<arr.length;j++){
                 obj[arr[j]] = i==0?rawData[arr[j]]:rawData[arr[j]+(i+1)]
               }
-              array.push(obj)
+              array.push(obj);
+              headTitle.push(array[i].pile_describe)
             }
-            this.RT_data= Object.assign(array[Number(this.controlHead)-1],commonObj);
+            if(headTitle!=this.headTitle){
+              this.headTitle=headTitle;
+            }
+            this.RT_data= Object.assign(array[Number(this.controlHead)],commonObj);
             this.RT_data.depth_design=this.DesignDeep;
-            this.progress=Number(this.RT_data.rdeep).toFixed(2);
+            this.progress=Math.abs(Number(this.RT_data.rdeep).toFixed(2));
             this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
           }else{
             this.RT_data= res.result;
             this.RT_data.depth_design=this.DesignDeep;
-            this.progress=Number(this.RT_data.rdeep).toFixed(2);
+            this.progress=Math.abs(Number(this.RT_data.rdeep).toFixed(2));
             this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
           }
 
           if(this.config_post_data!=res.result.pile_describe){
             this.config_post_data=res.result.pile_describe;
           }
-
         }else {
           this.progressHeight='100%';
         }
@@ -468,10 +643,6 @@ export default {
       },100);
     },
 
-    //切换设备
-    deviceChange(index){
-      this.deviceIndex=index;
-    },
 
     //子组件的自适应
     temp(isDialog,diameter,that,clientWidth) {
@@ -649,8 +820,17 @@ export default {
     .t-device{
       display: table-cell;
       vertical-align: middle;
-      color: #666666;
-      font-size: 30px;
+      font-size: 25px;
+      text-align: center;
+      .d-text{
+        margin: 0 auto;
+        text-align: center;
+        width: 320px;
+        height: 50px;
+        line-height: 50px;
+        color: #ffffff;
+        background: rgba(0,0,0,0.5);
+      }
     }
   }
   .r-box{
@@ -699,6 +879,260 @@ export default {
         padding:0 20px;
         background:rgba(255,255,255,1);
         box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+
+        .deviceActive{
+          font-size:20px;
+          background: #24BCF7;
+          color:#ffffff !important;
+          border: 1px solid #24BCF7 !important;
+        }
+        .i-id{
+          font-size: 20px;
+          color: rgba(218,218,218,1);
+          width:100%;
+          height: 8%;
+          min-height: 20px;
+          margin-top: 10%;
+          overflow: hidden;
+          .d-model{
+            float: left;
+            width: 60%;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .d-kind{
+            float: right;
+            width: 30%;
+            min-width: 60px;
+            li{
+              cursor: pointer;
+              width: 20px;
+              height: 20px;
+              text-align: center;
+              line-height: 20px;
+              margin-left: 10px;
+              float: left;
+              border-radius: 50%;
+              border: 1px solid #90A4B7;
+              font-size: 12px;
+              color: #90A4B7;
+            }
+          }
+        }
+        .i-box{
+          height: 20%;
+          .i-body{
+            width: 100%;
+            height: 40%;
+            .i-name{
+              float: left;
+              font-size:15px;
+              color:rgba(51,51,51,1);
+              font-weight: bold;
+            }
+            .i-company{
+              float: left;
+              font-size:10px;
+              color:#999999;
+            }
+            .i-state{
+              float: right;
+              font-size:10px;
+              color:#999999;
+              .led-green{
+                vertical-align: middle;
+                display: inline-block;
+                background-color: #00ff00;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #26c702;
+                -moz-box-shadow: 0px 0px 2px 4px #26c702;
+                -webkit-box-shadow: 0px 0px 2px 4px #26c702;
+                border-radius: 50%;
+              }
+              .led-gray{
+                display: inline-block;
+                background-color: #c1c1c1;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #858585;
+                -moz-box-shadow: 0px 0px 2px 4px #858585;
+                -webkit-box-shadow: 0px 0px 2px 4px #858585;
+                border-radius: 50%;
+              }
+              .led-skyBlue{
+                display: inline-block;
+                background-color: #f7ef8a;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #ffaa17;
+                -moz-box-shadow: 0px 0px 2px 4px #ffaa17;
+                -webkit-box-shadow: 0px 0px 2px 4px #ffaa17;
+                border-radius: 50%;
+              }
+              .led-blue{
+                display: inline-block;
+                background-color: #12E7FF;
+                width: 6px;
+                height: 6px;
+                box-shadow: 0px 0px 2px 4px #31C4F7;
+                -moz-box-shadow: 0px 0px 2px 4px #31C4F7;
+                -webkit-box-shadow: 0px 0px 2px 4px #31C4F7;
+                border-radius: 50%;
+              }
+              .s-title{
+                vertical-align: middle;
+                margin-right: 10px;
+              }
+            }
+            .icon-portrait{
+              color: #787F87;
+            }
+            .icon-phonenew{
+              color: #787F87;
+            }
+          }
+          .icon-state{
+            font-size: 12px;
+            color: #24BCF7;
+          }
+        }
+        .h-box{
+          width: 100%;
+          height: 20%;
+          overflow: hidden;
+          .b-info{
+            float: left;
+            width: 60%;
+            height: 80%;
+
+            .i-infoName{
+              margin-left: 10px;
+            }
+            .b-infoName{
+              height: 50%;
+              .i-info{
+                margin-left: 10px;
+                color: #999999;
+              }
+            }
+            .b-infoCall{
+              height: 50%;
+              .i-info{
+                margin-left: 10px;
+                color: #999999;
+              }
+            }
+            /*.icon-portrait{
+              color: #787F87;
+            }
+            .icon-phonenew{
+              color: #787F87;
+            }*/
+          }
+          .b-angle{
+            float: right;
+            width: 60px;
+            height: 60px;
+            background: url("../../../assets/RState/angle.png") no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+            .a-spot{
+              position: absolute;
+              width: 5px;
+              height: 5px;
+              border-radius: 50%;
+              left: 27px;
+              top: 26px;
+              background: red;
+            }
+          }
+        }
+        .i-progress{
+          width: 100%;
+          margin-top: 2%;
+          height: 12%;
+          overflow: hidden;
+          div{
+            float: left;
+          }
+          .i-progressName{
+            color: #999999
+          }
+        }
+        .i-normal{
+          width:100%;
+          text-align: center;
+          height:15%;
+          background:rgba(141,232,240,0.06);
+          padding-top: 13%;
+        }
+        .i-warning{
+          width:calc(100% - 40px);
+          padding: 10px 20px;
+          height:calc(25% - 20px);
+          background:rgba(248,89,89,0.06);
+          overflow: auto;
+          .w-box{
+            .w-list{
+              margin-top: 5px;
+              .icon-warming{
+                vertical-align: top;
+                color: #DF2A2A;
+              }
+              .w-text{
+                margin-left: 10px;
+                max-width: 80%;
+                vertical-align: top;
+                display: inline-block;
+                text-align: left;
+              }
+            }
+          }
+
+        }
+
+        .d-name{
+          margin-top: 20px;
+          span{
+            margin-left: 5%;
+            font-size: 16px;
+            font-weight: bold;
+          }
+        }
+        .d-box{
+          height: 60%;
+
+          div{
+            margin-top: 50px;
+            float: left;
+            text-align: center;
+            width: 33%;
+          }
+          .d-key{
+            font-size: 14px;
+            color: #666666;
+          }
+          .d-value{
+            margin-top: 10px;
+            font-weight: bold;
+            height: 30px;
+            font-size: 25px;
+            color: #333333;
+          }
+          .d-value1{
+            margin-top: 10px;
+            font-weight: bold;
+            height: 30px;
+            font-size: 25px;
+            color: #333333;
+          }
+        }
+
         .deviceActive{
           font-size:20px;
           background: #24BCF7;
