@@ -83,7 +83,7 @@
                <span v-else class="i-info">暂无联系方式</span>
              </div>
            </div>
-           <div class="b-angle" v-if="isAngle">
+           <div class="b-angle">
              <div class="a-spot"></div>
            </div>
          </div>
@@ -457,8 +457,6 @@ export default {
           }
         }
       }
-
-
     },
 
     //历史回放
@@ -1038,7 +1036,7 @@ export default {
             float: right;
             width: 60px;
             height: 60px;
-            background: url("../../../assets/RState/angle.png") no-repeat;
+            background: url("../../../assets/Modular/JBZ/RState/angle.png") no-repeat;
             background-size: 100% 100%;
             position: relative;
             .a-spot{

@@ -108,7 +108,7 @@
                 fontSize:'12'
               }
             }],
-            color:'rgba(31,189,238,0.2)',
+            color:'rgba(223,223,223,1)',
             series: [{
               name: 'loading',
               type: 'pie',

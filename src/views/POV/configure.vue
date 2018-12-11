@@ -50,7 +50,7 @@
               label="类型"
               min-width="80">
               <template slot-scope="scope">
-                <span style="white-space:nowrap;">{{ typeMap.get(scope.row.typeId) }}</span>
+                <span style="white-space:nowrap;">{{typeMap.get(scope.row.typeId)}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -278,7 +278,7 @@
       this.getParamsList();
     },
     mounted(){
-      this.getList(this.post_data)
+
     },
     methods:{
       handleSelectionChange(val) {
@@ -367,7 +367,7 @@
         this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
           let list = res.result.items;
-          this.navList=res.result.items
+          this.navList=res.result.items;
           this.typeOptions = list.map(item => {
             return { value: item.id, label: item.name };
           });
@@ -375,6 +375,7 @@
           for (let i=0; i<list.length; i++) {
             this.typeMap.set(list[i].id,list[i].name)
           }
+          this.getList(this.post_data)
         })
       },
       changeTab(list,index){ //切换tab
@@ -616,7 +617,7 @@
       text-align: center;
       line-height: 30px;
       background: #FFFFFF;
-      color: #cccccc;
+      color: #999999;
       border:1px solid #cccccc;
       margin-left: -1px;
     }
