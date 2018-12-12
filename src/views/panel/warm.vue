@@ -1,7 +1,7 @@
 <template>
     <div style="width: 100%;height: 100%;">
         <div class="warm_tit">
-            <i class="iconfont icon-warm"></i>
+            <i class="iconfont icon-alarm1"></i>
             预警分布
         </div>
         <div id="warm"></div>
@@ -94,7 +94,7 @@ export default {
     top: 20px;
     left:25px;
 }
-.icon-warm{
+.icon-alarm1{
     font-size:20px;
     font-weight:100;
     padding-right:20px;

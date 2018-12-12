@@ -1,7 +1,7 @@
 <template>
     <div style="width: 100%;height: 100%;">
         <div class="device_tit">
-            <i class="iconfont icon-device"></i>
+            <i class="iconfont icon-quanbushebei"></i>
             设备统计
         </div>
         <div id="device"></div>
@@ -127,7 +127,7 @@ export default {
     line-height:28px;
     height: 28px;
 }
-.icon-device{
+.icon-quanbushebei{
     font-size:20px;
     font-weight:100;
     padding-right:20px;

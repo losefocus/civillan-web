@@ -1,13 +1,13 @@
 <template>
     <div class="panel">
         <div class="top">
-            <div class="pull-left weather">
-                <i class="iconfont icon-clock" style="padding-right:10px;"></i>
+            <div class="weather" style="float:left">
+                <i class="iconfont icon-shizhong" style="padding-right:10px;"></i>
                 <span style="padding-right:10px">{{time.date}}</span>
                 <span style="padding-right:10px">{{time.hour}}</span>
                 <span>{{time.day}}</span>
             </div>
-            <div class="pull-right tips">
+            <div class="tips" style="float:right">
                 <marquee>热烈欢迎xxx公司领导一行莅临指导工作</marquee>
             </div>
         </div>
@@ -92,6 +92,7 @@ export default {
 .panel{
     height: 1080px;
     width: 1920px;
+    color:#fff;
     background: url(../../assets/bg.png)no-repeat center
 }
 .top{
@@ -100,9 +101,6 @@ export default {
     line-height: 65px;
     padding: 65px 25px 0;
     overflow: hidden;
-}
-.weather{
-
 }
 .tips{
     width: 540px;

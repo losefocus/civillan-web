@@ -61,6 +61,10 @@ export default {
 .com{
     color: #CED2E8;
     line-height: 23px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 7;
+    overflow: hidden;
 }
 .org{
     position: absolute;

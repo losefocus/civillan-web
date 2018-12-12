@@ -1,7 +1,7 @@
 <template>
     <div style="width: 100%;height: 100%;">
         <div class="work_tit">
-            <i class="iconfont icon-work"></i>
+            <i class="iconfont icon-zuoyechengxiao"></i>
             作业统计
         </div>
         <div id="work"></div>
@@ -106,7 +106,7 @@ export default {
     line-height:28px;
     height: 28px;
 }
-.icon-work{
+.icon-zuoyechengxiao{
     font-size:20px;
     font-weight:100;
     padding-right:20px;
