@@ -1489,7 +1489,7 @@
           'height: 20px;' +
           ' }' +
           '</style>' +
-          '</head><body ><table class="excelTable">{table}</table></body></html>';
+          '</head><body ><table class="excelTable" border="1">{table}</table></body></html>';
         if (!tableid.nodeType) tableid = document.getElementById(tableid);
         let ctx;
         if(tableid){
