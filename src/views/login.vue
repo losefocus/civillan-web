@@ -1,5 +1,4 @@
 <template>
-  <!--登录-->
   <div style="height: 100%">
     <el-container style="height: 100%;">
       <div class="l-bg" :style="{backgroundImage: 'url(' + groupImg + ')' }">
