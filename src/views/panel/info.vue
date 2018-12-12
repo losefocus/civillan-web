@@ -26,8 +26,6 @@
     </div>
 </template>
 <script>
-import info from "@/api/panel/index";
-
 export default {
     data(){
         return{
@@ -35,33 +33,15 @@ export default {
         }
     },
     components:{
-        
+
     },
     created(){
 
     },
     mounted(){
-        this.getInfo()
     },
     methods:{
-        getInfo(){
-            this.loading = true
-            let data = {
-                project_id:15
-            }
-            info.info(data).then(res => {
-                this.info = res.data.result
-                let nowTm = Math.round(new Date().getTime()/1000)
-                this.percentage = (nowTm > this.info.endAt)?100:Math.round((nowTm - this.info.beginAt) / (this.info.endAt - this.info.beginAt) * 100)
-                let OList = res.data.result.organTypeList
-                OList.forEach(ele => {
-                    ele.organList.forEach(elm => {
-                        this.organList.push({organName:ele.name,contact:elm.contact,name:elm.name,phone:elm.phone,})
-                    })
-                });
-                this.loading = false
-            })
-        },
+
     },
     watch:{
 

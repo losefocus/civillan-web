@@ -35,6 +35,13 @@
     <!--<span class="p-name">项目地图</span>-->
   </router-link>
 
+  <router-link to="/panel" class="p-box hd-right" style="margin-right: 40px;">
+    <el-tooltip class="item" effect="dark" content="项目大屏" placement="bottom">
+      <i class="iconfont icon-touping" style="font-size: 30px;color: #666666;"></i>
+    </el-tooltip>
+    <!--<span class="p-name">项目地图</span>-->
+  </router-link>
+
   <el-dialog
     :visible.sync="isOut"
     width="30%">

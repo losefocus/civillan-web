@@ -76,7 +76,7 @@ export default {
 
     },
     mounted(){
-        
+
     },
     methods:{
         getTimes(){
@@ -92,7 +92,7 @@ export default {
 .panel{
     height: 1080px;
     width: 1920px;
-    background: url(../assets/bg.png)no-repeat center
+    background: url(../../assets/bg.png)no-repeat center
 }
 .top{
     height:65px;
@@ -102,7 +102,7 @@ export default {
     overflow: hidden;
 }
 .weather{
-    
+
 }
 .tips{
     width: 540px;

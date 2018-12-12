@@ -17,6 +17,12 @@ const vRouter = new VueRouter({
       component: resolve => require(['@/views/login'],resolve),
     },
     {
+      path: '/panel',
+      name: '项目大屏',
+      meta: {requireAuth: true},
+      component: resolve => require(['@/views/panel'],resolve),
+    },
+    {
       path: '/ProjectOverview',
       name: '项目首页',
       redirect:"/project",

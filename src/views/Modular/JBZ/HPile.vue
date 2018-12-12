@@ -1305,7 +1305,7 @@
                   let date = new Date(lists*1000);
                   lists=formatDate(date, 'MM-dd hh:mm')
                 }else if(key=='pile_describe'||key=='rate'){
-                  lists=Math.abs(lists);
+
                 }else if(key=='depth'){
                   allDepth+=lists
                 }else if(key=='cumulative_pulp'){
@@ -1340,7 +1340,7 @@
             this.statisticsReport.machine_key=this.multipleSelection[0].machine_key;
 
             setTimeout(()=>{
-              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
+              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'-统计报表')
             },200);
 
             //引用赋值  用完清空

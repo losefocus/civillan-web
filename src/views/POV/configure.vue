@@ -639,7 +639,7 @@
   }
   .j-box{
     //margin-top: 15px;
-    height: calc(100% - 15px);
+    height: 780px;
     overflow: hidden;
     .j-table{
       float: left;
@@ -669,7 +669,7 @@
     }
     .j-add{
       float: right;
-      height: calc( 100% - 40px );
+      height: 780px;
       padding: 20px;
       width: calc(45% - 100px);
       background: #ffffff;
