@@ -1,4 +1,3 @@
-
 const vRouter = new VueRouter({
   routes: [
     {

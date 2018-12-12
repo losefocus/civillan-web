@@ -564,7 +564,7 @@
     height: calc(100% - 90px);
     background: #f5f5f9;
   }
-  @media screen and (max-width: 1467px){
+  /*@media screen and (max-width: 1467px){
     .n-box{
       padding: 20px;
       height: auto;
@@ -572,13 +572,14 @@
       .j-box{
         .j-table{
           height: 620px;
+          overflow: auto;
         }
         .j-add{
           height: 620px;
         }
       }
     }
-  }
+  }*/
   .vfl-label {
     text-transform: uppercase;
   }
