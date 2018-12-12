@@ -755,7 +755,7 @@
     },
     data() {
       return {
-        /*pickerOptions0: {
+       /* pickerOptions0: {
 
         },
         pickerOptions1: {
@@ -763,8 +763,7 @@
             if(this.value5==''){
               this.$message.error('没有输入开始时间')
             }else{
-              console.log(time.getTime());
-              return time.getTime() <= this.value5;
+              return time.getTime() <= (this.value5 - 3600 * 1000 * 24);
             }
           }
         },

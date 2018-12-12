@@ -314,6 +314,7 @@ export default {
     this.closeTab();
     clearInterval(this.timer);
     clearInterval(this.timer1);
+    clearInterval(this.timer2);
   },
 
   methods:{
@@ -502,7 +503,8 @@ export default {
       let replayData=sessionStorage.getItem('replayData');
       let post_data=JSON.parse(replayData);
       deviceData.replay(post_data).then(res=>{
-        this.historyData=res.result;
+        console.log(res);
+        this.historyData=res.result[0].realtimeObjectList;
       }).catch(e=>{
 
       })
