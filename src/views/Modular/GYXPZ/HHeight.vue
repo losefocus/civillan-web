@@ -42,6 +42,21 @@
             :value="item.value2">
           </el-option>
         </el-select>
+
+        <!--<el-date-picker
+          v-model="value5"
+          type="datetime"
+          size="mini"
+          placeholder="开始日期">
+        </el-date-picker>
+        <el-date-picker
+          v-model="value6"
+          type="datetime"
+          size="mini"
+          placeholder="结束日期"
+          :picker-options="pickerOptions1">
+        </el-date-picker>-->
+
         <el-date-picker
           size="mini"
           v-model="value7"
@@ -100,7 +115,7 @@
         <td colspan="2">{{ statisticsReport.end_time }}</td>
       </tr>
 
-            </thead>
+      </thead>
       <tbody>
       <tr v-for="item in statisticsData">
         <td v-for="i in item">{{i}}&nbsp;</td>
@@ -253,155 +268,155 @@
               <td>{{item.p_current  | formatZ}}&nbsp;</td>
               <td>{{item.p_pressure  | formatZ}}&nbsp;</td>
               <td>{{Math.abs(Math.round(item.p_down_speed))}}&nbsp;</td>
-        <td>
-          <span v-if="item.p_down_speed >= 0">下钻</span>
-          <span v-else>提钻</span>
-        </td>
-      </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-        <td colspan="2">成桩总时间(s)：</td>
-        <td colspan="2">{{recordReport.p_allTime}}</td>
-        <td colspan="2">最大斜度：</td>
-        <td colspan="2">{{props.row.max_slope | formatZ}}&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="2">往复深度1（m）:</td>
-        <td colspan="2">65.0</td>
-        <td colspan="2">往复深度2（m）:</td>
-        <td colspan="2">1.1-1.4</td>
-      </tr>
-      <tr>
-        <td colspan="2">累计浆量（L）：</td>
-        <td colspan="2">{{props.row.cumulative_pulp | formatZ}}&nbsp;</td>
-        <td colspan="2">累计灰量（kg）：</td>
-        <td colspan="2">{{props.row.cumulative_ash | formatZ}}&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="2">最大电流（A）:</td>
-        <td colspan="2">{{props.row.max_current | formatZ}}&nbsp;</td>
-        <td colspan="2">平均灰量（kg/m）： </td>
-        <td colspan="2">{{props.row.average_ash | formatZ}}&nbsp;0</td>
-      </tr>
-      <tr>
-        <td colspan="2">最大提速（cm/min）：</td>
-        <td colspan="2">{{Math.abs(Math.round(props.row.max_up_speed))}}&nbsp;</td>
-        <td colspan="2">最大钻速（cm/min）：</td>
-        <td colspan="2">{{Math.abs(Math.round(props.row.max_down_speed))}}&nbsp;</td>
-      </tr>
-      <tr>
-        <td colspan="2">操作人员：</td>
-        <td colspan="2"></td>
-        <td colspan="2">技术人员：</td>
-        <td colspan="2"></td>
-      </tr>
-      <tr>
-        <td colspan="2">现场监理：</td>
-        <td colspan="2"></td>
-        <td colspan="2">打印时间：</td>
-        <td colspan="2"></td>
-      </tr>
-      </tfoot>
-    </table>
+              <td>
+                <span v-if="item.p_down_speed >= 0">下钻</span>
+                <span v-else>提钻</span>
+              </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="2">成桩总时间(s)：</td>
+              <td colspan="2">{{recordReport.p_allTime}}</td>
+              <td colspan="2">最大斜度：</td>
+              <td colspan="2">{{props.row.max_slope | formatZ}}&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">往复深度1（m）:</td>
+              <td colspan="2">65.0</td>
+              <td colspan="2">往复深度2（m）:</td>
+              <td colspan="2">1.1-1.4</td>
+            </tr>
+            <tr>
+              <td colspan="2">累计浆量（L）：</td>
+              <td colspan="2">{{props.row.cumulative_pulp | formatZ}}&nbsp;</td>
+              <td colspan="2">累计灰量（kg）：</td>
+              <td colspan="2">{{props.row.cumulative_ash | formatZ}}&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">最大电流（A）:</td>
+              <td colspan="2">{{props.row.max_current | formatZ}}&nbsp;</td>
+              <td colspan="2">平均灰量（kg/m）： </td>
+              <td colspan="2">{{props.row.average_ash | formatZ}}&nbsp;0</td>
+            </tr>
+            <tr>
+              <td colspan="2">最大提速（cm/min）：</td>
+              <td colspan="2">{{Math.abs(Math.round(props.row.max_up_speed))}}&nbsp;</td>
+              <td colspan="2">最大钻速（cm/min）：</td>
+              <td colspan="2">{{Math.abs(Math.round(props.row.max_down_speed))}}&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">操作人员：</td>
+              <td colspan="2"></td>
+              <td colspan="2">技术人员：</td>
+              <td colspan="2"></td>
+            </tr>
+            <tr>
+              <td colspan="2">现场监理：</td>
+              <td colspan="2"></td>
+              <td colspan="2">打印时间：</td>
+              <td colspan="2"></td>
+            </tr>
+            </tfoot>
+          </table>
 
-    <div  class="expand_head">
-      <ul class="expand_tab">
-        <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">段数据列表</li>
-        <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="getChart(props.row)">图表曲线</li>
-      </ul>
-      <div class="exportExcel" :download="filename" id="excelOut" @click="recordExcel">记录报表下载</div>
-    </div>
-    <el-table
-      v-if="isActive==1"
-      header-cell-class-name="history-header"
-      header-row-class-name="h-header"
-      header-align="center"
-      border
-      max-height="500"
-      :data="props.row.data"
-      style="width: 100%">
-      <el-table-column
-        align="center"
-        prop="part_id"
-        label="序号"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="段浆量（L）">
-        <template slot-scope="props">
-          {{ props.row.p_pulp | formatZ}}
+          <div  class="expand_head">
+            <ul class="expand_tab">
+              <li class="expand_list_tab" :class="{Action:isActive==1}" @click="isActive=1">段数据列表</li>
+              <li class="expand_overview_tab" :class="{Action:isActive==2}" @click="getChart(props.row)">图表曲线</li>
+            </ul>
+            <div class="exportExcel" :download="filename" id="excelOut" @click="recordExcel">记录报表下载</div>
+          </div>
+          <el-table
+            v-if="isActive==1"
+            header-cell-class-name="history-header"
+            header-row-class-name="h-header"
+            header-align="center"
+            border
+            max-height="500"
+            :data="props.row.data"
+            style="width: 100%">
+            <el-table-column
+              align="center"
+              prop="part_id"
+              label="序号"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="段浆量（L）">
+              <template slot-scope="props">
+                {{ props.row.p_pulp | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="段灰量（kg）"
+              align="center">
+              <template slot-scope="props">
+                {{ props.row.p_total_ash | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="段深度（m）">
+              <template slot-scope="props">
+                {{ props.row.p_deep / 100 | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="段电流（A）">
+              <template slot-scope="props">
+                {{ props.row.p_current | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="段密度（g/cm³）">
+              <template slot-scope="props">
+                {{ props.row.p_density | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="段喷压（MPa）">
+              <template slot-scope="props">
+                {{ props.row.p_pressure | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="速度（cm/min）">
+              <template slot-scope="props">
+                {{ Math.abs(props.row.p_down_speed) | formatZ}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="段时长（s）">
+              <template slot-scope="props">
+                {{ Math.abs(props.row.p_time)}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="状态">
+              <template slot-scope="props">
+                <span v-if="props.row.p_down_speed >= 0">下钻</span>
+                <span v-else>提钻</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div v-else>
+            <ul class="expand_charts">
+              <li  v-if="isActive==2"><chart :options="option1" :auto-resize=true></chart></li>
+              <li  v-if="isActive==2" style="margin-left: 20px"><chart :options="option2" :auto-resize=true></chart></li>
+              <li  v-if="isActive==2" style="margin-top: 20px"><chart :options="option3" :auto-resize=true></chart></li>
+              <li  v-if="isActive==2" style="margin: 20px 0 0 20px"><chart :options="option4" :auto-resize=true></chart></li>
+            </ul>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="段灰量（kg）"
-        align="center">
-        <template slot-scope="props">
-          {{ props.row.p_total_ash | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="段深度（m）">
-        <template slot-scope="props">
-          {{ props.row.p_deep / 100 | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="段电流（A）">
-        <template slot-scope="props">
-          {{ props.row.p_current | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="段密度（g/cm³）">
-        <template slot-scope="props">
-          {{ props.row.p_density | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="段喷压（MPa）">
-        <template slot-scope="props">
-          {{ props.row.p_pressure | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="速度（cm/min）">
-        <template slot-scope="props">
-          {{ Math.abs(props.row.p_down_speed) | formatZ}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="段时长（s）">
-        <template slot-scope="props">
-          {{ Math.abs(props.row.p_time)}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="状态">
-        <template slot-scope="props">
-          <span v-if="props.row.p_down_speed >= 0">下钻</span>
-          <span v-else>提钻</span>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div v-else>
-      <ul class="expand_charts">
-        <li  v-if="isActive==2"><chart :options="option1" :auto-resize=true></chart></li>
-        <li  v-if="isActive==2" style="margin-left: 20px"><chart :options="option2" :auto-resize=true></chart></li>
-        <li  v-if="isActive==2" style="margin-top: 20px"><chart :options="option3" :auto-resize=true></chart></li>
-        <li  v-if="isActive==2" style="margin: 20px 0 0 20px"><chart :options="option4" :auto-resize=true></chart></li>
-      </ul>
-    </div>
-  </template>
-</el-table-column>
       <el-table-column
         type="selection"
         min-width="30">
@@ -417,7 +432,7 @@
             placement="right-start"
             title="作业设计参数"
             trigger="click"
-            >
+          >
             <div v-if="noConfig" style="color:#999999">未找到当前作业的设计参数</div>
             <ul v-else v-for="(list,index) in config_data" :key="index">
               <li><span class="c-name">{{list.name}}</span> : <span class="c-key">{{list.value}}</span></li>
@@ -740,6 +755,7 @@
     },
     data() {
       return {
+
         nPile:nPile,
         tPile:tPile,
 
@@ -787,11 +803,10 @@
         value1:'', // 全部桩选定值
         value2:'',// 评分等级选定值
         deviceSelect2:[
-          {value2:[80,100],name:'A (80-100)'},
-          {value2:[70,80],name:'B (70-80)'},
-          {value2:[60,70],name:'C (60-70)'},
-          {value2:[50,60],name:'D (50-60)'},
-          {value2:[40,50],name:'E (40-50)'},
+          {value2:[95,100],name:'A [95-100]'},
+          {value2:[75,94],name:'B [75-95)'},
+          {value2:[60,74],name:'C [60-75)'},
+          {value2:[0,59],name:'D [0-60)'},
         ],// 评分等级选定值
         value7:'',// 时间选定值
 
@@ -1291,9 +1306,6 @@
 
               list.push(obj);
             });
-            console.log(allDepth);
-            console.log(cumulative_pulp/allDepth);
-            console.log(cumulative_ash/allDepth);
 
             this.statisticsReport.allDepth=allDepth;
             this.statisticsReport.total=list.length;
@@ -1373,8 +1385,6 @@
             this.statisticsReport.begin_time=list[list.length-1].begin_time;
             this.statisticsReport.end_time=list[0].begin_time;
             this.statisticsReport.machine_key=res.result.items[0].machine_key;
-
-            console.log(this.statisticsReport);
 
             //引用赋值  用完清空
             this.tableHeader=[];
@@ -1497,7 +1507,6 @@
 
           try {
             let fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
-            console.log(fname);
           } catch (e) {
             print("Nested catch caught " + e);
           } finally {
@@ -1675,7 +1684,7 @@
           }else{
             let num=0;
             item.forEach(i=>{
-                num+=i.p_pulp;
+              num+=i.p_pulp;
             });
             num=num.toFixed(2);
             deepPulp.push([num,item[0].p_deep/100]);
@@ -1725,7 +1734,6 @@
       //统计总数
       getRecords(post_data){
         history.records(post_data).then(res=>{
-          console.log(res);
           this.recordSum=res.result[0];
         })
       },

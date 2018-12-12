@@ -12,11 +12,11 @@
 
 <script>
   import deviceGrouping from '@/api/project/deviceGrouping'
-  import RState from '@/views/Modular/MPile/RState'
-  import FConcrete from '@/views/Modular/FConcrete/FConcrete'
-  import SCuring from '@/views/Modular/SCuring/SCuring'
-  import TTensile from '@/views/Modular/TTensile/TTensile'
-  import PGrouting from '@/views/Modular/PGrouting/PGrouting'
+  import RState from '@/views/Modular/JBZ/RState'
+  import FConcrete from '@/views/Modular/PMHNT/FConcrete'
+  import SCuring from '@/views/Modular/PNYH/SCuring'
+  import TTensile from '@/views/Modular/YYLZL/TTensile'
+  import PGrouting from '@/views/Modular/YYLYJ/PGrouting'
 
   import Bus from '@/common/eventBus'
   export default {

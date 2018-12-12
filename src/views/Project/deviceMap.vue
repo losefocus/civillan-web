@@ -22,21 +22,38 @@
 
 <script>
   import deviceList from '@/api/project/deviceList'
-  import offLineMarker from '@/assets/device/m-offLine.png'
-  import runningMarker from '@/assets/device/m-running.png'
-  import alarmMarker from '@/assets/device/m-alarm.png'
 
-  import foamAlarm from '@/assets/device/foamAlarm.png'
-  import foamOff from '@/assets/device/foamOff.png'
-  import foamRunning from '@/assets/device/foamRunning.png'
+  //搅拌桩
+  import offLineMarker from '@/assets/Modular/JBZ/m-offLine.png'
+  import runningMarker from '@/assets/Modular/JBZ/m-running.png'
+  import alarmMarker from '@/assets/Modular/JBZ/m-alarm.png'
 
-  import curingFault from '@/assets/curing/curingFault.png'
-  import curingOff from '@/assets/curing/curingOff.png'
-  import curingRunning from '@/assets/curing/curingRunning.png'
+  //泡沫混凝土
+  import foamAlarm from '@/assets/Modular/PMHNT/foamAlarm.png'
+  import foamOff from '@/assets/Modular/PMHNT/foamOff.png'
+  import foamRunning from '@/assets/Modular/PMHNT/foamRunning.png'
 
-  import tensileRunning from '@/assets/tensile/tensileRunning.png'
-  import tensileOff from '@/assets/tensile/tensileOff.png'
-  import tensileAlarm from '@/assets/tensile/tensileAlarm.png'
+  //喷凝养护
+  import curingFault from '@/assets/Modular/PNYH/m-fault.png'
+  import curingOff from '@/assets/Modular/PNYH/m-off.png'
+  import curingRunning from '@/assets/Modular/PNYH/m-run.png'
+
+  //预应力张拉
+  import tensileRunning from '@/assets/Modular/YYLZL/tensileRunning.png'
+  import tensileOff from '@/assets/Modular/YYLZL/tensileOff.png'
+  import tensileAlarm from '@/assets/Modular/YYLZL/tensileAlarm.png'
+
+  //预应力压浆
+  import groutingRunning from '@/assets/Modular/YYLYJ/groutingRunning.png'
+  import groutingOff from '@/assets/Modular/YYLYJ/groutingOff.png'
+  import groutingAlarm from '@/assets/Modular/YYLYJ/groutingAlarm.png'
+
+  //预应力张拉
+  import heightRunning from '@/assets/Modular/GYXPZ/heightRunning.png'
+  import heightOff from '@/assets/Modular/GYXPZ/heightOff.png'
+  import heightAlarm from '@/assets/Modular/GYXPZ/heightAlarm.png'
+
+
 
   import newRunning from '@/views/softBase/newRunning.vue'
 
@@ -183,7 +200,12 @@ export default {
                     changeMarker = curingRunning;
                   }else if(lists[i].type=='YYLZL'){
                     changeMarker = tensileRunning;
+                  }else if(lists[i].type=='YYLYJ'){
+                    changeMarker = groutingRunning;
+                  }else if(lists[i].type=='GYXPZ'){
+                    changeMarker = heightRunning;
                   }
+
                 }else if(lists[i].status=='21'){
                   changeBackground = 'alarmBackground';
                   changeColor = 'alarmColor';
@@ -195,6 +217,10 @@ export default {
                     changeMarker = curingFault;
                   }else if(lists[i].type=='YYLZL'){
                     changeMarker = tensileAlarm;
+                  }else if(lists[i].type=='YYLYJ'){
+                    changeMarker = groutingAlarm;
+                  }else if(lists[i].type=='GYXPZ'){
+                    changeMarker = heightAlarm;
                   }
                 }else{
                   changeBackground = 'noBackground';
@@ -207,6 +233,10 @@ export default {
                     changeMarker = curingOff;
                   }else if(lists[i].type=='YYLZL'){
                     changeMarker = tensileOff;
+                  }else if(lists[i].type=='YYLYJ'){
+                    changeMarker = groutingOff;
+                  }else if(lists[i].type=='GYXPZ'){
+                    changeMarker = heightOff;
                   }
                 }
 
@@ -395,7 +425,7 @@ export default {
       text-align: center;
       line-height: 30px;
       background: #FFFFFF;
-      color: #cccccc;
+      color: #999999;
       border:1px solid #cccccc;
       margin-left: -1px;
     }

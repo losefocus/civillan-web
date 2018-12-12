@@ -31,7 +31,7 @@
       >
         <div class="item pj-box" :style="item.style" :index="item.id" @click="getDetails(item,index)">
           <!--:class="{'r-state1':item.status==0,'r-state2':item.status==1,'r-state3':item.status==2}"-->
-          <div class="r-state" :class="{'r-state1':item.status==21,'r-state2':item.status==11,'r-state3':item.status==0,'r-state4':item.status==1||item.status==2,}">
+          <div class="r-state" :class="{'r-state1':item.status==21,'r-state2':item.status==11,'r-state4':item.status==1||item.status==2||item.status==0,}">
             {{ deviceStatus.get(item.status) }}
           </div>
           <div class="d-name">
@@ -49,6 +49,8 @@
               <img v-if="item.type=='PLYH'" :src="pnyhImg">
               <img v-if="item.type=='PMHNT'" :src="pmhntImg">
               <img v-if="item.type=='YYLZL'" :src="yylzlImg">
+              <img v-if="item.type=='YYLYJ'" :src="yylyjImg">
+              <img v-if="item.type=='GYXPZ'" :src="gyxpzImg">
             </li>
             <li class="d-statistics">
               <div class="d-date">当前作业</div>
@@ -98,10 +100,12 @@
   import deviceData from '@/api/device/deviceData'
   import newRunning from '@/views/softBase/newRunning.vue'
 
-  import jbzImg from '@/assets/device/JBZ.png'
-  import pmhntImg from '@/assets/device/PMHNT.png'
-  import pnyhImg from '@/assets/device/PNYH.png'
-  import yylzlImg from '@/assets/tensile/YYLZL.png'
+  import jbzImg from '@/assets/Modular/deviceList/JBZ.png'
+  import pmhntImg from '@/assets/Modular/deviceList/PMHNT.png'
+  import pnyhImg from '@/assets/Modular/deviceList/PNYH.png'
+  import yylzlImg from '@/assets/Modular/deviceList/YYLZL.png'
+  import yylyjImg from '@/assets/Modular/deviceList/YYLYJ.png'
+  import gyxpzImg from '@/assets/Modular/deviceList/GYXPZ.png'
 
 
   import Waterfall from 'vue-waterfall/lib/waterfall'
@@ -119,6 +123,8 @@
         pmhntImg:pmhntImg,
         pnyhImg:pnyhImg,
         yylzlImg:yylzlImg,
+        yylyjImg:yylyjImg,
+        gyxpzImg:gyxpzImg,
         isActive:'',
         noData:false,
         navList:[],
@@ -296,7 +302,7 @@
       text-align: center;
       line-height: 30px;
       background: #FFFFFF;
-      color: #cccccc;
+      color: #999999;
       border:1px solid #cccccc;
       margin-left: -1px;
     }

@@ -14,25 +14,28 @@
   import deviceGrouping from '@/api/project/deviceGrouping'
 
   //搅拌桩
-  import SAnalysis from '@/views/Modular/MPile/SAnalysis'
-  import RState from '@/views/Modular/MPile/RState'
-  import AQuery from '@/views/Modular/MPile/AQuery'
-  import HPile from '@/views/Modular/MPile/HPile'
-  import NRecord from '@/views/Modular/MPile/NRecord'
+  import SAnalysis from '@/views/Modular/JBZ/SAnalysis'
+  import RState from '@/views/Modular/JBZ/RState'
+  import AQuery from '@/views/Modular/JBZ/AQuery.vue'
+  import HPile from '@/views/Modular/JBZ/HPile'
+  import NRecord from '@/views/Modular/JBZ/NRecord'
 
   //泡沫混凝土
-  import FConcrete from '@/views/Modular/FConcrete/FConcrete'
-  import HFoam from '@/views/Modular/FConcrete/HFoam'
+  import FConcrete from '@/views/Modular/PMHNT/FConcrete.vue'
+  import HFoam from '@/views/Modular/PMHNT/HFoam'
 
   //喷凝养护
-  import SCuring from '@/views/Modular/SCuring/SCuring'
+  import SCuring from '@/views/Modular/PNYH/SCuring'
 
   //预应力张拉
-  import TTensile from '@/views/Modular/TTensile/TTensile'
-  import HTensile from '@/views/Modular/TTensile/HTensile'
+  import TTensile from '@/views/Modular/YYLZL/TTensile'
+  import HTensile from '@/views/Modular/YYLZL/HTensile'
 
   //预应力压浆
-  import PGrouting from '@/views/Modular/PGrouting/PGrouting'
+  import PGrouting from '@/views/Modular/YYLYJ/PGrouting'
+
+  //高压旋喷桩
+  import PHeight from '@/views/Modular/GYXPZ/PHeight'
 
   import Bus from '@/common/eventBus'
   export default {
@@ -48,7 +51,8 @@
       SCuring,
       TTensile,
       HTensile,
-      PGrouting
+      PGrouting,
+      PHeight,
     },
     data () {
       return {
@@ -78,7 +82,7 @@
         ],
         tBody:[],
         tIndex:0,
-        currentView:'RState',
+        currentView:'',
         isBusy: false,
         deviceStatus:null,
         deviceStatusLists:[
@@ -168,6 +172,9 @@
         }else if(this.deviceType=='YYLYJ'){
           this.tBody=['PGrouting', 'HFoam', 'SAnalysis', 'AQuery',];
           this.currentView='PGrouting'
+        }else if(this.deviceType=='GYXPZ'){
+          this.tBody=['PHeight', 'HFoam', 'SAnalysis', 'AQuery',];
+          this.currentView='PHeight'
         }
       },
       changeTab1(list,index){ //切换tab

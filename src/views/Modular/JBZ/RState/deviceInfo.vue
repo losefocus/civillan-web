@@ -412,7 +412,7 @@
         float: right;
         width: 60px;
         height: 60px;
-        background: url("../../../../assets/RState/angle.png") no-repeat;
+        background: url("../../../../assets/Modular/JBZ/RState/angle.png") no-repeat;
         background-size: 100% 100%;
         position: relative;
         .a-spot{

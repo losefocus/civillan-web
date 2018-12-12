@@ -18,9 +18,9 @@
   import deviceList from '@/api/project/deviceList'
   import {formatDate} from '@/common/formatDate.js';
 
-  import HPile from '@/views/Modular/MPile/HPile'
-  import HFoam from '@/views/Modular/FConcrete/HFoam'
-  import HTensile from '@/views/Modular/TTensile/HTensile.vue'
+  import HPile from '@/views/Modular/JBZ/HPile'
+  import HFoam from '@/views/Modular/PMHNT/HFoam'
+  import HTensile from '@/views/Modular/YYLZL/HTensile.vue'
 
   import deviceGrouping from '@/api/project/deviceGrouping'
   export default {
@@ -174,7 +174,7 @@
       text-align: center;
       line-height: 30px;
       background: #FFFFFF;
-      color: #cccccc;
+      color: #999999;
       border:1px solid #cccccc;
       margin-left: -1px;
     }

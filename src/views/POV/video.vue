@@ -55,7 +55,7 @@
       text-align: center;
       line-height: 30px;
       background: #FFFFFF;
-      color: #cccccc;
+      color: #999999;
       border:1px solid #cccccc;
       margin-left: -1px;
     }

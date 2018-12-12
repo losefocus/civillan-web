@@ -7,7 +7,7 @@
 
 <script>
   import HPile from '@/views/softBase/HPile'
-  import HFoam from '@/views/Modular/FConcrete/HFoam'
+  import HFoam from '@/views/Modular/PMHNTPMHNT/HFoam'
   import HTensile from '@/views/TTensile/HTensile'
 export default {
   name: "SHistory",
