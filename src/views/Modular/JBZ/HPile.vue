@@ -43,21 +43,25 @@
           </el-option>
         </el-select>
 
-        <!--<el-date-picker
+        <el-date-picker
           v-model="value5"
           type="datetime"
           size="mini"
+          @change="getStart()"
+          style="margin: 0 5px;width: 180px;float: left;"
           placeholder="开始日期">
         </el-date-picker>
         <el-date-picker
           v-model="value6"
           type="datetime"
           size="mini"
+          @change="getEnd()"
           placeholder="结束日期"
+          style="margin: 0 5px;width: 180px;float: left;"
           :picker-options="pickerOptions1">
-        </el-date-picker>-->
+        </el-date-picker>
 
-        <el-date-picker
+        <!--<el-date-picker
           size="mini"
           v-model="value7"
           type="datetimerange"
@@ -68,7 +72,7 @@
           @change="getTime(value7)"
           style="margin: 0 5px;width: 315px;float: left;"
           align="center">
-        </el-date-picker>
+        </el-date-picker>-->
         <div class="c-button">
           <el-button type="info" size="mini" @click="query">查询</el-button>
         </div>
@@ -754,20 +758,20 @@
     },
     data() {
       return {
-        /*pickerOptions0: {
+        pickerOptions0: {
 
         },
         pickerOptions1: {
           disabledDate: (time) => {
-            if(this.value5==''){
+            if(this.post_data.start==''){
               this.$message.error('没有输入开始时间')
             }else{
-              return time.getTime() <= (this.value5 - 3600 * 1000 * 24);
+              return time.getTime() <= (this.post_data.start - 3600 * 1000 * 24);
             }
           }
         },
         value5:'',
-        value6:'',*/
+        value6:'',
 
 
 
@@ -1177,6 +1181,27 @@
       ...mapActions('changeTab',['incrementTab']),
       ...mapActions('backTab',['incrementBack']),
 
+
+      getStart(){
+        this.post_data.start=new Date(this.value5).getTime()/1000;
+        this.post_data.end=new Date(this.value6).getTime()/1000;
+        this.value6=this.value5;
+        if(this.value6>=this.value5){
+
+        }else{
+          this.$message.error('结束时间必须大于开始时间')
+        }
+      },
+      getEnd(){
+        this.post_data.start=new Date(this.value5).getTime()/1000;
+        this.post_data.end=new Date(this.value6).getTime()/1000;
+        if(this.value6>=this.value5){
+
+        }else{
+          this.$message.error('结束时间必须大于开始时间')
+        }
+      },
+
       //判断是否是设备  导出按钮限制
       getDevice(){
         if(this.isDevice){
@@ -1506,6 +1531,7 @@
           ' <style type="text/css">' +
           'table td {' +
           'height: 30px;' +
+          'width: 150px;' +
           'font-family: 宋体;' +
           'font-size: 16px;' +
           'text-align: left;' +
@@ -1955,7 +1981,7 @@
 
     }
     .c-query{
-      width: 695px;
+      width: 750px;
       overflow: hidden;
       float: left;
       .c-button{
