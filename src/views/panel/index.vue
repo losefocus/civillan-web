@@ -53,15 +53,12 @@
   import work from "./work";
   import device from "./device";
   import alarm from "./alarm";
+import {formatDate} from '@/common/formatDate.js';
 
 export default {
     data(){
         return{
-            time:{
-                date:'2018-09-21',
-                hour:'10:45:01',
-                day:'周五',
-            }
+            time:{}
         }
     },
     components:{
@@ -72,15 +69,31 @@ export default {
         device,
         alarm,
     },
+    filters: {
+    },
     created(){
 
     },
     mounted(){
-
+        setInterval(this.getTimes,1000)
     },
     methods:{
         getTimes(){
-
+            let newDate = new Date()
+            this.time={
+                date:formatDate(newDate,'yyyy-MM-dd'),
+                hour:formatDate(newDate,'hh:mm:ss'),
+            }
+            let day = newDate.getDay()
+            switch (day){
+                case 1:this.time.day = '周一';break;
+                case 2:this.time.day = '周二';break;
+                case 3:this.time.day = '周三';break;
+                case 4:this.time.day = '周四';break;
+                case 5:this.time.day = '周五';break;
+                case 6:this.time.day = '周六';break;
+                default :this.time.day = '周日'
+            }
         }
     },
     watch:{

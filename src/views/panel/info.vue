@@ -1,12 +1,14 @@
 <template>
     <div class="info">
-        <div class="tit">杭宁高速公路父子岭至南庄兜路段改扩建工程 —— 第三标段 </div>
-        <div class="time">项目工期：2018-10-21至2019-10-21</div>
-        <div class="com">工程概况是指在施工程项目的基本情况。其主要内容包括：工程名称、规模、性质、用途、投资额、开竣工日期、
-            建设单位、设计单位、工程建筑面用途设计单位、工程建筑面用途设计单位、工程建筑面用途设计单位、工程建筑、工程建筑、工程建筑、
-            工程建筑、工程建筑、工程概况是指在施工程项目的基本情况。其开竣工日投资额、结构形式、图纸设计完成情况、承包合同等。</div>
+        <div class="tit">{{data.name}}</div>
+        <div class="time">项目工期：{{data.beginAt*1000 | formatDate}} 至 {{data.endAt*1000 | formatDate}}</div>
+        <div class="com">{{data.comment == ''?'暂无介绍':data.comment}}</div>
         <ul class="org clearfix">
-            <li>
+            <li v-for="(item,index) in data.organTypeList"  :key="index">
+                <div class="org_tit">{{item.name}}</div>
+                <div class="org_name">{{item.organList[0].name}}</div>
+            </li>
+            <!-- <li>
                 <div class="org_tit">建设单位</div>
                 <div class="org_name">浙江工程股份科技有限公司</div>
             </li>
@@ -21,27 +23,55 @@
             <li>
                 <div class="org_tit">设计单位</div>
                 <div class="org_name">浙江杭州市设计院</div>
-            </li>
+            </li> -->
         </ul>
     </div>
 </template>
 <script>
+import project from '@/api/userCenter/project'
+import {formatDate} from '@/common/formatDate.js';
 export default {
     data(){
         return{
-
+            data:{
+                beginAt:new Date()/1000,
+                endAt:new Date()/1000,
+            }
         }
     },
     components:{
 
     },
+    filters: {
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd'); //yyyy-MM-dd hh:mm
+      }
+    },
     created(){
 
     },
     mounted(){
+        this.getInfo()
     },
     methods:{
-
+        getInfo(id){
+            let tenant=this.$cookies.get('tenant');
+            let panel_id=this.$cookies.get('panel_id'); 
+            project.info({'project_id':panel_id,tenant:tenant}).then(res=>{
+                this.data = res.result
+                // if(res.success){
+                //     this.info=res.result;
+                //     sessionStorage.setItem('projectInfo',JSON.stringify(res.result));
+                //     this.organTypeList=res.result.organTypeList;
+                //     this.loading.close();
+                // }else{
+                //     this.loading.close();
+                // }
+                // }).catch(err => {
+                // this.loading.close();
+            });
+        },
     },
     watch:{
 
