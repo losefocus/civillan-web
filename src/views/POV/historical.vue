@@ -87,7 +87,6 @@
         deviceGrouping.list(this.group_post).then(res=>{
           if(res.success){
             this.navList=res.result.items;
-            this.getList(this.post_data);
 
             this.$nextTick(()=>{
               this.isShow=true

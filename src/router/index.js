@@ -1,4 +1,3 @@
-
 const vRouter = new VueRouter({
   routes: [
     {
@@ -16,6 +15,12 @@ const vRouter = new VueRouter({
       path: '/login',
       name: '登录',
       component: resolve => require(['@/views/login'],resolve),
+    },
+    {
+      path: '/panel',
+      name: '项目大屏',
+      meta: {requireAuth: true},
+      component: resolve => require(['@/views/panel'],resolve),
     },
     {
       path: '/ProjectOverview',

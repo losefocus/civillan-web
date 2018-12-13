@@ -65,6 +65,7 @@
             if(res.success){
               loading.close();
               let lists=toTree(res.result);
+              this.$cookies.set('panel_id',res.result[0].id)
               lists.forEach(function (item) {
                 item.show=false;
                 item.listId='id'+item.id;

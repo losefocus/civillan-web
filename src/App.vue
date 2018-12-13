@@ -15,11 +15,11 @@ export default {
   html,body{
     width: 100%;
     height: 100%;
-
   }
   #app {
     width: 100%;
     height: 100%;
+    min-width: 1200px;
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

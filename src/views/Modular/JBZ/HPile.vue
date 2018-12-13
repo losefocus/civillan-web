@@ -98,47 +98,46 @@
     </div>
     <table cellspacing="0" cellpadding="0" border="1" id="statisticsTable" v-show="false">
       <thead>
-      <tr>
-        <td class="tHead" colspan="8">水泥土搅拌桩施工现场统计报表</td>
-      </tr>
-      <tr>
-        <td colspan="8">工程名称：<span>{{statisticsReport.projectName}}</span></td>
-      </tr>
-      <tr>
-        <td colspan="4">施工单位：<span>{{statisticsReport.ConstructionUnit}}</span></td>
-        <td colspan="4">桩机编号：<span>{{statisticsReport.machine_key}}</span></td>
-      </tr>
-      <tr>
-        <td colspan="2">开始时间：</td>
-        <td colspan="2">{{ statisticsReport.begin_time }}</td>
-        <td colspan="2">结束时间：</td>
-        <td colspan="2">{{ statisticsReport.end_time }}</td>
-      </tr>
-
-            </thead>
+        <tr>
+          <td class="tHead" colspan="8">水泥土搅拌桩施工现场统计报表</td>
+        </tr>
+        <tr>
+          <td colspan="8">工程名称：<span>{{statisticsReport.projectName}}</span></td>
+        </tr>
+        <tr>
+          <td colspan="4">施工单位：<span>{{statisticsReport.ConstructionUnit}}</span></td>
+          <td colspan="4">桩机编号：<span>{{statisticsReport.machine_key}}</span></td>
+        </tr>
+        <tr>
+          <td colspan="2">开始时间：</td>
+          <td colspan="2">{{ statisticsReport.begin_time }}</td>
+          <td colspan="2">结束时间：</td>
+          <td colspan="2">{{ statisticsReport.end_time }}</td>
+        </tr>
+      </thead>
       <tbody>
-      <tr v-for="item in statisticsData">
-        <td v-for="i in item">{{i}}&nbsp;</td>
-      </tr>
+        <tr v-for="item in statisticsData">
+          <td v-for="i in item">{{i}}&nbsp;</td>
+        </tr>
       </tbody>
       <tfoot v-if="isAll">
       <tr>
         <td colspan="2">累计根数（根）：</td>
-        <td colspan="2">{{recordSum.total_pile_num}}</td>
+        <td colspan="2" v-if="recordSum">{{recordSum.total_pile_num}}</td>
         <td colspan="2">累计延米数（m）：</td>
         <td colspan="2">{{statisticsReport.allDepth | formatZ}}</td>
       </tr>
       <tr>
         <td colspan="2">累计浆量（L）：</td>
-        <td colspan="2">{{recordSum.total_cumulative_pulp | formatZ}}</td>
+        <td colspan="2" v-if="recordSum">{{recordSum.total_cumulative_pulp | formatZ}}</td>
         <td colspan="2">累计灰量（kg）：</td>
-        <td colspan="2">{{recordSum.total_cumulative_ash | formatZ}}</td>
+        <td colspan="2" v-if="recordSum">{{recordSum.total_cumulative_ash | formatZ}}</td>
       </tr>
       <tr>
         <td colspan="2">平均浆量（L）：</td>
-        <td colspan="2">{{recordSum.total_cumulative_pulp/statisticsReport.allDepth | formatZ}}</td>
+        <td colspan="2" v-if="recordSum">{{recordSum.total_cumulative_pulp/statisticsReport.allDepth | formatZ}}</td>
         <td colspan="2">平均灰量（kg）：</td>
-        <td colspan="2">{{recordSum.total_cumulative_ash/statisticsReport.allDepth | formatZ}}</td>
+        <td colspan="2" v-if="recordSum">{{recordSum.total_cumulative_ash/statisticsReport.allDepth | formatZ}}</td>
       </tr>
       <tr>
         <td colspan="2">操作人员：</td>
@@ -150,7 +149,7 @@
         <td colspan="2">现场监理：</td>
         <td colspan="2"></td>
         <td colspan="2">打印时间：</td>
-        <td colspan="2"></td>
+        <td colspan="2">{{ statisticsReport.now_time }}</td>
       </tr>
       </tfoot>
       <tfoot v-else>
@@ -182,7 +181,7 @@
         <td colspan="2">现场监理：</td>
         <td colspan="2"></td>
         <td colspan="2">打印时间：</td>
-        <td colspan="2"></td>
+        <td colspan="2">{{ statisticsReport.now_time }}</td>
       </tr>
       </tfoot>
     </table>
@@ -315,7 +314,7 @@
         <td colspan="2">现场监理：</td>
         <td colspan="2"></td>
         <td colspan="2">打印时间：</td>
-        <td colspan="2"></td>
+        <td colspan="2">{{recordReport.now_time}}</td>
       </tr>
       </tfoot>
     </table>
@@ -416,7 +415,7 @@
       </ul>
     </div>
   </template>
-</el-table-column>
+  </el-table-column>
       <el-table-column
         type="selection"
         min-width="30">
@@ -590,7 +589,7 @@
         :show-overflow-tooltip=true
         align="center"
         min-width="110"
-        label="最大提速(cm/min)">
+        label="最大钻速(cm/min)">
         <template slot-scope="props">
           {{ Math.abs(Math.ceil(props.row.max_down_speed))}}
         </template>
@@ -678,7 +677,7 @@
         :show-overflow-tooltip=true
         min-width="60"
         align="center"
-        label="评分值"
+        label="评级"
         prop="rate">
       </el-table-column>
     </el-table>
@@ -755,7 +754,7 @@
     },
     data() {
       return {
-       /* pickerOptions0: {
+        /*pickerOptions0: {
 
         },
         pickerOptions1: {
@@ -840,27 +839,27 @@
           machine_key:{title:'桩机号',checked:false},
           begin_time:{title:'开始时间',checked:true},
           end_time:{title:'结束时间',checked:true},
-          depth:{title:'实际桩长',checked:true},
-          re_depth:{title:'复搅深度',checked:false},
+          depth:{title:'实际桩长(m)',checked:true},
+          re_depth:{title:'复搅深度(m)',checked:false},
           water_cement_ratio:{title:'水灰比',checked:true},
-          cumulative_ash:{title:'累计灰量',checked:true},
-          cumulative_pulp:{title:'累计浆量',checked:true},
-          max_current:{title:'最大钻杆电流',checked:true},
-          down_speed:{title:'平均下钻速度',checked:false},
-          up_speed:{title:'平均提钻速度',checked:false},
-          average_pulp:{title:'平均浆量',checked:false},
-          average_ash:{title:'平均灰量',checked:false},
-          average_current:{title:'平均电流',checked:false},
-          max_down_speed:{title:'最大钻速',checked:true},
-          max_up_speed:{title:'最大提速',checked:true},
+          cumulative_ash:{title:'累计灰量(kg)',checked:true},
+          cumulative_pulp:{title:'累计浆量(L)',checked:true},
+          max_current:{title:'最大电流(A)',checked:true},
+          down_speed:{title:'平均下钻速度(cm/min)',checked:false},
+          up_speed:{title:'平均提钻速度(cm/min)',checked:false},
+          average_pulp:{title:'平均浆量(L)',checked:false},
+          average_ash:{title:'平均灰量(kg)',checked:false},
+          average_current:{title:'平均电流(A)',checked:false},
+          max_down_speed:{title:'最大钻速(cm/min)',checked:true},
+          max_up_speed:{title:'最大提速(cm/min)',checked:true},
           max_slope:{title:'最大斜度',checked:true},
-          sprayed_time:{title:'喷浆时间',checked:false},
-          t_type_length:{title:'扩大头桩长',checked:false},
-          t_type_slurry:{title:'扩大头浆量',checked:false},
-          bottom_part_slurry:{title:'扩大桩灰量',checked:false},
-          t_type_ash:{title:'下部桩浆量',checked:false},
-          bottom_part_ash:{title:'下部桩灰量',checked:false},
-          rate:{title:'评分',checked:true},
+          sprayed_time:{title:'喷浆时间(s)',checked:false},
+          t_type_length:{title:'扩大头桩长(m)',checked:false},
+          t_type_slurry:{title:'扩大头浆量(L)',checked:false},
+          bottom_part_slurry:{title:'扩大桩灰量(kg)',checked:false},
+          t_type_ash:{title:'下部桩浆量(L)',checked:false},
+          bottom_part_ash:{title:'下部桩灰量(kg)',checked:false},
+          rate:{title:'评级',checked:true},
         },
         tableHeader:[],
         tableName:[],
@@ -1035,7 +1034,7 @@
         },
         option4:{
           title: {
-            text: '浆量、深度分布曲线',
+            text: '浆量分布曲线',
             top:'3%',
             left:'3%',
           },
@@ -1120,14 +1119,16 @@
           begin_time:'', //开始时间
           projectName:'', //项目名称
           p_allTime:'', //成桩总时间
+          now_time:this.getNewTime(),//打印时间
         },
-        statisticsReport:{ //记录报表数据
+        statisticsReport:{ //统计报表数据
           ConstructionUnit:'', // 建设单位
           end_time:'', //结束时间
           begin_time:'', //开始时间
           projectName:'', //项目名称
           p_allTime:'', //成桩总时间
           machine_key:'',//桩机号
+          now_time:this.getNewTime(),//打印时间
         },
         idTmr:null,
         statisticsData:[], //统计表格的数据
@@ -1276,6 +1277,7 @@
         });
       },
 
+
       //excel导出统计报表选项
       importExcel() {
         this.isAll=false;
@@ -1289,38 +1291,44 @@
             }
 
             let tHeader = this.tableHeader; //将对应的属性名转换成中文
+            tHeader.unshift('序号');
             let filterVal = this.tableName; //table表格中对应的属性名
+            filterVal.unshift('sort');
             let list=[];
             let allDepth=0; //总桩长
             let cumulative_pulp=0; //累计浆量
             let cumulative_ash=0; //累计灰量
-            this.multipleSelection.forEach(e=>{
+            this.multipleSelection.forEach((e,j)=>{
               let obj = {};
 
               for(let i=0;i<filterVal.length;i++){
                 let key=filterVal[i];
                 let lists=e[filterVal[i]];
-
                 if(key=='begin_time'||key=='end_time'){
                   let date = new Date(lists*1000);
                   lists=formatDate(date, 'MM-dd hh:mm')
-                }else if(key=='pile_describe'||key=='rate'){
-                  lists=Math.abs(lists);
+                }else if(key=='pile_describe'||key=='rate'||key=='sort'){
                 }else if(key=='depth'){
-                  allDepth+=lists
+                  allDepth+=lists;
+                  lists=Number(lists).toFixed(2);
                 }else if(key=='cumulative_pulp'){
-                  cumulative_pulp+=lists
+                  cumulative_pulp+=lists;
+                  lists=Number(lists).toFixed(2);
                 }else if(key=='cumulative_ash'){
                   cumulative_ash+=lists
+                  lists=Number(lists).toFixed(2);
                 }else if(key=='max_up_speed'||key=='max_down_speed'){
+                  lists=Number(lists).toFixed(2);
                   lists=Math.abs(lists);
                 }else{
                   lists=Number(lists).toFixed(2)
                 }
                 obj[filterVal[i]] = lists;
+                obj.sort = j+1;
               }
 
               list.push(obj);
+
             });
 
             this.statisticsReport.allDepth=allDepth;
@@ -1340,7 +1348,7 @@
             this.statisticsReport.machine_key=this.multipleSelection[0].machine_key;
 
             setTimeout(()=>{
-              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
+              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'-统计报表')
             },200);
 
             //引用赋值  用完清空
@@ -1359,63 +1367,91 @@
         this.post_data.page_size=9999999;
         history.list(this.post_data).then(res=>{
           if(res.success){
-            for(name in this.newData){
-              if(this.newData[name].checked){
-                this.tableHeader.push(this.newData[name].title);
-                this.tableName.push(name)
-              }
-            }
-            let tHeader = this.tableHeader; //将对应的属性名转换成中文
-            let filterVal = this.tableName; //table表格中对应的属性名
-            let list=[];
-            let allDepth=0; //总桩长
-            res.result.items.forEach(e=>{
-              let obj = {};
-              for(let i=0;i<filterVal.length;i++){
-                let key=filterVal[i];
-                let lists=e[filterVal[i]];
-                if(key=='begin_time'||key=='end_time'){
-                  let date = new Date(lists*1000);
-                  lists=formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-                }else if(key=='pile_describe'||key=='rate'||key=='machine_key'){
-
-                }else if(key=='depth'){
-                  allDepth+=lists
-                }else if(key=='max_up_speed'||key=='max_down_speed'){
-                  lists=Math.abs(lists);
-                }else{
-                  lists=Number(lists).toFixed(2)
+            if(res.result.items.length>0){
+              for(name in this.newData){
+                if(this.newData[name].checked){
+                  this.tableHeader.push(this.newData[name].title);
+                  this.tableName.push(name)
                 }
-                obj[filterVal[i]] = lists;
               }
-              list.push(obj);
-            });
+              let tHeader = this.tableHeader; //将对应的属性名转换成中文
+              tHeader.unshift('序号');
+              let filterVal = this.tableName; //table表格中对应的属性名
+              filterVal.unshift('sort');
+              let list=[];
+              let allDepth=0; //总桩长
+              res.result.items.forEach((e,j)=>{
+                let obj = {};
+                for(let i=0;i<filterVal.length;i++){
+                  let key=filterVal[i];
+                  let lists=e[filterVal[i]];
+                  if(key=='begin_time'||key=='end_time'){
+                    let date = new Date(lists*1000);
+                    lists=formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+                  }else if(key=='pile_describe'||key=='rate'||key=='machine_key'){
 
-            this.statisticsReport.allDepth=allDepth;
+                  }else if(key=='depth'){
+                    allDepth+=lists
+                    lists=Number(lists).toFixed(2)
+                  }else if(key=='max_up_speed'||key=='max_down_speed'){
+                    lists=Math.abs(lists).toFixed(1);
+                  }else{
+                    lists=Number(lists).toFixed(2)
+                  }
+                  obj[filterVal[i]] = lists;
+                  obj.sort=j
+                }
+                list.push(obj);
+              });
 
+              this.statisticsReport.allDepth=allDepth;
 
-            const data = this.formatJson(filterVal, list);
-            //export_json_to_excel(tHeader, data, '数据报表');
-            data.unshift(tHeader);
-            this.statisticsData=data;
-            this.statisticsReport.begin_time=list[list.length-1].begin_time;
-            this.statisticsReport.end_time=list[0].begin_time;
-            this.statisticsReport.machine_key=res.result.items[0].machine_key;
+              const data = this.formatJson(filterVal, list);
+              data.unshift(tHeader);
+              this.statisticsData=data;
+              this.statisticsReport.begin_time=list[list.length-1].begin_time;
+              this.statisticsReport.end_time=list[0].begin_time;
+              this.statisticsReport.machine_key=res.result.items[0].machine_key;
+              this.statisticsReport.now_time=this.getNewTime();
 
-            //引用赋值  用完清空
-            this.tableHeader=[];
-            this.tableName=[];
+              console.log(this.statisticsReport.now_time);
 
-            list=[];
-            setTimeout(()=>{
-              this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
-            },200);
+              //引用赋值  用完清空
+              this.tableHeader=[];
+              this.tableName=[];
 
+              list=[];
+              setTimeout(()=>{
+                this.copyExcel('statisticsTable',this.statisticsReport.begin_time+'_统计报表')
+              },200);
+            }else{
+              this.$message.error('没有可导出的项目')
+            }
           }else {
             _this.$message.error(res.message);
           }
         }).catch(err => {
         });
+      },
+
+      //获取当前时间
+      getNewTime() {
+        let date = new Date();
+        let seperator1 = "-";
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let second = date.getSeconds();
+        let strDate = date.getDate();
+        let currentdate = year + seperator1 + this.editTime(month) + seperator1 + this.editTime(strDate)+' '+this.editTime(hour)+':'+this.editTime(minute)+':'+this.editTime(second);
+        return currentdate;
+      },
+      editTime(time){
+        if (time >= 0 && time <= 9) {
+          time = "0" + time;
+        }
+        return time
       },
 
       //导出记录报表
@@ -1473,7 +1509,11 @@
           'font-family: 宋体;' +
           'font-size: 16px;' +
           'text-align: left;' +
-          'border: 0.5px solid #000000;' +
+          ' }' +
+          'table{' +
+          'font-family: 宋体;' +
+          'font-size: 16px;' +
+          'border: 1px solid #000000;'+
           ' }' +
           'table .tHead {' +
           'font-size: 24px;' +
@@ -1489,7 +1529,7 @@
           'height: 20px;' +
           ' }' +
           '</style>' +
-          '</head><body ><table class="excelTable">{table}</table></body></html>';
+          '</head><body ><table border="1" cellspacing="0">{table}</table></body></html>';
         if (!tableid.nodeType) tableid = document.getElementById(tableid);
         let ctx;
         if(tableid){
@@ -1616,7 +1656,7 @@
       deviceChange(val){
         this.post_data.key=val;
         this.getList(this.post_data);
-        this.getRecords(val)
+        this.getRecords(this.post_data)
       },
       deviceChange1(val){
         this.post_data.minScore=val[0];
@@ -1814,7 +1854,7 @@
     },
     watch:{
       deviceKey:{
-        handler(val, oldVal){
+        handler(val){
           this.post_data.key=val;
           this.getList(this.post_data)
         },
@@ -1824,7 +1864,7 @@
 
         },
       },
-      device(val, oldVal){
+      device(val){
         if(val){
           if(!this.isDevice){
             this.isExport=false;
@@ -1836,6 +1876,7 @@
     },
   }
 </script>
+
 <style lang="scss" scoped>
 
   #tableToExcel td {
