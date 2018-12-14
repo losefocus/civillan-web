@@ -9,26 +9,14 @@
 </template>
 <script>
 var echarts = require('echarts');
+import panel from '@/api/panel/index'
+
 export default {
     
     data(){
         return{
             myChart:null,
-        }
-    },
-    components:{
-        
-    },
-    created(){
-
-    },
-    mounted(){
-        this.init()
-    },
-    methods:{
-        init(){
-            this.myChart = echarts.init(document.getElementById('warm'));
-            this.myChart.setOption({
+            option:{
                 color:['#034D80','#0061A4','#0574C0','#329AE2','#55BAFF','#89CFFF','#76DDFB','#DBECF8','#A6E2F4',],
                 legend: {
                     bottom: 0,
@@ -39,7 +27,7 @@ export default {
                 },
                 series : [
                     {
-                        name:'访问来源',
+                        name:'预警分布',
                         type:'pie',
                         radius : '55%',
                         selectedMode: 'single',
@@ -68,11 +56,35 @@ export default {
                             }
                         },
                         center: ['50%', '45%'],
-                        data: [{name: "压浆系统", value: 30524},{name: "张拉", value: 61946},{name: "高压旋喷桩", value: 76310},{name: "搅拌桩", value: 30140},
-                        {name: "压浆系统2", value: 49530},{name: "张拉2", value: 88327},{name: "高压旋喷桩2", value: 57751},{name: "搅拌桩2", value: 70649}],
+                        data: [],
                     },
                 ]
-            });
+            },
+            i:0
+        }
+    },
+    components:{
+        
+    },
+    created(){
+
+    },
+    mounted(){
+        this.init()
+    },
+    methods:{
+        init(){
+            this.myChart = echarts.init(document.getElementById('warm'));
+            this.getWarm();
+        },
+        getWarm(){
+            panel.warm({projectId:this.$cookies.get('panel_id')}).then(res => {
+                let data = res.result
+                this.option.series[0].data = data.map(r => {
+                    return {name:r._id,value:r.count}
+                })
+                this.myChart.setOption(this.option);
+            })
         }
     },
     watch:{

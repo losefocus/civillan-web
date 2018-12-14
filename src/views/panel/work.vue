@@ -9,29 +9,16 @@
 </template>
 <script>
 var echarts = require('echarts');
+import panel from '@/api/panel/index'
+
 export default {
     data(){
         return{
-            
-        }
-    },
-    components:{
-        
-    },
-    created(){
-
-    },
-    mounted(){
-        this.init()
-    },
-    methods:{
-        init(){
-            this.myChart = echarts.init(document.getElementById('work'));
-            this.myChart.setOption({
+            option:{
                 color:['#53A8E2'],
                 grid: {
                     left: '2%',
-                    right: '3%',
+                    right: '5%',
                     bottom: '2%',
                     top:'5%',
                     containLabel: true
@@ -87,7 +74,45 @@ export default {
                         data: [70, 25, 90, 50, 70, 25,90,50]
                     },
                 ]
-            });
+            }
+        }
+    },
+    components:{
+        
+    },
+    created(){
+
+    },
+    mounted(){
+        this.init()
+    },
+    methods:{
+        init(){
+            this.myChart = echarts.init(document.getElementById('work'));
+            this.getWork();
+        },
+        getWork(){
+            panel.work({projectId:this.$cookies.get('panel_id')}).then(res => {
+                let data_yAxis = [],data_series = []
+                res.result.forEach(e => {
+                    data_yAxis.push(e._id)
+                    data_series.push(e.count.toFixed(2))
+                });
+                this.option.yAxis.data = data_yAxis
+                // this.option.series.data = data_series
+                this.option.series = {
+                        name: '2011年',
+                        type: 'bar',
+                        label:{
+                            show:true,
+                            position: 'right',
+                            color:'#fff'
+                        },
+                        barWidth:'45%',
+                        data: data_series
+                    }
+                this.myChart.setOption(this.option);
+            })
         }
     },
     watch:{

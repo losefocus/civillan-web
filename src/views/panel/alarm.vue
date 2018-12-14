@@ -5,63 +5,98 @@
             实时警报
         </div>
         <div id="alarm">
-            <ul>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-                <li class="clearfix">
-                    <div class="pull-left text">飞阳建设搅拌桩4号-流量传感器异常</div>
-                    <div class="pull-right">12-6 15:30</div>
-                </li>
-            </ul>
+            <!-- <marquee direction="up" style="height:100%" vspace="0" loop="-1"> -->
+                <ul>
+                    <li class="clearfix" v-for="(item,index) in list" :key="index">
+                        <div class="pull-left text">{{item.message}}</div>
+                        <div class="pull-right">{{item.ts | filterDate}}</div>
+                    </li>
+                    <!-- <li class="clearfix">
+                        <div class="pull-left text">2飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">3飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">4飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">5飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">6飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">7飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">8飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">9飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">10飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">11飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">12飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li>
+                    <li class="clearfix">
+                        <div class="pull-left text">13飞阳建设搅拌桩4号-流量传感器异常</div>
+                        <div class="pull-right">12-6 15:30</div>
+                    </li> -->
+                </ul>
+            <!-- </marquee> -->
+            
         </div>
     </div>
 </template>
 <script>
+import panel from '@/api/panel/index'
+import {formatDate} from '@/common/formatDate.js';
+
 export default {
     data(){
         return{
-            
+            list:[]
         }
     },
     components:{
         
     },
+    filters: {
+        filterDate(time){
+            let date = new Date(parseInt(time));
+            return formatDate(date, 'MM-dd hh:mm'); //yyyy-MM-dd hh:mm
+        }
+    },
     created(){
 
     },
     mounted(){
+        this.getList()
     },
     methods:{
+        getList(){
+            panel.alarm({projectId:this.$cookies.get('panel_id')}).then(res => {
+                this.list = res.result
+            })
+        }
+        
     },
     watch:{
 

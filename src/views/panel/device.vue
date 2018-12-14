@@ -9,25 +9,12 @@
 </template>
 <script>
 var echarts = require('echarts');
+import panel from '@/api/panel/index'
+
 export default {
     data(){
         return{
-            
-        }
-    },
-    components:{
-        
-    },
-    created(){
-
-    },
-    mounted(){
-        this.init()
-    },
-    methods:{
-        init(){
-            this.myChart = echarts.init(document.getElementById('device'));
-            this.myChart.setOption({
+            option:{
                 color:['#53A8E2','#0574C0'],
                 legend: {
                     show:true,
@@ -85,6 +72,17 @@ export default {
                 },
                 series: [
                     {
+                        name: '设备总数',
+                        type: 'bar',
+                        barWidth:'30%',
+                        label:{
+                            show:true,
+                            position: 'top',
+                            color:'#fff'
+                        },
+                        data: [60, 35, 60, 30, 20, 65,80,90]
+                    },
+                    {
                         name: '在线设备',
                         type: 'bar',
                         barGap: 0,
@@ -96,8 +94,49 @@ export default {
                         },
                         data: [70, 25, 90, 50, 70, 25,90,50]
                     },
+                    
+                ]
+            }
+        }
+    },
+    components:{
+        
+    },
+    created(){
+
+    },
+    mounted(){
+        this.init()
+        this.getDevice()
+    },
+    methods:{
+        init(){
+            this.myChart = echarts.init(document.getElementById('device'));
+            this.getDevice();
+        },
+        getDevice(){
+            panel.count({projectId:this.$cookies.get('panel_id')}).then(res => {
+                let data_xAxis = [],data_1=[],data_2=[]
+                for (let key in res.result.all) {
+                    data_xAxis.push(key);
+                    data_1.push(res.result.all[key]);
+                }
+                for (let key in res.result.online) {
+                    data_2.push(res.result.online[key]);
+                }
+
+                // data_xAxis.forEach(r => {
+                //     if(r in res.result.online){
+                //         data_2.push(res.result.online[r])
+                //     }else{
+                //         data_2.push(null)
+                //     }
+                // })
+
+                this.option.xAxis.data = data_xAxis
+                this.option.series= [
                     {
-                        name: '进场设备',
+                        name: '设备总数',
                         type: 'bar',
                         barWidth:'30%',
                         label:{
@@ -105,10 +144,24 @@ export default {
                             position: 'top',
                             color:'#fff'
                         },
-                        data: [60, 35, 60, 30, 20, 65,80,90]
+                        data: data_1
                     },
+                    {
+                        name: '在线设备',
+                        type: 'bar',
+                        barGap: 0,
+                        barWidth:'30%',
+                        label:{
+                            show:true,
+                            position: 'top',
+                            color:'#fff'
+                        },
+                        data: data_2
+                    },
+                    
                 ]
-            });
+                this.myChart.setOption(this.option);
+            })
         }
     },
     watch:{
