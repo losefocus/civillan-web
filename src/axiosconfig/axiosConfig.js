@@ -60,10 +60,8 @@ axios.interceptors.response.use(
     }
   },
   error => {
-    console.log(error);
     let errMsg = error.toString();
     let code = errMsg.substr(errMsg.indexOf('code') + 5);
-    console.log(errorCode[code] || errorCode['default']);
     /*Message({
       message: errorCode[code] || errorCode['default'],
       type: 'error'

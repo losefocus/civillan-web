@@ -253,11 +253,11 @@
 
             </thead>
             <tbody>
-            <tr>
+            <tr class="bHead">
               <td>深度(m)</td>
               <td>段浆量（L/m）</td>
               <td>段灰量（kg/m）</td>
-              <td>段密度（g/cm3）</td>
+              <td>段密度（g/cm³）</td>
               <td>段电流（A）</td>
               <td>段喷压（MPa）</td>
               <td>速率（cm/min）</td>
@@ -482,7 +482,7 @@
         :show-overflow-tooltip=true
         align="center"
         min-width="80"
-        label="实际桩长(m)">
+        label="施工桩长(m)">
         <template slot-scope="props">
           {{ props.row.depth | formatZ}}
         </template>
@@ -763,11 +763,7 @@
         },
         pickerOptions1: {
           disabledDate: (time) => {
-            if(this.post_data.start==''){
-              this.$message.error('没有输入开始时间')
-            }else{
-              return time.getTime() <= (this.post_data.start - 3600 * 1000 * 24);
-            }
+            return time.getTime() <= (this.value5 - 3600 * 1000 * 24);
           }
         },
         value5:'',
@@ -843,7 +839,7 @@
           machine_key:{title:'桩机号',checked:false},
           begin_time:{title:'开始时间',checked:true},
           end_time:{title:'结束时间',checked:true},
-          depth:{title:'实际桩长(m)',checked:true},
+          depth:{title:'施工桩长(m)',checked:true},
           re_depth:{title:'复搅深度(m)',checked:false},
           water_cement_ratio:{title:'水灰比',checked:true},
           cumulative_ash:{title:'累计灰量(kg)',checked:true},
@@ -1184,22 +1180,9 @@
 
       getStart(){
         this.post_data.start=new Date(this.value5).getTime()/1000;
-        this.post_data.end=new Date(this.value6).getTime()/1000;
-        this.value6=this.value5;
-        if(this.value6>=this.value5){
-
-        }else{
-          this.$message.error('结束时间必须大于开始时间')
-        }
       },
       getEnd(){
-        this.post_data.start=new Date(this.value5).getTime()/1000;
         this.post_data.end=new Date(this.value6).getTime()/1000;
-        if(this.value6>=this.value5){
-
-        }else{
-          this.$message.error('结束时间必须大于开始时间')
-        }
       },
 
       //判断是否是设备  导出按钮限制
@@ -1439,8 +1422,6 @@
               this.statisticsReport.machine_key=res.result.items[0].machine_key;
               this.statisticsReport.now_time=this.getNewTime();
 
-              console.log(this.statisticsReport.now_time);
-
               //引用赋值  用完清空
               this.tableHeader=[];
               this.tableName=[];
@@ -1531,7 +1512,6 @@
           ' <style type="text/css">' +
           'table td {' +
           'height: 30px;' +
-          'width: 150px;' +
           'font-family: 宋体;' +
           'font-size: 16px;' +
           'text-align: left;' +
@@ -1552,7 +1532,11 @@
           ' }' +
           'table tbody td{' +
           'text-align: center;' +
-          'height: 20px;' +
+          'height: 25px;' +
+          ' }' +
+          'table tbody tr .bHead{' +
+          'text-align: center;' +
+          'height: 50px;' +
           ' }' +
           '</style>' +
           '</head><body ><table border="1" cellspacing="0">{table}</table></body></html>';
@@ -1728,6 +1712,11 @@
                 list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
               })
             });
+            if(res.result.items.length>0&&this.device){
+              this.isExport=false;
+            }else{
+              this.isExport=true;
+            }
             this.loading=false
           }else {
             this.$message.error(res.message);
@@ -1855,13 +1844,34 @@
 
       //查询列表
       query(){
-        this.post_data.page_index=1;
-        this.getList(this.post_data);
-        this.getRecords(this.post_data)
+        console.log(this.value5,this.value6);
+        if(this.value5&&this.value6){
+          if(this.value6>=this.value5){
+            this.post_data.page_index=1;
+            this.getList(this.post_data);
+            this.getRecords(this.post_data)
+          }else{
+            this.$message.error('结束时间必须大于开始时间')
+          }
+        }else if(!this.value5&&!this.value6){
+          this.post_data.start='';
+          this.post_data.end='';
+          this.post_data.page_index=1;
+          this.getList(this.post_data);
+          this.getRecords(this.post_data)
+        }else{
+          if(!this.value5){
+            this.$message.error('请选择开始时间')
+          }else if(!this.value6){
+            this.$message.error('请选择结束时间')
+          }
+        }
+
       },
 
       //重置请求参数
       Refresh(){
+
         this.value2='';
         this.value7='';
         this.post_data={ // 请求数据

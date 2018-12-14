@@ -160,7 +160,6 @@
                 }
               }
             }).catch(err => {
-              console.log(err);
               loading.close();
             });
           }else {

@@ -232,7 +232,7 @@
   }
   .t-Body{
     height: 100%;
-    min-height: 600px;
+    min-height: 700px;
     overflow: auto;
     padding: 10px;
     background: #f5f5f9;

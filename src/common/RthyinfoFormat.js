@@ -11,7 +11,6 @@ export const RthyinfoFormat = {
      * @return 保留结果。
      */
     round: function(v, len) {
-      console.log(v, len);
         if (v == null || v == "" || isNaN(v)) {
             return "";
         }
@@ -49,8 +48,6 @@ export const RthyinfoFormat = {
      *            水位值。
      */
     formatZ: function(v) {
-      console.log(v);
-
         if (v == null || v == "" || isNaN(v)) {
             return "";
         }
@@ -64,7 +61,6 @@ export const RthyinfoFormat = {
      *            雨量值。
      */
     formatP: function(v) {
-      console.log(v);
         if (v == 0) return "0.0";
         if (isNaN(v) || v == null ||v == "") {
             return "";
