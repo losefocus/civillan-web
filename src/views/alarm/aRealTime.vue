@@ -206,8 +206,6 @@ export default {
             tableList.push(item);
           });
           _this.tableData=tableList;
-          //_this.tableData.tableRows=_this.tableRows
-          console.log(_this.tableData);
           _this.loading=false
         }else {
           _this.$message.error(res.message);
@@ -219,7 +217,6 @@ export default {
     //统计总数
     getRecords(){
       history.records().then(res=>{
-        console.log(res);
         this.recordSum=res.result[0]
       })
     },
@@ -238,10 +235,8 @@ export default {
     getDeviceList(post_data){
       let _this=this;
       deviceList.list(post_data).then(res=>{
-        console.log(res);
         _this.deviceSelect=res.result.items;
         _this.deviceTotal=res.result.total;
-        console.log(_this.deviceTotal)
       });
     },
 

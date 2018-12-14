@@ -75,6 +75,7 @@ export default {
 
     },
     mounted(){
+        this.getTimes()
         setInterval(this.getTimes,1000)
     },
     methods:{
@@ -106,7 +107,7 @@ export default {
     height: 1080px;
     width: 1920px;
     color:#fff;
-    background: url(../../assets/bg.png)no-repeat center
+    background: url(../../assets/panel/bg.png)no-repeat center
 }
 .top{
     height:65px;

@@ -1065,13 +1065,11 @@
       //获取设备信息
       getInfo(key){
         deviceList.list({key:key}).then(res=>{
-          console.log(res);
           let data=res.result.items[0];
           //设备类型
 
           this.productName=data.product.name;
           this.deviceName1=data.name;
-          console.log(this.deviceName1);
           deviceUser.list({device_id:data.id}).then(res=>{
             if(res.success){
               if(res.result.total){

@@ -6,7 +6,7 @@
         <ul class="org clearfix">
             <li v-for="(item,index) in data.organTypeList"  :key="index">
                 <div class="org_tit">{{item.name}}</div>
-                <div class="org_name">{{item.organList[0].name}}</div>
+                <div class="org_name">{{item.organList.length==0?'无':item.organList[0].name}}</div>
             </li>
             <!-- <li>
                 <div class="org_tit">建设单位</div>

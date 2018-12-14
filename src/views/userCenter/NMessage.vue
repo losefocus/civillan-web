@@ -178,7 +178,6 @@
       })
     },
     expanded(row, expandedRows){
-      console.log(expandedRows);
       if(expandedRows.length>0){
         if(expandedRows[0].status==1){
           let ids=expandedRows[0].id;

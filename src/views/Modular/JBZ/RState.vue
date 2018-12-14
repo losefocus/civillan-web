@@ -141,7 +141,7 @@
        <li class="s-progress" :class="{'s-progress1':classChange==1}">
          <div class="p-box" >
            <div class="p-echart" style="">
-             <div class="p-progress" :style="{height:'75%'}">
+             <div class="p-progress" :style="{height:'85%'}">
                <div style="height: 100%;">
                  <div class="progressContainer">
                    <div class="progress" :style="{height:progressHeight}" style="font-size: 12px">
@@ -360,6 +360,7 @@ export default {
     getInfo(key){
       deviceList.list({key:key}).then(res=>{
         let data=res.result.items[0];
+        console.log(data);
         //设备类型
         let headNum=key.substring(3,4);
         if(Number(headNum)>1){
@@ -503,7 +504,6 @@ export default {
       let replayData=sessionStorage.getItem('replayData');
       let post_data=JSON.parse(replayData);
       deviceData.replay(post_data).then(res=>{
-        console.log(res);
         this.historyData=res.result[0].realtimeObjectList;
       }).catch(e=>{
 
@@ -1218,7 +1218,7 @@ export default {
             overflow: hidden;
             height: calc( 100% - 30px);
             .p-progress{
-              margin:15% 0 0 40%;
+              margin:8% 0 0 42%;
             }
           }
         }

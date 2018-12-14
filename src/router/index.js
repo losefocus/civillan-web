@@ -78,7 +78,7 @@ const vRouter = new VueRouter({
         {
           path: '/alarm',
           component: resolve => require(['@/views/POV/alarm'],resolve),
-          name:'故障报警',
+          name:'预警信息',
           redirect:'/alarm/aAnalysis',
           meta: { requireAuth: true },
           children:[

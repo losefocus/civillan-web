@@ -233,7 +233,6 @@
 
       },
       beforeUpload(file){
-        console.log(file);
         this.uploading=true;
         const isJPG = file.type === 'application/vnd.ms-excel';
         const isLt2M = file.size / 1024 / 1024 < 5;
