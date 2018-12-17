@@ -4,7 +4,8 @@
             <i class="iconfont icon-quanbushebei"></i>
             设备统计
         </div>
-        <div id="device"></div>
+        <div v-show="option.xAxis.data.length == 0" style="line-height:100px;text-align: center">暂无数据</div>
+        <div v-show="option.xAxis.data.length != 0" id="device"></div>
     </div>
 </template>
 <script>
@@ -115,7 +116,7 @@ export default {
             this.getDevice();
         },
         getDevice(){
-            panel.count({projectId:this.$cookies.get('panel_id')}).then(res => {
+            panel.count({projectId:this.$route.query.id}).then(res => {
                 let data_xAxis = [],data_1=[],data_2=[]
                 for (let key in res.result.all) {
                     data_xAxis.push(key);

@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <el-container style="height: 100%">
       <el-header height="70px">
-        <z-header></z-header>
+        <z-header :panel-id="panelId"></z-header>
       </el-header>
       <div id="container" style="width: 100%;height: 100%">
         <ul id="my-list">
@@ -35,6 +35,7 @@
     },
     data () {
       return {
+        panelId:null,
         isShow:{},
         lists:[]
       };
@@ -65,7 +66,7 @@
             if(res.success){
               loading.close();
               let lists=toTree(res.result);
-              this.$cookies.set('panel_id',res.result[0].id)
+              this.panelId = res.result[0].id
               lists.forEach(function (item) {
                 item.show=false;
                 item.listId='id'+item.id;
@@ -212,6 +213,7 @@
 
                     markerList.on('infoWindowClick',function (event,info) {
                       //_this.$store.dispatch('incrementId',info.id);
+                      _this.panelId = info.id
                       _this.$cookies.set('projectId',info.id);
                       _this.$cookies.set('tenant',info.data.tenant);
                       //_this.$store.dispatch('incrementTenant',info.data.tenant);

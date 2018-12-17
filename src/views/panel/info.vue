@@ -57,7 +57,7 @@ export default {
     methods:{
         getInfo(id){
             let tenant=this.$cookies.get('tenant');
-            let panel_id=this.$cookies.get('panel_id'); 
+            let panel_id=this.$route.query.id; 
             project.info({'project_id':panel_id,tenant:tenant}).then(res=>{
                 this.data = res.result
                 // if(res.success){

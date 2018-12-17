@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <el-container style="height: 100%">
       <el-header height="70px" style="border-bottom: 1px solid rgba(230,234,238,1);">
-        <z-header ></z-header>
+        <z-header :panel-id="panelId"></z-header>
       </el-header>
       <el-container style="height: calc(100% - 70px);" v-cloak>
         <z-nav style="float: left;height: calc(100%)" v-show="isNav"></z-nav>
@@ -34,12 +34,14 @@
     },
     data(){
       return{
+        panelId:'',
         title:'',
         isActive:true,
         isNav:true,
       }
     },
     mounted(){
+      this.panelId = this.$cookies.get('projectId')
       this.title=this.$route.name;
       if(this.$route.path=='/project'){
         this.isActive=false;

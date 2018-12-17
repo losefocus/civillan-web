@@ -14,51 +14,8 @@
                     <!-- <li class="clearfix">
                         <div class="pull-left text">2飞阳建设搅拌桩4号-流量传感器异常</div>
                         <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">3飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">4飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">5飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">6飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">7飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">8飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">9飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">10飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">11飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">12飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
-                    </li>
-                    <li class="clearfix">
-                        <div class="pull-left text">13飞阳建设搅拌桩4号-流量传感器异常</div>
-                        <div class="pull-right">12-6 15:30</div>
                     </li> -->
+                    
                 </ul>
             <!-- </marquee> -->
             
@@ -70,6 +27,7 @@ import panel from '@/api/panel/index'
 import {formatDate} from '@/common/formatDate.js';
 
 export default {
+    props:['interval'],
     data(){
         return{
             list:[]
@@ -89,10 +47,11 @@ export default {
     },
     mounted(){
         this.getList()
+        setInterval(this.getList,this.interval)
     },
     methods:{
         getList(){
-            panel.alarm({projectId:this.$cookies.get('panel_id')}).then(res => {
+            panel.alarm({projectId:this.$route.query.id}).then(res => {
                 this.list = res.result
             })
         }

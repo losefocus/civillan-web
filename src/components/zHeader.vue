@@ -35,11 +35,18 @@
     <!--<span class="p-name">项目地图</span>-->
   </router-link>
 
-  <router-link to="/panel" class="p-box hd-right" style="margin-right: 40px;">
-    <el-tooltip class="item" effect="dark" content="大屏投放" placement="bottom">
+  <!--项目大屏-->
+  <router-link v-if="panel_type == 'project'" :to="{path:'/panel_p',query: {id: panelId}}"  target="_blank" class="p-box hd-right" style="margin-right: 40px;">
+    <el-tooltip class="item" effect="dark" content="大屏投放-项目" placement="bottom">
       <i class="iconfont icon-touping" style="font-size: 30px;color: #666666;"></i>
     </el-tooltip>
-    <!--<span class="p-name">项目地图</span>-->
+  </router-link>
+
+  <!--标段大屏-->
+  <router-link v-else :to="{path:'/panel',query: {id: panelId}}" target="_blank" class="p-box hd-right" style="margin-right: 40px;">
+    <el-tooltip class="item" effect="dark" content="大屏投放-标段" placement="bottom">
+      <i class="iconfont icon-touping" style="font-size: 30px;color: #666666;"></i>
+    </el-tooltip>
   </router-link>
 
   <el-dialog
@@ -84,6 +91,7 @@
   import Bus from '@/common/eventBus.js'
 
   export default {
+    props:['panelId'],
     name: "zHeader",
     components:{
       HCenter,
@@ -93,6 +101,7 @@
     },
     data(){
        return{
+         panel_type:'project',
          topChange:true,
          isOut:false,
          logoImg:logo,
@@ -121,6 +130,11 @@
        }
     },
     created(){
+      if(this.$route.path =='/'){
+        this.panel_type = 'project'
+      }else{
+        this.panel_type = 'section'
+      }
       let _this=this;
       let clientHeight=document.body.clientHeight;
       /*if(clientHeight<800){
@@ -248,7 +262,16 @@
           this.$router.push('/login')
         }
       }
-    }
+    },
+    watch: {
+      $route: {
+        handler: function(val, oldVal){
+          console.log(val);
+        },
+        // 深度观察监听
+        deep: true
+      }
+    },
   }
 </script>
 
