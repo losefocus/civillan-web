@@ -317,7 +317,7 @@
     }
     .m-name1{
       position: absolute;
-      z-index: 9999;
+      z-index: 99;
       width: calc(100% - 60px);
       padding: 30px;
       height: 170px;
