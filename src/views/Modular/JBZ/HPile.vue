@@ -255,13 +255,13 @@
             <tbody>
             <tr class="bHead">
               <td>深度(m)</td>
-              <td>段浆量（L/m）</td>
-              <td>段灰量（kg/m）</td>
-              <td>段密度（g/cm³）</td>
-              <td>段电流（A）</td>
-              <td>段喷压（MPa）</td>
-              <td>速率（cm/min）</td>
-              <td>状态</td>
+              <td>段浆量<br>(L/m)</td>
+              <td>段灰量<br>(kg/m)</td>
+              <td>段密度<br>(g/cm³)</td>
+              <td>段电流<br>(A)</td>
+              <td>段喷压<br>(MPa)</td>
+              <td>速率<br>(cm/min)</td>
+              <td class="w-state">状态</td>
             </tr>
             <tr v-for="item in props.row.data" :key="item">
               <td>{{item.p_deep / 100  | formatZ}}&nbsp;</td>
@@ -1534,9 +1534,12 @@
           'text-align: center;' +
           'height: 25px;' +
           ' }' +
-          'table tbody tr .bHead{' +
+          'table .bHead td{' +
           'text-align: center;' +
           'height: 50px;' +
+          ' }' +
+          'table .bHead .w-state{' +
+          'min-width: 100px;' +
           ' }' +
           '</style>' +
           '</head><body ><table border="1" cellspacing="0">{table}</table></body></html>';
@@ -1698,6 +1701,7 @@
       //获取全部历史数据列表
       getList(post_data) {
         this.loading=true;
+        console.log(this.isDevice)
         history.list(post_data).then(res=>{
           if(res.success){
             this.total=res.result.total;
@@ -1712,7 +1716,7 @@
                 list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
               })
             });
-            if(res.result.items.length>0&&this.device){
+            if(res.result.items.length>0&&this.isDevice){
               this.isExport=false;
             }else{
               this.isExport=true;
@@ -1875,6 +1879,7 @@
         this.value2='';
         this.value7='';
         this.post_data={ // 请求数据
+          projectId:this.$cookies.get('projectId'),
           key:this.key,
           page_index:1,
           page_size:10,

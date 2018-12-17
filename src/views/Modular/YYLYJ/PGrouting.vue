@@ -36,12 +36,16 @@
         <li class="b-data">
           <ul class="d-window">
             <li class="w-body">
-              <div class="w-name">进浆量(L)</div>
-              <div class="w-key">300</div>
+              <div class="w-container">
+                <div class="w-name">进浆量(L)</div>
+                <div class="w-key">300</div>
+              </div>
             </li>
             <li class="w-body">
-              <div class="w-name">进浆量(L)</div>
-              <div class="w-key">300</div>
+              <div  class="w-container">
+                <div class="w-name">进浆量(L)</div>
+                <div class="w-key">300</div>
+              </div>
             </li>
           </ul>
         </li>
@@ -891,18 +895,24 @@
             text-align: center;
             background:rgba(255,255,255,1);
             box-shadow:0 3px 4px 0 rgba(144,164,183,0.2);
+            width: 100%;
             height: calc(50% - 5px);
             overflow: hidden;
-            .w-name{
-              margin-top: 25%;
-              font-size: 18px;
+            display: table;
+            .w-container{
+              display: table-cell;
+              vertical-align: middle;
+              .w-name{
+                font-size: 18px;
+              }
+              .w-key{
+                color: #1FBDEE;
+                margin-top: 10px;
+                font-weight: bold;
+                font-size: 40px;
+              }
             }
-            .w-key{
-              color: #1FBDEE;
-              margin-top: 10px;
-              font-weight: bold;
-              font-size: 40px;
-            }
+
           }
           .w-body:last-child{
             height: calc(50% - 5px);
