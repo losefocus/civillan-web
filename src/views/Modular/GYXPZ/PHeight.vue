@@ -865,6 +865,8 @@
 
         designReturn:250,
         designUp:250,
+
+        chartData:[]
       }
     },
     props:['dialogFullScreen','deviceKey','isClose','clientWidth'],
@@ -882,6 +884,10 @@
       this.getInfo(deviceKey);
       this.getAlarms(deviceKey);
       this.getData(deviceKey);
+      this.timer=setInterval(()=>{
+        this.getData(deviceKey);
+      },2000);
+
 
     },
     mounted(){
@@ -1155,14 +1161,15 @@
 
       //实时数据
       getData(key){
-        deviceData.list({'key':key}).then(res=>{
+        deviceData.list({'key':'GP20184901'}).then(res=>{
           if(res.success){
             this.RT_data=res.result;
-            console.log(this.RT_data);
-            this.getUp(this.RT_data.speed,this.designUp);
-            this.getRotation(this.RT_data.rspeed,this.designReturn);
+            let speed=Number(this.RT_data.speed).toFixed(2);
+            let rspeed=Number(this.RT_data.rspeed).toFixed(2);
+            this.getUp(speed,this.designUp);
+            this.getRotation(rspeed,this.designReturn);
 
-            this.polar1.series[0].data[0].value=Number(this.RT_data.slurry_pressure).toFixed(2); //灰浆压力(MPa）
+            this.polar1.series[0].data[0].value=Number(this.RT_data.slurry_pressure); //灰浆压力(MPa）
             this.polar2.series[0].data[0].value=Number(this.RT_data.slurry_flow).toFixed(2); //灰浆流量(L/min）
             this.polar3.series[0].data[0].value=Number(this.RT_data.air_pressure).toFixed(2); //空气压力(MPa）
             this.polar4.series[0].data[0].value=Number(this.RT_data.air_flow).toFixed(2); //空气流量(m3/min）
@@ -1172,6 +1179,25 @@
             this.polar8.series[0].data[0].value=Number(this.RT_data.return_flow).toFixed(2); //返浆流量(L/min）
 
 
+            let _this=this;
+            function randomData() {
+              now = new Date(+now + oneDay);
+              return {
+                value: [
+                  [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-'),
+                  Math.round(Number(_this.RT_data.slurry_flow))
+                ]
+              }
+            }
+
+            this.chartData = [];
+            let now = +new Date(1997, 9, 3);
+            let oneDay = 24 * 3600 * 1000;
+            let value = Math.random() * 1000;
+            for (let i = 0; i < 10; i++) {
+              this.chartData.push(randomData());
+            }
+            console.log(this.chartData);
 
             this.RT_data.depth_design=this.DesignDeep;
             this.progress=Math.abs(Number(this.RT_data.rdeep).toFixed(2));
@@ -1182,14 +1208,7 @@
         }).catch(err=>{
         });
       },
-      getStyle(obj,attr) {
-        if(obj.currentStyle)
-        {
-          return obj.currentStyle[attr];
-        }else{
-          return getComputedStyle(obj,false)[attr];
-        }
-      },
+
       //项目配置参数
       getConfig(){
         let projectId=this.$cookies.get('projectId');
@@ -1199,79 +1218,54 @@
 
       //ECharts
       myCharts(){
-        let colors = ['#1FBDEE', '#F85959','#F85959'];
-        let data=[ "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00" ];
-        let data1= [ 499, 556, 648, 0, 78, 435, 1014, 1129, 747, 1183, 648, 1006, 737, 880, 777, 685, 469, 731, 319, 873, 824, 545, 0, 0 ];
-        let data2= [ 599, 656, 0, 648, 78, 435, 1014, 1129, 747, 1183, 648, 1006, 737, 880, 777, 685, 469, 731, 319, 873, 824, 545, 0, 0 ];
-        let data3= [ 699, 456, 648, 0, 78, 435, 1014, 1129, 747, 1183, 648, 1006, 737, 880, 777, 685, 469, 731, 319, 873, 824, 545, 0, 0 ];
-
 
         this.myChart = this.$echarts.init(document.getElementById('THCharts'));
         this.myChart.setOption({
           title: {
-            text: '流量变化曲线',
-            show: true,
-            textStyle: {
-              fontWeight: 'bold',
-              fontSize: 18,
-              color: '#333'
-            },
-            top:'4%',
-            left: '3%'
+            text: '动态数据 + 时间坐标轴'
           },
-          color: colors,
-
           tooltip: {
             trigger: 'axis',
+            formatter: function (params) {
+              params = params[0];
+              var date = new Date(params.name);
+              return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+            },
             axisPointer: {
-              type: 'cross'
+              animation: false
             }
           },
-          grid: {
-            top:'25%',
-            bottom:'10%',
-            right:'3%',
-          },
-          legend: {
-            itemWidth: 12,
-            itemHeight: 5,
-            itemGap: 13,
-            textStyle: {
-              fontSize: 12,
-              color: '#333'
-            },
-            top:'8%',
-            right:'2%',
-          },
+          dataZoom: [
+            {
+              start: 50,
+              end:100,
+            }, {
+              type: 'inside',
+            }
+          ],
           xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: data
+            type: 'time',
+            splitLine: {
+              show: false
+            }
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            boundaryGap: [0, '100%'],
+            splitLine: {
+              show: false
+            }
           },
-          series: [
-            {
-              name:'水',
-              type:'line',
-              stack: '总量',
-              data:data1
-            },
-            {
-              name:'灰浆',
-              type:'line',
-              stack: '总量',
-              data:data2
-            },
-            {
-              name:'返浆',
-              type:'line',
-              stack: '总量',
-              data:data3
-            },
-          ]
+          series: [{
+            name: '模拟数据',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: this.chartData
+          }]
         });
+
+
       },
     },
 

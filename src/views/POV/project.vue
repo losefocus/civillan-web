@@ -194,6 +194,7 @@
       JumpRouter(data){
         this.$router.push('/device');
         sessionStorage.setItem('groupId',data.id);
+        sessionStorage.setItem('code',data.code);
         sessionStorage.setItem('groupName',data.name)
       },
       sum (m,n){

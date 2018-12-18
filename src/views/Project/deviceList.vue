@@ -190,12 +190,6 @@
         deviceGrouping.list(this.group_post).then(res=>{
           if(res.success){
             this.navList=res.result.items;
-            let allDevice={
-              project_id:this.$cookies.get('projectId'),
-              name:'全部',
-              id:sessionStorage.getItem('groupId'),
-            };
-            this.navList.unshift(allDevice);
             this.getList(this.post_data);
 
             this.$nextTick(()=>{

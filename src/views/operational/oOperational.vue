@@ -349,6 +349,7 @@
         value7:'',
         newData:'',
         device_data: {//全部设备select列表
+          project_id:this.$cookies.get('projectId'),
           page_index: 1,
           page_size: 5,
           name: ''
@@ -431,17 +432,11 @@
           }
         })
       },
+      //设备分组
       getGroup(){
         deviceGrouping.list(this.group_post).then(res=>{
           if(res.success){
             this.navList=res.result.items;
-            let allDevice={
-              project_id:this.$cookies.get('projectId'),
-              name:'全部',
-              id:sessionStorage.getItem('groupId'),
-            };
-            this.navList.unshift(allDevice);
-            this.getList(this.post_data);
 
             this.$nextTick(()=>{
               this.isShow=true
