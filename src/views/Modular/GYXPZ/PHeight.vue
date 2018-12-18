@@ -18,7 +18,7 @@
       <ul class="s-box1">
         <li class="s-info" :class="{'s-info1':classChange==1}" v-if="!isTab">
           <div class="i-id">
-            <div v-if="RT_data.pile_describe" class="d-model" :title="RT_data.pile_describe">{{RT_data.pile_describe}}</div>
+            <div v-if="RT_data.pile_name" class="d-model" :title="RT_data.pile_name">{{RT_data.pile_name}}</div>
             <div v-else class="d-model">暂无作业</div>
             <ul class="d-kind" v-if="isPile">
               <li v-for="(list,index) in deviceHead" @click="deviceChange(index)" :key="list" :class="{'deviceActive':index==deviceIndex}" :title="headTitle[index]">{{list}}</li>
@@ -118,15 +118,18 @@
             <li class="c-statistics">
               <ul class="s-box">
                 <li class="s-body">
-                  <p class="s-num">200</p>
-                  <p class="s-text">累计流量(kg)</p>
+                  <p class="s-num" v-if="RT_data.ash_total">{{Number(RT_data.ash_total).toFixed(2)}}</p>
+                  <p class="s-num" v-else>0</p>
+                  <p class="s-text">累计灰量(kg)</p>
                 </li>
                 <li class="s-body">
-                  <p class="s-num">200</p>
+                  <p class="s-num" v-if="RT_data.slurry_part">{{Number(RT_data.slurry_part).toFixed(2)}}</p>
+                  <p class="s-num" v-else>0</p>
                   <p class="s-text">区段浆量(L)</p>
                 </li>
                 <li class="s-body">
-                  <p class="s-num">200</p>
+                  <p class="s-num" v-if="RT_data.slurry_total">{{Number(RT_data.slurry_total).toFixed(2)}}</p>
+                  <p class="s-num" v-else>0</p>
                   <p class="s-text">累计浆量(L)</p>
                 </li>
               </ul>
@@ -142,12 +145,14 @@
             <li class="c-statistics">
               <ul class="s1-box">
                 <li class="s1-body">
-                  <p class="s1-num">200</p>
-                  <p class="s1-text">区段气量(m3)</p>
+                  <p class="s1-num" v-if="RT_data.air_part">{{Number(RT_data.air_part).toFixed(2)}}</p>
+                  <p class="s1-num" v-else>0</p>
+                  <p class="s1-text">区段气量(m³)</p>
                 </li>
                 <li class="s1-body">
-                  <p class="s1-num">200</p>
-                  <p class="s1-text">累计气量(m3)</p>
+                  <p class="s1-num" v-if="RT_data.air_total">{{Number(RT_data.air_total).toFixed(2)}}</p>
+                  <p class="s1-num" v-else>0</p>
+                  <p class="s1-text">累计气量(m³)</p>
                 </li>
               </ul>
             </li>
@@ -164,11 +169,13 @@
             <li class="c-statistics">
               <ul class="s1-box">
                 <li class="s1-body">
-                  <p class="s1-num">200</p>
+                  <p class="s1-num" v-if="RT_data.water_part">{{Number(RT_data.water_part).toFixed(2)}}</p>
+                  <p class="s1-num" v-else>0</p>
                   <p class="s1-text">区段水量(L)</p>
                 </li>
                 <li class="s1-body">
-                  <p class="s1-num">200</p>
+                  <p class="s1-num" v-if="RT_data.water_total">{{Number(RT_data.water_total).toFixed(2)}}</p>
+                  <p class="s1-num" v-else>0</p>
                   <p class="s1-text">累计水量(L)</p>
                 </li>
               </ul>
@@ -184,11 +191,13 @@
             <li class="c-statistics">
               <ul class="s1-box">
                 <li class="s1-body">
-                  <p class="s1-num">200</p>
+                  <p class="s1-num" v-if="RT_data.return_part">{{Number(RT_data.return_part).toFixed(2)}}</p>
+                  <p class="s1-num" v-else>0</p>
                   <p class="s1-text">区段返浆(L)</p>
                 </li>
                 <li class="s1-body">
-                  <p class="s1-num">200</p>
+                  <p class="s1-num" v-if="RT_data.return_total">{{Number(RT_data.return_total).toFixed(2)}}</p>
+                  <p class="s1-num" v-else>0</p>
                   <p class="s1-text">累计返浆(L)</p>
                 </li>
               </ul>
@@ -208,7 +217,7 @@
                       <div style="margin-left: 25px;color: #24BCF7;margin-top: -9px;width: 60px"><!--{{ progress+'%'}}--><span style="font-size: 16px;font-weight: bold;">{{isNaN(progress)?0:progress}}</span></div>
                     </div>
                     <span style="margin-left: -25px">0米</span>
-                    <span style="position: absolute;bottom: 0;left:-40px;">{{DesignDeep}} 米</span>
+                    <span style="position: absolute;bottom: 0;left:-40px;">{{DesignDeep}}米</span>
                   </div>
                 </div>
               </div>
@@ -228,7 +237,7 @@
                 </p>
               </li>
               <li  class="b-state">
-                <p class="s-title" v-if="1">
+                <p class="s-title1" v-if="1">
                   <span>三重管法</span>
                 </p>
               </li>
@@ -266,6 +275,7 @@
   import config from '@/api/configure/config.js'
 
   import deviceInfo from '@/views/Modular/JBZ/RState/deviceInfo.vue'
+  import deviceConfig from '@/api/device/deviceConfig.js'
   export default {
     name: "PHeight",
     components:{
@@ -355,7 +365,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'灰浆压力(MPa)'
+              value:0, name:'灰浆压力(MPa)'
             }]
           }]
         },
@@ -422,7 +432,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'灰浆流量(L/min)'
+              value:0, name:'灰浆流量(L/min)'
             }]
           }]
         },
@@ -489,7 +499,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'空气压力(MPa)'
+              value:0, name:'空气压力(MPa)'
             }]
           }]
         },
@@ -556,7 +566,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'空气流量(m3/min)'
+              value:0, name:'空气流量(m3/min)'
             }]
           }]
         },
@@ -623,7 +633,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'清水压力(MPa)'
+              value:0, name:'清水压力(MPa)'
             }]
           }]
         },
@@ -690,7 +700,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'清水流量(L/min)'
+              value:0, name:'清水流量(L/min)'
             }]
           }]
         },
@@ -757,7 +767,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'返浆压力(MPa)'
+              value:0, name:'返浆压力(MPa)'
             }]
           }]
         },
@@ -824,7 +834,7 @@
               offsetCenter:[0, '30%']
             },
             data: [{
-              value:300, name:'返浆流量(L/min)'
+              value:0, name:'返浆流量(L/min)'
             }]
           }]
         },
@@ -853,6 +863,8 @@
         /*upChart:null,
         rotationChart:null,*/
 
+        designReturn:250,
+        designUp:250,
       }
     },
     props:['dialogFullScreen','deviceKey','isClose','clientWidth'],
@@ -865,6 +877,7 @@
     created(){
       this.getConfig();
       this.getDeviceInfo();
+      this.getDeviceConfig();
       let deviceKey=this.$store.state.project.deviceKey;
       this.getInfo(deviceKey);
       this.getAlarms(deviceKey);
@@ -875,12 +888,16 @@
       this.init();
       this.reload();
       this.myCharts();
-      this.getUp();
-      this.getRotation();
+
       this.$nextTick(()=>{
         this.myChart.resize();
-        this.upChart.resize();
-        this.rotationChart.resize();
+        if(this.upChart){
+          this.upChart.resize();
+        }
+        if(this.rotationChart){
+          this.rotationChart.resize();
+        }
+
       });
     },
     beforeDestroy(){
@@ -892,7 +909,6 @@
         let clientWidth=document.body.clientWidth;
         /*this.temp(this.dialogFullscreen,this.diameter,this,clientWidth)*/
       },
-
 
       //报警信息
       getAlarms(key){
@@ -917,18 +933,33 @@
 
       },
 
+      //设备设计参数
+      getDeviceConfig(){
+        let deviceInfo=JSON.parse(sessionStorage.getItem('deviceInfo'));
+        let id=deviceInfo.id;
+        deviceConfig.sensor({page_index:1,page_size:1000,device_id:id}).then(res=>{
+          if(res.success){
+            if(res.result.items.length>0){
+
+            }
+          }else{
+
+          }
+        })
+      },
+
       //提钻速度
-      getUp(){
+      getUp(data,designData){
         let upSpeed=document.getElementById('upSpeed');
         this.upChart = this.$echarts.init(upSpeed);
-        let tips=100;
+        let tips=data;
         if(isNaN(tips)){
           tips='0.00'
         }
         let loading=()=> {
-          if(tips>200){
+          if(tips>designData){
             return [{
-              value: 200,
+              value: designData,
               itemStyle: {
                 normal: {
                   color: '#F31A1A',
@@ -946,13 +977,13 @@
                 }
               }
             }, {
-              value: 200 - tips,
+              value: designData - tips,
             }];
           }
         };
         this.upChart.setOption({
           title: [{
-            text: tips +' '+'/'+' ' + 200,
+            text: tips +' '+'/'+' ' + designData,
             left: 'center',
             top: '42%',
             textStyle: {
@@ -960,7 +991,7 @@
               fontSize:'14',
             }
           }, {
-            text: 'A',
+            text: 'cm/min',
             left: 'center',
             top: '58%',
             textStyle: {
@@ -985,17 +1016,17 @@
       },
 
       //回转速度
-      getRotation(){
+      getRotation(data,designData){
         let rotationSpeed=document.getElementById('rotationSpeed');
         this.rotationChart = this.$echarts.init(rotationSpeed);
-        let tips=100;
+        let tips=data;
         if(isNaN(tips)){
           tips='0.00'
         }
         let loading=()=> {
-          if(tips>200){
+          if(tips>designData){
             return [{
-              value: 200,
+              value: designData,
               itemStyle: {
                 normal: {
                   color: '#F31A1A',
@@ -1013,13 +1044,13 @@
                 }
               }
             }, {
-              value: 200 - tips,
+              value: designData - tips,
             }];
           }
         };
         this.rotationChart.setOption({
           title: [{
-            text: tips +' '+'/'+' ' + 200,
+            text: tips +' '+'/'+' ' + designData,
             left: 'center',
             top: '42%',
             textStyle: {
@@ -1027,7 +1058,7 @@
               fontSize:'14',
             }
           }, {
-            text: 'A',
+            text: 'r/min',
             left: 'center',
             top: '58%',
             textStyle: {
@@ -1051,13 +1082,12 @@
         });
       },
 
-
       //遮罩
       getDeviceState(){
         if(this.$store.state.project.changeTab==true){
           this.noDevice=false;
         }else{
-          this.noDevice=true;
+          this.noDevice=false;
           this.RT_data.depth_design=20;
         }
       },
@@ -1128,30 +1158,27 @@
         deviceData.list({'key':key}).then(res=>{
           if(res.success){
             this.RT_data=res.result;
-            this.RT_data.status=1;
-            this.RT_data.rdeep=Math.abs(this.RT_data.rdeep);
-            this.RT_data.depth_design=30;
+            console.log(this.RT_data);
+            this.getUp(this.RT_data.speed,this.designUp);
+            this.getRotation(this.RT_data.rspeed,this.designReturn);
 
-            this.rflow=res.result.rflow;
-            this.rspeed=Math.abs(res.result.rspeed);
-            this.rcurrent=res.result.rcurrent;
-            this.progress=res.result.rdeep.toFixed(2);
-            if(isNaN(this.progress)){
-              this.progress=0
-            }
+            this.polar1.series[0].data[0].value=Number(this.RT_data.slurry_pressure).toFixed(2); //灰浆压力(MPa）
+            this.polar2.series[0].data[0].value=Number(this.RT_data.slurry_flow).toFixed(2); //灰浆流量(L/min）
+            this.polar3.series[0].data[0].value=Number(this.RT_data.air_pressure).toFixed(2); //空气压力(MPa）
+            this.polar4.series[0].data[0].value=Number(this.RT_data.air_flow).toFixed(2); //空气流量(m3/min）
+            this.polar5.series[0].data[0].value=Number(this.RT_data.water_pressure).toFixed(2); //清水压力(MPa）
+            this.polar6.series[0].data[0].value=Number(this.RT_data.water_flow).toFixed(2); //清水流量(L/min）
+            this.polar7.series[0].data[0].value=Number(this.RT_data.return_pressure).toFixed(2); //返浆压力(MPa）
+            this.polar8.series[0].data[0].value=Number(this.RT_data.return_flow).toFixed(2); //返浆流量(L/min）
+
+
+
+            this.RT_data.depth_design=this.DesignDeep;
+            this.progress=Math.abs(Number(this.RT_data.rdeep).toFixed(2));
             this.progressHeight=(1-(this.progress/parseFloat(this.DesignDeep)))*100+'%';
-
-            let par_slurry=res.result.par_slurry;
-            let par_ash=res.result.par_ash;
-            let rpressure=res.result.rpressure;
-
-            this.slurryData.push(par_slurry);
-            this.ashData.push(par_ash);
-            this.rpressureData.push(rpressure);
           }else {
 
           }
-
         }).catch(err=>{
         });
       },
@@ -1169,7 +1196,6 @@
         config.list({'project_id':projectId,'name':'k2230_940_C18'}).then(res=>{
         })
       },
-
 
       //ECharts
       myCharts(){
@@ -1506,7 +1532,7 @@
                 -webkit-box-shadow: 0px 0px 2px 4px #31C4F7;
                 border-radius: 50%;
               }
-              .s-title{
+              .s-title1{
                 vertical-align: middle;
                 margin-right: 10px;
               }
@@ -1752,9 +1778,27 @@
               margin: 8% auto;
               .s-title{
                 width: 100%;
-                height: 100%;
+                height: 70%;
                 background: #1FBDEE;
                 color: #ffffff;
+                position: relative;
+                span{
+                  position: absolute;
+                  font-size: 14px;
+                  width:100px;
+                  height: 12px;
+                  top:50%;
+                  left:50%;
+                  margin-left:-50px;
+                  margin-top:-10px;
+                  text-align: center;
+                }
+              }
+              .s-title1{
+                width: 100%;
+                height: 70%;
+                color: #000000;
+                margin-top: 30%;
                 position: relative;
                 span{
                   position: absolute;

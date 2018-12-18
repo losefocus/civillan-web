@@ -19,12 +19,12 @@
             </div>
             <div class="item item_l">
                 <div class="item_" style="padding:0">
-                    <my-map :interval="interval" :showsum="showsum"></my-map>
+                    <my-map :interval="interval"></my-map>
                 </div>
             </div>
-            <div class="item item_s">
-                <div class="item_">
-                    <warm></warm>
+            <div class="item item_s" style="background: transparent;">
+                <div class="item_" style="padding:0">
+                    <stat></stat>
                 </div>
             </div>
             <div class="item item_h margin_top">
@@ -39,7 +39,7 @@
             </div>
             <div class="item item_h margin_top item_s">
                 <div class="item_">
-                    <alarm :interval="interval"></alarm>
+                    <warm :interval="interval"></warm>
                 </div>
             </div>
         </div>
@@ -49,27 +49,26 @@
 <script>
 import info from "./info";
 import myMap from "./map";
-import warm from "./warm";
+import stat from "./stat";
 import work from "./work";
 import device from "./device";
-import alarm from "./alarm";
+import warm from "./warm";
 import {formatDate} from '@/common/formatDate.js';
 
 export default {
     data(){
         return{
             time:{},
-            interval:1000*10,
-            showsum:true
+            interval:1000*10
         }
     },
     components:{
         info,
         myMap,
-        warm,
+        stat,
         work,
         device,
-        alarm,
+        warm,
     },
     filters: {
     },
@@ -109,7 +108,7 @@ export default {
     height: 1080px;
     width: 1920px;
     color:#fff;
-    background: url(../../assets/panel/bg.png)no-repeat center
+    background: url(../../assets/panel/bg_p.png)no-repeat center
 }
 .top{
     height:65px;

@@ -4,7 +4,8 @@
             <i class="iconfont icon-alarm1"></i>
             预警分布
         </div>
-        <div id="warm"></div>
+        <div v-show="option.series[0].data.length == 0" style="line-height:100px;text-align: center">暂无数据</div>
+        <div v-show="option.series[0].data.length != 0" id="warm"></div>
     </div>
 </template>
 <script>
@@ -78,7 +79,7 @@ export default {
             this.getWarm();
         },
         getWarm(){
-            panel.warm({projectId:this.$cookies.get('panel_id')}).then(res => {
+            panel.warm({projectId:this.$route.query.id}).then(res => {
                 let data = res.result
                 this.option.series[0].data = data.map(r => {
                     return {name:r._id,value:r.count}
@@ -95,16 +96,16 @@ export default {
 <style scoped>
 #warm{
     width: 100%;
-    height: 100%;
+    height: calc(100% - 28px);
 }
 .warm_tit{
     font-size:20px;
     font-weight:600;
     line-height:28px;
     height: 28px;
-    position: absolute;
+    /* position: absolute;
     top: 20px;
-    left:25px;
+    left:25px; */
 }
 .icon-alarm1{
     font-size:20px;

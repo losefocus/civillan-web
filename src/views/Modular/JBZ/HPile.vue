@@ -1716,7 +1716,7 @@
                 list.p_ash=list.p_pulp*list.p_density/(1+item.water_cement_ratio);
               })
             });
-            if(res.result.items.length>0&&this.isDevice){
+            if(res.result.items.length>0||this.isDevice){
               this.isExport=false;
             }else{
               this.isExport=true;

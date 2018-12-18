@@ -4,7 +4,8 @@
             <i class="iconfont icon-zuoyechengxiao"></i>
             作业统计
         </div>
-        <div id="work"></div>
+        <div v-show="option.series[0].data.length == 0" style="line-height:100px;text-align: center">暂无数据</div>
+        <div v-show="option.series[0].data.length != 0" id="work"></div>
     </div>
 </template>
 <script>
@@ -92,25 +93,25 @@ export default {
             this.getWork();
         },
         getWork(){
-            panel.work({projectId:this.$cookies.get('panel_id')}).then(res => {
+            panel.work({projectId:this.$route.query.id}).then(res => {
                 let data_yAxis = [],data_series = []
                 res.result.forEach(e => {
                     data_yAxis.push(e._id)
                     data_series.push(e.count.toFixed(2))
                 });
                 this.option.yAxis.data = data_yAxis
-                // this.option.series.data = data_series
-                this.option.series = {
-                        name: '2011年',
-                        type: 'bar',
-                        label:{
-                            show:true,
-                            position: 'right',
-                            color:'#fff'
-                        },
-                        barWidth:'45%',
-                        data: data_series
-                    }
+                // // this.option.series.data = data_series
+                this.option.series = [{
+                    name: '2011年',
+                    type: 'bar',
+                    label:{
+                        show:true,
+                        position: 'right',
+                        color:'#fff'
+                    },
+                    barWidth:'45%',
+                    data: data_series
+                }]
                 this.myChart.setOption(this.option);
             })
         }
