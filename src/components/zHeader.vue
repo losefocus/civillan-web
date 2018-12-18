@@ -177,7 +177,7 @@
     methods:{
       initWebSocket(){ //初始化webSocket
         if(this.$cookies.get('wsUrl')){
-          let wsUrl='ws:'+this.$cookies.get('wsUrl');//ws地址
+          let wsUrl='wss:'+this.$cookies.get('wsUrl');//ws地址
           // let wsUrl='ws://ws.gcycloud.com/ws/message/token=BPbn9JXQVn+lQsHMaXl1bg==';//ws地址
           this.webSocket = new WebSocket(wsUrl);
           this.webSocket.onopen = this.websocketonopen;

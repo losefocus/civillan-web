@@ -877,6 +877,7 @@
           pileId:'',
         },
         device_data:{//全部设备select列表
+          project_id:this.$cookies.get('projectId'),
           page_index:1,
           page_size:5,
           name:''
@@ -1837,6 +1838,7 @@
       visibleChange(val){
         if(val){
           this.device_data={
+            project_id:this.$cookies.get('projectId'),
             page_index:1,
             page_size:5,
             name:''
@@ -1873,7 +1875,6 @@
 
       //重置请求参数
       Refresh(){
-
         this.value2='';
         this.value7='';
         this.post_data={ // 请求数据

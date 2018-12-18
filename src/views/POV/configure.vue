@@ -242,9 +242,12 @@
         multipleTable:[],//列表select复选框
         typeOptions:[],//类型select列表
         allListQuery:{ //类型select列表请求参数
+          project_id:this.$cookies.get('projectId'),
+          code:sessionStorage.getItem('code'),
           page_index: 1,
           page_size: 999,
-          direction:'asc'
+          direction:'asc',
+          sort_by:'sort'
         },
         content_form:{ //设计参数
           label:'',
@@ -366,8 +369,9 @@
       getCategoryList(){
         this.allListQuery.tenant=this.$cookies.get('tenant');
         categories.list(this.allListQuery).then(res => {
-          let list = res.result.items;
-          this.navList=res.result.items;
+
+          let list = res.result.items[0].childrenList;
+          this.navList=res.result.items[0].childrenList;
           this.typeOptions = list.map(item => {
             return { value: item.id, label: item.name };
           });

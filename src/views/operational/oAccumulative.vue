@@ -9,7 +9,7 @@
     </ul>
     <div class="c-box" :class="{'c-box1':isCollapse}">
       <div class="c-query">
-        <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 15%;float: left;" clearable >
+        <el-select v-model="device" filterable :filter-method="deviceSearch" placeholder="选择设备" size="mini" @change="deviceChange" style="margin: 0 5px 0 0;width: 30%;float: left;" clearable >
           <el-option
             v-for="(item,index) in deviceSelect"
             :key="index"
@@ -35,7 +35,7 @@
             :value="item.value1">
           </el-option>
         </el-select>-->
-        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 15%;float: left;">
+        <el-select v-model="value2" placeholder="评分等级" size="mini" @change="deviceChange" style="margin: 0 5px;width: 20%;float: left;">
           <el-option
             v-for="item in deviceSelect2"
             :key="item.value2"
@@ -350,6 +350,7 @@
         value7:'',
         newData:'',
         device_data: {//全部设备select列表
+          project_id:this.$cookies.get('projectId'),
           page_index: 1,
           page_size: 5,
           name: ''
@@ -393,17 +394,10 @@
         }*/
       },
       //设备分组
-      getGroup()  {
+      getGroup(){
         deviceGrouping.list(this.group_post).then(res=>{
           if(res.success){
             this.navList=res.result.items;
-            let allDevice={
-              project_id:this.$cookies.get('projectId'),
-              name:'全部',
-              id:sessionStorage.getItem('groupId'),
-            };
-            this.navList.unshift(allDevice);
-            this.getList(this.post_data);
 
             this.$nextTick(()=>{
               this.isShow=true
