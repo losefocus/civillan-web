@@ -1701,7 +1701,6 @@
       //获取全部历史数据列表
       getList(post_data) {
         this.loading=true;
-        console.log(this.isDevice)
         history.list(post_data).then(res=>{
           if(res.success){
             this.total=res.result.total;
@@ -1848,7 +1847,6 @@
 
       //查询列表
       query(){
-        console.log(this.value5,this.value6);
         if(this.value5&&this.value6){
           if(this.value6>=this.value5){
             this.post_data.page_index=1;
